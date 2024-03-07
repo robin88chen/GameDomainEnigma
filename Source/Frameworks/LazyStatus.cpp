@@ -31,3 +31,8 @@ bool LazyStatus::isLoading() const
 {
     return m_status == Status::Loading;
 }
+
+bool LazyStatus::isFailed() const
+{
+    return m_status == Status::Failed;
+}

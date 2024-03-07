@@ -46,13 +46,13 @@ namespace Enigma::SceneGraph
     class PortalDto;
     class PortalZoneNodeDto;
     class PortalManagementNodeDto;
-    class SceneGraphBuilder;
+    //class SceneGraphBuilder;
 
     class SceneGraphRepository : public Frameworks::ISystemService
     {
         DECLARE_EN_RTTI;
     public:
-        SceneGraphRepository(Frameworks::ServiceManager* srv_mngr, const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer, const std::shared_ptr<SceneGraphStoreMapper>& store_mapper);
+        SceneGraphRepository(Frameworks::ServiceManager* srv_mngr, const std::shared_ptr<SceneGraphStoreMapper>& store_mapper);
         SceneGraphRepository(const SceneGraphRepository&) = delete;
         SceneGraphRepository(SceneGraphRepository&&) = delete;
         virtual ~SceneGraphRepository() override;
@@ -67,18 +67,9 @@ namespace Enigma::SceneGraph
 
         SceneGraphFactory* factory() { return m_factory; }
 
-        //std::shared_ptr<Camera> createCamera(const SpatialId& id);
-        //std::shared_ptr<Camera> createCamera(const Engine::GenericDto& dto);
-
         std::shared_ptr<Node> createNode(const SpatialId& id);
         std::shared_ptr<Node> createNode(const std::string& name, const Engine::FactoryDesc& factory_desc);
         std::shared_ptr<Node> createNode(const Engine::GenericDto& dto);
-
-        //std::shared_ptr<Pawn> CreatePawn(const std::string& name);
-
-        //std::shared_ptr<Light> createLight(const SpatialId& id, const LightInfo& info);
-        //bool hasLight(const SpatialId& id);
-        //std::shared_ptr<Light> queryLight(const SpatialId& id);
 
         std::shared_ptr<Portal> createPortal(const std::string& name);
         bool hasPortal(const std::string& name);
@@ -95,14 +86,17 @@ namespace Enigma::SceneGraph
         std::shared_ptr<Camera> queryCamera(const SpatialId& id);
         bool hasSpatial(const SpatialId& id);
         std::shared_ptr<Spatial> querySpatial(const SpatialId& id);
+        bool hasLaziedContent(const SpatialId& id);
 
         /** put entities */
         void putCamera(const std::shared_ptr<Camera>& camera);
         void putSpatial(const std::shared_ptr<Spatial>& spatial, PersistenceLevel persistence_level);
+        void putLaziedContent(const std::shared_ptr<LazyNode>& lazy_node);
 
         /** remove entities */
         void removeCamera(const SpatialId& id);
         void removeSpatial(const SpatialId& id);
+        void removeLaziedContent(const SpatialId& id);
 
         /** factory methods */
         std::shared_ptr<PortalZoneNode> createPortalZoneNode(const PortalZoneNodeDto& portal_zone_node_dto);
@@ -125,11 +119,11 @@ namespace Enigma::SceneGraph
         void removeCamera(const Frameworks::ICommandPtr& c);
         void putSpatial(const Frameworks::ICommandPtr& c);
         void removeSpatial(const Frameworks::ICommandPtr& c);
+        void putLaziedContent(const Frameworks::ICommandPtr& c);
+        void removeLaziedContent(const Frameworks::ICommandPtr& c);
 
+        void hydrateLazyNode(const Frameworks::ICommandPtr& c);
         void attachNodeChild(const Frameworks::ICommandPtr& c);
-
-        //void createCamera(const Frameworks::ICommandPtr& c);
-        //void createNode(const Frameworks::ICommandPtr& c);
 
     private:
         SceneGraphFactory* m_factory;
@@ -144,13 +138,10 @@ namespace Enigma::SceneGraph
         std::unordered_map<SpatialId, std::shared_ptr<Spatial>, SpatialId::hash> m_spatials;
         std::recursive_mutex m_spatialMapLock;
 
-        std::unordered_map<SpatialId, std::weak_ptr<Light>, SpatialId::hash> m_lights;
-        std::recursive_mutex m_lightMapLock;
-
         std::unordered_map<std::string, std::weak_ptr<Portal>> m_portals;
         std::recursive_mutex m_portalMapLock;
 
-        SceneGraphBuilder* m_builder;
+        //SceneGraphBuilder* m_builder;
 
         Frameworks::QuerySubscriberPtr m_queryCamera;
         Frameworks::QuerySubscriberPtr m_requestCameraCreation;
@@ -165,11 +156,11 @@ namespace Enigma::SceneGraph
         Frameworks::CommandSubscriberPtr m_removeCamera;
         Frameworks::CommandSubscriberPtr m_putSpatial;
         Frameworks::CommandSubscriberPtr m_removeSpatial;
+        Frameworks::CommandSubscriberPtr m_putLaziedContent;
+        Frameworks::CommandSubscriberPtr m_removeLaziedContent;
 
+        Frameworks::CommandSubscriberPtr m_hydrateLazyNode;
         Frameworks::CommandSubscriberPtr m_attachNodeChild;
-
-        //Frameworks::CommandSubscriberPtr m_createCamera;
-        //Frameworks::CommandSubscriberPtr m_createNode;
     };
 }
 

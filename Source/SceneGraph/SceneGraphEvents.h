@@ -392,6 +392,68 @@ namespace Enigma::SceneGraph
         SpatialId m_id;
         std::error_code m_err;
     };
+    class LaziedContentPut : public Frameworks::IEvent
+    {
+    public:
+        LaziedContentPut(const SpatialId& id) : m_id(id) {}
+
+        const SpatialId& id() const { return m_id; }
+    protected:
+        SpatialId m_id;
+    };
+    class PutLaziedContentFailed : public Frameworks::IEvent
+    {
+    public:
+        PutLaziedContentFailed(const SpatialId& id, std::error_code err) : m_id(id), m_err(err) {};
+        const SpatialId& id() const { return m_id; }
+        std::error_code error() const { return m_err; }
+
+    protected:
+        SpatialId m_id;
+        std::error_code m_err;
+    };
+    class LaziedContentRemoved : public Frameworks::IEvent
+    {
+    public:
+        LaziedContentRemoved(const SpatialId& id) : m_id(id) {}
+
+        const SpatialId& id() const { return m_id; }
+
+    protected:
+        SpatialId m_id;
+    };
+    class RemoveLaziedContentFailed : public Frameworks::IEvent
+    {
+    public:
+        RemoveLaziedContentFailed(const SpatialId& id, std::error_code err) : m_id(id), m_err(err) {};
+        const SpatialId& id() const { return m_id; }
+        std::error_code error() const { return m_err; }
+
+    protected:
+        SpatialId m_id;
+        std::error_code m_err;
+    };
+    class LazyNodeHydrated : public Frameworks::IEvent
+    {
+    public:
+        LazyNodeHydrated(const SpatialId& id) : m_id(id) {}
+
+        const SpatialId& id() const { return m_id; }
+
+    protected:
+        SpatialId m_id;
+    };
+    class HydrateLazyNodeFailed : public Frameworks::IEvent
+    {
+    public:
+        HydrateLazyNodeFailed(const SpatialId& id, std::error_code err) : m_id(id), m_err(err) {};
+        const SpatialId& id() const { return m_id; }
+        std::error_code error() const { return m_err; }
+
+    protected:
+        SpatialId m_id;
+        std::error_code m_err;
+    };
 }
 
 

@@ -27,7 +27,7 @@ void SceneGraphMaker::makePawm(const Enigma::SceneGraph::SpatialId& id, const En
     }
 }
 
-void SceneGraphMaker::makeStoredLazyNode(const SpatialId& id, const SpatialId& parent_id, const std::vector<SpatialId>& children)
+GenericDto SceneGraphMaker::makeLazyNode(const SpatialId& id, const SpatialId& parent_id, const std::vector<SpatialId>& children)
 {
     BoundingVolume unit_bv(Box3::UNIT_BOX);
     LazyNodeDto lazy_dto;
@@ -42,10 +42,10 @@ void SceneGraphMaker::makeStoredLazyNode(const SpatialId& id, const SpatialId& p
     lazy_dto.spatialFlag() = static_cast<unsigned>(Spatial::Spatial_Unlit);
     for (const auto& child : children)
     {
-        lazy_dto.children().push_back(NodeDto::ChildDto{ child, GenericDto() });
+        lazy_dto.children().push_back(child);
     }
     lazy_dto.parentId() = parent_id;
-    std::make_shared<RequestSpatialConstitution>(id, lazy_dto.toGenericDto(), PersistenceLevel::Store)->dispatch();
+    return lazy_dto.toGenericDto();
 }
 
 GenericDto SceneGraphMaker::makeSceneGraph(const SpatialId& root_id, const SpatialId& lazy_node_id)

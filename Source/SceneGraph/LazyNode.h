@@ -32,8 +32,11 @@ namespace Enigma::SceneGraph
 
         static std::shared_ptr<LazyNode> create(const SpatialId& id);
         static std::shared_ptr<LazyNode> constitute(const SpatialId& id, const Engine::GenericDto& dto);
+        virtual std::error_code hydrate(const Engine::GenericDto& dto);
 
         virtual Engine::GenericDto serializeDto() override;
+        virtual Engine::GenericDto serializeLaziedContent();
+        //todo : remove
         virtual Engine::GenericDtoCollection serializeFlattenedTree() override;
 
         virtual bool canVisited() override;

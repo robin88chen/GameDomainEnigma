@@ -136,19 +136,6 @@ namespace Enigma::SceneGraph
         std::shared_ptr<SceneGraph::Spatial> m_child;
         MathLib::Matrix4 m_localTransform;
     };
-    //--------------------------- Creator --------------------------------------
-    class CreateNode : public Frameworks::IRequestCommand
-    {
-    public:
-        CreateNode(const std::string& name, const Engine::FactoryDesc& factory_desc) : m_name(name), m_factory_desc(factory_desc) {}
-
-        const std::string& name() { return m_name; }
-        const Engine::FactoryDesc& factoryDesc() { return m_factory_desc; }
-
-    protected:
-        std::string m_name;
-        Engine::FactoryDesc m_factory_desc;
-    };
     //--------------------------- Repository operations ------------------------
     class PutSpatial : public Frameworks::ICommand
     {
@@ -166,6 +153,38 @@ namespace Enigma::SceneGraph
     {
     public:
         RemoveSpatial(const SpatialId& id) : m_id(id) {}
+
+        const SpatialId& id() { return m_id; }
+
+    protected:
+        SpatialId m_id;
+    };
+    class PutLaziedContent : public Frameworks::ICommand
+    {
+    public:
+        PutLaziedContent(const SpatialId& id, const std::shared_ptr<LazyNode>& node) : m_id(id), m_node(node) {}
+
+        const SpatialId& id() { return m_id; }
+        const std::shared_ptr<LazyNode>& lazyNode() { return m_node; }
+
+    protected:
+        SpatialId m_id;
+        std::shared_ptr<LazyNode> m_node;
+    };
+    class RemoveLaziedContent : public Frameworks::ICommand
+    {
+    public:
+        RemoveLaziedContent(const SpatialId& id) : m_id(id) {}
+
+        const SpatialId& id() { return m_id; }
+
+    protected:
+        SpatialId m_id;
+    };
+    class HydrateLazyNode : public Frameworks::ICommand
+    {
+    public:
+        HydrateLazyNode(const SpatialId& id);
 
         const SpatialId& id() { return m_id; }
 

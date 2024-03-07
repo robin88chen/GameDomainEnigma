@@ -113,7 +113,8 @@ void LazyNodeIOTest::installEngine()
     auto geometry_policy = std::make_shared<GeometryInstallingPolicy>(std::make_shared<GeometryDataFileStoreMapper>("geometries.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
     auto primitive_policy = std::make_shared<PrimitiveRepositoryInstallingPolicy>(std::make_shared<PrimitiveFileStoreMapper>("primitives.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
     auto animator_policy = std::make_shared<AnimatorInstallingPolicy>(std::make_shared<AnimatorFileStoreMapper>("animators.db.txt@DataPath", std::make_shared<DtoJsonGateway>()), std::make_shared<AnimationAssetFileStoreMapper>("animation_assets.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
-    auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(std::make_shared<JsonFileDtoDeserializer>(), std::make_shared<SceneGraphFileStoreMapper>("scene_graph.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
+    m_sceneGraphFileStoreMapper = std::make_shared<SceneGraphFileStoreMapper>("scene_graph.db.txt@DataPath", "lazy_scene.db.txt@DataPath", std::make_shared<DtoJsonGateway>());
+    auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(std::make_shared<JsonFileDtoDeserializer>(), m_sceneGraphFileStoreMapper);
     auto effect_material_source_policy = std::make_shared<EffectMaterialSourceRepositoryInstallingPolicy>(std::make_shared<EffectMaterialSourceFileStoreMapper>("effect_materials.db.txt@APK_PATH"));
     auto texture_policy = std::make_shared<TextureRepositoryInstallingPolicy>(std::make_shared<TextureFileStoreMapper>("textures.db.txt@APK_PATH", std::make_shared<DtoJsonGateway>()));
     auto renderables_policy = std::make_shared<RenderablesInstallingPolicy>();
@@ -204,13 +205,18 @@ void LazyNodeIOTest::makeModel()
     auto mesh = SkinMeshModelMaker::makeCubeMeshPrimitive(meshId, cubeId);
     m_model = SkinMeshModelMaker::makeModelPrimitive(modelId, meshId, animatorId, meshNodeNames);
     SceneGraphMaker::makePawm(pawnId, modelId);
-    SceneGraphMaker::makeStoredLazyNode(lazyNodeId, m_rootId, { pawnId });
+    if (!m_sceneGraphFileStoreMapper->hasLaziedContent(lazyNodeId))
+    {
+        auto lazy_dto = SceneGraphMaker::makeLazyNode(lazyNodeId, m_rootId, { pawnId });
+        m_sceneGraphFileStoreMapper->putLaziedContent(lazyNodeId, lazy_dto);
+    }
     m_sceneRoot = Node::queryNode(m_rootId);
     if (!m_sceneRoot)
     {
         auto scene_dto = SceneGraphMaker::makeSceneGraph(m_rootId, lazyNodeId);
         m_sceneRoot = std::dynamic_pointer_cast<Node>(std::make_shared<RequestSpatialConstitution>(m_rootId, scene_dto, PersistenceLevel::Store)->dispatch());
     }
+    CommandBus::send(std::make_shared<HydrateLazyNode>(lazyNodeId));
     auto pawn = Pawn::queryPawn(pawnId);
     if (!pawn) return;
     animatorId = pawn->getPrimitive()->animatorId();

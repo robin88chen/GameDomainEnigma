@@ -35,10 +35,11 @@ Node::Node(const SpatialId& id, const Engine::GenericDto& dto) : Spatial(id, dto
     NodeDto nodeDto{ dto };
     for (auto& child : nodeDto.children())
     {
-        auto child_spatial = std::make_shared<QuerySpatial>(child.id)->dispatch();
+        auto child_spatial = std::make_shared<QuerySpatial>(child.id())->dispatch();
         if (!child_spatial)
         {
-            child_spatial = std::make_shared<RequestSpatialConstitution>(child.id, child.dto, PersistenceLevel::Repository)->dispatch();
+            assert(child.dto().has_value());
+            child_spatial = std::make_shared<RequestSpatialConstitution>(child.id(), child.dto().value(), PersistenceLevel::Repository)->dispatch();
         }
         if (child_spatial) m_childList.push_back(child_spatial);
     }
@@ -82,7 +83,15 @@ NodeDto Node::serializeNodeDto()
     NodeDto dto(serializeSpatialDto());
     for (auto child : m_childList)
     {
-        if (child) dto.children().emplace_back(NodeDto::ChildDto{ child->id(), child->serializeDto() });
+        if (!child) continue;
+        if (child->persistenceLevel() == PersistenceLevel::Store)
+        {
+            dto.children().emplace_back(child->id());
+        }
+        else
+        {
+            dto.children().emplace_back(child->id(), child->serializeDto());
+        }
     }
     return dto;
 }
@@ -92,7 +101,7 @@ void Node::resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryL
     NodeDto nodeDto{ dto };
     for (auto& child : nodeDto.children())
     {
-        resolver.tryResolveLinkage(child.id.name(), [lifetime = weak_from_this()](auto sp)
+        resolver.tryResolveLinkage(child.id().name(), [lifetime = weak_from_this()](auto sp)
             { if (!lifetime.expired())
             std::dynamic_pointer_cast<Node, Spatial>(lifetime.lock())->attachChild(sp, sp->getLocalTransform()); });
     }

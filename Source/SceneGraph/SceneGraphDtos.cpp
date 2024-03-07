@@ -24,8 +24,8 @@ static std::string TOKEN_CULLING_MODE = "CullingMode";
 static std::string TOKEN_SPATIAL_FLAG = "SpatialFlag";
 static std::string TOKEN_NOTIFY_FLAG = "NotifyFlag";
 static std::string TOKEN_PARENT_ID = "ParentId";
-static std::string TOKEN_CHILD_IDS = "ChildIds";
-static std::string TOKEN_CHILD_DTOS = "ChildDtos";
+static std::string TOKEN_CHILDREN = "Children";
+static std::string TOKEN_NATIVE_DTO = "NativeDto";
 static std::string TOKEN_LIGHT_INFO = "LightInfo";
 static std::string TOKEN_PAWN_PRIMITIVE_ID = "PawnPrimitiveId";
 //static std::string TOKEN_PRIMITIVE_FACTORY = "PrimitiveFactory";
@@ -77,6 +77,28 @@ GenericDto SpatialDto::toGenericDto() const
     return dto;
 }
 
+NodeDto::ChildDto::ChildDto(const Engine::GenericDto& dto_from)
+{
+    if (auto v = dto_from.tryGetValue<std::vector<std::string>>(TOKEN_ID)) m_id = v.value();
+    if (auto v = dto_from.tryGetValue<GenericDto>(TOKEN_NATIVE_DTO)) m_dto = v.value();
+}
+
+NodeDto::ChildDto::ChildDto(const SpatialId& id) : m_id(id)
+{
+}
+
+NodeDto::ChildDto::ChildDto(const SpatialId& id, const Engine::GenericDto& child_dto) : m_id(id), m_dto(child_dto)
+{
+}
+
+GenericDto NodeDto::ChildDto::toGenericDto() const
+{
+    GenericDto dto;
+    dto.addOrUpdate(TOKEN_ID, m_id.tokens());
+    if (m_dto) dto.addOrUpdate(TOKEN_NATIVE_DTO, m_dto.value());
+    return dto;
+}
+
 NodeDto::NodeDto() : SpatialDto()
 {
     m_factoryDesc = FactoryDesc(Node::TYPE_RTTI.getName());
@@ -90,14 +112,13 @@ NodeDto::NodeDto(const SpatialDto& spatial_dto) : SpatialDto(spatial_dto)
 NodeDto::NodeDto(const Engine::GenericDto& dto) : SpatialDto(dto)
 {
     assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), Node::TYPE_RTTI.getName()));
-    std::vector<SpatialId> child_ids;
-    if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_CHILD_IDS)) child_ids = tokensToIds(v.value());
-    Engine::GenericDtoCollection dtos;
-    if (auto v = dto.tryGetValue<Engine::GenericDtoCollection>(TOKEN_CHILD_DTOS)) dtos = v.value();
-    for (unsigned i = 0; i < child_ids.size() && i < dtos.size(); i++)
+    if (auto children = dto.tryGetValue<Engine::GenericDtoCollection>(TOKEN_CHILDREN))
     {
-        m_children.emplace_back(ChildDto{ child_ids[i], dtos[i] });
-    };
+        for (const Engine::GenericDto& child : children.value())
+        {
+            m_children.emplace_back(child);
+        }
+    }
 }
 
 /*NodeDto NodeDto::fromGenericDto(const GenericDto& dto)
@@ -109,16 +130,12 @@ NodeDto::NodeDto(const Engine::GenericDto& dto) : SpatialDto(dto)
 GenericDto NodeDto::toGenericDto() const
 {
     GenericDto dto = SpatialDto::toGenericDto();
-    std::vector<SpatialId> child_ids;
     Engine::GenericDtoCollection dtos;
     for (const ChildDto& child : m_children)
     {
-        child_ids.push_back(child.id);
-        dtos.push_back(child.dto);
+        dtos.push_back(child.toGenericDto());
     }
-    dto.addOrUpdate(TOKEN_CHILD_IDS, idsToTokens(child_ids));
-    dto.addOrUpdate(TOKEN_CHILD_DTOS, dtos);
-
+    dto.addOrUpdate(TOKEN_CHILDREN, dtos);
     return dto;
 }
 

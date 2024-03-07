@@ -10,7 +10,7 @@
                 "ResourceName": "",
                 "ResourceFilename": "",
                 "RttiName": "En.SceneGraph.Pawn",
-                "PrefabFilename": ""
+                "PrefabFilename": "pawn.pawn@DataPath"
             }
         },
         "ModelBound": {

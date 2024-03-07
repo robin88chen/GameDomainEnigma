@@ -24,6 +24,8 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::sceneRepositoryFailed: return "Scene repository failed";
     case ErrorCode::entityAlreadyExists: return "Entity already existed";
     case ErrorCode::sceneFactoryFailed: return "Scene factory failed";
+    case ErrorCode::laziedContentNotFound: return "Lazied content not found";
+    case ErrorCode::childDtoNotFound: return "Child dto not found";
     case ErrorCode::spatialFactoryNotFound: return "Spatial factory not found";
     case ErrorCode::factoryRttiMismatch: return "Factory rtti mismatch";
     }

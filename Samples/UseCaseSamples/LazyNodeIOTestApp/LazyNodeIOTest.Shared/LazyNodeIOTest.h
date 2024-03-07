@@ -23,6 +23,7 @@
 #include "Renderer/Renderer.h"
 #include "SceneGraph/Node.h"
 #include "SceneGraph/Pawn.h"
+#include "FileStorage/SceneGraphFileStoreMapper.h"
 
 class LazyNodeIOTest : public Enigma::Application::AppDelegate
 {
@@ -58,6 +59,7 @@ protected:
     Enigma::Frameworks::EventSubscriberPtr m_onRenderTargetCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
 
+    std::shared_ptr<Enigma::FileStorage::SceneGraphFileStoreMapper> m_sceneGraphFileStoreMapper;
     Enigma::Renderer::RendererPtr m_renderer;
     Enigma::Renderer::RenderTargetPtr m_renderTarget;
     std::shared_ptr<Enigma::Renderables::ModelPrimitive> m_model;

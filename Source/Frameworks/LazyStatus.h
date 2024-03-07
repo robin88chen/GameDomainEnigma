@@ -20,7 +20,8 @@ namespace Enigma::Frameworks
             Ghost,
             InQueue,
             Loading,
-            Ready
+            Ready,
+            Failed,
         };
     public:
         LazyStatus();
@@ -29,6 +30,7 @@ namespace Enigma::Frameworks
         bool isGhost() const;
         bool isInQueue() const;
         bool isLoading() const;
+        bool isFailed() const;
         void changeStatus(Status s);
 
     private:

@@ -311,5 +311,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphFactory.cpp">
       <Filter>Repository</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphCommands.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -87,6 +87,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneFlattenTraversal.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphBuilder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphAssemblers.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphCommands.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphDtos.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphFactory.cpp" />

@@ -32,6 +32,8 @@ namespace Enigma::SceneGraph
         sceneRepositoryFailed,
         entityAlreadyExists,
         sceneFactoryFailed,
+        laziedContentNotFound,
+        childDtoNotFound,
 
         spatialFactoryNotFound = 301,
         factoryRttiMismatch,

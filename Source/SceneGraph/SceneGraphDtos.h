@@ -78,10 +78,21 @@ namespace Enigma::SceneGraph
     class NodeDto : public SpatialDto
     {
     public:
-        struct ChildDto
+        class ChildDto
         {
-            SpatialId id;
-            Engine::GenericDto dto;
+        public:
+            ChildDto() = default;
+            ChildDto(const Engine::GenericDto& dto_from);
+            ChildDto(const SpatialId& id);
+            ChildDto(const SpatialId& id, const Engine::GenericDto& child_dto);
+
+            const SpatialId& id() const { return m_id; }
+            const std::optional<Engine::GenericDto>& dto() const { return m_dto; }
+
+            Engine::GenericDto toGenericDto() const;
+        protected:
+            SpatialId m_id;
+            std::optional<Engine::GenericDto> m_dto;
         };
     public:
         NodeDto();

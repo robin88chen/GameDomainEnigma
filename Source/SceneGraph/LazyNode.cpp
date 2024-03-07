@@ -1,8 +1,10 @@
 ﻿#include "LazyNode.h"
 #include "SceneNonLazyFlattenTraversal.h"
 #include "SceneGraphDtos.h"
+#include "SceneGraphErrors.h"
 #include "Frameworks/Rtti.h"
 #include "GameEngine/FactoryDesc.h"
+#include "SceneGraphQueries.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Engine;
@@ -20,10 +22,7 @@ LazyNode::LazyNode(const SpatialId& id, const Engine::GenericDto& o) : Node(id, 
 {
     LazyNodeDto lazy_node_dto{ o };
     m_factoryDesc = lazy_node_dto.factoryDesc();
-    if (m_factoryDesc.GetInstanceType() == FactoryDesc::InstanceType::Instanced)
-    {
-        m_lazyStatus.changeStatus(Frameworks::LazyStatus::Status::Ready);
-    }
+    m_lazyStatus.changeStatus(Frameworks::LazyStatus::Status::Ghost);
 }
 
 LazyNode::LazyNode(const std::string& name, const FactoryDesc& factory_desc) : Node(name)
@@ -59,13 +58,39 @@ std::shared_ptr<LazyNode> LazyNode::constitute(const SpatialId& id, const Engine
     return std::make_shared<LazyNode>(id, dto);
 }
 
+std::error_code LazyNode::hydrate(const Engine::GenericDto& dto)
+{
+    LazyNodeDto lazy_node_dto{ dto };
+    for (auto& child : lazy_node_dto.children())
+    {
+        auto child_spatial = std::make_shared<QuerySpatial>(child.id())->dispatch();
+        if (!child_spatial)
+        {
+            if (!child.dto().has_value()) return ErrorCode::childDtoNotFound;
+            child_spatial = std::make_shared<RequestSpatialConstitution>(child.id(), child.dto().value(), PersistenceLevel::Repository)->dispatch();
+        }
+        if (child_spatial)
+        {
+            auto er = attachChild(child_spatial, child_spatial->getLocalTransform());
+            if (er)
+            {
+                m_lazyStatus.changeStatus(Frameworks::LazyStatus::Status::Failed);
+                return er;
+            }
+        }
+    }
+    m_lazyStatus.changeStatus(Frameworks::LazyStatus::Status::Ready);
+    return ErrorCode::ok;
+}
+
 GenericDto LazyNode::serializeDto()
 {
-    if (m_factoryDesc.GetInstanceType() == FactoryDesc::InstanceType::Instanced)
-    {
-        return serializeAsLaziness();
-    }
-    return Node::serializeDto();
+    return serializeAsLaziness();
+}
+
+GenericDto LazyNode::serializeLaziedContent()
+{
+    return serializeNodeDto().toGenericDto();
 }
 
 GenericDto LazyNode::serializeAsLaziness()

@@ -17,7 +17,7 @@ error SceneGraphInstallingPolicy::install(Frameworks::ServiceManager* service_ma
     assert(service_manager);
     const auto timer = service_manager->getSystemServiceAs<Engine::TimerService>();
     assert(timer);
-    auto scene_graph_repository = std::make_shared<SceneGraphRepository>(service_manager, m_dtoDeserializer, m_storeMapper);
+    auto scene_graph_repository = std::make_shared<SceneGraphRepository>(service_manager, m_storeMapper);
     scene_graph_repository->factory()->registerSpatialFactory(Pawn::TYPE_RTTI.getName(), Pawn::create, Pawn::constitute);
     scene_graph_repository->factory()->registerSpatialFactory(Node::TYPE_RTTI.getName(), Node::create, Node::constitute);
     scene_graph_repository->factory()->registerSpatialFactory(LazyNode::TYPE_RTTI.getName(), LazyNode::create, LazyNode::constitute);

@@ -19,6 +19,7 @@
 #include "Frameworks/Rtti.h"
 #include "GameEngine/FactoryDesc.h"
 #include "GameEngine/LinkageResolver.h"
+#include "SceneGraphPersistenceLevel.h"
 #include <string>
 #include <memory>
 #include <system_error>
@@ -87,6 +88,8 @@ namespace Enigma::SceneGraph
         static std::shared_ptr<Spatial> querySpatial(const SpatialId& id);
 
         const SpatialId& id() const { return m_id; }
+        PersistenceLevel persistenceLevel() const { return m_persistenceLevel; }
+        void persistenceLevel(PersistenceLevel level) { m_persistenceLevel = level; }
         const std::string& getSpatialName() const { return m_name; }
 
         const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
@@ -241,6 +244,7 @@ namespace Enigma::SceneGraph
 
     protected:
         SpatialId m_id;
+        PersistenceLevel m_persistenceLevel;
         std::string m_name;
 
         Engine::FactoryDesc m_factoryDesc;

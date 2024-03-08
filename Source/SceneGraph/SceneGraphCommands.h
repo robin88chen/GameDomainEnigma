@@ -46,20 +46,6 @@ namespace Enigma::SceneGraph
     protected:
         std::shared_ptr<LazyNode> m_node;
     };
-
-    class InPlaceBuildSceneGraph : public Frameworks::ICommand
-    {
-    public:
-        InPlaceBuildSceneGraph(const std::shared_ptr<Node>& owner_node, const Engine::GenericDtoCollection& dtos)
-            : m_ownerNode(owner_node), m_dtos(dtos) {}
-
-        const std::shared_ptr<Node>& GetOwnerNode() { return m_ownerNode; }
-        const Engine::GenericDtoCollection& GetDtos() { return m_dtos; }
-
-    protected:
-        std::shared_ptr<Node> m_ownerNode;
-        Engine::GenericDtoCollection m_dtos;
-    };
     //--------------------------------------------------------------------------------
     using SpatialDtoFactory = std::function<Spatial* (const Engine::GenericDto& dto)>;
 

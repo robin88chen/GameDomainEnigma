@@ -14,6 +14,8 @@
 #include "Renderer/RendererManager.h"
 #include "GameEngine/EffectVariable.h"
 #include "Renderables/MeshPrimitive.h"
+#include "SceneGraph/Light.h"
+#include "SceneGraph/Pawn.h"
 
 namespace Enigma::ShadowMap
 {

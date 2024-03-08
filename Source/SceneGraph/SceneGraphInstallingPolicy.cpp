@@ -2,12 +2,13 @@
 #include "GameEngine/TimerService.h"
 #include "SceneGraphRepository.h"
 #include "SceneGraphFactory.h"
-#include "LazyNodeIOService.h"
+#include "LazyNodeHydrationService.h"
 #include "LightInfoTraversal.h"
 #include "SceneGraphErrors.h"
 #include "Pawn.h"
 #include "Node.h"
 #include "LazyNode.h"
+#include "VisibilityManagedNode.h"
 #include <cassert>
 
 using namespace Enigma::SceneGraph;
@@ -21,8 +22,9 @@ error SceneGraphInstallingPolicy::install(Frameworks::ServiceManager* service_ma
     scene_graph_repository->factory()->registerSpatialFactory(Pawn::TYPE_RTTI.getName(), Pawn::create, Pawn::constitute);
     scene_graph_repository->factory()->registerSpatialFactory(Node::TYPE_RTTI.getName(), Node::create, Node::constitute);
     scene_graph_repository->factory()->registerSpatialFactory(LazyNode::TYPE_RTTI.getName(), LazyNode::create, LazyNode::constitute);
+    scene_graph_repository->factory()->registerSpatialFactory(VisibilityManagedNode::TYPE_RTTI.getName(), VisibilityManagedNode::create, VisibilityManagedNode::constitute);
     service_manager->registerSystemService(scene_graph_repository);
-    service_manager->registerSystemService(std::make_shared<LazyNodeIOService>(service_manager, timer, m_dtoDeserializer));
+    service_manager->registerSystemService(std::make_shared<LazyNodeHydrationService>(service_manager, scene_graph_repository, timer));
     service_manager->registerSystemService(std::make_shared<LightInfoTraversal>(service_manager));
     return ErrorCode::ok;
 }
@@ -30,7 +32,7 @@ error SceneGraphInstallingPolicy::install(Frameworks::ServiceManager* service_ma
 error SceneGraphInstallingPolicy::shutdown(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
-    service_manager->shutdownSystemService(SceneGraph::LazyNodeIOService::TYPE_RTTI);
+    service_manager->shutdownSystemService(SceneGraph::LazyNodeHydrationService::TYPE_RTTI);
     service_manager->shutdownSystemService(SceneGraph::SceneGraphRepository::TYPE_RTTI);
     service_manager->shutdownSystemService(SceneGraph::LightInfoTraversal::TYPE_RTTI);
     return ErrorCode::ok;

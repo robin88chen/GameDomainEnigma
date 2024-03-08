@@ -246,14 +246,14 @@ namespace Enigma::SceneGraph
     class VisibilityChanged : public Frameworks::IEvent
     {
     public:
-        VisibilityChanged(const std::shared_ptr<LazyNode>& node, bool visible)
-            : m_node(node), m_isVisible(visible) {};
+        VisibilityChanged(const SpatialId& id, bool visible)
+            : m_id(id), m_isVisible(visible) {};
 
-        std::shared_ptr<LazyNode> GetNode() { return m_node.lock(); }
-        bool IsVisible() const { return m_isVisible; }
+        const SpatialId& id() { return m_id; }
+        bool isVisible() const { return m_isVisible; }
 
     protected:
-        std::weak_ptr<LazyNode> m_node;
+        SpatialId m_id;
         bool m_isVisible;
     };
     //------------ node operation ------------

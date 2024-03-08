@@ -31,9 +31,6 @@
     <Filter Include="Portal System">
       <UniqueIdentifier>{979f42de-ba0c-49b5-a048-e13b8fd593cb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Lazy Node IO">
-      <UniqueIdentifier>{4e37e94c-8b2a-49e1-adcf-8d4049626af6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Visibilities">
       <UniqueIdentifier>{91848c0a-c165-4152-9490-3558f3e042e8}</UniqueIdentifier>
     </Filter>
@@ -54,6 +51,9 @@
     </Filter>
     <Filter Include="DTO &amp; Assemblers">
       <UniqueIdentifier>{2e119933-502e-48d9-b642-a1d9450a14cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lazy Node Hydration">
+      <UniqueIdentifier>{4e37e94c-8b2a-49e1-adcf-8d4049626af6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -114,8 +114,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\CameraFrustumDtos.h">
       <Filter>DTO &amp; Assemblers</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\LazyNodeIOService.h">
-      <Filter>Lazy Node IO</Filter>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LazyNodeHydrationService.h">
+      <Filter>Lazy Node Hydration</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\VisibilityManagedNode.h">
       <Filter>Visibilities</Filter>
@@ -248,8 +248,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\CameraFrustumDtos.cpp">
       <Filter>DTO &amp; Assemblers</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\LazyNodeIOService.cpp">
-      <Filter>Lazy Node IO</Filter>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LazyNodeHydrationService.cpp">
+      <Filter>Lazy Node Hydration</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\VisibilityManagedNode.cpp">
       <Filter>Visibilities</Filter>

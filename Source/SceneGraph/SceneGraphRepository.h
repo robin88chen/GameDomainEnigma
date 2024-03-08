@@ -9,12 +9,11 @@
 #define SCENE_GRAPH_REPOSITORY_H
 
 #include "Frameworks/SystemService.h"
-#include "GameEngine/DtoDeserializer.h"
 #include "SceneGraphDefines.h"
-#include "Frustum.h"
 #include "Frameworks/CommandSubscriber.h"
 #include "Frameworks/QuerySubscriber.h"
 #include "GameEngine/FactoryDesc.h"
+#include "GameEngine/GenericDto.h"
 #include "SpatialId.h"
 #include "SceneGraphPersistenceLevel.h"
 #include <memory>
@@ -28,24 +27,24 @@ namespace Enigma::SceneGraph
     class SceneGraphFactory;
     class Spatial;
     class Camera;
-    class Frustum;
+    //class Frustum;
     class Node;
-    class Pawn;
+    //class Pawn;
     class Portal;
-    class LightInfo;
-    class Light;
+    //class LightInfo;
+    //class Light;
     class LazyNode;
     class PortalZoneNode;
-    class VisibilityManagedNode;
-    class CameraDto;
-    class NodeDto;
-    class LazyNodeDto;
-    class VisibilityManagedNodeDto;
-    class LightDto;
-    class PawnDto;
-    class PortalDto;
+    //class VisibilityManagedNode;
+    //class CameraDto;
+    //class NodeDto;
+    //class LazyNodeDto;
+    //class VisibilityManagedNodeDto;
+    //class LightDto;
+    //class PawnDto;
+    //class PortalDto;
     class PortalZoneNodeDto;
-    class PortalManagementNodeDto;
+    //class PortalManagementNodeDto;
     //class SceneGraphBuilder;
 
     class SceneGraphRepository : public Frameworks::ISystemService
@@ -87,6 +86,7 @@ namespace Enigma::SceneGraph
         bool hasSpatial(const SpatialId& id);
         std::shared_ptr<Spatial> querySpatial(const SpatialId& id);
         bool hasLaziedContent(const SpatialId& id);
+        void hydrateLazyNode(const SpatialId& id);
 
         /** put entities */
         void putCamera(const std::shared_ptr<Camera>& camera);
@@ -100,7 +100,7 @@ namespace Enigma::SceneGraph
 
         /** factory methods */
         std::shared_ptr<PortalZoneNode> createPortalZoneNode(const PortalZoneNodeDto& portal_zone_node_dto);
-        std::shared_ptr<VisibilityManagedNode> createVisibilityManagedNode(const VisibilityManagedNodeDto& visibility_managed_node_dto);
+        //std::shared_ptr<VisibilityManagedNode> createVisibilityManagedNode(const VisibilityManagedNodeDto& visibility_managed_node_dto);
 
     private:
         void registerHandlers();
@@ -122,7 +122,6 @@ namespace Enigma::SceneGraph
         void putLaziedContent(const Frameworks::ICommandPtr& c);
         void removeLaziedContent(const Frameworks::ICommandPtr& c);
 
-        void hydrateLazyNode(const Frameworks::ICommandPtr& c);
         void attachNodeChild(const Frameworks::ICommandPtr& c);
 
     private:
@@ -159,7 +158,6 @@ namespace Enigma::SceneGraph
         Frameworks::CommandSubscriberPtr m_putLaziedContent;
         Frameworks::CommandSubscriberPtr m_removeLaziedContent;
 
-        Frameworks::CommandSubscriberPtr m_hydrateLazyNode;
         Frameworks::CommandSubscriberPtr m_attachNodeChild;
     };
 }

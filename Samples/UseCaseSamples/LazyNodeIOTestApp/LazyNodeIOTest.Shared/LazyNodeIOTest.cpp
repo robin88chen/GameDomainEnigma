@@ -100,9 +100,13 @@ void LazyNodeIOTest::installEngine()
     m_onRendererCreated = std::make_shared<EventSubscriber>([=](auto e) { this->onRendererCreated(e); });
     m_onRenderTargetCreated = std::make_shared<EventSubscriber>([=](auto e) { this->onRenderTargetCreated(e); });
     m_onSceneGraphBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->onSceneGraphBuilt(e); });
+    m_onLazyNodeHydrated = std::make_shared<EventSubscriber>([=](auto e) { this->onLazyNodeHydrated(e); });
+    m_onHydrateLazyNodeFailed = std::make_shared<EventSubscriber>([=](auto e) { this->onHydrateLazyNodeFailed(e); });
     EventPublisher::subscribe(typeid(RendererCreated), m_onRendererCreated);
     EventPublisher::subscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
     EventPublisher::subscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
+    EventPublisher::subscribe(typeid(LazyNodeHydrated), m_onLazyNodeHydrated);
+    EventPublisher::subscribe(typeid(HydrateLazyNodeFailed), m_onHydrateLazyNodeFailed);
 
     assert(m_graphicMain);
 
@@ -114,7 +118,7 @@ void LazyNodeIOTest::installEngine()
     auto primitive_policy = std::make_shared<PrimitiveRepositoryInstallingPolicy>(std::make_shared<PrimitiveFileStoreMapper>("primitives.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
     auto animator_policy = std::make_shared<AnimatorInstallingPolicy>(std::make_shared<AnimatorFileStoreMapper>("animators.db.txt@DataPath", std::make_shared<DtoJsonGateway>()), std::make_shared<AnimationAssetFileStoreMapper>("animation_assets.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
     m_sceneGraphFileStoreMapper = std::make_shared<SceneGraphFileStoreMapper>("scene_graph.db.txt@DataPath", "lazy_scene.db.txt@DataPath", std::make_shared<DtoJsonGateway>());
-    auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(std::make_shared<JsonFileDtoDeserializer>(), m_sceneGraphFileStoreMapper);
+    auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(m_sceneGraphFileStoreMapper);
     auto effect_material_source_policy = std::make_shared<EffectMaterialSourceRepositoryInstallingPolicy>(std::make_shared<EffectMaterialSourceFileStoreMapper>("effect_materials.db.txt@APK_PATH"));
     auto texture_policy = std::make_shared<TextureRepositoryInstallingPolicy>(std::make_shared<TextureFileStoreMapper>("textures.db.txt@APK_PATH", std::make_shared<DtoJsonGateway>()));
     auto renderables_policy = std::make_shared<RenderablesInstallingPolicy>();
@@ -136,9 +140,13 @@ void LazyNodeIOTest::shutdownEngine()
     EventPublisher::unsubscribe(typeid(RendererCreated), m_onRendererCreated);
     EventPublisher::unsubscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
     EventPublisher::unsubscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
+    EventPublisher::unsubscribe(typeid(LazyNodeHydrated), m_onLazyNodeHydrated);
+    EventPublisher::unsubscribe(typeid(HydrateLazyNodeFailed), m_onHydrateLazyNodeFailed);
     m_onRendererCreated = nullptr;
     m_onRenderTargetCreated = nullptr;
     m_onSceneGraphBuilt = nullptr;
+    m_onLazyNodeHydrated = nullptr;
+    m_onHydrateLazyNodeFailed = nullptr;
 
     m_graphicMain->shutdownRenderEngine();
 }
@@ -197,17 +205,17 @@ void LazyNodeIOTest::makeModel()
     auto modelId = PrimitiveId("test_model", ModelPrimitive::TYPE_RTTI);
     auto animationId = AnimationAssetId("test_animation");
     auto animatorId = AnimatorId("test_animator", ModelPrimitiveAnimator::TYPE_RTTI);
-    auto pawnId = SpatialId("pawn", Pawn::TYPE_RTTI);
+    m_pawnId = SpatialId("pawn", Pawn::TYPE_RTTI);
     auto lazyNodeId = SpatialId("lazy_node", LazyNode::TYPE_RTTI);
     auto animation = SkinAnimationMaker::makeSkinMeshAnimationAsset(animationId, meshNodeNames);
     auto animator = SkinAnimationMaker::makeModelAnimator(animatorId, animationId, modelId.origin(), meshId, meshNodeNames);
     auto cube = CubeGeometryMaker::makeCube(cubeId);
     auto mesh = SkinMeshModelMaker::makeCubeMeshPrimitive(meshId, cubeId);
     m_model = SkinMeshModelMaker::makeModelPrimitive(modelId, meshId, animatorId, meshNodeNames);
-    SceneGraphMaker::makePawm(pawnId, modelId);
+    SceneGraphMaker::makePawm(m_pawnId, modelId);
     if (!m_sceneGraphFileStoreMapper->hasLaziedContent(lazyNodeId))
     {
-        auto lazy_dto = SceneGraphMaker::makeLazyNode(lazyNodeId, m_rootId, { pawnId });
+        auto lazy_dto = SceneGraphMaker::makeLazyNode(lazyNodeId, m_rootId, { m_pawnId });
         m_sceneGraphFileStoreMapper->putLaziedContent(lazyNodeId, lazy_dto);
     }
     m_sceneRoot = Node::queryNode(m_rootId);
@@ -216,15 +224,7 @@ void LazyNodeIOTest::makeModel()
         auto scene_dto = SceneGraphMaker::makeSceneGraph(m_rootId, lazyNodeId);
         m_sceneRoot = std::dynamic_pointer_cast<Node>(std::make_shared<RequestSpatialConstitution>(m_rootId, scene_dto, PersistenceLevel::Store)->dispatch());
     }
-    CommandBus::send(std::make_shared<HydrateLazyNode>(lazyNodeId));
-    auto pawn = Pawn::queryPawn(pawnId);
-    if (!pawn) return;
-    animatorId = pawn->getPrimitive()->animatorId();
-    if (const auto animator = std::dynamic_pointer_cast<ModelPrimitiveAnimator>(Animator::queryAnimator(animatorId)))
-    {
-        animator->playAnimation(Enigma::Renderables::AnimationClip{ 0.0f, 2.5f, Enigma::Renderables::AnimationClip::WarpMode::Loop, 0 });
-    }
-    CommandBus::post(std::make_shared<AddListeningAnimator>(animatorId));
+    CommandBus::post(std::make_shared<HydrateLazyNode>(lazyNodeId));
 }
 
 void LazyNodeIOTest::onRendererCreated(const IEventPtr& e)
@@ -255,4 +255,29 @@ void LazyNodeIOTest::onSceneGraphBuilt(const IEventPtr& e)
     if (top_spatials.empty()) return;
     m_sceneRoot = std::dynamic_pointer_cast<Node, Spatial>(top_spatials[0]);
     if (!m_sceneRoot) return;
+}
+
+void LazyNodeIOTest::onLazyNodeHydrated(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<LazyNodeHydrated, IEvent>(e);
+    if (!ev) return;
+    auto lazy_node = std::dynamic_pointer_cast<LazyNode>(Node::queryNode(ev->id()));
+    if (!lazy_node) return;
+    auto pawn = Pawn::queryPawn(m_pawnId);
+    if (!pawn) return;
+    auto animatorId = pawn->getPrimitive()->animatorId();
+    if (const auto animator = std::dynamic_pointer_cast<ModelPrimitiveAnimator>(Animator::queryAnimator(animatorId)))
+    {
+        animator->playAnimation(Enigma::Renderables::AnimationClip{ 0.0f, 2.5f, Enigma::Renderables::AnimationClip::WarpMode::Loop, 0 });
+    }
+    CommandBus::post(std::make_shared<AddListeningAnimator>(animatorId));
+}
+
+void LazyNodeIOTest::onHydrateLazyNodeFailed(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<HydrateLazyNodeFailed, IEvent>(e);
+    if (!ev) return;
+    Enigma::Platforms::Debug::ErrorPrintf("Hydrate lazy node %s failed : %s", ev->id().name().c_str(), ev->error().message().c_str());
 }

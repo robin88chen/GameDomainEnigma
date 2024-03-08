@@ -17,6 +17,8 @@
 
 namespace Enigma::SceneGraph
 {
+    class Camera;
+    class Pawn;
     class CameraAssembler
     {
     public:

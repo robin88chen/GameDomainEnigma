@@ -95,7 +95,7 @@ namespace Enigma::SceneGraph
         Frameworks::EventSubscriberPtr m_onFactoryCreated;
 
         Frameworks::CommandSubscriberPtr m_doBuildingSceneGraph;
-        Frameworks::CommandSubscriberPtr m_doInPlaceBuildingSceneGraph;
+        //Frameworks::CommandSubscriberPtr m_doInPlaceBuildingSceneGraph;
 
         BuiltSceneGraphMeta m_builtSceneGraphMeta;
 

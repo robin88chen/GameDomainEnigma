@@ -98,8 +98,6 @@ void SceneGraphRepository::registerHandlers()
     m_removeLaziedContent = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { removeLaziedContent(c); });
     CommandBus::subscribe(typeid(RemoveLaziedContent), m_removeLaziedContent);
 
-    m_hydrateLazyNode = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { hydrateLazyNode(c); });
-    CommandBus::subscribe(typeid(HydrateLazyNode), m_hydrateLazyNode);
     m_attachNodeChild = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { attachNodeChild(c); });
     CommandBus::subscribe(typeid(AttachNodeChild), m_attachNodeChild);
 }
@@ -136,8 +134,6 @@ void SceneGraphRepository::unregisterHandlers()
     CommandBus::unsubscribe(typeid(RemoveLaziedContent), m_removeLaziedContent);
     m_removeLaziedContent = nullptr;
 
-    CommandBus::unsubscribe(typeid(HydrateLazyNode), m_hydrateLazyNode);
-    m_hydrateLazyNode = nullptr;
     CommandBus::unsubscribe(typeid(AttachNodeChild), m_attachNodeChild);
     m_attachNodeChild = nullptr;
 }
@@ -184,7 +180,7 @@ std::shared_ptr<Node> SceneGraphRepository::createNode(const std::string& name, 
 {
     assert(!hasNode(name));
     std::shared_ptr<Node> node = nullptr;
-    if (factory_desc.GetRttiName() == Node::TYPE_RTTI.getName())
+    /*if (factory_desc.GetRttiName() == Node::TYPE_RTTI.getName())
     {
         node = std::make_shared<Node>(name);
     }
@@ -196,7 +192,7 @@ std::shared_ptr<Node> SceneGraphRepository::createNode(const std::string& name, 
     {
         node = std::make_shared<VisibilityManagedNode>(name, factory_desc);
     }
-    else if (factory_desc.GetRttiName() == PortalZoneNode::TYPE_RTTI.getName())
+    else*/ if (factory_desc.GetRttiName() == PortalZoneNode::TYPE_RTTI.getName())
     {
         node = std::make_shared<PortalZoneNode>(name, factory_desc);
     }
@@ -214,7 +210,7 @@ std::shared_ptr<Node> SceneGraphRepository::createNode(const GenericDto& dto)
 {
     assert(!hasNode(dto.getName()));
     std::shared_ptr<Node> node = nullptr;
-    if (dto.getRtti().GetRttiName() == Node::TYPE_RTTI.getName())
+    /*if (dto.getRtti().GetRttiName() == Node::TYPE_RTTI.getName())
     {
         node = std::make_shared<Node>(dto);
     }
@@ -226,7 +222,7 @@ std::shared_ptr<Node> SceneGraphRepository::createNode(const GenericDto& dto)
     {
         node = createVisibilityManagedNode(VisibilityManagedNodeDto{ dto });
     }
-    else if (dto.getRtti().GetRttiName() == PortalZoneNode::TYPE_RTTI.getName())
+    else*/ if (dto.getRtti().GetRttiName() == PortalZoneNode::TYPE_RTTI.getName())
     {
         node = createPortalZoneNode(PortalZoneNodeDto::fromGenericDto(dto));
     }
@@ -255,7 +251,7 @@ std::shared_ptr<PortalZoneNode> SceneGraphRepository::createPortalZoneNode(const
     return node;
 }
 
-std::shared_ptr<VisibilityManagedNode> SceneGraphRepository::createVisibilityManagedNode(const VisibilityManagedNodeDto& visibility_managed_node_dto)
+/*std::shared_ptr<VisibilityManagedNode> SceneGraphRepository::createVisibilityManagedNode(const VisibilityManagedNodeDto& visibility_managed_node_dto)
 {
     auto node = std::make_shared<VisibilityManagedNode>(visibility_managed_node_dto.toGenericDto());
     if (!visibility_managed_node_dto.parentName().empty())
@@ -263,7 +259,7 @@ std::shared_ptr<VisibilityManagedNode> SceneGraphRepository::createVisibilityMan
         if (const auto parent = queryNode(visibility_managed_node_dto.parentName())) parent->attachChild(node, visibility_managed_node_dto.localTransform());
     }
     return node;
-}
+}*/
 
 bool SceneGraphRepository::hasNode(const std::string& name)
 {
@@ -633,6 +629,33 @@ void SceneGraphRepository::putLaziedContent(const Frameworks::ICommandPtr& c)
     putLaziedContent(cmd->lazyNode());
 }
 
+void SceneGraphRepository::hydrateLazyNode(const SpatialId& id)
+{
+    auto lazy_node = std::dynamic_pointer_cast<LazyNode>(querySpatial(id));
+    if (!lazy_node)
+    {
+        EventPublisher::post(std::make_shared<HydrateLazyNodeFailed>(id, ErrorCode::nodeNotFound));
+        return;
+    }
+    if (!lazy_node->lazyStatus().isInQueue()) return;
+    lazy_node->lazyStatus().changeStatus(LazyStatus::Status::Loading);
+    const auto content = m_storeMapper->queryLaziedContent(id);
+    if (!content)
+    {
+        lazy_node->lazyStatus().changeStatus(LazyStatus::Status::Failed);
+        EventPublisher::post(std::make_shared<HydrateLazyNodeFailed>(id, ErrorCode::laziedContentNotFound));
+        return;
+    }
+    if (error er = lazy_node->hydrate(content.value()))
+    {
+        EventPublisher::post(std::make_shared<HydrateLazyNodeFailed>(id, er));
+    }
+    else
+    {
+        EventPublisher::post(std::make_shared<LazyNodeHydrated>(id));
+    }
+}
+
 void SceneGraphRepository::removeLaziedContent(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
@@ -641,35 +664,6 @@ void SceneGraphRepository::removeLaziedContent(const Frameworks::ICommandPtr& c)
     removeLaziedContent(cmd->id());
 }
 
-void SceneGraphRepository::hydrateLazyNode(const Frameworks::ICommandPtr& c)
-{
-    if (!c) return;
-    const auto cmd = std::dynamic_pointer_cast<HydrateLazyNode>(c);
-    assert(cmd);
-    auto lazy_node = std::dynamic_pointer_cast<LazyNode>(querySpatial(cmd->id()));
-    if (!lazy_node)
-    {
-        EventPublisher::post(std::make_shared<HydrateLazyNodeFailed>(cmd->id(), ErrorCode::nodeNotFound));
-        return;
-    }
-    if (!lazy_node->lazyStatus().isInQueue()) return;
-    lazy_node->lazyStatus().changeStatus(LazyStatus::Status::Loading);
-    const auto content = m_storeMapper->queryLaziedContent(cmd->id());
-    if (!content)
-    {
-        lazy_node->lazyStatus().changeStatus(LazyStatus::Status::Failed);
-        EventPublisher::post(std::make_shared<HydrateLazyNodeFailed>(cmd->id(), ErrorCode::laziedContentNotFound));
-        return;
-    }
-    if (error er = lazy_node->hydrate(content.value()))
-    {
-        EventPublisher::post(std::make_shared<HydrateLazyNodeFailed>(cmd->id(), er));
-    }
-    else
-    {
-        EventPublisher::post(std::make_shared<LazyNodeHydrated>(cmd->id()));
-    }
-}
 
 void SceneGraphRepository::attachNodeChild(const Frameworks::ICommandPtr& c)
 {

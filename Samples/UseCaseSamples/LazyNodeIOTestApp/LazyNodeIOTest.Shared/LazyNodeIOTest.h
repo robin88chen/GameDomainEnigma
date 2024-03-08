@@ -45,6 +45,8 @@ protected:
     void onRendererCreated(const Enigma::Frameworks::IEventPtr& e);
     void onRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e);
     void onSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
+    void onLazyNodeHydrated(const Enigma::Frameworks::IEventPtr& e);
+    void onHydrateLazyNodeFailed(const Enigma::Frameworks::IEventPtr& e);
 
 private:
     void makeCamera();
@@ -58,6 +60,8 @@ protected:
     Enigma::Frameworks::EventSubscriberPtr m_onRendererCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onRenderTargetCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
+    Enigma::Frameworks::EventSubscriberPtr m_onLazyNodeHydrated;
+    Enigma::Frameworks::EventSubscriberPtr m_onHydrateLazyNodeFailed;
 
     std::shared_ptr<Enigma::FileStorage::SceneGraphFileStoreMapper> m_sceneGraphFileStoreMapper;
     Enigma::Renderer::RendererPtr m_renderer;
@@ -65,6 +69,7 @@ protected:
     std::shared_ptr<Enigma::Renderables::ModelPrimitive> m_model;
     Enigma::SceneGraph::SpatialId m_rootId;
     Enigma::SceneGraph::NodePtr m_sceneRoot;
+    Enigma::SceneGraph::SpatialId m_pawnId;
     Enigma::SceneGraph::PawnPtr m_pawn;
 
     Enigma::SceneGraph::SpatialId m_cameraId;

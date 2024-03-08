@@ -70,10 +70,10 @@ SceneGraphBuilder::SceneGraphBuilder(SceneGraphRepository* host, const std::shar
 
     m_doBuildingSceneGraph =
         std::make_shared<CommandSubscriber>([=](auto c) { this->DoBuildingSceneGraph(c); });
-    m_doInPlaceBuildingSceneGraph =
-        std::make_shared<CommandSubscriber>([=](auto c) { this->DoBuildingSceneGraph(c); });
+    //m_doInPlaceBuildingSceneGraph =
+      //  std::make_shared<CommandSubscriber>([=](auto c) { this->DoBuildingSceneGraph(c); });
     CommandBus::subscribe(typeid(SceneGraph::BuildSceneGraph), m_doBuildingSceneGraph);
-    CommandBus::subscribe(typeid(SceneGraph::InPlaceBuildSceneGraph), m_doInPlaceBuildingSceneGraph);
+    //CommandBus::subscribe(typeid(SceneGraph::InPlaceBuildSceneGraph), m_doInPlaceBuildingSceneGraph);
 }
 
 SceneGraphBuilder::~SceneGraphBuilder()
@@ -88,9 +88,9 @@ SceneGraphBuilder::~SceneGraphBuilder()
     m_doInvokingSpatialDtoFactory = nullptr;
 
     CommandBus::unsubscribe(typeid(SceneGraph::BuildSceneGraph), m_doBuildingSceneGraph);
-    CommandBus::unsubscribe(typeid(SceneGraph::InPlaceBuildSceneGraph), m_doInPlaceBuildingSceneGraph);
+    //CommandBus::unsubscribe(typeid(SceneGraph::InPlaceBuildSceneGraph), m_doInPlaceBuildingSceneGraph);
     m_doBuildingSceneGraph = nullptr;
-    m_doInPlaceBuildingSceneGraph = nullptr;
+    //m_doInPlaceBuildingSceneGraph = nullptr;
 
     //EventPublisher::unsubscribe(typeid(RenderablePrimitiveBuilt), m_onPrimitiveBuilt);
     //m_onPrimitiveBuilt = nullptr;
@@ -284,10 +284,10 @@ void SceneGraphBuilder::BuildNextSceneGraph()
     {
         BuildSceneGraph(cmd->GetSceneGraphId(), cmd->GetDtos());
     }
-    else if (auto cmd = std::dynamic_pointer_cast<SceneGraph::InPlaceBuildSceneGraph, ICommand>(c))
+    /*else if (auto cmd = std::dynamic_pointer_cast<SceneGraph::InPlaceBuildSceneGraph, ICommand>(c))
     {
         InPlaceBuildSceneGraph(cmd->GetOwnerNode(), cmd->GetDtos());
-    }
+    }*/
 }
 
 void SceneGraphBuilder::OnFactoryCreated(const Frameworks::IEventPtr& e)

@@ -1,5 +1,5 @@
 ﻿#include "VisibilityManagedTest.h"
-#include "Platforms/MemoryAllocMacro.h"
+#include "Platforms/MemoryMacro.h"
 #include <windows.h>
 #include <tchar.h>
 #include <assert.h>
@@ -12,14 +12,14 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
     meInitMemoryCheck();
     //_CrtSetBreakAlloc(40098);
     VisibilityManagedTest* app = menew VisibilityManagedTest("visibility managed test");
-    app->Initialize(Enigma::Graphics::IGraphicAPI::APIVersion::API_Dx11, Enigma::Graphics::IGraphicAPI::AsyncType::UseAsyncDevice);
+    app->initialize(Enigma::Graphics::IGraphicAPI::APIVersion::API_Dx11, Enigma::Graphics::IGraphicAPI::AsyncType::UseAsyncDevice);
     RECT rc;
-    GetClientRect(app->GetWnd(), &rc);
-    app->OnFrameSizeChanged(rc.right - rc.left, rc.bottom - rc.top);
+    GetClientRect(app->getWnd(), &rc);
+    app->onFrameSizeChanged(rc.right - rc.left, rc.bottom - rc.top);
     //app->CreateScene();
-    app->Run();
+    app->run();
     //app->DestroyScene();
-    app->Finalize();
+    app->finalize();
 
     delete app;
     return 0;

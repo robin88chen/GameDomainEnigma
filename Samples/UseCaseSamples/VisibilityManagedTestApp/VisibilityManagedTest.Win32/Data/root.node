@@ -1,0 +1,226 @@
+[{
+        "LocalTransform": {
+            "Type": "Matrix4",
+            "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+        },
+        "Rtti": {
+            "Type": "FactoryDesc",
+            "Value": {
+                "InstanceType": 0,
+                "ResourceName": "",
+                "ResourceFilename": "",
+                "RttiName": "En.SceneGraph.Node",
+                "PrefabFilename": "root.node@DataPath"
+            }
+        },
+        "ModelBound": {
+            "Type": "DataObject",
+            "Value": {
+                "BoxBV": {
+                    "Type": "Box3",
+                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0]
+                }
+            }
+        },
+        "TopLevel": {
+            "Type": "Boolean",
+            "Value": false
+        },
+        "Name": {
+            "Type": "String",
+            "Value": "root"
+        },
+        "NotifyFlag": {
+            "Type": "Uint32",
+            "Value": 0
+        },
+        "GraphDepth": {
+            "Type": "Uint32",
+            "Value": 0
+        },
+        "Id": {
+            "Type": "StringArray",
+            "Value": ["root", "En.SceneGraph.Node"]
+        },
+        "WorldTransform": {
+            "Type": "Matrix4",
+            "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+        },
+        "WorldBound": {
+            "Type": "DataObject",
+            "Value": {
+                "BoxBV": {
+                    "Type": "Box3",
+                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0]
+                }
+            }
+        },
+        "CullingMode": {
+            "Type": "Uint32",
+            "Value": 0
+        },
+        "SpatialFlag": {
+            "Type": "Uint32",
+            "Value": 4
+        },
+        "Children": {
+            "Type": "DataObjectArray",
+            "Value": [{
+                    "Id": {
+                        "Type": "StringArray",
+                        "Value": ["child1", "En.SceneGraph.Node"]
+                    },
+                    "NativeDto": {
+                        "Type": "DataObject",
+                        "Value": {
+                            "LocalTransform": {
+                                "Type": "Matrix4",
+                                "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+                            },
+                            "Rtti": {
+                                "Type": "FactoryDesc",
+                                "Value": {
+                                    "InstanceType": 0,
+                                    "ResourceName": "",
+                                    "ResourceFilename": "",
+                                    "RttiName": "En.SceneGraph.Node",
+                                    "PrefabFilename": ""
+                                }
+                            },
+                            "ModelBound": {
+                                "Type": "DataObject",
+                                "Value": {
+                                    "BoxBV": {
+                                        "Type": "Box3",
+                                        "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0]
+                                    }
+                                }
+                            },
+                            "TopLevel": {
+                                "Type": "Boolean",
+                                "Value": false
+                            },
+                            "NotifyFlag": {
+                                "Type": "Uint32",
+                                "Value": 0
+                            },
+                            "Name": {
+                                "Type": "String",
+                                "Value": "child1"
+                            },
+                            "Id": {
+                                "Type": "StringArray",
+                                "Value": ["child1", "En.SceneGraph.Node"]
+                            },
+                            "GraphDepth": {
+                                "Type": "Uint32",
+                                "Value": 0
+                            },
+                            "WorldTransform": {
+                                "Type": "Matrix4",
+                                "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+                            },
+                            "WorldBound": {
+                                "Type": "DataObject",
+                                "Value": {
+                                    "BoxBV": {
+                                        "Type": "Box3",
+                                        "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0]
+                                    }
+                                }
+                            },
+                            "CullingMode": {
+                                "Type": "Uint32",
+                                "Value": 0
+                            },
+                            "SpatialFlag": {
+                                "Type": "Uint32",
+                                "Value": 4
+                            },
+                            "Children": {
+                                "Type": "DataObjectArray",
+                                "Value": []
+                            }
+                        }
+                    }
+                }, {
+                    "Id": {
+                        "Type": "StringArray",
+                        "Value": ["lazy_node", "En.SceneGraph.LazyNode"]
+                    },
+                    "NativeDto": {
+                        "Type": "DataObject",
+                        "Value": {
+                            "LocalTransform": {
+                                "Type": "Matrix4",
+                                "Value": [1.0, 0.0, 0.0, 2.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+                            },
+                            "Rtti": {
+                                "Type": "FactoryDesc",
+                                "Value": {
+                                    "InstanceType": 2,
+                                    "ResourceName": "",
+                                    "ResourceFilename": "",
+                                    "RttiName": "En.SceneGraph.VisibilityManagedNode",
+                                    "PrefabFilename": "lazy_node.node@DataPath"
+                                }
+                            },
+                            "ModelBound": {
+                                "Type": "DataObject",
+                                "Value": {
+                                    "BoxBV": {
+                                        "Type": "Box3",
+                                        "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0]
+                                    }
+                                }
+                            },
+                            "TopLevel": {
+                                "Type": "Boolean",
+                                "Value": false
+                            },
+                            "NotifyFlag": {
+                                "Type": "Uint32",
+                                "Value": 0
+                            },
+                            "Name": {
+                                "Type": "String",
+                                "Value": "lazy_node"
+                            },
+                            "Id": {
+                                "Type": "StringArray",
+                                "Value": ["lazy_node", "En.SceneGraph.LazyNode"]
+                            },
+                            "GraphDepth": {
+                                "Type": "Uint32",
+                                "Value": 0
+                            },
+                            "WorldTransform": {
+                                "Type": "Matrix4",
+                                "Value": [1.0, 0.0, 0.0, 2.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+                            },
+                            "WorldBound": {
+                                "Type": "DataObject",
+                                "Value": {
+                                    "BoxBV": {
+                                        "Type": "Box3",
+                                        "Value": [2.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0]
+                                    }
+                                }
+                            },
+                            "CullingMode": {
+                                "Type": "Uint32",
+                                "Value": 0
+                            },
+                            "SpatialFlag": {
+                                "Type": "Uint32",
+                                "Value": 4
+                            },
+                            "Children": {
+                                "Type": "DataObjectArray",
+                                "Value": []
+                            }
+                        }
+                    }
+                }]
+        }
+    }]

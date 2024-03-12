@@ -16,7 +16,7 @@ Light::Light(const SpatialId& id, const LightInfo& lightInfo) : Spatial(id), m_l
     m_factoryDesc = Engine::FactoryDesc(Light::TYPE_RTTI.getName());
 }
 
-Light::Light(const Engine::GenericDto& o) : Spatial(o)
+Light::Light(const SpatialId& id, const Engine::GenericDto& o) : Spatial(id, o)
 {
     LightDto dto{ o };
     m_lightInfo = LightInfo(dto.lightInfo());

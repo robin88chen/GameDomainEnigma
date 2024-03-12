@@ -122,10 +122,11 @@ std::shared_ptr<WorldMap> WorldMapService::deserializeWorldMap(const std::string
 std::shared_ptr<WorldMap> WorldMapService::createWorldMap(const std::string& name, const Engine::FactoryDesc& factory_desc, const std::shared_ptr<SceneGraph::PortalManagementNode>& portal_management_node)
 {
     assert(!m_sceneGraphRepository.expired());
-    auto root_node = std::dynamic_pointer_cast<PortalZoneNode>(m_sceneGraphRepository.lock()->createNode(name, Engine::FactoryDesc(PortalZoneNode::TYPE_RTTI.getName()).ClaimAsInstanced(name + ".node").PathId(factory_desc.PathId())));
-    if (portal_management_node) portal_management_node->attachOutsideZone(root_node);
-    const auto world = std::make_shared<WorldMap>(name, factory_desc, root_node);
-    return world;
+    //auto root_node = std::dynamic_pointer_cast<PortalZoneNode>(m_sceneGraphRepository.lock()->createNode(name, Engine::FactoryDesc(PortalZoneNode::TYPE_RTTI.getName()).ClaimAsInstanced(name + ".node").PathId(factory_desc.PathId())));
+    //if (portal_management_node) portal_management_node->attachOutsideZone(root_node);
+    //const auto world = std::make_shared<WorldMap>(name, factory_desc, root_node);
+    //return world;
+    return nullptr;
 }
 
 void WorldMapService::completeCreateWorldMap(const std::shared_ptr<WorldMap>& world)
@@ -201,7 +202,7 @@ std::shared_ptr<Node> WorldMapService::findFittingQuadLeaf(const std::shared_ptr
     bool envelop = testSubTreeQuadEnvelop(sub_tree_box_in_parent, bv_in_node);
     if (!envelop) return parent;  // 下一層放不下這物件，返回本層
 
-    auto fitting_node = findTargetSubtree(parent, parent->getSpatialName(), sub_tree_index);
+    auto fitting_node = findTargetSubtree(parent, parent->id().name(), sub_tree_index);
     if (!fitting_node) return nullptr;
     //todo : 原做法會再細切子節點，違背 CQS原則，要改成 query 失敗後，再送 command 細切子節點
     Matrix4 fitting_node_inv_local_mx = fitting_node->getLocalTransform().Inverse();
@@ -259,7 +260,7 @@ Enigma::Engine::GenericDtoCollection WorldMapService::createFittingQuadGraph(con
     std::vector<VisibilityManagedNodeDto> sub_quad_dtos;
 
     int depth = MAX_RECURSIVE_DEPTH;
-    std::string parent_node_name = root->getSpatialName();
+    std::string parent_node_name = root->id().name();
     //Matrix4 parent_world_mx = root->getWorldTransform();
     MathLib::Box3 parent_box = root->getModelBound().BoundingBox3().value();
     Engine::BoundingVolume dest_bv_in_node = dest_bv_in_root;
@@ -279,7 +280,7 @@ Enigma::Engine::GenericDtoCollection WorldMapService::createFittingQuadGraph(con
             sub_tree = findTargetSubtree(root, parent_node_name, sub_tree_index);
             if (sub_tree)
             {
-                parent_node_name = sub_tree->getSpatialName();
+                parent_node_name = sub_tree->id().name();
                 parent_box = sub_tree->getModelBound().BoundingBox3().value();
                 Matrix4 parent_inv_local_mx = sub_tree->getLocalTransform().Inverse();
                 dest_bv_in_node = Engine::BoundingVolume::CreateFromTransform(dest_bv_in_node, parent_inv_local_mx);
@@ -300,8 +301,8 @@ Enigma::Engine::GenericDtoCollection WorldMapService::createFittingQuadGraph(con
                 //m_fittingParentName = parent_node_name;
                 m_fittingParentId = SpatialId(parent_node_name, VisibilityManagedNode::TYPE_RTTI);
             }
-            linkQuadTreeChild(sub_quad_dtos, parent_node_name, dto.name());
-            parent_node_name = dto.name();
+            linkQuadTreeChild(sub_quad_dtos, parent_node_name, dto.id().name());
+            parent_node_name = dto.id().name();
             parent_box = Engine::BoundingVolumeDto::fromGenericDto(dto.modelBound()).box().value();
             Matrix4 parent_inv_local_mx = dto.localTransform().Inverse();
             dest_bv_in_node = Engine::BoundingVolume::CreateFromTransform(dest_bv_in_node, parent_inv_local_mx);
@@ -323,7 +324,7 @@ VisibilityManagedNodeDto WorldMapService::createSubQuadNodeDto(const std::string
     VisibilityManagedNodeDto dto;
     dto.factoryDesc() = Engine::FactoryDesc(VisibilityManagedNode::TYPE_RTTI.getName());
     std::string target_node_name = parent_name + "_" + string_format("%d", sub_tree_index); // +NODE_FILE_EXT;
-    dto.name() = target_node_name;
+    dto.id() = SpatialId(target_node_name, VisibilityManagedNode::TYPE_RTTI);
     Box3 sub_quad_box = sub_tree_box_in_parent;
     sub_quad_box.Center() = Vector3::ZERO;
     Engine::BoundingVolume sub_quad_bv = Engine::BoundingVolume{ sub_quad_box };
@@ -337,7 +338,7 @@ void WorldMapService::linkQuadTreeChild(std::vector<SceneGraph::VisibilityManage
 {
     for (auto& dto : node_dtos)
     {
-        if (dto.name() == parent_name)
+        if (dto.id().name() == parent_name)
         {
             //todo : use child id
             dto.children().push_back(NodeDto::ChildDto{ SpatialId(child_name, VisibilityManagedNode::TYPE_RTTI), dto.toGenericDto() });
@@ -469,7 +470,7 @@ void WorldMapService::createEmptyWorldMap(const ICommandPtr& c)
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<CreateEmptyWorldMap, ICommand>(c);
     if (!cmd) return;
-    const auto portal_management_node = std::dynamic_pointer_cast<PortalManagementNode>(m_sceneGraphRepository.lock()->queryNode(cmd->portalManagerName()));
+    const auto portal_management_node = nullptr; // std::dynamic_pointer_cast<PortalManagementNode>(m_sceneGraphRepository.lock()->queryNode(cmd->portalManagerName()));
     if (!portal_management_node)
     {
         failCreateWorldMap(cmd->name(), ErrorCode::nullPortalManager);
@@ -484,7 +485,7 @@ void WorldMapService::deserializeWorldMap(const ICommandPtr& c)
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<DeserializeWorldMap, ICommand>(c);
     if (!cmd) return;
-    const auto portal_management_node = std::dynamic_pointer_cast<PortalManagementNode>(m_sceneGraphRepository.lock()->queryNode(cmd->portalManagerName()));
+    const auto portal_management_node = nullptr; // std::dynamic_pointer_cast<PortalManagementNode>(m_sceneGraphRepository.lock()->queryNode(cmd->portalManagerName()));
     if (!portal_management_node)
     {
         failDeserializeWorldMap(cmd->name(), ErrorCode::nullPortalManager);

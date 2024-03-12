@@ -21,7 +21,7 @@ VisibilityManagedNode::VisibilityManagedNode(const SpatialId& id, const Engine::
 {
 }
 
-VisibilityManagedNode::VisibilityManagedNode(const std::string& name, const FactoryDesc& factory_desc)
+/*VisibilityManagedNode::VisibilityManagedNode(const std::string& name, const FactoryDesc& factory_desc)
     : LazyNode(name, factory_desc)
 {
     assert(Frameworks::Rtti::isExactlyOrDerivedFrom(factory_desc.GetRttiName(), VisibilityManagedNode::TYPE_RTTI.getName()));
@@ -30,7 +30,7 @@ VisibilityManagedNode::VisibilityManagedNode(const std::string& name, const Fact
 VisibilityManagedNode::VisibilityManagedNode(const GenericDto& dto)
     : LazyNode(dto)
 {
-}
+}*/
 
 VisibilityManagedNode::~VisibilityManagedNode()
 {

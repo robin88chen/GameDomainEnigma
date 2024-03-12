@@ -55,7 +55,7 @@ namespace Enigma::SceneGraph
         Engine::GenericDto m_dto;
         PersistenceLevel m_persistenceLevel;
     };
-    class QueryNode : public Frameworks::Query<std::shared_ptr<Node>>
+    /*class QueryNode : public Frameworks::Query<std::shared_ptr<Node>>
     {
     public:
         QueryNode(const std::string& name) : m_name(name) {}
@@ -64,7 +64,7 @@ namespace Enigma::SceneGraph
 
     protected:
         std::string m_name;
-    };
+    };*/
     class QuerySpatial : public Frameworks::Query<std::shared_ptr<Spatial>>
     {
     public:

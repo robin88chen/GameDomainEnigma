@@ -23,16 +23,21 @@ namespace Enigma::SceneGraph
     {
         DECLARE_EN_RTTI;
     public:
-        PortalManagementNode(const std::string& name);
-        PortalManagementNode(const Engine::GenericDto& dto);
+        PortalManagementNode(const SpatialId& id);
+        PortalManagementNode(const SpatialId& id, const Engine::GenericDto& o);
+        //PortalManagementNode(const std::string& name);
+        //PortalManagementNode(const Engine::GenericDto& dto);
         PortalManagementNode(const PortalManagementNode&) = delete;
         PortalManagementNode(PortalManagementNode&&) = delete;
         PortalManagementNode& operator=(const PortalManagementNode&) = delete;
         PortalManagementNode& operator=(PortalManagementNode&&) = delete;
         virtual ~PortalManagementNode() override;
 
+        static std::shared_ptr<PortalManagementNode> create(const SpatialId& id);
+        static std::shared_ptr<PortalManagementNode> constitute(const SpatialId& id, const Engine::GenericDto& dto);
+
         virtual Engine::GenericDto serializeDto() override;
-        virtual void resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver) override;
+        //virtual void resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver) override;
 
         void attachOutsideZone(const std::shared_ptr<PortalZoneNode>& node);
 
@@ -43,8 +48,8 @@ namespace Enigma::SceneGraph
         void attachOutsideZone(const Frameworks::ICommandPtr& c);
 
     protected:
-        std::shared_ptr<PortalZoneNode> m_outsideZone;
-        std::shared_ptr<PortalZoneNode> m_cachedStartZone;
+        SpatialId m_outsideZoneId;
+        std::weak_ptr<PortalZoneNode> m_cachedStartZone;
 
         Frameworks::CommandSubscriberPtr m_attachOutsideZone;
     };

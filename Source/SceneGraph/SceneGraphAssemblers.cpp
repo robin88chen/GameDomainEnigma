@@ -87,7 +87,7 @@ SpatialAssembler::SpatialAssembler(const SpatialId& id)
     m_dto.id() = id;
     m_modelBound = Engine::BoundingVolume{ MathLib::Box3::UNIT_BOX };
     m_dto.factoryDesc() = Engine::FactoryDesc(Spatial::TYPE_RTTI.getName());
-    m_dto.name() = id.name();
+    //m_dto.name() = id.name();
     m_dto.isTopLevel() = false;
     m_dto.localTransform() = MathLib::Matrix4::IDENTITY;
     m_dto.worldTransform() = MathLib::Matrix4::IDENTITY;
@@ -161,7 +161,7 @@ PawnAssembler::PawnAssembler(const SpatialId& id)
     m_dto.id() = id;
     m_modelBound = Engine::BoundingVolume{ MathLib::Box3::UNIT_BOX };
     m_dto.factoryDesc() = Engine::FactoryDesc(Pawn::TYPE_RTTI.getName());
-    m_dto.name() = id.name();
+    //m_dto.name() = id.name();
     m_dto.isTopLevel() = false;
     m_dto.localTransform() = MathLib::Matrix4::IDENTITY;
     m_dto.worldTransform() = MathLib::Matrix4::IDENTITY;
@@ -176,7 +176,7 @@ PawnAssembler::PawnAssembler(const SpatialId& id)
 PawnAssembler& PawnAssembler::factory(const Engine::FactoryDesc& factory)
 {
     m_dto.factoryDesc() = factory;
-    m_dto.id() = SpatialId(m_dto.name(), Frameworks::Rtti::fromName(factory.GetRttiName()));
+    m_dto.id() = SpatialId(m_dto.id().name(), Frameworks::Rtti::fromName(factory.GetRttiName()));
     return *this;
 }
 

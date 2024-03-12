@@ -34,7 +34,6 @@ GenericDto SceneGraphMaker::makeLazyNode(const SpatialId& id, const SpatialId& p
     lazy_dto.id() = id;
     lazy_dto.isTopLevel() = true;
     lazy_dto.factoryDesc() = FactoryDesc(LazyNode::TYPE_RTTI.getName()).ClaimAsDeferred(id.name() + ".node", "DataPath");
-    lazy_dto.name() = id.name();
     lazy_dto.localTransform() = Matrix4::MakeTranslateTransform(Vector3(2.0f, 0.0f, 0.0f));
     lazy_dto.worldTransform() = lazy_dto.localTransform();
     lazy_dto.modelBound() = unit_bv.serializeDto().toGenericDto();
@@ -53,7 +52,6 @@ GenericDto SceneGraphMaker::makeSceneGraph(const SpatialId& root_id, const Spati
     BoundingVolume root_bv(Box3::UNIT_BOX);
     NodeDto root_dto;
     root_dto.id() = root_id;
-    root_dto.name() = root_id.name();
     root_dto.factoryDesc() = FactoryDesc(Node::TYPE_RTTI.getName()).ClaimAsNative(root_id.name() + ".node@DataPath");
     root_dto.localTransform() = Matrix4::IDENTITY;
     root_dto.worldTransform() = Matrix4::IDENTITY;
@@ -65,7 +63,6 @@ GenericDto SceneGraphMaker::makeSceneGraph(const SpatialId& root_id, const Spati
     BoundingVolume child_bv(Box3::UNIT_BOX);
     NodeDto child1_dto;
     child1_dto.id() = SpatialId("child1", Node::TYPE_RTTI);
-    child1_dto.name() = "child1";
     child1_dto.localTransform() = Matrix4::IDENTITY;
     child1_dto.worldTransform() = root_dto.worldTransform() * child1_dto.localTransform();
     child1_dto.modelBound() = child_bv.serializeDto().toGenericDto();
@@ -75,7 +72,6 @@ GenericDto SceneGraphMaker::makeSceneGraph(const SpatialId& root_id, const Spati
     LazyNodeDto lazy_dto;
     lazy_dto.id() = lazy_node_id;
     lazy_dto.factoryDesc() = FactoryDesc(LazyNode::TYPE_RTTI.getName()).ClaimAsInstanced(lazy_node_id.name() + ".node", "DataPath");
-    lazy_dto.name() = lazy_node_id.name();
     lazy_dto.localTransform() = Matrix4::MakeTranslateTransform(Vector3(2.0f, 0.0f, 0.0f));
     lazy_dto.worldTransform() = root_dto.worldTransform() * lazy_dto.localTransform();
     lazy_dto.modelBound() = child_bv.serializeDto().toGenericDto();

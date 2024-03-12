@@ -30,8 +30,8 @@ namespace Enigma::SceneGraph
         Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
         [[nodiscard]] bool isTopLevel() const { return m_isTopLevel; }
         bool& isTopLevel() { return m_isTopLevel; }
-        const std::string& name() const { return m_name; }
-        std::string& name() { return m_name; }
+        //const std::string& name() const { return m_name; }
+        //std::string& name() { return m_name; }
         SpatialId& id() { return m_id; }
         [[nodiscard]] const SpatialId& id() const { return m_id; }
         const std::string& parentName() const { return m_parentName; }
@@ -61,7 +61,7 @@ namespace Enigma::SceneGraph
     protected:
         Engine::FactoryDesc m_factoryDesc;
         bool m_isTopLevel;
-        std::string m_name;
+        //std::string m_name;
         SpatialId m_id;
         std::string m_parentName;
         MathLib::Matrix4 m_localTransform;

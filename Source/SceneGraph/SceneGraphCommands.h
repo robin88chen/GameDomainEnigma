@@ -35,17 +35,6 @@ namespace Enigma::SceneGraph
         std::string m_id;
         Engine::GenericDtoCollection m_dtos;
     };
-
-    class InstanceLazyNode : public Frameworks::ICommand
-    {
-    public:
-        InstanceLazyNode(const std::shared_ptr<LazyNode>& node) : m_node(node) {}
-
-        const std::shared_ptr<LazyNode>& GetNode() { return m_node; }
-
-    protected:
-        std::shared_ptr<LazyNode> m_node;
-    };
     //--------------------------------------------------------------------------------
     using SpatialDtoFactory = std::function<Spatial* (const Engine::GenericDto& dto)>;
 

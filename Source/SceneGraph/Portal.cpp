@@ -4,6 +4,7 @@
 #include "SceneGraphErrors.h"
 #include "Culler.h"
 #include "Camera.h"
+#include "SceneGraphQueries.h"
 #include "Platforms/PlatformLayerUtilities.h"
 
 using namespace Enigma::SceneGraph;
@@ -19,7 +20,22 @@ Vector3 s_vecPortalLocalQuad[PORTAL_VERTEX_COUNT] =
 
 DEFINE_RTTI(SceneGraph, Portal, Spatial);
 
-Portal::Portal(const std::string& name) : Spatial(name)
+Portal::Portal(const SpatialId& id) : Spatial(id)
+{
+    m_factoryDesc = FactoryDesc(Portal::TYPE_RTTI.getName());
+    m_isOpen = false;
+    m_zoneLoadStatus = ZoneLoadStatus::None;
+}
+
+Portal::Portal(const SpatialId& id, const Engine::GenericDto& o) : Spatial(id, o)
+{
+    PortalDto dto{ o };
+    m_isOpen = dto.isOpen();
+    m_adjacentZoneId = dto.adjacentZoneNodeId();
+    m_zoneLoadStatus = ZoneLoadStatus::None;
+}
+
+/*Portal::Portal(const std::string& name) : Spatial(name)
 {
     m_factoryDesc = FactoryDesc(Portal::TYPE_RTTI.getName());
     m_isOpen = false;
@@ -28,48 +44,82 @@ Portal::Portal(const std::string& name) : Spatial(name)
 
 Portal::Portal(const GenericDto& o) : Spatial(o)
 {
-    PortalDto dto = PortalDto::fromGenericDto(o);
+    PortalDto dto{ o };
     m_isOpen = dto.isOpen();
     m_zoneLoadStatus = ZoneLoadStatus::None;
-}
+}*/
 
 Portal::~Portal()
 {
+}
+
+std::shared_ptr<Portal> Portal::queryPortal(const SpatialId& id)
+{
+    assert(id.rtti().isDerived(Portal::TYPE_RTTI));
+    return std::dynamic_pointer_cast<Portal, Spatial>(std::make_shared<QuerySpatial>(id)->dispatch());
+}
+
+std::shared_ptr<Portal> Portal::create(const SpatialId& id)
+{
+    return std::make_shared<Portal>(id);
+}
+
+std::shared_ptr<Portal> Portal::constitute(const SpatialId& id, const Engine::GenericDto& dto)
+{
+    return std::make_shared<Portal>(id, dto);
 }
 
 Enigma::Engine::GenericDto Portal::serializeDto()
 {
     PortalDto dto(serializeSpatialDto());
     dto.isOpen() = m_isOpen;
-    if (!m_adjacentPortalZone.expired()) dto.adjacentZoneNodeName() = m_adjacentPortalZone.lock()->getSpatialName();
+    dto.adjacentZoneNodeId() = m_adjacentZoneId;
     return dto.toGenericDto();
 }
 
-void Portal::resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver)
+/*void Portal::resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver)
 {
-    PortalDto portalDto = PortalDto::fromGenericDto(dto);
-    resolver.tryResolveLinkage(portalDto.adjacentZoneNodeName(), [lifetime = weak_from_this()](auto sp)
+    PortalDto portalDto{ dto };
+    resolver.tryResolveLinkage(portalDto.adjacentZoneNodeId().name(), [lifetime = weak_from_this()](auto sp)
         {
             if (!lifetime.expired())
                 std::dynamic_pointer_cast<Portal, Spatial>(lifetime.lock())->setAdjacentZone(std::dynamic_pointer_cast<PortalZoneNode, Spatial>(sp));
         });
+}*/
+
+void Portal::setAdjacentZone(const SpatialId& id)
+{
+    m_adjacentZoneId = id;
+    if (auto zone = getAdjacentZone())
+    {
+        zone->setPortalParent(m_id);
+    }
 }
 
-void Portal::setAdjacentZone(const std::shared_ptr<PortalZoneNode>& node)
+std::shared_ptr<PortalZoneNode> Portal::getAdjacentZone()
 {
-    m_adjacentPortalZone = node;
-    if (!m_adjacentPortalZone.expired())
+    if ((m_adjacentPortalZone.expired()) || (m_adjacentPortalZone.lock()->id() != m_adjacentZoneId))
     {
-        m_adjacentPortalZone.lock()->setPortalParent(shared_from_this());
-        m_zoneLoadStatus = ZoneLoadStatus::Done;
+        m_zoneLoadStatus = ZoneLoadStatus::None;
+        if (m_adjacentZoneId.isValid())
+        {
+            m_adjacentPortalZone = std::dynamic_pointer_cast<PortalZoneNode>(Node::queryNode(m_adjacentZoneId));
+            if (!m_adjacentPortalZone.expired()) m_zoneLoadStatus = ZoneLoadStatus::Done;
+        }
+        else
+        {
+            m_adjacentPortalZone.reset();
+        }
     }
+    return m_adjacentPortalZone.lock();
 }
 
 error Portal::onCullingVisible(Culler* culler, bool noCull)
 {
-    if (m_adjacentPortalZone.expired()) return ErrorCode::ok;
+    const auto zone = getAdjacentZone();
+    if (!zone) return ErrorCode::ok;
 
-    error er = m_adjacentPortalZone.lock()->cullVisibleSet(culler, noCull);
+    error er = zone->cullVisibleSet(culler, noCull);
     if (er) return er;
 
     return er;
@@ -81,9 +131,10 @@ error Portal::cullVisibleSet(Culler* culler, bool noCull)
     if (FATAL_LOG_EXPR((!culler) || (!culler->GetCamera()))) return ErrorCode::nullCullerCamera;
 
     if (!m_isOpen) return ErrorCode::ok;
-    if (m_adjacentPortalZone.expired()) return ErrorCode::ok;
+    const auto zone = getAdjacentZone();
+    if (!zone) return ErrorCode::ok;
 
-    bool isPortalPass = culler->IsVisible(&m_vecPortalQuadWorldPos[0], PORTAL_VERTEX_COUNT, true);
+    const bool isPortalPass = culler->IsVisible(&m_vecPortalQuadWorldPos[0], PORTAL_VERTEX_COUNT, true);
     if ((!noCull) && (!isPortalPass)) return ErrorCode::ok;  // not pass portal, so not in visible set
 
     if ((!noCull) && (m_quadWorldPlane.Normal().dot(culler->GetCamera()->eyeToLookatVector()) < 0))
@@ -91,7 +142,7 @@ error Portal::cullVisibleSet(Culler* culler, bool noCull)
 
     //Todo: 這裡要先把Frustum縮小再繼續
 
-    error er = onCullingVisible(culler, noCull);
+    const error er = onCullingVisible(culler, noCull);
     if (er) return er;
 
     return er;
@@ -99,7 +150,7 @@ error Portal::cullVisibleSet(Culler* culler, bool noCull)
 
 error Portal::_updateWorldData(const MathLib::Matrix4& parentWorld)
 {
-    error er = Spatial::_updateWorldData(parentWorld);
+    const error er = Spatial::_updateWorldData(parentWorld);
     if (er) return er;
 
     updatePortalQuad();
@@ -114,9 +165,9 @@ SceneTraveler::TravelResult Portal::visitBy(SceneTraveler* traveler)
     SceneTraveler::TravelResult res = traveler->travelTo(thisSpatial());
     if (res != SceneTraveler::TravelResult::Continue) return res;  // don't go sub-tree
 
-    if (!m_adjacentPortalZone.expired())
+    if (const auto zone = getAdjacentZone())
     {
-        res = m_adjacentPortalZone.lock()->visitBy(traveler);
+        res = zone->visitBy(traveler);
     }
     return res;
 }

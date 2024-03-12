@@ -9,6 +9,9 @@
 #include "Node.h"
 #include "LazyNode.h"
 #include "VisibilityManagedNode.h"
+#include "PortalManagementNode.h"
+#include "Portal.h"
+#include "PortalZoneNode.h"
 #include <cassert>
 
 using namespace Enigma::SceneGraph;
@@ -23,6 +26,9 @@ error SceneGraphInstallingPolicy::install(Frameworks::ServiceManager* service_ma
     scene_graph_repository->factory()->registerSpatialFactory(Node::TYPE_RTTI.getName(), Node::create, Node::constitute);
     scene_graph_repository->factory()->registerSpatialFactory(LazyNode::TYPE_RTTI.getName(), LazyNode::create, LazyNode::constitute);
     scene_graph_repository->factory()->registerSpatialFactory(VisibilityManagedNode::TYPE_RTTI.getName(), VisibilityManagedNode::create, VisibilityManagedNode::constitute);
+    scene_graph_repository->factory()->registerSpatialFactory(PortalManagementNode::TYPE_RTTI.getName(), PortalManagementNode::create, PortalManagementNode::constitute);
+    scene_graph_repository->factory()->registerSpatialFactory(Portal::TYPE_RTTI.getName(), Portal::create, Portal::constitute);
+    scene_graph_repository->factory()->registerSpatialFactory(PortalZoneNode::TYPE_RTTI.getName(), PortalZoneNode::create, PortalZoneNode::constitute);
     service_manager->registerSystemService(scene_graph_repository);
     service_manager->registerSystemService(std::make_shared<LazyNodeHydrationService>(service_manager, scene_graph_repository, timer));
     service_manager->registerSystemService(std::make_shared<LightInfoTraversal>(service_manager));

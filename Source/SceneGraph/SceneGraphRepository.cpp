@@ -74,8 +74,8 @@ void SceneGraphRepository::registerHandlers()
     QueryDispatcher::subscribe(typeid(RequestCameraCreation), m_requestCameraCreation);
     m_requestCameraConstitution = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { requestCameraConstitution(q); });
     QueryDispatcher::subscribe(typeid(RequestCameraConstitution), m_requestCameraConstitution);
-    m_queryNode = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { queryNode(q); });
-    QueryDispatcher::subscribe(typeid(QueryNode), m_queryNode);
+    //m_queryNode = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { queryNode(q); });
+    //QueryDispatcher::subscribe(typeid(QueryNode), m_queryNode);
     m_querySpatial = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { querySpatial(q); });
     QueryDispatcher::subscribe(typeid(QuerySpatial), m_querySpatial);
     m_requestSpatialCreation = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { requestSpatialCreation(q); });
@@ -110,8 +110,8 @@ void SceneGraphRepository::unregisterHandlers()
     m_requestCameraCreation = nullptr;
     QueryDispatcher::unsubscribe(typeid(RequestCameraConstitution), m_requestCameraConstitution);
     m_requestCameraConstitution = nullptr;
-    QueryDispatcher::unsubscribe(typeid(QueryNode), m_queryNode);
-    m_queryNode = nullptr;
+    //QueryDispatcher::unsubscribe(typeid(QueryNode), m_queryNode);
+    //m_queryNode = nullptr;
     QueryDispatcher::unsubscribe(typeid(QuerySpatial), m_querySpatial);
     m_querySpatial = nullptr;
     QueryDispatcher::unsubscribe(typeid(RequestSpatialCreation), m_requestSpatialCreation);
@@ -171,16 +171,16 @@ std::shared_ptr<Camera> SceneGraphRepository::queryCamera(const SpatialId& id)
     return camera;
 }
 
-std::shared_ptr<Node> SceneGraphRepository::createNode(const SpatialId& id)
+/*std::shared_ptr<Node> SceneGraphRepository::createNode(const SpatialId& id)
 {
     return createNode(id.name(), id.rtti().getName());
 }
-
-std::shared_ptr<Node> SceneGraphRepository::createNode(const std::string& name, const Engine::FactoryDesc& factory_desc)
+*/
+/*std::shared_ptr<Node> SceneGraphRepository::createNode(const std::string& name, const Engine::FactoryDesc& factory_desc)
 {
     assert(!hasNode(name));
     std::shared_ptr<Node> node = nullptr;
-    /*if (factory_desc.GetRttiName() == Node::TYPE_RTTI.getName())
+    if (factory_desc.GetRttiName() == Node::TYPE_RTTI.getName())
     {
         node = std::make_shared<Node>(name);
     }
@@ -192,7 +192,7 @@ std::shared_ptr<Node> SceneGraphRepository::createNode(const std::string& name, 
     {
         node = std::make_shared<VisibilityManagedNode>(name, factory_desc);
     }
-    else*/ if (factory_desc.GetRttiName() == PortalZoneNode::TYPE_RTTI.getName())
+    else if (factory_desc.GetRttiName() == PortalZoneNode::TYPE_RTTI.getName())
     {
         node = std::make_shared<PortalZoneNode>(name, factory_desc);
     }
@@ -204,13 +204,13 @@ std::shared_ptr<Node> SceneGraphRepository::createNode(const std::string& name, 
     std::lock_guard locker{ m_nodeMapLock };
     m_nodes.insert_or_assign(name, node);
     return node;
-}
+}*/
 
-std::shared_ptr<Node> SceneGraphRepository::createNode(const GenericDto& dto)
+/*std::shared_ptr<Node> SceneGraphRepository::createNode(const GenericDto& dto)
 {
     assert(!hasNode(dto.getName()));
     std::shared_ptr<Node> node = nullptr;
-    /*if (dto.getRtti().GetRttiName() == Node::TYPE_RTTI.getName())
+    if (dto.getRtti().GetRttiName() == Node::TYPE_RTTI.getName())
     {
         node = std::make_shared<Node>(dto);
     }
@@ -222,7 +222,7 @@ std::shared_ptr<Node> SceneGraphRepository::createNode(const GenericDto& dto)
     {
         node = createVisibilityManagedNode(VisibilityManagedNodeDto{ dto });
     }
-    else*/ if (dto.getRtti().GetRttiName() == PortalZoneNode::TYPE_RTTI.getName())
+    else if (dto.getRtti().GetRttiName() == PortalZoneNode::TYPE_RTTI.getName())
     {
         node = createPortalZoneNode(PortalZoneNodeDto::fromGenericDto(dto));
     }
@@ -234,9 +234,9 @@ std::shared_ptr<Node> SceneGraphRepository::createNode(const GenericDto& dto)
     std::lock_guard locker{ m_nodeMapLock };
     m_nodes.insert_or_assign(dto.getName(), node);
     return node;
-}
+}*/
 
-std::shared_ptr<PortalZoneNode> SceneGraphRepository::createPortalZoneNode(const PortalZoneNodeDto& portal_zone_node_dto)
+/*std::shared_ptr<PortalZoneNode> SceneGraphRepository::createPortalZoneNode(const PortalZoneNodeDto& portal_zone_node_dto)
 {
     auto node = std::make_shared<PortalZoneNode>(portal_zone_node_dto.toGenericDto());
     if (!portal_zone_node_dto.portalName().empty())
@@ -249,7 +249,7 @@ std::shared_ptr<PortalZoneNode> SceneGraphRepository::createPortalZoneNode(const
             portal_management->attachOutsideZone(node);
     }
     return node;
-}
+}*/
 
 /*std::shared_ptr<VisibilityManagedNode> SceneGraphRepository::createVisibilityManagedNode(const VisibilityManagedNodeDto& visibility_managed_node_dto)
 {
@@ -261,7 +261,7 @@ std::shared_ptr<PortalZoneNode> SceneGraphRepository::createPortalZoneNode(const
     return node;
 }*/
 
-bool SceneGraphRepository::hasNode(const std::string& name)
+/*bool SceneGraphRepository::hasNode(const std::string& name)
 {
     std::lock_guard locker{ m_nodeMapLock };
     auto it = m_nodes.find(name);
@@ -275,7 +275,7 @@ std::shared_ptr<Node> SceneGraphRepository::queryNode(const std::string& name)
     if (it == m_nodes.end()) return nullptr;
     if (it->second.expired()) return nullptr;
     return it->second.lock();
-}
+}*/
 
 bool SceneGraphRepository::hasSpatial(const SpatialId& id)
 {
@@ -305,7 +305,7 @@ bool SceneGraphRepository::hasLaziedContent(const SpatialId& id)
     return m_storeMapper->hasLaziedContent(id);
 }
 
-std::shared_ptr<Portal> SceneGraphRepository::createPortal(const std::string& name)
+/*std::shared_ptr<Portal> SceneGraphRepository::createPortal(const std::string& name)
 {
     assert(!hasPortal(name));
     auto portal = std::make_shared<Portal>(name);
@@ -328,18 +328,18 @@ std::shared_ptr<Portal> SceneGraphRepository::queryPortal(const std::string& nam
     if (it == m_portals.end()) return nullptr;
     if (it->second.expired()) return nullptr;
     return it->second.lock();
-}
+}*/
 
-std::shared_ptr<Spatial> SceneGraphRepository::querySpatial(const std::string& name)
+/*std::shared_ptr<Spatial> SceneGraphRepository::querySpatial(const std::string& name)
 {
     if (auto node = queryNode(name)) return node;
     //if (auto pawn = queryPawn(name)) return pawn;
     //if (auto light = QueryLight(name)) return light;
-    if (auto portal = queryPortal(name)) return portal;
+    //if (auto portal = queryPortal(name)) return portal;
     return nullptr;
-}
+}*/
 
-std::shared_ptr<Spatial> SceneGraphRepository::AddNewSpatial(Spatial* spatial)
+/*std::shared_ptr<Spatial> SceneGraphRepository::AddNewSpatial(Spatial* spatial)
 {
     assert(spatial);
     if (auto node = std::shared_ptr<Node>(dynamic_cast<Node*>(spatial)))
@@ -361,7 +361,7 @@ std::shared_ptr<Spatial> SceneGraphRepository::AddNewSpatial(Spatial* spatial)
         assert(false);
         return nullptr;
     }
-}
+}*/
 
 void SceneGraphRepository::queryCamera(const IQueryPtr& q)
 {
@@ -525,13 +525,13 @@ void SceneGraphRepository::removeLaziedContent(const SpatialId& id)
     }
 }
 
-void SceneGraphRepository::queryNode(const Frameworks::IQueryPtr& q)
+/*void SceneGraphRepository::queryNode(const Frameworks::IQueryPtr& q)
 {
     if (!q) return;
     const auto query = std::dynamic_pointer_cast<QueryNode>(q);
     assert(query);
     query->setResult(queryNode(query->nodeName()));
-}
+}*/
 
 void SceneGraphRepository::querySpatial(const Frameworks::IQueryPtr& q)
 {

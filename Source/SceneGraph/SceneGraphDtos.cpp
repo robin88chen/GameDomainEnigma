@@ -12,7 +12,7 @@ using namespace Enigma::SceneGraph;
 using namespace Enigma::MathLib;
 using namespace Enigma::Engine;
 
-static std::string TOKEN_NAME = "Name";
+//static std::string TOKEN_NAME = "Name";
 static std::string TOKEN_ID = "Id";
 static std::string TOKEN_PARENT_NAME = "ParentName";
 static std::string TOKEN_LOCAL_TRANSFORM = "LocalTransform";
@@ -43,7 +43,7 @@ SpatialDto::SpatialDto(const Engine::GenericDto& dto) : m_factoryDesc(Spatial::T
 {
     factoryDesc() = dto.getRtti();
     m_isTopLevel = dto.isTopLevel();
-    if (auto v = dto.tryGetValue<std::string>(TOKEN_NAME)) name() = v.value();
+    //if (auto v = dto.tryGetValue<std::string>(TOKEN_NAME)) name() = v.value();
     if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_ID)) id() = SpatialId(v.value());
     if (auto v = dto.tryGetValue<std::string>(TOKEN_PARENT_NAME)) parentName() = v.value();
     if (auto v = dto.tryGetValue<Matrix4>(TOKEN_LOCAL_TRANSFORM)) localTransform() = v.value();
@@ -62,7 +62,7 @@ GenericDto SpatialDto::toGenericDto() const
     GenericDto dto;
     dto.addRtti(m_factoryDesc);
     dto.asTopLevel(m_isTopLevel);
-    dto.addOrUpdate(TOKEN_NAME, m_name);
+    //dto.addOrUpdate(TOKEN_NAME, m_name);
     dto.addOrUpdate(TOKEN_ID, m_id.tokens());
     if (!m_parentName.empty()) dto.addOrUpdate(TOKEN_PARENT_NAME, m_parentName);
     dto.addOrUpdate(TOKEN_LOCAL_TRANSFORM, m_localTransform);

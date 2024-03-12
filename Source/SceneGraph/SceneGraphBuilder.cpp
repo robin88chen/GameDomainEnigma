@@ -25,7 +25,7 @@ using namespace Enigma::Engine;
 using namespace Enigma::Renderables;
 using namespace Enigma::Platforms;
 
-SceneGraphBuilder::SceneGraphBuilder(SceneGraphRepository* host, const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer)
+/*SceneGraphBuilder::SceneGraphBuilder(SceneGraphRepository* host, const std::shared_ptr<Engine::IDtoDeserializer>& dto_deserializer)
 {
     m_isCurrentBuilding = false;
     m_host = host;
@@ -126,7 +126,7 @@ void SceneGraphBuilder::SpatialFactory(const Engine::GenericDto& dto)
     {
         PawnFactory(dto);
     }
-    else*/ if (Rtti::isExactlyOrDerivedFrom(dto.getRtti().GetRttiName(), Node::TYPE_RTTI.getName()))
+    else*//* if (Rtti::isExactlyOrDerivedFrom(dto.getRtti().GetRttiName(), Node::TYPE_RTTI.getName()))
     {
         NodeFactory(dto);
     }
@@ -138,7 +138,7 @@ void SceneGraphBuilder::SpatialFactory(const Engine::GenericDto& dto)
     {
         LightFactory(dto);
     }*/
-    else
+    /*else
     {
         Platforms::Debug::ErrorPrintf("wrong dto rtti %s for spatial factory\n", dto.getRtti().GetRttiName().c_str());
         EventPublisher::post(std::make_shared<CreateFactorySpatialFailed>(dto, ErrorCode::factoryRttiMismatch));
@@ -211,7 +211,7 @@ void SceneGraphBuilder::NodeFactory(const GenericDto& dto)
     EventPublisher::post(std::make_shared<FactorySpatialCreated>(dto, pawn));
 }*/
 
-void SceneGraphBuilder::PortalFactory(const Engine::GenericDto& dto)
+/*void SceneGraphBuilder::PortalFactory(const Engine::GenericDto& dto)
 {
     if (!Rtti::isExactlyOrDerivedFrom(dto.getRtti().GetRttiName(), Portal::TYPE_RTTI.getName()))
     {
@@ -288,133 +288,133 @@ void SceneGraphBuilder::BuildNextSceneGraph()
     {
         InPlaceBuildSceneGraph(cmd->GetOwnerNode(), cmd->GetDtos());
     }*/
-}
+    /*}
 
-void SceneGraphBuilder::OnFactoryCreated(const Frameworks::IEventPtr& e)
-{
-    if (!e) return;
-    auto ev = std::dynamic_pointer_cast<FactorySpatialCreated, IEvent>(e);
-    if (!ev) return;
-    for (auto& meta : m_builtSceneGraphMeta.m_builtSpatialMetas)
+    void SceneGraphBuilder::OnFactoryCreated(const Frameworks::IEventPtr& e)
     {
-        if (meta.m_dto == ev->GetDto())
+        if (!e) return;
+        auto ev = std::dynamic_pointer_cast<FactorySpatialCreated, IEvent>(e);
+        if (!ev) return;
+        for (auto& meta : m_builtSceneGraphMeta.m_builtSpatialMetas)
         {
-            meta.m_spatial = ev->GetSpatial();
-            break;
+            if (meta.m_dto == ev->GetDto())
+            {
+                meta.m_spatial = ev->GetSpatial();
+                break;
+            }
         }
+        TryCompleteSceneGraphBuilding();
     }
-    TryCompleteSceneGraphBuilding();
-}
 
-void SceneGraphBuilder::TryCompleteSceneGraphBuilding()
-{
-    std::vector<std::shared_ptr<Spatial>> top_levels;
-    for (auto meta : m_builtSceneGraphMeta.m_builtSpatialMetas)
+    void SceneGraphBuilder::TryCompleteSceneGraphBuilding()
     {
-        if (!meta.m_spatial) return;
-        if (meta.m_dto.isTopLevel())
+        std::vector<std::shared_ptr<Spatial>> top_levels;
+        for (auto meta : m_builtSceneGraphMeta.m_builtSpatialMetas)
         {
-            top_levels.emplace_back(meta.m_spatial.value());
+            if (!meta.m_spatial) return;
+            if (meta.m_dto.isTopLevel())
+            {
+                top_levels.emplace_back(meta.m_spatial.value());
+            }
         }
+        auto unresolved_names = m_resolver->getUnresolvedNames();
+        for (auto name : unresolved_names)
+        {
+            Debug::ErrorPrintf("unresolved name %s\n", name.c_str());
+        }
+        m_isCurrentBuilding = false;
+        if (m_builtSceneGraphMeta.m_in_placeRoot == nullptr)
+        {
+            EventPublisher::post(std::make_shared<FactorySceneGraphBuilt>(m_builtSceneGraphMeta.m_sceneGraphId, top_levels));
+        }
+        else
+        {
+            EventPublisher::post(std::make_shared<InPlaceSceneGraphBuilt>(m_builtSceneGraphMeta.m_in_placeRoot));
+        }
+        BuildNextSceneGraph();
     }
-    auto unresolved_names = m_resolver->getUnresolvedNames();
-    for (auto name : unresolved_names)
-    {
-        Debug::ErrorPrintf("unresolved name %s\n", name.c_str());
-    }
-    m_isCurrentBuilding = false;
-    if (m_builtSceneGraphMeta.m_in_placeRoot == nullptr)
-    {
-        EventPublisher::post(std::make_shared<FactorySceneGraphBuilt>(m_builtSceneGraphMeta.m_sceneGraphId, top_levels));
-    }
-    else
-    {
-        EventPublisher::post(std::make_shared<InPlaceSceneGraphBuilt>(m_builtSceneGraphMeta.m_in_placeRoot));
-    }
-    BuildNextSceneGraph();
-}
 
-/*std::shared_ptr<RenderablePrimitivePolicy> SceneGraphBuilder::ConvertPrimitivePolicy(const std::shared_ptr<Pawn>& pawn, const Engine::GenericDto& primitive_dto)
-{
-    if (auto p = primitive_dto.convertToPolicy(m_dtoDeserializer))
+    /*std::shared_ptr<RenderablePrimitivePolicy> SceneGraphBuilder::ConvertPrimitivePolicy(const std::shared_ptr<Pawn>& pawn, const Engine::GenericDto& primitive_dto)
     {
-        return std::dynamic_pointer_cast<RenderablePrimitivePolicy, GenericPolicy>(p);
-    }
-    else
-    {
-        EventPublisher::post(std::make_shared<BuildPawnPrimitiveFailed>(pawn, ErrorCode::unsupportPawnPrimitive));
-    }
-    return nullptr;
-}*/
+        if (auto p = primitive_dto.convertToPolicy(m_dtoDeserializer))
+        {
+            return std::dynamic_pointer_cast<RenderablePrimitivePolicy, GenericPolicy>(p);
+        }
+        else
+        {
+            EventPublisher::post(std::make_shared<BuildPawnPrimitiveFailed>(pawn, ErrorCode::unsupportPawnPrimitive));
+        }
+        return nullptr;
+    }*/
 
-/*void SceneGraphBuilder::BuildPawnPrimitive(const std::shared_ptr<Pawn>& pawn, const std::shared_ptr<RenderablePrimitivePolicy>& primitive_policy)
-{
-    assert(pawn);
-    if (!primitive_policy) return;
-    std::lock_guard locker{ m_buildingPrimitiveLock };
-    auto cmd = std::make_shared<BuildRenderablePrimitive>(primitive_policy);
-    m_buildingPawnPrimitives.insert({ cmd->getRuid(), pawn->getSpatialName() });
-    CommandBus::post(cmd);
-}*/
-
-/*void SceneGraphBuilder::OnPrimitiveBuilt(const Frameworks::IEventPtr& e)
-{
-    if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<RenderablePrimitiveBuilt>(e);
-    if (!ev) return;
-    if (m_buildingPawnPrimitives.empty()) return;
-    std::lock_guard locker{ m_buildingPrimitiveLock };
-    auto it = m_buildingPawnPrimitives.find(ev->getRequestRuid());
-    if (it == m_buildingPawnPrimitives.end()) return;
-    if (auto pawn = m_host->QueryPawn(it->second))
+    /*void SceneGraphBuilder::BuildPawnPrimitive(const std::shared_ptr<Pawn>& pawn, const std::shared_ptr<RenderablePrimitivePolicy>& primitive_policy)
     {
-        pawn->SetPrimitive(ev->getPrimitive());
-        EventPublisher::post(std::make_shared<PawnPrimitiveBuilt>(pawn));
-    }
-    m_buildingPawnPrimitives.erase(it);
-}*/
+        assert(pawn);
+        if (!primitive_policy) return;
+        std::lock_guard locker{ m_buildingPrimitiveLock };
+        auto cmd = std::make_shared<BuildRenderablePrimitive>(primitive_policy);
+        m_buildingPawnPrimitives.insert({ cmd->getRuid(), pawn->getSpatialName() });
+        CommandBus::post(cmd);
+    }*/
 
-/*void SceneGraphBuilder::OnBuildPrimitiveFailed(const Frameworks::IEventPtr& e)
-{
-    if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<BuildRenderablePrimitiveFailed>(e);
-    if (!ev) return;
-    if (m_buildingPawnPrimitives.empty()) return;
-    std::lock_guard locker{ m_buildingPrimitiveLock };
-    auto it = m_buildingPawnPrimitives.find(ev->getRequestRuid());
-    if (it == m_buildingPawnPrimitives.end()) return;
-    if (ev->errorCode())
+    /*void SceneGraphBuilder::OnPrimitiveBuilt(const Frameworks::IEventPtr& e)
     {
-        Debug::ErrorPrintf("pawn primitive %s build failed : %s\n",
-            ev->getName().c_str(), ev->errorCode().message().c_str());
+        if (!e) return;
+        const auto ev = std::dynamic_pointer_cast<RenderablePrimitiveBuilt>(e);
+        if (!ev) return;
+        if (m_buildingPawnPrimitives.empty()) return;
+        std::lock_guard locker{ m_buildingPrimitiveLock };
+        auto it = m_buildingPawnPrimitives.find(ev->getRequestRuid());
+        if (it == m_buildingPawnPrimitives.end()) return;
         if (auto pawn = m_host->QueryPawn(it->second))
         {
-            EventPublisher::post(std::make_shared<BuildPawnPrimitiveFailed>(pawn, ev->errorCode()));
+            pawn->SetPrimitive(ev->getPrimitive());
+            EventPublisher::post(std::make_shared<PawnPrimitiveBuilt>(pawn));
         }
+        m_buildingPawnPrimitives.erase(it);
+    }*/
+
+    /*void SceneGraphBuilder::OnBuildPrimitiveFailed(const Frameworks::IEventPtr& e)
+    {
+        if (!e) return;
+        const auto ev = std::dynamic_pointer_cast<BuildRenderablePrimitiveFailed>(e);
+        if (!ev) return;
+        if (m_buildingPawnPrimitives.empty()) return;
+        std::lock_guard locker{ m_buildingPrimitiveLock };
+        auto it = m_buildingPawnPrimitives.find(ev->getRequestRuid());
+        if (it == m_buildingPawnPrimitives.end()) return;
+        if (ev->errorCode())
+        {
+            Debug::ErrorPrintf("pawn primitive %s build failed : %s\n",
+                ev->getName().c_str(), ev->errorCode().message().c_str());
+            if (auto pawn = m_host->QueryPawn(it->second))
+            {
+                EventPublisher::post(std::make_shared<BuildPawnPrimitiveFailed>(pawn, ev->errorCode()));
+            }
+        }
+        m_buildingPawnPrimitives.erase(it);
+    }*/
+
+    /*void SceneGraphBuilder::DoRegisteringSpatialFactory(const ICommandPtr& c)
+    {
+        if (!c) return;
+        auto cmd = std::dynamic_pointer_cast<RegisterSpatialDtoFactory, ICommand>(c);
+        if (!cmd) return;
+        m_factories.insert_or_assign(cmd->getRtti(), cmd->GetFactory());
     }
-    m_buildingPawnPrimitives.erase(it);
-}*/
 
-void SceneGraphBuilder::DoRegisteringSpatialFactory(const ICommandPtr& c)
-{
-    if (!c) return;
-    auto cmd = std::dynamic_pointer_cast<RegisterSpatialDtoFactory, ICommand>(c);
-    if (!cmd) return;
-    m_factories.insert_or_assign(cmd->getRtti(), cmd->GetFactory());
-}
+    void SceneGraphBuilder::DoUnRegisteringSpatialFactory(const ICommandPtr& c)
+    {
+        if (!c) return;
+        auto cmd = std::dynamic_pointer_cast<UnRegisterSpatialDtoFactory, ICommand>(c);
+        if (!cmd) return;
+        if (m_factories.find(cmd->getRtti()) != m_factories.end()) m_factories.erase(cmd->getRtti());
+    }
 
-void SceneGraphBuilder::DoUnRegisteringSpatialFactory(const ICommandPtr& c)
-{
-    if (!c) return;
-    auto cmd = std::dynamic_pointer_cast<UnRegisterSpatialDtoFactory, ICommand>(c);
-    if (!cmd) return;
-    if (m_factories.find(cmd->getRtti()) != m_factories.end()) m_factories.erase(cmd->getRtti());
-}
-
-void SceneGraphBuilder::DoInvokingSpatialFactory(const ICommandPtr& c)
-{
-    if (!c) return;
-    auto cmd = std::dynamic_pointer_cast<InvokeSpatialDtoFactory, ICommand>(c);
-    if (!cmd) return;
-    SpatialFactory(cmd->GetDto());
-}
+    void SceneGraphBuilder::DoInvokingSpatialFactory(const ICommandPtr& c)
+    {
+        if (!c) return;
+        auto cmd = std::dynamic_pointer_cast<InvokeSpatialDtoFactory, ICommand>(c);
+        if (!cmd) return;
+        SpatialFactory(cmd->GetDto());
+    }*/

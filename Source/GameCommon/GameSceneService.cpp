@@ -72,7 +72,7 @@ ServiceResult GameSceneService::onTerm()
     return ServiceResult::Complete;
 }
 
-void GameSceneService::createRootScene(const SpatialId& scene_root_id, PersistenceLevel persistence_level, const std::optional<std::string>& portal_managed_name)
+void GameSceneService::createRootScene(const SpatialId& scene_root_id, PersistenceLevel persistence_level, const std::optional<SpatialId>& portal_management_node_id)
 {
     assert(!m_sceneGraphRepository.expired());
     auto root = std::make_shared<QuerySpatial>(scene_root_id)->dispatch();
@@ -85,10 +85,16 @@ void GameSceneService::createRootScene(const SpatialId& scene_root_id, Persisten
     assert(m_sceneRoot);
     m_sceneRoot->setLocalTransform(Matrix4::IDENTITY);
 
-    if (portal_managed_name.has_value())
+    if (portal_management_node_id.has_value())
     {
-        m_portalMgtNode = std::dynamic_pointer_cast<PortalManagementNode, Node>(
-            m_sceneGraphRepository.lock()->createNode(portal_managed_name.value(), Engine::FactoryDesc(PortalManagementNode::TYPE_RTTI.getName()).ClaimAsNative(portal_managed_name.value())));
+        auto management_node = Spatial::querySpatial(portal_management_node_id.value());
+        if (!management_node)
+        {
+            management_node = std::make_shared<RequestSpatialCreation>(portal_management_node_id.value(), persistence_level)->dispatch();
+        }
+        assert(management_node);
+        m_portalMgtNode = std::dynamic_pointer_cast<PortalManagementNode>(management_node);
+        assert(m_portalMgtNode);
         m_sceneRoot->attachChild(m_portalMgtNode, Matrix4::IDENTITY);
     }
 

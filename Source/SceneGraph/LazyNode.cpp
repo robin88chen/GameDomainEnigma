@@ -25,7 +25,7 @@ LazyNode::LazyNode(const SpatialId& id, const Engine::GenericDto& o) : Node(id, 
     m_lazyStatus.changeStatus(Frameworks::LazyStatus::Status::Ghost);
 }
 
-LazyNode::LazyNode(const std::string& name, const FactoryDesc& factory_desc) : Node(name)
+/*LazyNode::LazyNode(const std::string& name, const FactoryDesc& factory_desc) : Node(name)
 {
     assert(Frameworks::Rtti::isExactlyOrDerivedFrom(factory_desc.GetRttiName(), LazyNode::TYPE_RTTI.getName()));
     m_factoryDesc = factory_desc;
@@ -42,7 +42,7 @@ LazyNode::LazyNode(const GenericDto& o) : Node(o)
     {
         m_lazyStatus.changeStatus(Frameworks::LazyStatus::Status::Ready);
     }
-}
+}*/
 
 LazyNode::~LazyNode()
 {

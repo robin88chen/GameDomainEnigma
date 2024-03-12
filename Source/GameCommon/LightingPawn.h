@@ -26,7 +26,7 @@ namespace Enigma::GameCommon
         LightingPawn& operator=(const LightingPawn&) = delete;
         LightingPawn& operator=(LightingPawn&&) = delete;
 
-        virtual void resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver) override;
+        //virtual void resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver) override;
 
         void setHostLight(const std::shared_ptr<SceneGraph::Light>& light);
         std::shared_ptr<SceneGraph::Light> getHostLight() const { return m_hostLight.expired() ? nullptr : m_hostLight.lock(); }

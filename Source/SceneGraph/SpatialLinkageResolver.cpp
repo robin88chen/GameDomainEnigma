@@ -6,7 +6,7 @@ using namespace Enigma::SceneGraph;
 using namespace Enigma::Engine;
 using namespace Enigma::Frameworks;
 
-SpatialLinkageResolver::SpatialLinkageResolver() : FactoryLinkageResolver<Spatial>()
+/*SpatialLinkageResolver::SpatialLinkageResolver() : FactoryLinkageResolver<Spatial>()
 {
     m_onFactorySpatialCreated = nullptr;
 }
@@ -56,5 +56,6 @@ void SpatialLinkageResolver::OnFactorySpatialCreated(const Frameworks::IEventPtr
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<FactorySpatialCreated, IEvent>(e);
     if (!ev) return;
-    invokeLinkageResolver(ev->GetSpatial()->getSpatialName(), ev->GetSpatial());
+    //invokeLinkageResolver(ev->GetSpatial()->getSpatialName(), ev->GetSpatial());
 }
+*/

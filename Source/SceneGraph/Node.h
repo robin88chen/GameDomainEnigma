@@ -32,10 +32,10 @@ namespace Enigma::SceneGraph
         using ChildList = std::list<SpatialPtr>;
 
     public:
-        Node(const std::string& name);
+        //Node(const std::string& name);
         Node(const SpatialId& id);
         Node(const SpatialId& id, const Engine::GenericDto& dto);
-        Node(const Engine::GenericDto& dto);
+        //Node(const Engine::GenericDto& dto);
         Node(const Node&) = delete;
         Node(Node&&) = delete;
         virtual ~Node() override;
@@ -44,7 +44,7 @@ namespace Enigma::SceneGraph
 
         virtual Engine::GenericDto serializeDto() override;
         //todo : remove
-        virtual void resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver) override;
+        //virtual void resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver) override;
 
         static std::shared_ptr<Node> queryNode(const SpatialId& id);
         static std::shared_ptr<Node> create(const SpatialId& id);

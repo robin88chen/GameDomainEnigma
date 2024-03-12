@@ -17,7 +17,7 @@ using namespace Enigma::Engine;
 
 DEFINE_RTTI_OF_BASE(SceneGraph, Spatial);
 
-Spatial::Spatial(const std::string& name) : m_factoryDesc(Spatial::TYPE_RTTI.getName())
+/*Spatial::Spatial(const std::string& name) : m_factoryDesc(Spatial::TYPE_RTTI.getName())
 {
     m_name = name;
 
@@ -44,11 +44,11 @@ Spatial::Spatial(const std::string& name) : m_factoryDesc(Spatial::TYPE_RTTI.get
     m_vecWorldPosition = Vector3::ZERO;
 
     m_notifyFlags = Notify_All;
-}
+}*/
 
 Spatial::Spatial(const SpatialId& id) : m_factoryDesc(Spatial::TYPE_RTTI.getName()), m_id(id)
 {
-    m_name = id.name();
+    //m_name = id.name();
 
     m_graphDepth = 0;
 
@@ -76,7 +76,7 @@ Spatial::Spatial(const SpatialId& id) : m_factoryDesc(Spatial::TYPE_RTTI.getName
 
 }
 
-Spatial::Spatial(const GenericDto& o) : m_factoryDesc(o.getRtti())
+/*Spatial::Spatial(const GenericDto& o) : m_factoryDesc(o.getRtti())
 {
     SpatialDto dto{ o };
     m_name = dto.name();
@@ -98,12 +98,12 @@ Spatial::Spatial(const GenericDto& o) : m_factoryDesc(o.getRtti())
     std::tie(angles, std::ignore) = m_mxLocalRotation.ToEulerAnglesXYZ();
     m_vecLocalEulerAngle = Vector3(angles.m_x, angles.m_y, angles.m_z);
     m_vecWorldPosition = m_mxWorldTransform.UnMatrixTranslate();
-}
+}*/
 
 Spatial::Spatial(const SpatialId& id, const GenericDto& o) : m_factoryDesc(o.getRtti()), m_id(id)
 {
     SpatialDto dto{ o };
-    m_name = dto.name();
+    //m_name = dto.name();
     m_graphDepth = dto.graphDepth();
     m_cullingMode = static_cast<CullingMode>(dto.cullingMode());
     m_spatialFlags = dto.spatialFlag();
@@ -144,7 +144,7 @@ SpatialDto Spatial::serializeSpatialDto()
 {
     SpatialDto dto;
     dto.factoryDesc() = m_factoryDesc;
-    dto.name() = m_name;
+    //dto.name() = m_name;
     dto.id() = m_id;
     if (m_parent) dto.parentName() = m_parent.value().name();
     //dto.graphDepth() = m_graphDepth;

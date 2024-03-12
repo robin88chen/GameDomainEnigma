@@ -21,7 +21,7 @@
 
 namespace Enigma::SceneGraph
 {
-    class Spatial;
+    /*class Spatial;
     class SceneGraphRepository;
     class SpatialLinkageResolver;
     class Pawn;
@@ -114,7 +114,7 @@ namespace Enigma::SceneGraph
         Frameworks::CommandSubscriberPtr m_doRegisteringSpatialFactory;
         Frameworks::CommandSubscriberPtr m_doUnRegisteringSpatialFactory;
         Frameworks::CommandSubscriberPtr m_doInvokingSpatialDtoFactory;
-    };
+    };*/
 }
 
 #endif // SCENE_GRAPH_BUILDER_H

@@ -21,108 +21,54 @@ GenericDto SceneGraphMaker::makePawm(const SpatialId& id, const Enigma::Primitiv
     BoundingVolume& geometry_bound)
 {
     PawnAssembler pawn(id);
-    pawn.primitive(primitive_id).localTransform(Matrix4::IDENTITY).modelBound(geometry_bound).topLevel(true).asNative(id.name() + ".pawn@DataPath").constitute(
+    pawn.spatial().localTransform(Matrix4::IDENTITY).modelBound(geometry_bound).topLevel(true);
+    pawn.primitive(primitive_id).asNative(id.name() + ".pawn@DataPath").constitute(
         PersistenceLevel::Store);
     return pawn.toPawnDto().toGenericDto();
 }
 
-GenericDto SceneGraphMaker::makeInsideZoneNode(const SpatialId& node_id, const SpatialId& portal_id, const std::vector<SpatialId>& children)
+PortalZoneNodeAssembler SceneGraphMaker::makeInsideZoneNode(const SpatialId& node_id, const SpatialId& portal_id, const std::vector<SpatialId>& children)
 {
     BoundingVolume unit_bv(Box3::UNIT_BOX);
-    PortalZoneNodeDto node_dto;
-    node_dto.id() = node_id;
-    node_dto.portalParentId() = portal_id;
-    node_dto.isTopLevel() = true;
-    node_dto.factoryDesc() = FactoryDesc(PortalZoneNode::TYPE_RTTI.getName()).ClaimAsDeferred(node_id.name() + ".node", "DataPath");
-    node_dto.localTransform() = Matrix4::IDENTITY;
-    node_dto.worldTransform() = node_dto.localTransform();
-    node_dto.modelBound() = unit_bv.serializeDto().toGenericDto();
-    node_dto.worldBound() = BoundingVolume::CreateFromTransform(unit_bv, node_dto.worldTransform()).serializeDto().toGenericDto();
-    node_dto.spatialFlag() = static_cast<unsigned>(Spatial::Spatial_Unlit);
+    PortalZoneNodeAssembler node_assembler(node_id);
+    node_assembler.lazyNode().node().spatial().localTransform(Matrix4::IDENTITY).modelBound(unit_bv).topLevel(true);
     for (const auto& child : children)
     {
-        node_dto.children().push_back(child);
+        node_assembler.lazyNode().node().child(child);
     }
-    //node_dto.parentId() = parent_id;
-    return node_dto.toGenericDto();
+    node_assembler.asDeferred(node_id.name() + ".node", "DataPath");
+    node_assembler.portalParentId(portal_id);
+
+    return node_assembler;
 }
 
-GenericDto SceneGraphMaker::makeOutsideRegion(const SpatialId& outside_id, const SpatialId& root_id, const SpatialId& portal_id, const SpatialId& inside_zone_id, const std::vector<SpatialId>& children)
+PortalZoneNodeAssembler SceneGraphMaker::makeOutsideRegion(const SpatialId& outside_id, const SpatialId& root_id, const SpatialId& portal_id, const SpatialId& inside_zone_id, const std::vector<SpatialId>& children)
 {
     BoundingVolume unit_bv(Box3::UNIT_BOX);
-    PortalZoneNodeDto node_dto;
-    node_dto.id() = outside_id;
-    node_dto.portalParentId() = root_id;
-    node_dto.isTopLevel() = true;
-    node_dto.factoryDesc() = FactoryDesc(PortalZoneNode::TYPE_RTTI.getName()).ClaimAsDeferred(outside_id.name() + ".node", "DataPath");
-    node_dto.localTransform() = Matrix4::IDENTITY;
-    node_dto.worldTransform() = node_dto.localTransform();
-    node_dto.modelBound() = unit_bv.serializeDto().toGenericDto();
-    node_dto.worldBound() = BoundingVolume::CreateFromTransform(unit_bv, node_dto.worldTransform()).serializeDto().toGenericDto();
-    node_dto.spatialFlag() = static_cast<unsigned>(Spatial::Spatial_Unlit);
+    PortalZoneNodeAssembler node_assembler(outside_id);
+    node_assembler.lazyNode().node().spatial().localTransform(Matrix4::IDENTITY).modelBound(unit_bv).topLevel(true);
     for (const auto& child : children)
     {
-        node_dto.children().push_back(child);
+        node_assembler.lazyNode().node().child(child);
     }
-    //node_dto.parentId() = parent_id;
+    node_assembler.asDeferred(outside_id.name() + ".node", "DataPath");
+    node_assembler.portalParentId(root_id);
 
-    // portal
-    PortalDto portal_dto;
-    portal_dto.id() = portal_id;
-    portal_dto.factoryDesc() = FactoryDesc(Portal::TYPE_RTTI.getName()).ClaimAsNative(portal_id.name() + ".portal@DataPath");
-    portal_dto.localTransform() = Matrix4::IDENTITY;
-    portal_dto.worldTransform() = Matrix4::IDENTITY;
-    portal_dto.modelBound() = PrimitiveMeshMaker::getDoorBound().serializeDto().toGenericDto();
-    portal_dto.worldBound() = BoundingVolume::CreateFromTransform(PrimitiveMeshMaker::getDoorBound(), portal_dto.worldTransform()).serializeDto().toGenericDto();
-    portal_dto.spatialFlag() = static_cast<unsigned>(Spatial::Spatial_Unlit);
-    portal_dto.adjacentZoneNodeId() = inside_zone_id;
-    portal_dto.isOpen() = true;
-
-    node_dto.children().push_back({ portal_id, portal_dto.toGenericDto() });
-    return node_dto.toGenericDto();
+    PortalAssembler portal_assembler(portal_id);
+    portal_assembler.spatial().localTransform(Matrix4::IDENTITY).modelBound(PrimitiveMeshMaker::getDoorBound());
+    portal_assembler.adjacentZoneNodeId(inside_zone_id).isOpen(true).asNative(portal_id.name() + ".portal@DataPath");
+    node_assembler.lazyNode().node().child(portal_id, portal_assembler.toGenericDto());
+    return node_assembler;
 }
 
-GenericDto SceneGraphMaker::makeSceneGraph(const SpatialId& root_id, const SpatialId& outside_region_id, const SpatialId
-    & portal_id, const SpatialId& inside_zone_id)
+GenericDto SceneGraphMaker::makeSceneGraph(const SpatialId& root_id, const PortalZoneNodeAssembler& outside_region, const SpatialId
+    & portal_id, const PortalZoneNodeAssembler& inside_zone)
 {
     BoundingVolume root_bv(Box3::UNIT_BOX);
-    PortalManagementNodeDto root_dto;
-    root_dto.id() = root_id;
-    //root_dto.name() = root_id.name();
-    root_dto.factoryDesc() = FactoryDesc(PortalManagementNode::TYPE_RTTI.getName()).ClaimAsNative(root_id.name() + ".node@DataPath");
-    root_dto.localTransform() = Matrix4::IDENTITY;
-    root_dto.worldTransform() = Matrix4::IDENTITY;
-    root_dto.modelBound() = root_bv.serializeDto().toGenericDto();
-    root_dto.worldBound() = root_bv.serializeDto().toGenericDto();
-    root_dto.isTopLevel() = true;
-    root_dto.spatialFlag() = static_cast<unsigned>(Spatial::Spatial_Unlit);
-    root_dto.outsideZoneNodeId() = outside_region_id;
+    PortalManagementNodeAssembler root_assembler(root_id);
+    root_assembler.node().spatial().localTransform(Matrix4::IDENTITY).modelBound(root_bv).topLevel(true);
+    root_assembler.node().child(inside_zone.id(), inside_zone.toDeHydratedGenericDto()).child(outside_region.id(), outside_region.toDeHydratedGenericDto());
+    root_assembler.asNative(root_id.name() + ".node@DataPath").outsideZoneNodeId(outside_region.id());
 
-    // inside zone node
-    BoundingVolume unit_bv(Box3::UNIT_BOX);
-    PortalZoneNodeDto zone_node_dto;
-    zone_node_dto.id() = inside_zone_id;
-    zone_node_dto.factoryDesc() = FactoryDesc(PortalZoneNode::TYPE_RTTI.getName()).ClaimAsInstanced(inside_zone_id.name() + ".node", "DataPath");
-    zone_node_dto.localTransform() = Matrix4::IDENTITY;
-    zone_node_dto.worldTransform() = root_dto.worldTransform() * zone_node_dto.localTransform();
-    zone_node_dto.modelBound() = unit_bv.serializeDto().toGenericDto();
-    zone_node_dto.worldBound() = BoundingVolume::CreateFromTransform(unit_bv, zone_node_dto.worldTransform()).serializeDto().toGenericDto();
-    zone_node_dto.spatialFlag() = static_cast<unsigned>(Spatial::Spatial_Unlit);
-    zone_node_dto.portalParentId() = portal_id;
-    //zone_node_dto.parentId() = root_id;*/
-
-    // outside region
-    BoundingVolume outside_child_bv(Box3::UNIT_BOX);
-    PortalZoneNodeDto outside_child1_dto;
-    outside_child1_dto.id() = outside_region_id;
-    outside_child1_dto.localTransform() = Matrix4::IDENTITY;
-    outside_child1_dto.worldTransform() = root_dto.worldTransform() * outside_child1_dto.localTransform();
-    outside_child1_dto.modelBound() = outside_child_bv.serializeDto().toGenericDto();
-    outside_child1_dto.worldBound() = BoundingVolume::CreateFromTransform(outside_child_bv, outside_child1_dto.worldTransform()).serializeDto().toGenericDto();
-    outside_child1_dto.spatialFlag() = static_cast<unsigned>(Spatial::Spatial_Unlit);
-    //outside_child1_dto.parentId() = root_dto.id();
-    outside_child1_dto.portalParentId() = root_id;
-    root_dto.children().push_back({ inside_zone_id, zone_node_dto.toGenericDto() });
-    root_dto.children().push_back({ outside_region_id, outside_child1_dto.toGenericDto() });
-    return root_dto.toGenericDto();
+    return root_assembler.toGenericDto();
 }

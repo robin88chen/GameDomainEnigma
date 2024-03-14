@@ -293,7 +293,8 @@ void DeferredRendererService::createAmbientLightQuad(const std::shared_ptr<Light
     if (!lit_pawn)
     {
         PawnAssembler pawn_assembler(amb_pawn_id);
-        pawn_assembler.primitive(amb_mesh_id).topLevel(true).factory(FactoryDesc(LightQuadPawn::TYPE_RTTI.getName()));
+        pawn_assembler.spatial().topLevel(true);
+        pawn_assembler.primitive(amb_mesh_id).factory(FactoryDesc(LightQuadPawn::TYPE_RTTI.getName()));
         LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_assembler.toPawnDto());
         lighting_pawn_dto.id() = amb_pawn_id;
         lighting_pawn_dto.hostLightId() = lit->id();
@@ -330,7 +331,8 @@ void DeferredRendererService::createSunLightQuad(const std::shared_ptr<Light>& l
     if (!lit_pawn)
     {
         PawnAssembler pawn_assembler(sun_pawn_id);
-        pawn_assembler.primitive(sun_mesh_id)/*.spatialFlags(m_configuration->sunLightSpatialFlags())*/.topLevel(true).factory(FactoryDesc(LightQuadPawn::TYPE_RTTI.getName()));
+        pawn_assembler.spatial().topLevel(true);
+        pawn_assembler.primitive(sun_mesh_id)/*.spatialFlags(m_configuration->sunLightSpatialFlags())*/.factory(FactoryDesc(LightQuadPawn::TYPE_RTTI.getName()));
         LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_assembler.toPawnDto());
         lighting_pawn_dto.id() = sun_pawn_id;
         lighting_pawn_dto.hostLightId() = lit->id();
@@ -368,8 +370,8 @@ void DeferredRendererService::createPointLightVolume(const std::shared_ptr<Light
     if (!lit_pawn)
     {
         PawnAssembler pawn_assembler(vol_pawn_id);
-        pawn_assembler.factory(FactoryDesc(LightVolumePawn::TYPE_RTTI.getName())).primitive(vol_mesh_id)
-            .topLevel(true).localTransform(lit->getLocalTransform());
+        pawn_assembler.spatial().topLevel(true).localTransform(lit->getLocalTransform());
+        pawn_assembler.factory(FactoryDesc(LightVolumePawn::TYPE_RTTI.getName())).primitive(vol_mesh_id);
         LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_assembler.toPawnDto());
         lighting_pawn_dto.id() = vol_pawn_id;
         lighting_pawn_dto.hostLightId() = lit->id();

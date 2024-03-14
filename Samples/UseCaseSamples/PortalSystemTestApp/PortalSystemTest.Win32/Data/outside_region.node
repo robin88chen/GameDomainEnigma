@@ -57,7 +57,7 @@
         },
         "NotifyFlag": {
             "Type": "Uint32",
-            "Value": 0
+            "Value": 255
         },
         "Children": {
             "Type": "DataObjectArray",
@@ -106,13 +106,13 @@
                                 "Type": "Boolean",
                                 "Value": false
                             },
-                            "Id": {
-                                "Type": "StringArray",
-                                "Value": ["portal", "En.SceneGraph.Portal"]
-                            },
                             "GraphDepth": {
                                 "Type": "Uint32",
                                 "Value": 0
+                            },
+                            "Id": {
+                                "Type": "StringArray",
+                                "Value": ["portal", "En.SceneGraph.Portal"]
                             },
                             "WorldTransform": {
                                 "Type": "Matrix4",
@@ -137,7 +137,7 @@
                             },
                             "NotifyFlag": {
                                 "Type": "Uint32",
-                                "Value": 0
+                                "Value": 255
                             },
                             "AdjacentNodeID": {
                                 "Type": "StringArray",

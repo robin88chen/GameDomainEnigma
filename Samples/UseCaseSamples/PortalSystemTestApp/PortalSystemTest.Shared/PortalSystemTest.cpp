@@ -249,20 +249,22 @@ void PortalSystemTest::makeSceneGraph()
     auto outside_region_id = SpatialId("outside_region", PortalZoneNode::TYPE_RTTI);
     auto portal_id = SpatialId("portal", Portal::TYPE_RTTI);
     auto inside_zone_node_id = SpatialId("inside_zone_node", PortalZoneNode::TYPE_RTTI);
+    PortalZoneNodeAssembler inside_zone_assembler(inside_zone_node_id);
+    PortalZoneNodeAssembler outside_region_assembler(outside_region_id);
     if (!m_sceneGraphFileStoreMapper->hasLaziedContent(outside_region_id))
     {
-        const auto outside_region_dto = SceneGraphMaker::makeOutsideRegion(outside_region_id, m_rootId, portal_id, inside_zone_node_id, { floor_pawn_id, door_pawn_id });
-        m_sceneGraphFileStoreMapper->putLaziedContent(outside_region_id, outside_region_dto);
+        outside_region_assembler = SceneGraphMaker::makeOutsideRegion(outside_region_id, m_rootId, portal_id, inside_zone_node_id, { floor_pawn_id, door_pawn_id });
+        m_sceneGraphFileStoreMapper->putLaziedContent(outside_region_id, outside_region_assembler.toHydratedGenericDto());
     }
     if (!m_sceneGraphFileStoreMapper->hasLaziedContent(inside_zone_node_id))
     {
-        const auto inside_zone_node_dto = SceneGraphMaker::makeInsideZoneNode(inside_zone_node_id, portal_id, { board_pawn_id });
-        m_sceneGraphFileStoreMapper->putLaziedContent(inside_zone_node_id, inside_zone_node_dto);
+        inside_zone_assembler = SceneGraphMaker::makeInsideZoneNode(inside_zone_node_id, portal_id, { board_pawn_id });
+        m_sceneGraphFileStoreMapper->putLaziedContent(inside_zone_node_id, inside_zone_assembler.toHydratedGenericDto());
     }
     m_sceneRoot = Node::queryNode(m_rootId);
     if (!m_sceneRoot)
     {
-        auto root_dto = SceneGraphMaker::makeSceneGraph(m_rootId, outside_region_id, portal_id, inside_zone_node_id);
+        auto root_dto = SceneGraphMaker::makeSceneGraph(m_rootId, outside_region_assembler, portal_id, inside_zone_assembler);
         m_sceneRoot = std::dynamic_pointer_cast<Node>(std::make_shared<RequestSpatialConstitution>(m_rootId, root_dto, PersistenceLevel::Store)->dispatch());
     }
 }

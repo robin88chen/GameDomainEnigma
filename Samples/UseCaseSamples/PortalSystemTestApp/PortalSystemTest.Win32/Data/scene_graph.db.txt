@@ -1,5 +1,5 @@
 camera,En.SceneGraph.Camera,camera.cam@DataPath
 floor_pawn,En.SceneGraph.Pawn,floor_pawn.pawn@DataPath
 door_pawn,En.SceneGraph.Pawn,door_pawn.pawn@DataPath
-root,En.SceneGraph.PortalManagementNode,root.node@DataPath
 board_pawn,En.SceneGraph.Pawn,board_pawn.pawn@DataPath
+root,En.SceneGraph.PortalManagementNode,root.node@DataPath

@@ -55,12 +55,20 @@ void LazyNodeHydrationService::registerHandlers()
     m_hydrateLazyNode = std::make_shared<CommandSubscriber>([=](auto c) { hydrateLazyNode(c); });
     CommandBus::subscribe(typeid(HydrateLazyNode), m_hydrateLazyNode);
 
+    m_onLazyNodeHydrated = std::make_shared<EventSubscriber>([=](auto e) { onLazyNodeHydrated(e); });
+    EventPublisher::subscribe(typeid(LazyNodeHydrated), m_onLazyNodeHydrated);
+    m_onLazyNodeHydrationFailed = std::make_shared<EventSubscriber>([=](auto e) { onLazyNodeHydrationFailed(e); });
+    EventPublisher::subscribe(typeid(LazyNodeHydrationFailed), m_onLazyNodeHydrationFailed);
     m_onVisibilityChanged = std::make_shared<EventSubscriber>([=](auto e) { onVisibilityChanged(e); });
     EventPublisher::subscribe(typeid(VisibilityChanged), m_onVisibilityChanged);
 }
 
 void LazyNodeHydrationService::unregisterHandlers()
 {
+    EventPublisher::unsubscribe(typeid(LazyNodeHydrated), m_onLazyNodeHydrated);
+    m_onLazyNodeHydrated = nullptr;
+    EventPublisher::unsubscribe(typeid(LazyNodeHydrationFailed), m_onLazyNodeHydrationFailed);
+    m_onLazyNodeHydrationFailed = nullptr;
     EventPublisher::unsubscribe(typeid(VisibilityChanged), m_onVisibilityChanged);
     m_onVisibilityChanged = nullptr;
 
@@ -80,6 +88,29 @@ void LazyNodeHydrationService::hydrateLazyNode(const Frameworks::ICommandPtr& c)
     lazy_node->lazyStatus().changeStatus(LazyStatus::Status::InQueue);
     m_waitingNodes.push_back(cmd->id());
     m_needTick = true;
+}
+
+void LazyNodeHydrationService::onLazyNodeHydrated(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    auto ev = std::dynamic_pointer_cast<LazyNodeHydrated, IEvent>(e);
+    if (!ev) return;
+    if (!ev->id().isValid()) return;
+    m_isCurrentHydrating = false;
+    m_hydratingId = SpatialId();
+    hydrateNextLazyNode();
+}
+
+void LazyNodeHydrationService::onLazyNodeHydrationFailed(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    auto ev = std::dynamic_pointer_cast<LazyNodeHydrationFailed, IEvent>(e);
+    if (!ev) return;
+    if (!ev->id().isValid()) return;
+    Platforms::Debug::ErrorPrintf("Lazy Node %s(%s) hydration failed : %s", ev->id().name().c_str(), ev->id().rtti().getName().c_str(), ev->error().message().c_str());
+    m_isCurrentHydrating = false;
+    m_hydratingId = SpatialId();
+    hydrateNextLazyNode();
 }
 
 void LazyNodeHydrationService::onVisibilityChanged(const Frameworks::IEventPtr& e)

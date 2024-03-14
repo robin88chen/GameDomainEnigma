@@ -42,6 +42,8 @@ namespace Enigma::SceneGraph
         void unregisterHandlers();
 
         void hydrateLazyNode(const Frameworks::ICommandPtr& c);
+        void onLazyNodeHydrated(const Frameworks::IEventPtr& e);
+        void onLazyNodeHydrationFailed(const Frameworks::IEventPtr& e);
         void onVisibilityChanged(const Frameworks::IEventPtr& e);
 
         void hydrateNextLazyNode();
@@ -54,6 +56,8 @@ namespace Enigma::SceneGraph
 
         SpatialId m_hydratingId;
 
+        Frameworks::EventSubscriberPtr m_onLazyNodeHydrated;
+        Frameworks::EventSubscriberPtr m_onLazyNodeHydrationFailed;
         Frameworks::EventSubscriberPtr m_onVisibilityChanged;
 
         std::deque<SpatialId> m_waitingNodes;

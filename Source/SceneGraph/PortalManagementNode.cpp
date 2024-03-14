@@ -62,7 +62,7 @@ std::shared_ptr<PortalManagementNode> PortalManagementNode::constitute(const Spa
 
 GenericDto PortalManagementNode::serializeDto()
 {
-    PortalManagementNodeDto dto(serializeSpatialDto());
+    PortalManagementNodeDto dto(serializeNodeDto());
     dto.outsideZoneNodeId() = m_outsideZoneId;
     return dto.toGenericDto();
 }

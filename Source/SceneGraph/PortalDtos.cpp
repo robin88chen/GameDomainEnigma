@@ -16,7 +16,7 @@ PortalZoneNodeDto::PortalZoneNodeDto() : LazyNodeDto()
     m_factoryDesc = FactoryDesc(PortalZoneNode::TYPE_RTTI.getName());
 }
 
-PortalZoneNodeDto::PortalZoneNodeDto(const Engine::GenericDto& dto)
+PortalZoneNodeDto::PortalZoneNodeDto(const Engine::GenericDto& dto) : LazyNodeDto(dto)
 {
     assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), PortalZoneNode::TYPE_RTTI.getName()));
     if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_PORTAL_PARENT_ID)) portalParentId() = v.value();

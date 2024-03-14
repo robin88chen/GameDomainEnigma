@@ -1,0 +1,50 @@
+[{
+        "Rtti": {
+            "Type": "FactoryDesc",
+            "Value": {
+                "InstanceType": 0,
+                "ResourceName": "",
+                "ResourceFilename": "",
+                "RttiName": "En.Renderables.MeshPrimitive",
+                "PrefabFilename": "board_mesh.mesh@DataPath"
+            }
+        },
+        "GeometryId": {
+            "Type": "String",
+            "Value": "board"
+        },
+        "RenderListId": {
+            "Type": "Uint32",
+            "Value": 1
+        },
+        "Id": {
+            "Type": "StringArray",
+            "Value": ["board_mesh", "0", "En.Renderables.MeshPrimitive"]
+        },
+        "Effects": {
+            "Type": "StringArray",
+            "Value": ["fx/basic_floor_mesh"]
+        },
+        "VisualTechniqueSelection": {
+            "Type": "String",
+            "Value": "Default"
+        },
+        "TextureMaps": {
+            "Type": "DataObjectArray",
+            "Value": [{
+                    "TextureMappings": {
+                        "Type": "DataObjectArray",
+                        "Value": [{
+                                "TextureId.Name": {
+                                    "Type": "String",
+                                    "Value": "image/hga0010101"
+                                },
+                                "Semantic": {
+                                    "Type": "String",
+                                    "Value": "DiffuseMap"
+                                }
+                            }]
+                    }
+                }]
+        }
+    }]

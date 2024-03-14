@@ -21,6 +21,8 @@ PortalZoneNode::PortalZoneNode(const SpatialId& id) : LazyNode(id)
 PortalZoneNode::PortalZoneNode(const SpatialId& id, const Engine::GenericDto& o) : LazyNode(id, o)
 {
     m_hasTraversed = false;
+    PortalZoneNodeDto dto{ o };
+    m_portalParentId = dto.portalParentId();
 }
 
 /*PortalZoneNode::PortalZoneNode(const std::string& name, const Engine::FactoryDesc& factory_desc) : LazyNode(name, factory_desc)

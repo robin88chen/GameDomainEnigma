@@ -443,10 +443,10 @@ namespace Enigma::SceneGraph
     protected:
         SpatialId m_id;
     };
-    class HydrateLazyNodeFailed : public Frameworks::IEvent
+    class LazyNodeHydrationFailed : public Frameworks::IEvent
     {
     public:
-        HydrateLazyNodeFailed(const SpatialId& id, std::error_code err) : m_id(id), m_err(err) {};
+        LazyNodeHydrationFailed(const SpatialId& id, std::error_code err) : m_id(id), m_err(err) {};
         const SpatialId& id() const { return m_id; }
         std::error_code error() const { return m_err; }
 

@@ -634,7 +634,7 @@ void SceneGraphRepository::hydrateLazyNode(const SpatialId& id)
     auto lazy_node = std::dynamic_pointer_cast<LazyNode>(querySpatial(id));
     if (!lazy_node)
     {
-        EventPublisher::post(std::make_shared<HydrateLazyNodeFailed>(id, ErrorCode::nodeNotFound));
+        EventPublisher::post(std::make_shared<LazyNodeHydrationFailed>(id, ErrorCode::nodeNotFound));
         return;
     }
     if (!lazy_node->lazyStatus().isInQueue()) return;
@@ -643,12 +643,12 @@ void SceneGraphRepository::hydrateLazyNode(const SpatialId& id)
     if (!content)
     {
         lazy_node->lazyStatus().changeStatus(LazyStatus::Status::Failed);
-        EventPublisher::post(std::make_shared<HydrateLazyNodeFailed>(id, ErrorCode::laziedContentNotFound));
+        EventPublisher::post(std::make_shared<LazyNodeHydrationFailed>(id, ErrorCode::laziedContentNotFound));
         return;
     }
     if (error er = lazy_node->hydrate(content.value()))
     {
-        EventPublisher::post(std::make_shared<HydrateLazyNodeFailed>(id, er));
+        EventPublisher::post(std::make_shared<LazyNodeHydrationFailed>(id, er));
     }
     else
     {

@@ -25,8 +25,6 @@ namespace Enigma::SceneGraph
     public:
         PortalManagementNode(const SpatialId& id);
         PortalManagementNode(const SpatialId& id, const Engine::GenericDto& o);
-        //PortalManagementNode(const std::string& name);
-        //PortalManagementNode(const Engine::GenericDto& dto);
         PortalManagementNode(const PortalManagementNode&) = delete;
         PortalManagementNode(PortalManagementNode&&) = delete;
         PortalManagementNode& operator=(const PortalManagementNode&) = delete;
@@ -37,7 +35,6 @@ namespace Enigma::SceneGraph
         static std::shared_ptr<PortalManagementNode> constitute(const SpatialId& id, const Engine::GenericDto& dto);
 
         virtual Engine::GenericDto serializeDto() override;
-        //virtual void resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver) override;
 
         void attachOutsideZone(const std::shared_ptr<PortalZoneNode>& node);
 

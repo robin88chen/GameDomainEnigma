@@ -21,8 +21,6 @@ namespace Enigma::SceneGraph
     public:
         PortalZoneNode(const SpatialId& id);
         PortalZoneNode(const SpatialId& id, const Engine::GenericDto& o);
-        //PortalZoneNode(const std::string& name, const Engine::FactoryDesc& factory_desc);
-        //PortalZoneNode(const Engine::GenericDto& dto);
         PortalZoneNode(const PortalZoneNode&) = delete;
         PortalZoneNode(PortalZoneNode&&) = delete;
         PortalZoneNode& operator=(const PortalZoneNode&) = delete;
@@ -41,9 +39,7 @@ namespace Enigma::SceneGraph
         virtual void setPortalParent(const SpatialId& id);
 
     protected:
-        SpatialId m_portalParentId;
-        //std::weak_ptr<Spatial> m_portalParent; // either portal or portal management node
-        // for zone graph traversal
+        SpatialId m_portalParentId; // either portal or portal management node
         bool m_hasTraversed;
     };
     using PortalZoneNodePtr = std::shared_ptr<PortalZoneNode>;

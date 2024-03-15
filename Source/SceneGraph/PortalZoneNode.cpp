@@ -25,17 +25,6 @@ PortalZoneNode::PortalZoneNode(const SpatialId& id, const Engine::GenericDto& o)
     m_portalParentId = dto.portalParentId();
 }
 
-/*PortalZoneNode::PortalZoneNode(const std::string& name, const Engine::FactoryDesc& factory_desc) : LazyNode(name, factory_desc)
-{
-    assert(Frameworks::Rtti::isExactlyOrDerivedFrom(factory_desc.GetRttiName(), PortalZoneNode::TYPE_RTTI.getName()));
-    m_hasTraversed = false;
-}
-
-PortalZoneNode::PortalZoneNode(const GenericDto& dto) : LazyNode(dto)
-{
-    m_hasTraversed = false;
-}*/
-
 PortalZoneNode::~PortalZoneNode()
 {
 }
@@ -54,17 +43,6 @@ GenericDto PortalZoneNode::serializeDto()
 {
     PortalZoneNodeDto dto = PortalZoneNodeDto(LazyNode::serializeLazyNodeAsLaziness());
     dto.portalParentId() = m_portalParentId;
-    /*if (!m_portalParent.expired())
-    {
-        if (auto portal = std::dynamic_pointer_cast<Portal, Spatial>(m_portalParent.lock()))
-        {
-            dto.portalName() = portal->getSpatialName();
-        }
-        else if (auto portal_management = std::dynamic_pointer_cast<PortalManagementNode, Spatial>(m_portalParent.lock()))
-        {
-            dto.portalManagementNodeName() = portal_management->getSpatialName();
-        }
-    }*/
     return dto.toGenericDto();
 }
 
@@ -78,17 +56,6 @@ GenericDto PortalZoneNode::serializeLaziedContent()
 GenericDto PortalZoneNode::serializeAsLaziness()
 {
     PortalZoneNodeDto dto = PortalZoneNodeDto(LazyNode::serializeLazyNodeAsLaziness());
-    /*if (!m_portalParent.expired())
-    {
-        if (auto portal = std::dynamic_pointer_cast<Portal, Spatial>(m_portalParent.lock()))
-        {
-            dto.portalName() = portal->getSpatialName();
-        }
-        else if (auto portal_management = std::dynamic_pointer_cast<PortalManagementNode, Spatial>(m_portalParent.lock()))
-        {
-            dto.portalManagementNodeName() = portal_management->getSpatialName();
-        }
-    }*/
     return dto.toGenericDto();
 }
 

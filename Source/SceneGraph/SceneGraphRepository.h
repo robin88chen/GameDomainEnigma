@@ -12,8 +12,6 @@
 #include "SceneGraphDefines.h"
 #include "Frameworks/CommandSubscriber.h"
 #include "Frameworks/QuerySubscriber.h"
-#include "GameEngine/FactoryDesc.h"
-#include "GameEngine/GenericDto.h"
 #include "SpatialId.h"
 #include "SceneGraphPersistenceLevel.h"
 #include <memory>
@@ -27,25 +25,11 @@ namespace Enigma::SceneGraph
     class SceneGraphFactory;
     class Spatial;
     class Camera;
-    //class Frustum;
     class Node;
-    //class Pawn;
     class Portal;
-    //class LightInfo;
-    //class Light;
     class LazyNode;
     class PortalZoneNode;
-    //class VisibilityManagedNode;
-    //class CameraDto;
-    //class NodeDto;
-    //class LazyNodeDto;
-    //class VisibilityManagedNodeDto;
-    //class LightDto;
-    //class PawnDto;
-    //class PortalDto;
     class PortalZoneNodeDto;
-    //class PortalManagementNodeDto;
-    //class SceneGraphBuilder;
 
     class SceneGraphRepository : public Frameworks::ISystemService
     {
@@ -66,20 +50,6 @@ namespace Enigma::SceneGraph
 
         SceneGraphFactory* factory() { return m_factory; }
 
-        //std::shared_ptr<Node> createNode(const SpatialId& id);
-        //std::shared_ptr<Node> createNode(const std::string& name, const Engine::FactoryDesc& factory_desc);
-        //std::shared_ptr<Node> createNode(const Engine::GenericDto& dto);
-
-        //std::shared_ptr<Portal> createPortal(const std::string& name);
-        //bool hasPortal(const std::string& name);
-        //std::shared_ptr<Portal> queryPortal(const std::string& name);
-
-        //std::shared_ptr<Spatial> querySpatial(const std::string& name);
-        //std::shared_ptr<Spatial> AddNewSpatial(Spatial* spatial);
-
-        //bool hasNode(const std::string& name);
-        //std::shared_ptr<Node> queryNode(const std::string& name);
-
         /** query entities */
         bool hasCamera(const SpatialId& id);
         std::shared_ptr<Camera> queryCamera(const SpatialId& id);
@@ -98,10 +68,6 @@ namespace Enigma::SceneGraph
         void removeSpatial(const SpatialId& id);
         void removeLaziedContent(const SpatialId& id);
 
-        /** factory methods */
-        //std::shared_ptr<PortalZoneNode> createPortalZoneNode(const PortalZoneNodeDto& portal_zone_node_dto);
-        //std::shared_ptr<VisibilityManagedNode> createVisibilityManagedNode(const VisibilityManagedNodeDto& visibility_managed_node_dto);
-
     private:
         void registerHandlers();
         void unregisterHandlers();
@@ -109,7 +75,6 @@ namespace Enigma::SceneGraph
         void queryCamera(const Frameworks::IQueryPtr& q);
         void requestCameraCreation(const Frameworks::IQueryPtr& r);
         void requestCameraConstitution(const Frameworks::IQueryPtr& r);
-        //void queryNode(const Frameworks::IQueryPtr& q);
         void querySpatial(const Frameworks::IQueryPtr& q);
         void requestSpatialCreation(const Frameworks::IQueryPtr& r);
         void requestSpatialConstitution(const Frameworks::IQueryPtr& r);
@@ -132,20 +97,12 @@ namespace Enigma::SceneGraph
         std::unordered_map<SpatialId, std::shared_ptr<Camera>, SpatialId::hash> m_cameras;
         std::recursive_mutex m_cameraMapLock;
 
-        //std::unordered_map<std::string, std::weak_ptr<Node>> m_nodes;
-        //std::recursive_mutex m_nodeMapLock;
         std::unordered_map<SpatialId, std::shared_ptr<Spatial>, SpatialId::hash> m_spatials;
         std::recursive_mutex m_spatialMapLock;
-
-        //std::unordered_map<std::string, std::weak_ptr<Portal>> m_portals;
-        //std::recursive_mutex m_portalMapLock;
-
-        //SceneGraphBuilder* m_builder;
 
         Frameworks::QuerySubscriberPtr m_queryCamera;
         Frameworks::QuerySubscriberPtr m_requestCameraCreation;
         Frameworks::QuerySubscriberPtr m_requestCameraConstitution;
-        //Frameworks::QuerySubscriberPtr m_queryNode;
         Frameworks::QuerySubscriberPtr m_querySpatial;
         Frameworks::QuerySubscriberPtr m_requestSpatialCreation;
         Frameworks::QuerySubscriberPtr m_requestSpatialConstitution;

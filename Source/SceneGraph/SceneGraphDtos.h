@@ -30,8 +30,6 @@ namespace Enigma::SceneGraph
         Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
         [[nodiscard]] bool isTopLevel() const { return m_isTopLevel; }
         bool& isTopLevel() { return m_isTopLevel; }
-        //const std::string& name() const { return m_name; }
-        //std::string& name() { return m_name; }
         SpatialId& id() { return m_id; }
         [[nodiscard]] const SpatialId& id() const { return m_id; }
         const std::string& parentName() const { return m_parentName; }
@@ -55,13 +53,11 @@ namespace Enigma::SceneGraph
         [[nodiscard]] const std::optional<SpatialId>& parentId() const { return m_parentId; }
         std::optional<SpatialId>& parentId() { return m_parentId; }
 
-        //static SpatialDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
 
     protected:
         Engine::FactoryDesc m_factoryDesc;
         bool m_isTopLevel;
-        //std::string m_name;
         SpatialId m_id;
         std::string m_parentName;
         MathLib::Matrix4 m_localTransform;
@@ -122,7 +118,6 @@ namespace Enigma::SceneGraph
         [[nodiscard]] Engine::GenericDto lightInfo() const { return m_lightInfo; }
         Engine::GenericDto& lightInfo() { return m_lightInfo; }
 
-        //static LightDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
 
     protected:
@@ -138,16 +133,11 @@ namespace Enigma::SceneGraph
 
         [[nodiscard]] const std::optional<Primitives::PrimitiveId>& primitiveId() const { return m_primitiveId; }
         std::optional<Primitives::PrimitiveId>& primitiveId() { return m_primitiveId; }
-        //[[nodiscard]] const Engine::FactoryDesc& PrimitiveFactoryDesc() const { return m_primitiveFactory; }
-        //Engine::FactoryDesc& PrimitiveFactoryDesc() { return m_primitiveFactory; }
 
-        //static PawnDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
 
     protected:
         std::optional<Primitives::PrimitiveId> m_primitiveId;
-        //todo : prefab support
-        //Engine::FactoryDesc m_primitiveFactory;
     };
 
     class LazyNodeDto : public NodeDto
@@ -157,7 +147,6 @@ namespace Enigma::SceneGraph
         LazyNodeDto(const NodeDto& node_dto);
         LazyNodeDto(const Engine::GenericDto& dto);
 
-        //static LazyNodeDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
     };
 
@@ -168,7 +157,6 @@ namespace Enigma::SceneGraph
         VisibilityManagedNodeDto(const LazyNodeDto& lazy_node_dto);
         VisibilityManagedNodeDto(const Engine::GenericDto& dto);
 
-        //static VisibilityManagedNodeDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
     };
 }

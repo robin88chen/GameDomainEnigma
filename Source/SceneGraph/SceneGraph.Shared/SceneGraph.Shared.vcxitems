@@ -38,7 +38,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalManagementNode.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalZoneNode.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneFlattenTraversal.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphBuilder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphAssemblers.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphDtos.h" />
@@ -58,7 +57,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialLightInfoQuery.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialLightInfoRequest.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialLightInfoResponse.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialLinkageResolver.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialRenderState.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\VisibilityManagedNode.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\VisibleSet.h" />
@@ -85,7 +83,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalManagementNode.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalZoneNode.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneFlattenTraversal.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphBuilder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphAssemblers.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphCommands.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphDtos.cpp" />
@@ -97,7 +94,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Spatial.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialId.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialLightInfoQuery.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialLinkageResolver.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialRenderState.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\VisibilityManagedNode.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\VisibleSet.cpp" />

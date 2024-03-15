@@ -19,8 +19,6 @@ namespace Enigma::SceneGraph
     public:
         VisibilityManagedNode(const SpatialId& id);
         VisibilityManagedNode(const SpatialId& id, const Engine::GenericDto& o);
-        //VisibilityManagedNode(const std::string& name, const Engine::FactoryDesc& factory_desc);
-        //VisibilityManagedNode(const Engine::GenericDto& dto);
         VisibilityManagedNode(const VisibilityManagedNode&) = delete;
         VisibilityManagedNode(VisibilityManagedNode&&) = delete;
         virtual ~VisibilityManagedNode() override;

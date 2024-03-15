@@ -22,8 +22,6 @@ namespace Enigma::SceneGraph
     public:
         LazyNode(const SpatialId& id);
         LazyNode(const SpatialId& id, const Engine::GenericDto& o);
-        //LazyNode(const std::string& name, const Engine::FactoryDesc& factory_desc);
-        //LazyNode(const Engine::GenericDto& dto);
         LazyNode(const LazyNode&) = delete;
         LazyNode(LazyNode&&) = delete;
         virtual ~LazyNode() override;

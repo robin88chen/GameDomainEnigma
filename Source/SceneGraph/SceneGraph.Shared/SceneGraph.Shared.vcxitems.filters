@@ -22,9 +22,6 @@
     <Filter Include="Events">
       <UniqueIdentifier>{5cfd4ff6-f389-40d8-8586-5ff1103a2059}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Repository\Builder">
-      <UniqueIdentifier>{a4c9c21b-20e1-4560-9e29-10b0d82bcae5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Commands">
       <UniqueIdentifier>{7f26edff-9dd0-4f4b-bb08-6864c8bd9b46}</UniqueIdentifier>
     </Filter>
@@ -98,12 +95,6 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphDtos.h">
       <Filter>DTO &amp; Assemblers</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialLinkageResolver.h">
-      <Filter>Repository</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphBuilder.h">
-      <Filter>Repository\Builder</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphCommands.h">
       <Filter>Commands</Filter>
@@ -235,12 +226,6 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphDtos.cpp">
       <Filter>DTO &amp; Assemblers</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialLinkageResolver.cpp">
-      <Filter>Repository</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphBuilder.cpp">
-      <Filter>Repository\Builder</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightInfoDtos.cpp">
       <Filter>DTO &amp; Assemblers</Filter>

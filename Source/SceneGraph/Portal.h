@@ -26,8 +26,6 @@ namespace Enigma::SceneGraph
     public:
         Portal(const SpatialId& id);
         Portal(const SpatialId& id, const Engine::GenericDto& o);
-        //Portal(const std::string& name);
-        //Portal(const Engine::GenericDto& dto);
         Portal(const Portal&) = delete;
         Portal(Portal&&) = delete;
         Portal& operator=(const Portal&) = delete;
@@ -39,7 +37,6 @@ namespace Enigma::SceneGraph
         static std::shared_ptr<Portal> constitute(const SpatialId& id, const Engine::GenericDto& dto);
 
         virtual Engine::GenericDto serializeDto() override;
-        //virtual void resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver) override;
 
         void setAdjacentZone(const SpatialId& id);
         std::shared_ptr<PortalZoneNode> getAdjacentZone();

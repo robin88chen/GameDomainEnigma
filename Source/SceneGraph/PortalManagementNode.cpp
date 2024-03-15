@@ -31,19 +31,6 @@ PortalManagementNode::PortalManagementNode(const SpatialId& id, const Engine::Ge
     Frameworks::CommandBus::subscribe(typeid(AttachPortalOutsideZone), m_attachOutsideZone);
 }
 
-/*PortalManagementNode::PortalManagementNode(const std::string& name) : Node(name)
-{
-    m_factoryDesc = FactoryDesc(TYPE_RTTI.getName());
-    m_attachOutsideZone = std::make_shared<Frameworks::CommandSubscriber>([=](const Frameworks::ICommandPtr& c) { attachOutsideZone(c); });
-    Frameworks::CommandBus::subscribe(typeid(AttachPortalOutsideZone), m_attachOutsideZone);
-}
-
-PortalManagementNode::PortalManagementNode(const GenericDto& dto) : Node(dto)
-{
-    m_attachOutsideZone = std::make_shared<Frameworks::CommandSubscriber>([=](const Frameworks::ICommandPtr& c) { attachOutsideZone(c); });
-    Frameworks::CommandBus::subscribe(typeid(AttachPortalOutsideZone), m_attachOutsideZone);
-}*/
-
 PortalManagementNode::~PortalManagementNode()
 {
     Frameworks::CommandBus::unsubscribe(typeid(AttachPortalOutsideZone), m_attachOutsideZone);
@@ -66,17 +53,6 @@ GenericDto PortalManagementNode::serializeDto()
     dto.outsideZoneNodeId() = m_outsideZoneId;
     return dto.toGenericDto();
 }
-
-/*void PortalManagementNode::resolveFactoryLinkage(const GenericDto& dto, FactoryLinkageResolver<Spatial>& resolver)
-{
-    PortalManagementNodeDto nodeDto{ dto };
-    resolver.tryResolveLinkage(nodeDto.outsideZoneNodeId().name(), [lifetime = weak_from_this()](auto sp)
-        {
-            if (!lifetime.expired())
-                std::dynamic_pointer_cast<PortalManagementNode, Spatial>(lifetime.lock())->
-                attachOutsideZone(std::dynamic_pointer_cast<PortalZoneNode, Spatial>(sp));
-        });
-}*/
 
 void PortalManagementNode::attachOutsideZone(const std::shared_ptr<PortalZoneNode>& node)
 {

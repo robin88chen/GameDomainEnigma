@@ -12,7 +12,6 @@ using namespace Enigma::SceneGraph;
 using namespace Enigma::MathLib;
 using namespace Enigma::Engine;
 
-//static std::string TOKEN_NAME = "Name";
 static std::string TOKEN_ID = "Id";
 static std::string TOKEN_PARENT_NAME = "ParentName";
 static std::string TOKEN_LOCAL_TRANSFORM = "LocalTransform";
@@ -28,7 +27,6 @@ static std::string TOKEN_CHILDREN = "Children";
 static std::string TOKEN_NATIVE_DTO = "NativeDto";
 static std::string TOKEN_LIGHT_INFO = "LightInfo";
 static std::string TOKEN_PAWN_PRIMITIVE_ID = "PawnPrimitiveId";
-//static std::string TOKEN_PRIMITIVE_FACTORY = "PrimitiveFactory";
 
 SpatialDto::SpatialDto() : m_factoryDesc(Spatial::TYPE_RTTI.getName()), m_isTopLevel(false), m_graphDepth(0), m_cullingMode(0), m_spatialFlag(0), m_notifyFlag(0)
 {
@@ -43,7 +41,6 @@ SpatialDto::SpatialDto(const Engine::GenericDto& dto) : m_factoryDesc(Spatial::T
 {
     factoryDesc() = dto.getRtti();
     m_isTopLevel = dto.isTopLevel();
-    //if (auto v = dto.tryGetValue<std::string>(TOKEN_NAME)) name() = v.value();
     if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_ID)) id() = SpatialId(v.value());
     if (auto v = dto.tryGetValue<std::string>(TOKEN_PARENT_NAME)) parentName() = v.value();
     if (auto v = dto.tryGetValue<Matrix4>(TOKEN_LOCAL_TRANSFORM)) localTransform() = v.value();
@@ -62,7 +59,6 @@ GenericDto SpatialDto::toGenericDto() const
     GenericDto dto;
     dto.addRtti(m_factoryDesc);
     dto.asTopLevel(m_isTopLevel);
-    //dto.addOrUpdate(TOKEN_NAME, m_name);
     dto.addOrUpdate(TOKEN_ID, m_id.tokens());
     if (!m_parentName.empty()) dto.addOrUpdate(TOKEN_PARENT_NAME, m_parentName);
     dto.addOrUpdate(TOKEN_LOCAL_TRANSFORM, m_localTransform);
@@ -121,12 +117,6 @@ NodeDto::NodeDto(const Engine::GenericDto& dto) : SpatialDto(dto)
     }
 }
 
-/*NodeDto NodeDto::fromGenericDto(const GenericDto& dto)
-{
-    NodeDto node_dto{ SpatialDto(dto) };
-    return node_dto;
-}*/
-
 GenericDto NodeDto::toGenericDto() const
 {
     GenericDto dto = SpatialDto::toGenericDto();
@@ -176,13 +166,6 @@ LightDto::LightDto(const Engine::GenericDto& dto) : SpatialDto(dto)
     if (auto v = dto.tryGetValue<GenericDto>(TOKEN_LIGHT_INFO)) m_lightInfo = v.value();
 }
 
-/*LightDto LightDto::fromGenericDto(const Engine::GenericDto& dto)
-{
-    LightDto light_dto{ SpatialDto(dto) };
-    if (auto v = dto.tryGetValue<GenericDto>(TOKEN_LIGHT_INFO)) light_dto.m_lightInfo = v.value();
-    return light_dto;
-}*/
-
 GenericDto LightDto::toGenericDto() const
 {
     GenericDto dto = SpatialDto::toGenericDto();
@@ -205,16 +188,7 @@ PawnDto::PawnDto(const Engine::GenericDto& dto) : SpatialDto(dto)
 {
     assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), Pawn::TYPE_RTTI.getName()));
     if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_PAWN_PRIMITIVE_ID)) m_primitiveId = v.value();
-    //if (auto v = dto.tryGetValue<FactoryDesc>(TOKEN_PRIMITIVE_FACTORY)) m_primitiveFactory = v.value();
 }
-
-/*PawnDto PawnDto::fromGenericDto(const Engine::GenericDto& dto)
-{
-    PawnDto pawn_dto{ SpatialDto(dto) };
-    if (auto v = dto.tryGetValue<GenericDto>(TOKEN_PAWN_PRIMITIVE)) pawn_dto.m_primitive = v.value();
-    //if (auto v = dto.tryGetValue<FactoryDesc>(TOKEN_PRIMITIVE_FACTORY)) pawn_dto.m_primitiveFactory = v.value();
-    return pawn_dto;
-}*/
 
 GenericDto PawnDto::toGenericDto() const
 {
@@ -223,7 +197,6 @@ GenericDto PawnDto::toGenericDto() const
     {
         dto.addOrUpdate(TOKEN_PAWN_PRIMITIVE_ID, m_primitiveId.value().tokens());
     }
-    //dto.addOrUpdate(TOKEN_PRIMITIVE_FACTORY, m_primitiveFactory);
     return dto;
 }
 
@@ -240,12 +213,6 @@ LazyNodeDto::LazyNodeDto(const NodeDto& node_dto) : NodeDto(node_dto)
 LazyNodeDto::LazyNodeDto(const Engine::GenericDto& dto) : NodeDto(dto)
 {
 }
-
-/*LazyNodeDto LazyNodeDto::fromGenericDto(const Engine::GenericDto& dto)
-{
-    LazyNodeDto node_dto{ NodeDto(dto) };
-    return node_dto;
-}*/
 
 GenericDto LazyNodeDto::toGenericDto() const
 {
@@ -266,12 +233,6 @@ VisibilityManagedNodeDto::VisibilityManagedNodeDto(const LazyNodeDto& lazy_node_
 VisibilityManagedNodeDto::VisibilityManagedNodeDto(const Engine::GenericDto& dto) : LazyNodeDto(dto)
 {
 }
-
-/*VisibilityManagedNodeDto VisibilityManagedNodeDto::fromGenericDto(const Engine::GenericDto& dto)
-{
-    VisibilityManagedNodeDto node_dto(LazyNodeDto::fromGenericDto(dto));
-    return node_dto;
-}*/
 
 GenericDto VisibilityManagedNodeDto::toGenericDto() const
 {

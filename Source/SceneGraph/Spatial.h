@@ -72,9 +72,7 @@ namespace Enigma::SceneGraph
         using NotifyFlags = std::bitset<5>;
 
     public:
-        //Spatial(const std::string& name);
         Spatial(const SpatialId& id);
-        //Spatial(const Engine::GenericDto& dto);
         Spatial(const SpatialId& id, const Engine::GenericDto& dto);
         Spatial(const Spatial&) = delete;
         Spatial(Spatial&&) = delete;
@@ -83,14 +81,12 @@ namespace Enigma::SceneGraph
         Spatial& operator=(Spatial&&) = delete;
 
         virtual Engine::GenericDto serializeDto();
-        //virtual void resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver) {}
 
         static std::shared_ptr<Spatial> querySpatial(const SpatialId& id);
 
         const SpatialId& id() const { return m_id; }
         PersistenceLevel persistenceLevel() const { return m_persistenceLevel; }
         void persistenceLevel(PersistenceLevel level) { m_persistenceLevel = level; }
-        //const std::string& getSpatialName() const { return m_name; }
 
         const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }

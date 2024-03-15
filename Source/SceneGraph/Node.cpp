@@ -16,19 +16,10 @@ using namespace Enigma::SceneGraph;
 
 DEFINE_RTTI(SceneGraph, Node, Spatial);
 
-/*Node::Node(const std::string& name) : Spatial(name)
-{
-    m_factoryDesc = Engine::FactoryDesc(Node::TYPE_RTTI.getName());
-}*/
-
 Node::Node(const SpatialId& id) : Spatial(id)
 {
     m_factoryDesc = Engine::FactoryDesc(Node::TYPE_RTTI.getName());
 }
-
-/*Node::Node(const Engine::GenericDto& o) : Spatial(o)
-{
-}*/
 
 Node::Node(const SpatialId& id, const Engine::GenericDto& dto) : Spatial(id, dto)
 {
@@ -95,17 +86,6 @@ NodeDto Node::serializeNodeDto()
     }
     return dto;
 }
-
-/*void Node::resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver)
-{
-    NodeDto nodeDto{ dto };
-    for (auto& child : nodeDto.children())
-    {
-        resolver.tryResolveLinkage(child.id().name(), [lifetime = weak_from_this()](auto sp)
-            { if (!lifetime.expired())
-            std::dynamic_pointer_cast<Node, Spatial>(lifetime.lock())->attachChild(sp, sp->getLocalTransform()); });
-    }
-}*/
 
 Enigma::Engine::GenericDtoCollection Node::serializeFlattenedTree()
 {

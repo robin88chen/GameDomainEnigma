@@ -29,10 +29,8 @@ namespace Enigma::Geometries
         SquareQuadAssembler& textureCoord(const MathLib::Vector2& left_bottom, const MathLib::Vector2& right_top);
         SquareQuadAssembler& asAsset(const std::string& name, const std::string& filename, const std::string& path_id);
 
-        std::shared_ptr<GeometryData> constitute(PersistenceLevel persistence_level);
-
-    protected:
         Engine::GenericDto toGenericDto();
+        std::shared_ptr<GeometryData> constitute(PersistenceLevel persistence_level);
 
     protected:
         GeometryId m_id;
@@ -55,10 +53,8 @@ namespace Enigma::Geometries
         CubeAssembler& facedTextureCoord(const MathLib::Vector3& left_bottom_front, const MathLib::Vector3& right_top_back);
         CubeAssembler& asAsset(const std::string& name, const std::string& filename, const std::string& path_id);
 
-        std::shared_ptr<GeometryData> constitute(PersistenceLevel persistence_level);
-
-    protected:
         Engine::GenericDto toGenericDto();
+        std::shared_ptr<GeometryData> constitute(PersistenceLevel persistence_level);
 
     protected:
         GeometryId m_id;
@@ -77,10 +73,8 @@ namespace Enigma::Geometries
         SphereAssembler& boxBound();
         SphereAssembler& asAsset(const std::string& name, const std::string& filename, const std::string& path_id);
 
-        std::shared_ptr<GeometryData> constitute(PersistenceLevel persistence_level);
-
-    protected:
         Engine::GenericDto toGenericDto();
+        std::shared_ptr<GeometryData> constitute(PersistenceLevel persistence_level);
 
     protected:
         GeometryId m_id;

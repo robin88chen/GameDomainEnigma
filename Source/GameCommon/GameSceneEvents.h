@@ -24,6 +24,18 @@ namespace Enigma::GameCommon
     protected:
         std::weak_ptr<SceneGraph::Node> m_sceneRoot;
     };
+    class CreateSceneRootFailed : public Frameworks::IEvent
+    {
+    public:
+        CreateSceneRootFailed(const SceneGraph::SpatialId& root_id, std::error_code er) : m_rootId(root_id), m_error(er) {}
+
+        const SceneGraph::SpatialId& rootId() const { return m_rootId; }
+        std::error_code error() const { return m_error; }
+
+    protected:
+        SceneGraph::SpatialId m_rootId;
+        std::error_code m_error;
+    };
     class PortalManagementNodeCreated : public Frameworks::IEvent
     {
     public:
@@ -33,6 +45,18 @@ namespace Enigma::GameCommon
 
     protected:
         std::weak_ptr<SceneGraph::PortalManagementNode> m_managementNode;
+    };
+    class CreatePortalManagementNodeFailed : public Frameworks::IEvent
+    {
+    public:
+        CreatePortalManagementNodeFailed(const SceneGraph::SpatialId& portal_management_id, std::error_code er) : m_portalManagementId(portal_management_id), m_error(er) {}
+
+        const SceneGraph::SpatialId& portalManagementId() const { return m_portalManagementId; }
+        std::error_code error() const { return m_error; }
+
+    protected:
+        SceneGraph::SpatialId m_portalManagementId;
+        std::error_code m_error;
     };
     //-----------------------------------------------------------------------------------
     class SceneRootChildAttached : public Frameworks::IEvent

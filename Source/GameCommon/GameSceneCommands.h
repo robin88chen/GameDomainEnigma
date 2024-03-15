@@ -13,6 +13,20 @@
 
 namespace Enigma::GameCommon
 {
+    class CreateSceneRoot : public Frameworks::ICommand
+    {
+    public:
+        CreateSceneRoot(const SceneGraph::SpatialId& scene_root_id, const std::optional<SceneGraph::SpatialId>& portal_management_node_id) :
+            m_sceneRootId(scene_root_id), m_portalManagementNodeId(portal_management_node_id) {}
+
+        const SceneGraph::SpatialId& sceneRootId() const { return m_sceneRootId; }
+        const std::optional<SceneGraph::SpatialId>& portalManagementNodeId() const { return m_portalManagementNodeId; }
+
+    protected:
+        SceneGraph::SpatialId m_sceneRootId;
+        std::optional<SceneGraph::SpatialId> m_portalManagementNodeId;
+    };
+
     class AttachSceneRootChild : public Frameworks::ICommand
     {
     public:
@@ -25,6 +39,7 @@ namespace Enigma::GameCommon
         std::shared_ptr<SceneGraph::Spatial> m_child;
         MathLib::Matrix4 m_localTransform;
     };
+
     class DeleteSceneSpatial : public Frameworks::ICommand
     {
     public:

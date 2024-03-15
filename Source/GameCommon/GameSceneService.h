@@ -41,7 +41,7 @@ namespace Enigma::GameCommon
 
         /** @name scene root */
         //@{
-        void createRootScene(const SceneGraph::SpatialId& scene_root_id, SceneGraph::PersistenceLevel persistence_level, const std::optional<SceneGraph::SpatialId>& portal_management_node_id);
+        void createRootScene(const SceneGraph::SpatialId& scene_root_id, const std::optional<SceneGraph::SpatialId>& portal_management_node_id);
         void destroyRootScene();
         const std::shared_ptr<SceneGraph::Node>& getSceneRoot() { return m_sceneRoot; };
         //@}
@@ -61,6 +61,7 @@ namespace Enigma::GameCommon
     protected:
         void onGameCameraCreated(const Frameworks::IEventPtr& e);
         void onGameCameraUpdated(const Frameworks::IEventPtr& e);
+        void createSceneRoot(const Frameworks::ICommandPtr& c);
         void attachSceneRootChild(const Frameworks::ICommandPtr& c);
         void deleteSceneSpatial(const Frameworks::ICommandPtr& c);
 
@@ -73,6 +74,7 @@ namespace Enigma::GameCommon
 
         Frameworks::EventSubscriberPtr m_onCameraCreated;
         Frameworks::EventSubscriberPtr m_onCameraUpdated;
+        Frameworks::CommandSubscriberPtr m_createSceneRoot;
         Frameworks::CommandSubscriberPtr m_attachSceneRootChild;
         Frameworks::CommandSubscriberPtr m_deleteSceneSpatial;
     };

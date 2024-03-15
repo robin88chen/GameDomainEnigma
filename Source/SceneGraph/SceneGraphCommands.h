@@ -36,41 +36,6 @@ namespace Enigma::SceneGraph
         Engine::GenericDtoCollection m_dtos;
     };
     //--------------------------------------------------------------------------------
-    using SpatialDtoFactory = std::function<Spatial* (const Engine::GenericDto& dto)>;
-
-    class RegisterSpatialDtoFactory : public Frameworks::ICommand
-    {
-    public:
-        RegisterSpatialDtoFactory(const std::string& rtti, const SpatialDtoFactory& factory)
-            : m_rtti(rtti), m_factory(factory) {}
-
-        const std::string& getRtti() const { return m_rtti; }
-        const SpatialDtoFactory& GetFactory() { return m_factory; }
-
-    private:
-        std::string m_rtti;
-        SpatialDtoFactory m_factory;
-    };
-    class UnRegisterSpatialDtoFactory : public Frameworks::ICommand
-    {
-    public:
-        UnRegisterSpatialDtoFactory(const std::string& rtti) : m_rtti(rtti) {}
-
-        const std::string& getRtti() const { return m_rtti; }
-
-    private:
-        std::string m_rtti;
-    };
-    class InvokeSpatialDtoFactory : public Frameworks::ICommand
-    {
-    public:
-        InvokeSpatialDtoFactory(const Engine::GenericDto& dto) : m_dto(dto) {}
-
-        const Engine::GenericDto& GetDto() { return m_dto; }
-
-    private:
-        Engine::GenericDto m_dto;
-    };
     class RegisterSpatialFactory : public Frameworks::ICommand
     {
     public:

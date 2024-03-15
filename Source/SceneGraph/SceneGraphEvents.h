@@ -175,27 +175,6 @@ namespace Enigma::SceneGraph
         std::string m_sceneGraphId;
         std::error_code m_error;
     };
-    class InPlaceSceneGraphBuilt : public Frameworks::IEvent
-    {
-    public:
-        InPlaceSceneGraphBuilt(const std::shared_ptr<Node>& in_place_root) : m_in_placeRoot(in_place_root) {};
-
-        const std::shared_ptr<Node>& GetInPlaceRootNode() { return m_in_placeRoot; }
-    protected:
-        std::shared_ptr<Node> m_in_placeRoot;
-    };
-    class BuildInPlaceSceneGraphFailed : public Frameworks::IEvent
-    {
-    public:
-        BuildInPlaceSceneGraphFailed(const std::string& in_place_root_name, std::error_code er) : m_in_placeRootName(in_place_root_name), m_error(er) {}
-
-        const std::string& GetInPlaceRootNodeName() { return m_in_placeRootName; }
-        std::error_code GetErrorCode() const { return m_error; }
-
-    protected:
-        std::string m_in_placeRootName;
-        std::error_code m_error;
-    };
 
     class LazyNodeInstanced : public Frameworks::IEvent
     {
@@ -284,26 +263,6 @@ namespace Enigma::SceneGraph
         std::error_code m_error;
     };
     //------------ creator response ------------
-    class NodeCreated : public Frameworks::IResponseEvent
-    {
-    public:
-        NodeCreated(const Frameworks::Ruid& request_ruid, const std::shared_ptr<Node>& node) : IResponseEvent(request_ruid), m_node(node) {};
-
-        std::shared_ptr<Node> node() const { return m_node; }
-
-    protected:
-        std::shared_ptr<Node> m_node;
-    };
-    class CreateNodeFailed : public Frameworks::IResponseEvent
-    {
-    public:
-        CreateNodeFailed(const Frameworks::Ruid& ruid, std::error_code err) : IResponseEvent(ruid), m_error(err) {}
-
-        std::error_code error() const { return m_error; }
-
-    protected:
-        std::error_code m_error;
-    };
     class SpatialCreated : public Frameworks::IEvent
     {
     public:

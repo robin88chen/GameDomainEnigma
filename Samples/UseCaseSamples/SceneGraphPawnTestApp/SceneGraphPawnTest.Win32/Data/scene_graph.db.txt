@@ -1,0 +1,2 @@
+camera,En.SceneGraph.Camera,camera.cam@DataPath
+root,En.SceneGraph.Node,root.En.SceneGraph.Node.json

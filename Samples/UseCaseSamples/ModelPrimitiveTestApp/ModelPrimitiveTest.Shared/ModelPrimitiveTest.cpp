@@ -144,11 +144,11 @@ void ModelPrimitiveTest::frameUpdate()
 void ModelPrimitiveTest::renderFrame()
 {
     if (!m_renderer) return;
-    m_renderer->BeginScene();
-    m_renderer->ClearRenderTarget();
-    m_renderer->DrawScene();
-    m_renderer->EndScene();
-    m_renderer->Flip();
+    m_renderer->beginScene();
+    m_renderer->clearRenderTarget();
+    m_renderer->drawScene();
+    m_renderer->endScene();
+    m_renderer->flip();
 }
 
 void ModelPrimitiveTest::makeCamera()
@@ -157,7 +157,7 @@ void ModelPrimitiveTest::makeCamera()
     if (const auto camera = Camera::queryCamera(m_cameraId))
     {
         m_camera = camera;
-        if ((m_camera) && (m_renderer)) m_renderer->SetAssociatedCamera(m_camera);
+        if ((m_camera) && (m_renderer)) m_renderer->setAssociatedCamera(m_camera);
     }
     else
     {
@@ -194,7 +194,7 @@ void ModelPrimitiveTest::onCameraConstituted(const IEventPtr& e)
     if (ev->id() != m_cameraId) return;
     if (ev->isPersisted()) return;
     m_camera = ev->camera();
-    if ((m_camera) && (m_renderer)) m_renderer->SetAssociatedCamera(m_camera);
+    if ((m_camera) && (m_renderer)) m_renderer->setAssociatedCamera(m_camera);
     CommandBus::post(std::make_shared<PutCamera>(m_cameraId, m_camera));
 }
 
@@ -203,8 +203,8 @@ void ModelPrimitiveTest::onRenderTargetCreated(const IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<PrimaryRenderTargetCreated, IEvent>(e);
     if (!ev) return;
-    m_renderTarget = ev->GetRenderTarget();
-    if ((m_renderer) && (m_renderTarget)) m_renderer->SetRenderTarget(m_renderTarget);
+    m_renderTarget = ev->renderTarget();
+    if ((m_renderer) && (m_renderTarget)) m_renderer->setRenderTarget(m_renderTarget);
 }
 
 void ModelPrimitiveTest::onRendererCreated(const IEventPtr& e)
@@ -212,7 +212,7 @@ void ModelPrimitiveTest::onRendererCreated(const IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<RendererCreated, IEvent>(e);
     if (!ev) return;
-    m_renderer = std::dynamic_pointer_cast<Renderer, IRenderer>(ev->GetRenderer());
-    m_renderer->SetAssociatedCamera(m_camera);
-    if ((m_renderer) && (m_renderTarget)) m_renderer->SetRenderTarget(m_renderTarget);
+    m_renderer = std::dynamic_pointer_cast<Renderer, IRenderer>(ev->renderer());
+    m_renderer->setAssociatedCamera(m_camera);
+    if ((m_renderer) && (m_renderTarget)) m_renderer->setRenderTarget(m_renderTarget);
 }

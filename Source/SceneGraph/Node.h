@@ -13,11 +13,6 @@
 #include "Frameworks/Rtti.h"
 #include <string>
 
-namespace Enigma::Engine
-{
-    template <class T> class FactoryLinkageResolver;
-}
-
 namespace Enigma::SceneGraph
 {
     using error = std::error_code;
@@ -32,10 +27,8 @@ namespace Enigma::SceneGraph
         using ChildList = std::list<SpatialPtr>;
 
     public:
-        Node(const std::string& name);
         Node(const SpatialId& id);
         Node(const SpatialId& id, const Engine::GenericDto& dto);
-        Node(const Engine::GenericDto& dto);
         Node(const Node&) = delete;
         Node(Node&&) = delete;
         virtual ~Node() override;
@@ -43,11 +36,12 @@ namespace Enigma::SceneGraph
         Node& operator=(Node&&) = delete;
 
         virtual Engine::GenericDto serializeDto() override;
-        virtual void resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver) override;
 
+        static std::shared_ptr<Node> queryNode(const SpatialId& id);
         static std::shared_ptr<Node> create(const SpatialId& id);
         static std::shared_ptr<Node> constitute(const SpatialId& id, const Engine::GenericDto& dto);
 
+        //todo: remove
         virtual Engine::GenericDtoCollection serializeFlattenedTree();
 
         /** on cull visible, used by culler, for compute visible set, recursive calling children's "CullingVisibleSet"  */

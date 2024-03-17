@@ -25,7 +25,7 @@ namespace Enigma::SceneGraph
         DECLARE_EN_RTTI
     public:
         Light(const SpatialId& id, const LightInfo& lightInfo);
-        Light(const Engine::GenericDto& dto);
+        Light(const SpatialId& id, const Engine::GenericDto& dto);
         Light(const Light&) = delete;
         Light(Light&&) = delete;
         virtual ~Light() override;

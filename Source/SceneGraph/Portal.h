@@ -24,19 +24,22 @@ namespace Enigma::SceneGraph
     {
         DECLARE_EN_RTTI;
     public:
-        Portal(const std::string& name);
-        Portal(const Engine::GenericDto& dto);
+        Portal(const SpatialId& id);
+        Portal(const SpatialId& id, const Engine::GenericDto& o);
         Portal(const Portal&) = delete;
         Portal(Portal&&) = delete;
         Portal& operator=(const Portal&) = delete;
         Portal& operator=(Portal&&) = delete;
         virtual ~Portal() override;
 
-        virtual Engine::GenericDto serializeDto() override;
-        virtual void resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver) override;
+        static std::shared_ptr<Portal> queryPortal(const SpatialId& id);
+        static std::shared_ptr<Portal> create(const SpatialId& id);
+        static std::shared_ptr<Portal> constitute(const SpatialId& id, const Engine::GenericDto& dto);
 
-        void setAdjacentZone(const std::shared_ptr<PortalZoneNode>& node);
-        std::shared_ptr<PortalZoneNode> getAdjacentZone() const { return m_adjacentPortalZone.lock(); };
+        virtual Engine::GenericDto serializeDto() override;
+
+        void setAdjacentZone(const SpatialId& id);
+        std::shared_ptr<PortalZoneNode> getAdjacentZone();
 
         /// Portal Open & Close, Closed Portal 就像關起來的門
         bool isOpen() const { return m_isOpen; };
@@ -57,6 +60,7 @@ namespace Enigma::SceneGraph
         void updatePortalQuad();
 
     protected:
+        SpatialId m_adjacentZoneId;
         std::weak_ptr<PortalZoneNode> m_adjacentPortalZone;
         bool m_isOpen;
 

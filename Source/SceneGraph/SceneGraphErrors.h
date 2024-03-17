@@ -20,6 +20,7 @@ namespace Enigma::SceneGraph
         nullSceneGraph,
         dataNotReady,
         parentNode,
+        nodeNotFound,
         nullPrimitive,
         nullCullerCamera,
         unsupportPawnPrimitive,
@@ -31,6 +32,8 @@ namespace Enigma::SceneGraph
         sceneRepositoryFailed,
         entityAlreadyExists,
         sceneFactoryFailed,
+        laziedContentNotFound,
+        childDtoNotFound,
 
         spatialFactoryNotFound = 301,
         factoryRttiMismatch,

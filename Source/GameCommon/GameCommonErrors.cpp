@@ -15,6 +15,10 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::nodeNotFound: return "Node not found";
     case ErrorCode::spatialNotFound: return "Spatial not found";
     case ErrorCode::nullFrustum: return "Null frustum";
+    case ErrorCode::invalidSceneRootId: return "Invalid scene root id";
+    case ErrorCode::sceneRootAlreadyExist: return "Scene root already exist";
+    case ErrorCode::invalidPortalManagementId: return "Invalid portal management id";
+    case ErrorCode::portalManagementAlreadyExist: return "Portal management already exist";
     }
     return "Unknown";
 }

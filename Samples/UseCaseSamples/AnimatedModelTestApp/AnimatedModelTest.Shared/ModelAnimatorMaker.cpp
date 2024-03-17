@@ -48,7 +48,7 @@ std::shared_ptr<AnimationAsset> ModelAnimatorMaker::makeModelAnimationAsset(cons
     model_animation_asset_dto.factoryDesc() = Enigma::Engine::FactoryDesc(ModelAnimationAsset::TYPE_RTTI.getName()).ClaimAsResourceAsset(animation_id.name(), animation_id.name() + ".ani", "DataPath");
     model_animation_asset_dto.meshNodeNames() = std::vector<std::string>{ mesh_node_name };
     model_animation_asset_dto.timeSRTs().push_back(anim_srt_dto.toGenericDto());
-    return std::make_shared<RequestAnimationAssetConstitution>(animation_id, model_animation_asset_dto.toGenericDto(), RequestAnimationAssetConstitution::PersistenceLevel::Store)->dispatch();
+    return std::make_shared<RequestAnimationAssetConstitution>(animation_id, model_animation_asset_dto.toGenericDto(), PersistenceLevel::Store)->dispatch();
 }
 
 std::shared_ptr<Animator> ModelAnimatorMaker::makeModelAnimator(const AnimatorId& animator_id, const AnimationAssetId& animation_id, const Enigma::Primitives::PrimitiveId& model_id)
@@ -60,5 +60,5 @@ std::shared_ptr<Animator> ModelAnimatorMaker::makeModelAnimator(const AnimatorId
     model_animator_dto.animationAssetId() = animation_id;
     model_animator_dto.controlledPrimitiveId() = model_id;
     model_animator_dto.factoryDesc() = Enigma::Engine::FactoryDesc(ModelPrimitiveAnimator::TYPE_RTTI.getName()).ClaimAsNative(animator_id.name() + ".animator@DataPath");
-    return std::make_shared<RequestAnimatorConstitution>(animator_id, model_animator_dto.toGenericDto(), RequestAnimatorConstitution::PersistenceLevel::Store)->dispatch();
+    return std::make_shared<RequestAnimatorConstitution>(animator_id, model_animator_dto.toGenericDto(), PersistenceLevel::Store)->dispatch();
 }

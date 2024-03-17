@@ -1,0 +1,4 @@
+0
+floor_mesh,0,En.Renderables.MeshPrimitive,floor_mesh.mesh@DataPath
+door_mesh,0,En.Renderables.MeshPrimitive,door_mesh.mesh@DataPath
+cube_mesh,0,En.Renderables.MeshPrimitive,cube_mesh.mesh@DataPath

@@ -7,6 +7,7 @@
 #include "MathLib/MathAlgorithm.h"
 #include "Frameworks/EventPublisher.h"
 #include "GameEngine/BoundingVolume.h"
+#include "SceneGraphQueries.h"
 #include <cassert>
 #include <tuple>
 
@@ -16,42 +17,9 @@ using namespace Enigma::Engine;
 
 DEFINE_RTTI_OF_BASE(SceneGraph, Spatial);
 
-Spatial::Spatial(const std::string& name) : m_factoryDesc(Spatial::TYPE_RTTI.getName())
-{
-    m_name = name;
-
-    m_graphDepth = 0;
-
-    //m_spatialRenderState = nullptr;
-
-    m_cullingMode = CullingMode::Dynamic;
-
-    m_spatialFlags = Spatial_Unlit; // 預設是不受光的...entity再打開
-
-    m_vecLocalPosition = Vector3::ZERO;
-    m_vecLocalScale = Vector3(1.0f, 1.0f, 1.0f);
-    m_mxLocalRotation = Matrix3::IDENTITY;
-    m_qtLocalQuaternion = Quaternion::IDENTITY;
-    m_vecLocalEulerAngle = Vector3::ZERO;
-
-    m_mxLocalTransform = Matrix4::IDENTITY;
-    m_mxWorldTransform = Matrix4::IDENTITY;
-
-    m_modelBound = BoundingVolume(Box3::UNIT_BOX);
-    m_worldBound = BoundingVolume(Box3::UNIT_BOX);
-
-    m_vecWorldPosition = Vector3::ZERO;
-
-    m_notifyFlags = Notify_All;
-}
-
 Spatial::Spatial(const SpatialId& id) : m_factoryDesc(Spatial::TYPE_RTTI.getName()), m_id(id)
 {
-    m_name = id.name();
-
     m_graphDepth = 0;
-
-    //m_spatialRenderState = nullptr;
 
     m_cullingMode = CullingMode::Dynamic;
 
@@ -74,35 +42,9 @@ Spatial::Spatial(const SpatialId& id) : m_factoryDesc(Spatial::TYPE_RTTI.getName
     m_notifyFlags = Notify_All;
 
 }
-
-Spatial::Spatial(const GenericDto& o) : m_factoryDesc(o.getRtti())
-{
-    SpatialDto dto{ o };
-    m_name = dto.name();
-    m_graphDepth = dto.graphDepth();
-    m_cullingMode = static_cast<CullingMode>(dto.cullingMode());
-    m_spatialFlags = dto.spatialFlag();
-    m_notifyFlags = dto.notifyFlag();
-    m_mxLocalTransform = dto.localTransform();
-    assert(m_mxLocalTransform != Matrix4::ZERO);
-    m_mxWorldTransform = dto.worldTransform();
-    assert(m_mxWorldTransform != Matrix4::ZERO);
-    m_modelBound = BoundingVolume(BoundingVolumeDto::fromGenericDto(dto.modelBound()));
-    m_worldBound = BoundingVolume(BoundingVolumeDto::fromGenericDto(dto.worldBound()));
-    assert(!m_modelBound.isEmpty());
-    assert(!m_worldBound.isEmpty());
-    std::tie(m_vecLocalScale, m_qtLocalQuaternion, m_vecLocalPosition) = m_mxLocalTransform.UnMatrixSRT();
-    m_mxLocalRotation = m_qtLocalQuaternion.ToRotationMatrix();
-    EulerAngles angles{ 0.0f, 0.0f, 0.0f };
-    std::tie(angles, std::ignore) = m_mxLocalRotation.ToEulerAnglesXYZ();
-    m_vecLocalEulerAngle = Vector3(angles.m_x, angles.m_y, angles.m_z);
-    m_vecWorldPosition = m_mxWorldTransform.UnMatrixTranslate();
-}
-
 Spatial::Spatial(const SpatialId& id, const GenericDto& o) : m_factoryDesc(o.getRtti()), m_id(id)
 {
     SpatialDto dto{ o };
-    m_name = dto.name();
     m_graphDepth = dto.graphDepth();
     m_cullingMode = static_cast<CullingMode>(dto.cullingMode());
     m_spatialFlags = dto.spatialFlag();
@@ -125,7 +67,6 @@ Spatial::Spatial(const SpatialId& id, const GenericDto& o) : m_factoryDesc(o.get
 
 Spatial::~Spatial()
 {
-    //m_spatialRenderState = nullptr;
 }
 
 Enigma::Engine::GenericDto Spatial::serializeDto()
@@ -133,14 +74,20 @@ Enigma::Engine::GenericDto Spatial::serializeDto()
     return serializeSpatialDto().toGenericDto();
 }
 
+std::shared_ptr<Spatial> Spatial::querySpatial(const SpatialId& id)
+{
+    assert(id.rtti().isDerived(Spatial::TYPE_RTTI));
+    return std::make_shared<QuerySpatial>(id)->dispatch();
+}
+
 SpatialDto Spatial::serializeSpatialDto()
 {
     SpatialDto dto;
     dto.factoryDesc() = m_factoryDesc;
-    dto.name() = m_name;
+    //dto.name() = m_name;
     dto.id() = m_id;
-    if (!m_parent.expired()) dto.parentName() = m_parent.lock()->getSpatialName();
-    dto.graphDepth() = m_graphDepth;
+    if (m_parent) dto.parentName() = m_parent.value().name();
+    //dto.graphDepth() = m_graphDepth;
     dto.cullingMode() = static_cast<unsigned int>(m_cullingMode);
     dto.spatialFlag() = static_cast<unsigned int>(m_spatialFlags.to_ulong());
     dto.notifyFlag() = static_cast<unsigned int>(m_notifyFlags.to_ulong());
@@ -151,23 +98,22 @@ SpatialDto Spatial::serializeSpatialDto()
     return dto;
 }
 
-void Spatial::linkParent(const std::shared_ptr<Spatial>& parent)
+void Spatial::linkParent(const std::optional<SpatialId>& parent)
 {
     m_parent = parent;
-    if ((!m_parent.expired()) && (m_parent.lock()))
-        m_graphDepth = m_parent.lock()->getGraphDepth() + 1;
+    if (auto p = getParent()) m_graphDepth = p->getGraphDepth() + 1;
 }
 
 std::shared_ptr<Spatial> Spatial::getParent() const
 {
-    if (!m_parent.expired()) return m_parent.lock();
-    return nullptr;
+    if (!m_parent.has_value()) return nullptr;
+    return std::make_shared<QuerySpatial>(m_parent.value())->dispatch();
 }
 
 void Spatial::detachFromParent()
 {
-    if (m_parent.expired()) return;
-    const NodePtr parent_node = std::dynamic_pointer_cast<Node, Spatial>(m_parent.lock());
+    if (!m_parent.has_value()) return;
+    const NodePtr parent_node = Node::queryNode(m_parent.value());
     if (!parent_node) return;
     parent_node->detachChild(thisSpatial());
 }
@@ -199,7 +145,7 @@ error Spatial::cullVisibleSet(Culler* culler, bool noCull)
 
 Matrix4 Spatial::getParentWorldTransform() const
 {
-    if (!m_parent.expired()) return m_parent.lock()->getWorldTransform();
+    if (auto parent = getParent()) return parent->getWorldTransform();
     return Matrix4::IDENTITY;
 }
 
@@ -313,7 +259,7 @@ void Spatial::setCullingMode(CullingMode mode)
     }
     if ((testNotifyFlag(Notify_CullMode)) && (has_changed))
     {
-        Frameworks::EventPublisher::post(std::make_shared<SpatialCullModeChanged>(thisSpatial()));
+        Frameworks::EventPublisher::post(std::make_shared<SpatialCullModeChanged>(m_id));
     }
 }
 
@@ -324,7 +270,7 @@ void Spatial::notifySpatialRenderStateChanged()
 
 error Spatial::_propagateSpatialRenderState()
 {
-    if (!m_parent.expired()) return m_parent.lock()->_propagateSpatialRenderState();
+    if (auto parent = getParent()) return getParent()->_propagateSpatialRenderState();
     return ErrorCode::ok;
 }
 
@@ -335,11 +281,11 @@ error Spatial::_updateBoundData()
 
     if (testNotifyFlag(Notify_Bounding))
     {
-        Frameworks::EventPublisher::post(std::make_shared<SpatialBoundChanged>(thisSpatial()));
+        Frameworks::EventPublisher::post(std::make_shared<SpatialBoundChanged>(m_id));
     }
 
     error er = ErrorCode::ok;
-    if (!m_parent.expired()) er = m_parent.lock()->_updateBoundData();
+    if (auto parent = getParent()) er = parent->_updateBoundData();
 
     return er;
 }
@@ -349,16 +295,16 @@ error Spatial::_updateLocalTransform(const MathLib::Matrix4& mxLocal)
     m_mxLocalTransform = mxLocal;
 
     Matrix4 mxParent = Matrix4::IDENTITY;
-    if (!m_parent.expired())
+    if (auto parent = getParent())
     {
-        mxParent = m_parent.lock()->getWorldTransform();
+        mxParent = parent->getWorldTransform();
     }
     error er = _updateWorldData(mxParent);
     if (er) return er;
 
     if (testNotifyFlag(Notify_Location))
     {
-        Frameworks::EventPublisher::post(std::make_shared<SpatialLocationChanged>(thisSpatial()));
+        Frameworks::EventPublisher::post(std::make_shared<SpatialLocationChanged>(m_id));
     }
     // propagate up
     er = _updateBoundData();
@@ -369,11 +315,13 @@ error Spatial::_updateLocalTransform(const MathLib::Matrix4& mxLocal)
 error Spatial::_updateSpatialRenderState()
 {
     if (!isRenderable()) return ErrorCode::ok;  // only renderable entity need
-    if (!(testSpatialFlag(Spatial_Unlit))) m_spatialRenderState.QueryLightingState(m_vecWorldPosition);
-
+    if (!(testSpatialFlag(Spatial_Unlit)))
+    {
+        m_spatialRenderState = std::make_shared<QueryLightingStateAt>(m_vecWorldPosition)->dispatch();
+    }
     if (testNotifyFlag(Notify_RenderState))
     {
-        Frameworks::EventPublisher::post(std::make_shared<SpatialRenderStateChanged>(thisSpatial()));
+        Frameworks::EventPublisher::post(std::make_shared<SpatialRenderStateChanged>(m_id));
     }
     return ErrorCode::ok;
 }
@@ -395,7 +343,7 @@ void Spatial::addSpatialFlag(SpatialFlags flag)
     const bool visible_after = testSpatialFlag(SpatialBit::Spatial_Hide);
     if ((visible_before != visible_after) && (testNotifyFlag(Notify_Visibility)))
     {
-        Frameworks::EventPublisher::post(std::make_shared<SpatialVisibilityChanged>(thisSpatial()));
+        Frameworks::EventPublisher::post(std::make_shared<SpatialVisibilityChanged>(m_id));
     }
 }
 
@@ -406,6 +354,6 @@ void Spatial::removeSpatialFlag(SpatialFlags flag)
     const bool visible_after = testSpatialFlag(SpatialBit::Spatial_Hide);
     if ((visible_before != visible_after) && (testNotifyFlag(Notify_Visibility)))
     {
-        Frameworks::EventPublisher::post(std::make_shared<SpatialVisibilityChanged>(thisSpatial()));
+        Frameworks::EventPublisher::post(std::make_shared<SpatialVisibilityChanged>(m_id));
     }
 }

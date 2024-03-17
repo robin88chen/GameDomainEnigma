@@ -6,15 +6,20 @@
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Engine;
 
-static std::string TOKEN_PORTAL_MANAGEMENT_NODE_NAME = "PortalManagementNodeName";
-static std::string TOKEN_PORTAL_NAME = "PortalName";
-static std::string TOKEN_ADJACENT_NODE_NAME = "AdjacentNodeName";
+static std::string TOKEN_PORTAL_PARENT_ID = "PortalParentID";
+static std::string TOKEN_ADJACENT_NODE_ID = "AdjacentNodeID";
 static std::string TOKEN_IS_PORTAL_OPEN = "IsPortalOpen";
-static std::string TOKEN_OUTSIDE_NODE_NAME = "OutsideNodeName";
+static std::string TOKEN_OUTSIDE_NODE_ID = "OutsideNodeID";
 
 PortalZoneNodeDto::PortalZoneNodeDto() : LazyNodeDto()
 {
     m_factoryDesc = FactoryDesc(PortalZoneNode::TYPE_RTTI.getName());
+}
+
+PortalZoneNodeDto::PortalZoneNodeDto(const Engine::GenericDto& dto) : LazyNodeDto(dto)
+{
+    assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), PortalZoneNode::TYPE_RTTI.getName()));
+    if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_PORTAL_PARENT_ID)) portalParentId() = v.value();
 }
 
 PortalZoneNodeDto::PortalZoneNodeDto(const LazyNodeDto& lazy_node_dto) : LazyNodeDto(lazy_node_dto)
@@ -22,19 +27,10 @@ PortalZoneNodeDto::PortalZoneNodeDto(const LazyNodeDto& lazy_node_dto) : LazyNod
     assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), PortalZoneNode::TYPE_RTTI.getName()));
 }
 
-PortalZoneNodeDto PortalZoneNodeDto::fromGenericDto(const Engine::GenericDto& dto)
-{
-    PortalZoneNodeDto node_dto{ LazyNodeDto(dto) };
-    if (auto v = dto.tryGetValue<std::string>(TOKEN_PORTAL_MANAGEMENT_NODE_NAME)) node_dto.portalManagementNodeName() = v.value();
-    if (auto v = dto.tryGetValue<std::string>(TOKEN_PORTAL_NAME)) node_dto.portalName() = v.value();
-    return node_dto;
-}
-
 GenericDto PortalZoneNodeDto::toGenericDto() const
 {
     GenericDto dto = LazyNodeDto::toGenericDto();
-    dto.addOrUpdate(TOKEN_PORTAL_MANAGEMENT_NODE_NAME, m_portalManagementNodeName);
-    dto.addOrUpdate(TOKEN_PORTAL_NAME, m_portalName);
+    dto.addOrUpdate(TOKEN_PORTAL_PARENT_ID, m_portalParentId.tokens());
     return dto;
 }
 
@@ -43,23 +39,22 @@ PortalDto::PortalDto() : SpatialDto(), m_isOpen(false)
     m_factoryDesc = FactoryDesc(Portal::TYPE_RTTI.getName());
 }
 
+PortalDto::PortalDto(const Engine::GenericDto& dto) : SpatialDto(dto)
+{
+    assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), Portal::TYPE_RTTI.getName()));
+    if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_ADJACENT_NODE_ID)) adjacentZoneNodeId() = v.value();
+    if (auto v = dto.tryGetValue<bool>(TOKEN_IS_PORTAL_OPEN)) isOpen() = v.value();
+}
+
 PortalDto::PortalDto(const SpatialDto& spatial_dto) : SpatialDto(spatial_dto), m_isOpen(false)
 {
     assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), Portal::TYPE_RTTI.getName()));
 }
 
-PortalDto PortalDto::fromGenericDto(const GenericDto& dto)
-{
-    PortalDto portal_dto{ SpatialDto(dto) };
-    if (auto v = dto.tryGetValue<std::string>(TOKEN_ADJACENT_NODE_NAME)) portal_dto.adjacentZoneNodeName() = v.value();
-    if (auto v = dto.tryGetValue<bool>(TOKEN_IS_PORTAL_OPEN)) portal_dto.isOpen() = v.value();
-    return portal_dto;
-}
-
 GenericDto PortalDto::toGenericDto()
 {
     GenericDto dto = SpatialDto::toGenericDto();
-    dto.addOrUpdate(TOKEN_ADJACENT_NODE_NAME, m_adjacentZoneNodeName);
+    dto.addOrUpdate(TOKEN_ADJACENT_NODE_ID, m_adjacentZoneNodeId.tokens());
     dto.addOrUpdate(TOKEN_IS_PORTAL_OPEN, m_isOpen);
     return dto;
 }
@@ -69,21 +64,20 @@ PortalManagementNodeDto::PortalManagementNodeDto() : NodeDto()
     m_factoryDesc = FactoryDesc(PortalManagementNode::TYPE_RTTI.getName());
 }
 
+PortalManagementNodeDto::PortalManagementNodeDto(const Engine::GenericDto& dto) : NodeDto(dto)
+{
+    assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), PortalManagementNode::TYPE_RTTI.getName()));
+    if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_OUTSIDE_NODE_ID)) outsideZoneNodeId() = v.value();
+}
+
 PortalManagementNodeDto::PortalManagementNodeDto(const NodeDto& node_dto) : NodeDto(node_dto)
 {
     assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), PortalManagementNode::TYPE_RTTI.getName()));
 }
 
-PortalManagementNodeDto PortalManagementNodeDto::fromGenericDto(const Engine::GenericDto& dto)
-{
-    PortalManagementNodeDto node_dto{ NodeDto(dto) };
-    if (auto v = dto.tryGetValue<std::string>(TOKEN_OUTSIDE_NODE_NAME)) node_dto.outsideZoneNodeName() = v.value();
-    return node_dto;
-}
-
 GenericDto PortalManagementNodeDto::toGenericDto()
 {
     GenericDto dto = NodeDto::toGenericDto();
-    dto.addOrUpdate(TOKEN_OUTSIDE_NODE_NAME, m_outsideZoneNodeName);
+    dto.addOrUpdate(TOKEN_OUTSIDE_NODE_ID, m_outsideZoneNodeId.tokens());
     return dto;
 }

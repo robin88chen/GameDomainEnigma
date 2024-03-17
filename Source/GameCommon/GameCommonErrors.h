@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   GameCommonErrors.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   March 2023
  *********************************************************************/
@@ -21,6 +21,10 @@ namespace Enigma::GameCommon
         nodeNotFound,
         spatialNotFound,
         nullFrustum,
+        invalidSceneRootId,
+        sceneRootAlreadyExist,
+        invalidPortalManagementId,
+        portalManagementAlreadyExist,
     };
     class ErrorCategory : public std::error_category
     {

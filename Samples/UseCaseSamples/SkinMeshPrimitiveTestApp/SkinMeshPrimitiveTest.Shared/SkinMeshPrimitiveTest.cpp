@@ -117,7 +117,7 @@ void SkinMeshPrimitiveTest::installEngine()
     m_cameraId = SpatialId("camera", Camera::TYPE_RTTI);
     m_cubeId = GeometryId("test_geometry");
     m_meshId = PrimitiveId("test_mesh", MeshPrimitive::TYPE_RTTI);
-    m_modelId = PrimitiveId("test_model", ModelPrimitive::TYPE_RTTI).next();
+    m_modelId = PrimitiveId("test_model", ModelPrimitive::TYPE_RTTI);
     m_animationId = AnimationAssetId("test_animation");
     m_animatorId = AnimatorId("test_animator", ModelPrimitiveAnimator::TYPE_RTTI);
 
@@ -208,7 +208,7 @@ void SkinMeshPrimitiveTest::onRendererCreated(const IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<RendererCreated, IEvent>(e);
     if (!ev) return;
-    m_renderer = std::dynamic_pointer_cast<Renderer, IRenderer>(ev->getRenderer());
+    m_renderer = std::dynamic_pointer_cast<Renderer, IRenderer>(ev->renderer());
     m_renderer->setAssociatedCamera(m_camera);
     if ((m_renderer) && (m_renderTarget)) m_renderer->setRenderTarget(m_renderTarget);
 }
@@ -218,7 +218,7 @@ void SkinMeshPrimitiveTest::onRenderTargetCreated(const IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<PrimaryRenderTargetCreated, IEvent>(e);
     if (!ev) return;
-    m_renderTarget = ev->getRenderTarget();
+    m_renderTarget = ev->renderTarget();
     if ((m_renderer) && (m_renderTarget)) m_renderer->setRenderTarget(m_renderTarget);
 }
 

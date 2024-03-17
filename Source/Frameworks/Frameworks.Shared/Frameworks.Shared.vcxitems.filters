@@ -25,15 +25,6 @@
     <Filter Include="ruid">
       <UniqueIdentifier>{e68880cc-29bf-4920-972f-89bf074bdf1b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Requests &amp; Responses">
-      <UniqueIdentifier>{acf701a4-ec3f-487d-b0e7-3a131761e719}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Requests &amp; Responses\Request">
-      <UniqueIdentifier>{60d4b38d-4cf8-4707-a554-c368419e0f76}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Requests &amp; Responses\Response">
-      <UniqueIdentifier>{19aaf587-0d2b-4d46-a254-57b33fcd2dcf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="LazyStatus">
       <UniqueIdentifier>{10b2669a-fc7c-48be-9bfb-f3f2f00902bd}</UniqueIdentifier>
     </Filter>
@@ -77,24 +68,6 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ruid.cpp">
       <Filter>ruid</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\Request.cpp">
-      <Filter>Requests &amp; Responses\Request</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\Response.cpp">
-      <Filter>Requests &amp; Responses\Response</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\RequestSubscriber.cpp">
-      <Filter>Requests &amp; Responses\Request</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\RequestBus.cpp">
-      <Filter>Requests &amp; Responses\Request</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\ResponseSubscriber.cpp">
-      <Filter>Requests &amp; Responses\Response</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\ResponseBus.cpp">
-      <Filter>Requests &amp; Responses\Response</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LazyStatus.cpp">
       <Filter>LazyStatus</Filter>
@@ -160,24 +133,6 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ruid.h">
       <Filter>ruid</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Request.h">
-      <Filter>Requests &amp; Responses\Request</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Response.h">
-      <Filter>Requests &amp; Responses\Response</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RequestSubscriber.h">
-      <Filter>Requests &amp; Responses\Request</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RequestBus.h">
-      <Filter>Requests &amp; Responses\Request</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\ResponseSubscriber.h">
-      <Filter>Requests &amp; Responses\Response</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\ResponseBus.h">
-      <Filter>Requests &amp; Responses\Response</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\unique_ptr_dynamic_cast.hpp">
       <Filter>Extend</Filter>

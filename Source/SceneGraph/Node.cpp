@@ -9,32 +9,30 @@
 #include "GameEngine/LinkageResolver.h"
 #include "Platforms/PlatformLayer.h"
 #include "SceneGraph/SceneGraphQueries.h"
+#include "SceneGraph/SceneGraphCommands.h"
+#include "Frameworks/CommandBus.h"
 
 using namespace Enigma::SceneGraph;
 
 DEFINE_RTTI(SceneGraph, Node, Spatial);
-
-Node::Node(const std::string& name) : Spatial(name)
-{
-    m_factoryDesc = Engine::FactoryDesc(Node::TYPE_RTTI.getName());
-}
 
 Node::Node(const SpatialId& id) : Spatial(id)
 {
     m_factoryDesc = Engine::FactoryDesc(Node::TYPE_RTTI.getName());
 }
 
-Node::Node(const Engine::GenericDto& o) : Spatial(o)
-{
-}
-
 Node::Node(const SpatialId& id, const Engine::GenericDto& dto) : Spatial(id, dto)
 {
     NodeDto nodeDto{ dto };
-    for (auto& id : nodeDto.childIds())
+    for (auto& child : nodeDto.children())
     {
-        auto child = std::make_shared<QuerySpatial>(id)->dispatch();
-        if (child) attachChild(child, child->getLocalTransform());
+        auto child_spatial = std::make_shared<QuerySpatial>(child.id())->dispatch();
+        if (!child_spatial)
+        {
+            assert(child.dto().has_value());
+            child_spatial = std::make_shared<RequestSpatialConstitution>(child.id(), child.dto().value(), PersistenceLevel::Repository)->dispatch();
+        }
+        if (child_spatial) m_childList.push_back(child_spatial);
     }
 }
 
@@ -44,10 +42,16 @@ Node::~Node()
     {
         SpatialPtr child = m_childList.front();
         m_childList.pop_front();
-        if (child) child->linkParent(nullptr);
+        if (child) child->linkParent(std::nullopt);
         child = nullptr;
     }
     m_childList.clear();
+}
+
+std::shared_ptr<Node> Node::queryNode(const SpatialId& id)
+{
+    assert(id.rtti().isDerived(Node::TYPE_RTTI));
+    return std::dynamic_pointer_cast<Node, Spatial>(std::make_shared<QuerySpatial>(id)->dispatch());
 }
 
 std::shared_ptr<Node> Node::create(const SpatialId& id)
@@ -70,20 +74,17 @@ NodeDto Node::serializeNodeDto()
     NodeDto dto(serializeSpatialDto());
     for (auto child : m_childList)
     {
-        if (child) dto.childIds().emplace_back(child->id());
+        if (!child) continue;
+        if (child->persistenceLevel() == PersistenceLevel::Store)
+        {
+            dto.children().emplace_back(child->id());
+        }
+        else
+        {
+            dto.children().emplace_back(child->id(), child->serializeDto());
+        }
     }
     return dto;
-}
-
-void Node::resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver)
-{
-    NodeDto nodeDto{ dto };
-    for (auto& id : nodeDto.childIds())
-    {
-        resolver.tryResolveLinkage(id.name(), [lifetime = weak_from_this()](auto sp)
-            { if (!lifetime.expired())
-            std::dynamic_pointer_cast<Node, Spatial>(lifetime.lock())->attachChild(sp, sp->getLocalTransform()); });
-    }
 }
 
 Enigma::Engine::GenericDtoCollection Node::serializeFlattenedTree()
@@ -144,9 +145,9 @@ error Node::attachChild(const SpatialPtr& child, const MathLib::Matrix4& mxChild
     if (FATAL_LOG_EXPR(child->getParent() != nullptr)) return ErrorCode::parentNode; // must not have parent, must detach first!!
 
     m_childList.push_back(child);
-    child->linkParent(thisSpatial());
+    child->linkParent(m_id);
 
-    Frameworks::EventPublisher::post(std::make_shared<SceneGraphChanged>(thisSpatial(), child, SceneGraphChanged::NotifyCode::AttachChild));
+    Frameworks::EventPublisher::post(std::make_shared<SceneGraphChanged>(m_id, child->id(), SceneGraphChanged::NotifyCode::AttachChild));
 
     error er = child->setLocalTransform(mxChildLocal);
 
@@ -160,9 +161,9 @@ error Node::detachChild(const SpatialPtr& child)
     if (FATAL_LOG_EXPR(!child)) return ErrorCode::nullSceneGraph;
     if (FATAL_LOG_EXPR(child->getParent() != thisSpatial())) return ErrorCode::parentNode;
 
-    child->linkParent(nullptr);
+    child->linkParent(std::nullopt);
 
-    Frameworks::EventPublisher::post(std::make_shared<SceneGraphChanged>(thisSpatial(), child, SceneGraphChanged::NotifyCode::DetachChild));
+    Frameworks::EventPublisher::post(std::make_shared<SceneGraphChanged>(m_id, child->id(), SceneGraphChanged::NotifyCode::DetachChild));
 
     error er = child->setLocalTransform(MathLib::Matrix4::IDENTITY);
 
@@ -188,7 +189,7 @@ error Node::_updateLocalTransform(const MathLib::Matrix4& mxLocal)
 
     if (testNotifyFlag(Notify_Location))
     {
-        Frameworks::EventPublisher::post(std::make_shared<SpatialLocationChanged>(thisSpatial()));
+        Frameworks::EventPublisher::post(std::make_shared<SpatialLocationChanged>(m_id));
     }
 
     // propagate up
@@ -239,7 +240,7 @@ error Node::_updateBoundData()
 
     if (testNotifyFlag(Notify_Bounding))
     {
-        Frameworks::EventPublisher::post(std::make_shared<SpatialBoundChanged>(thisSpatial()));
+        Frameworks::EventPublisher::post(std::make_shared<SpatialBoundChanged>(m_id));
     }
 
     error er = ErrorCode::ok;
@@ -268,7 +269,7 @@ error Node::_updateSpatialRenderState()
     }
     if (testNotifyFlag(Notify_RenderState))
     {
-        Frameworks::EventPublisher::post(std::make_shared<SpatialRenderStateChanged>(thisSpatial()));
+        Frameworks::EventPublisher::post(std::make_shared<SpatialRenderStateChanged>(m_id));
     }
     return er;
 }

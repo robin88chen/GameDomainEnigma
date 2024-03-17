@@ -8,6 +8,7 @@
 #include "MathLib/ContainmentBox2.h"
 #include "Frameworks/EventPublisher.h"
 #include "SceneGraph/SceneGraphEvents.h"
+#include "SceneGraph/SceneGraphDtos.h"
 
 using namespace Enigma::WorldMap;
 using namespace Enigma::SceneGraph;
@@ -28,9 +29,10 @@ SceneQuadTreeRoot::SceneQuadTreeRoot(const std::shared_ptr<SceneGraph::SceneGrap
     QuadTreeRootDto dto = QuadTreeRootDto::fromGenericDto(o);
     m_name = dto.name();
     //todo: workaround for serialization
-    if (repository->hasNode(dto.root().getName()))
+    NodeDto root_dto{ dto.root() };
+    if (repository->hasSpatial(root_dto.id()))
     {
-        m_root = std::dynamic_pointer_cast<LazyNode>(repository->queryNode(dto.root().getName()));
+        m_root = std::dynamic_pointer_cast<LazyNode>(repository->querySpatial(root_dto.id()));
         assert(!m_root.expired());
     }
     else
@@ -58,7 +60,8 @@ GenericDto SceneQuadTreeRoot::serializeDto()
     dto.factoryDesc() = m_factory_desc;
     dto.name() = m_name;
     assert(!m_root.expired());
-    dto.root() = m_root.lock()->serializeAsLaziness();
+    dto.root() = m_root.lock()->serializeDto();
+    //dto.root() = m_root.lock()->serializeAsLaziness();
     return dto.toGenericDto();
 }
 
@@ -124,7 +127,7 @@ std::shared_ptr<Node> SceneQuadTreeRoot::findFittingLeaf(const Engine::BoundingV
         bool envelop = testSubTreeQuadEnvelop(sub_tree_box_in_parent, bv_in_root);
         if (!envelop) return parent;  // 下一層放不下這物件，返回本層
 
-        fitting_leaf = findTargetSubtree(parent, parent->getSpatialName(), sub_tree_index);
+        fitting_leaf = findTargetSubtree(parent, parent->id().name(), sub_tree_index);
         if (!fitting_leaf) return nullptr; // 找不到子節點，搜尋失敗
 
         parent = fitting_leaf;

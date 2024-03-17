@@ -17,38 +17,35 @@ namespace Enigma::SceneGraph
     {
     public:
         PortalZoneNodeDto();
+        PortalZoneNodeDto(const Engine::GenericDto& dto);
         PortalZoneNodeDto(const LazyNodeDto& lazy_node_dto);
 
-        [[nodiscard]] const std::string& portalManagementNodeName() const { return m_portalManagementNodeName; }
-        std::string& portalManagementNodeName() { return m_portalManagementNodeName; }
-        [[nodiscard]] const std::string& portalName() const { return m_portalName; }
-        std::string& portalName() { return m_portalName; }
+        [[nodiscard]] const SpatialId& portalParentId() const { return m_portalParentId; }
+        SpatialId& portalParentId() { return m_portalParentId; }
 
-        static PortalZoneNodeDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
 
     protected:
-        std::string m_portalManagementNodeName;
-        std::string m_portalName;
+        SpatialId m_portalParentId;
     };
 
     class PortalDto : public SpatialDto
     {
     public:
         PortalDto();
+        PortalDto(const Engine::GenericDto& dto);
         PortalDto(const SpatialDto& spatial_dto);
 
-        [[nodiscard]] const std::string& adjacentZoneNodeName() const { return m_adjacentZoneNodeName; }
-        std::string& adjacentZoneNodeName() { return m_adjacentZoneNodeName; }
+        [[nodiscard]] const SpatialId& adjacentZoneNodeId() const { return m_adjacentZoneNodeId; }
+        SpatialId& adjacentZoneNodeId() { return m_adjacentZoneNodeId; }
 
         [[nodiscard]] bool isOpen() const { return m_isOpen; }
         bool& isOpen() { return m_isOpen; }
 
-        static PortalDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto();
 
     protected:
-        std::string m_adjacentZoneNodeName;
+        SpatialId m_adjacentZoneNodeId;
         bool m_isOpen;
     };
 
@@ -56,16 +53,16 @@ namespace Enigma::SceneGraph
     {
     public:
         PortalManagementNodeDto();
+        PortalManagementNodeDto(const Engine::GenericDto& dto);
         PortalManagementNodeDto(const NodeDto& node_dto);
 
-        static PortalManagementNodeDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto();
 
-        [[nodiscard]] const std::string& outsideZoneNodeName() const { return m_outsideZoneNodeName; }
-        std::string& outsideZoneNodeName() { return m_outsideZoneNodeName; }
+        [[nodiscard]] const SpatialId& outsideZoneNodeId() const { return m_outsideZoneNodeId; }
+        SpatialId& outsideZoneNodeId() { return m_outsideZoneNodeId; }
 
     protected:
-        std::string m_outsideZoneNodeName;
+        SpatialId m_outsideZoneNodeId;
     };
 }
 

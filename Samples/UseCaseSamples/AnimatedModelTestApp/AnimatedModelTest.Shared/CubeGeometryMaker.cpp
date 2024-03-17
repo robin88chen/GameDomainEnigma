@@ -78,5 +78,5 @@ std::shared_ptr<GeometryData> CubeGeometryMaker::makeCube(const GeometryId& id)
     dto.geometryBound() = bv.serializeDto().toGenericDto();
     dto.factoryDesc() = FactoryDesc(TriangleList::TYPE_RTTI.getName()).ClaimAsResourceAsset(id.name(), id.name() + ".geo", "DataPath");
 
-    return std::make_shared<RequestGeometryConstitution>(id, dto.toGenericDto(), RequestGeometryConstitution::PersistenceLevel::Store)->dispatch();
+    return std::make_shared<RequestGeometryConstitution>(id, dto.toGenericDto(), PersistenceLevel::Store)->dispatch();
 }

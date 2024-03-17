@@ -11,6 +11,7 @@
 #include "Frameworks/Query.h"
 #include "SceneGraphPersistenceLevel.h"
 #include "LightInfo.h"
+#include "SpatialRenderState.h"
 
 namespace Enigma::SceneGraph
 {
@@ -54,16 +55,6 @@ namespace Enigma::SceneGraph
         SpatialId m_id;
         Engine::GenericDto m_dto;
         PersistenceLevel m_persistenceLevel;
-    };
-    class QueryNode : public Frameworks::Query<std::shared_ptr<Node>>
-    {
-    public:
-        QueryNode(const std::string& name) : m_name(name) {}
-
-        const std::string& nodeName() const { return m_name; }
-
-    protected:
-        std::string m_name;
     };
     class QuerySpatial : public Frameworks::Query<std::shared_ptr<Spatial>>
     {
@@ -114,6 +105,15 @@ namespace Enigma::SceneGraph
         SpatialId m_id;
         LightInfo m_info;
         PersistenceLevel m_persistenceLevel;
+    };
+    class QueryLightingStateAt : public Frameworks::Query<SpatialRenderState>
+    {
+    public:
+        QueryLightingStateAt(const MathLib::Vector3& world_position) : m_worldPosition(world_position) {}
+
+        const MathLib::Vector3& worldPosition() const { return m_worldPosition; }
+    protected:
+        MathLib::Vector3 m_worldPosition;
     };
 }
 

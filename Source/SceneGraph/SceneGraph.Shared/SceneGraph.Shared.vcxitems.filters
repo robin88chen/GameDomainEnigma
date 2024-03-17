@@ -22,17 +22,11 @@
     <Filter Include="Events">
       <UniqueIdentifier>{5cfd4ff6-f389-40d8-8586-5ff1103a2059}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Repository\Builder">
-      <UniqueIdentifier>{a4c9c21b-20e1-4560-9e29-10b0d82bcae5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Commands">
       <UniqueIdentifier>{7f26edff-9dd0-4f4b-bb08-6864c8bd9b46}</UniqueIdentifier>
     </Filter>
     <Filter Include="Portal System">
       <UniqueIdentifier>{979f42de-ba0c-49b5-a048-e13b8fd593cb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Lazy Node IO">
-      <UniqueIdentifier>{4e37e94c-8b2a-49e1-adcf-8d4049626af6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Visibilities">
       <UniqueIdentifier>{91848c0a-c165-4152-9490-3558f3e042e8}</UniqueIdentifier>
@@ -54,6 +48,9 @@
     </Filter>
     <Filter Include="DTO &amp; Assemblers">
       <UniqueIdentifier>{2e119933-502e-48d9-b642-a1d9450a14cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lazy Node Hydration">
+      <UniqueIdentifier>{4e37e94c-8b2a-49e1-adcf-8d4049626af6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -99,12 +96,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphDtos.h">
       <Filter>DTO &amp; Assemblers</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialLinkageResolver.h">
-      <Filter>Repository</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphBuilder.h">
-      <Filter>Repository\Builder</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphCommands.h">
       <Filter>Commands</Filter>
     </ClInclude>
@@ -114,8 +105,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\CameraFrustumDtos.h">
       <Filter>DTO &amp; Assemblers</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\LazyNodeIOService.h">
-      <Filter>Lazy Node IO</Filter>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LazyNodeHydrationService.h">
+      <Filter>Lazy Node Hydration</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\VisibilityManagedNode.h">
       <Filter>Visibilities</Filter>
@@ -143,12 +134,6 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphInstallingPolicy.h">
       <Filter>Installing</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialLightInfoRequest.h">
-      <Filter>Scene Graph\LightInfo</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialLightInfoResponse.h">
-      <Filter>Scene Graph\LightInfo</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphAssemblers.h">
       <Filter>DTO &amp; Assemblers</Filter>
@@ -236,20 +221,14 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphDtos.cpp">
       <Filter>DTO &amp; Assemblers</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialLinkageResolver.cpp">
-      <Filter>Repository</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphBuilder.cpp">
-      <Filter>Repository\Builder</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightInfoDtos.cpp">
       <Filter>DTO &amp; Assemblers</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\CameraFrustumDtos.cpp">
       <Filter>DTO &amp; Assemblers</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\LazyNodeIOService.cpp">
-      <Filter>Lazy Node IO</Filter>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LazyNodeHydrationService.cpp">
+      <Filter>Lazy Node Hydration</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\VisibilityManagedNode.cpp">
       <Filter>Visibilities</Filter>
@@ -299,9 +278,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Spatial.cpp">
       <Filter>Scene Graph</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialRenderState.cpp">
-      <Filter>Scene Graph</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneNonLazyFlattenTraversal.cpp">
       <Filter>Scene Traveler</Filter>
     </ClCompile>
@@ -310,6 +286,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphFactory.cpp">
       <Filter>Repository</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphCommands.cpp">
+      <Filter>Commands</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

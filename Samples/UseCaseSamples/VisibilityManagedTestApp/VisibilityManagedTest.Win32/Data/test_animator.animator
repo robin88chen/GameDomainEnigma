@@ -1,0 +1,47 @@
+[{
+        "Id": {
+            "Type": "StringArray",
+            "Value": ["test_animator", "0", "En.Renderables.ModelPrimitiveAnimator"]
+        },
+        "Rtti": {
+            "Type": "FactoryDesc",
+            "Value": {
+                "InstanceType": 0,
+                "ResourceName": "",
+                "ResourceFilename": "",
+                "RttiName": "En.Renderables.ModelPrimitiveAnimator",
+                "PrefabFilename": "test_animator.animator@DataPath"
+            }
+        },
+        "ControlledPrimitiveId": {
+            "Type": "StringArray",
+            "Value": ["test_model", "0", "En.Renderables.ModelPrimitive"]
+        },
+        "SkinOperators": {
+            "Type": "DataObjectArray",
+            "Value": [{
+                    "Rtti": {
+                        "Type": "FactoryDesc",
+                        "Value": {
+                            "InstanceType": 0,
+                            "ResourceName": "",
+                            "ResourceFilename": "",
+                            "RttiName": "En.Renderables.SkinAnimationOperator",
+                            "PrefabFilename": ""
+                        }
+                    },
+                    "SkinMeshId": {
+                        "Type": "StringArray",
+                        "Value": ["test_mesh", "0", "En.Renderables.MeshPrimitive"]
+                    },
+                    "BoneNodeNames": {
+                        "Type": "StringArray",
+                        "Value": ["bone_root", "bone_one"]
+                    }
+                }]
+        },
+        "AssetId": {
+            "Type": "String",
+            "Value": "test_animation"
+        }
+    }]

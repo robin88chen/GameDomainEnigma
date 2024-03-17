@@ -84,7 +84,7 @@ MeshPrimitiveDto MeshPrimitive::serializeMeshDto() const
 {
     MeshPrimitiveDto dto;
     dto.factoryDesc() = m_factoryDesc;
-    dto.id() = m_id;
+    dto.id() = m_id.origin();
     if (m_geometry)
     {
         dto.geometryId() = m_geometry->id();

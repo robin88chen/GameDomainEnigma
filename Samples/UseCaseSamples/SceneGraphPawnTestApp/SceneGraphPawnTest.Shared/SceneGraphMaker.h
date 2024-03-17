@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   SceneGraphMaker.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   February 2023
  *********************************************************************/
@@ -10,11 +10,13 @@
 
 #include "GameEngine/GenericDto.h"
 #include <vector>
+#include "SceneGraph/SpatialId.h"
+#include "Primitives/PrimitiveId.h"
 
 class SceneGraphMaker
 {
 public:
-    static std::vector<Enigma::Engine::GenericDto> MakeSceneGraphDtos();
+    static Enigma::Engine::GenericDto makeSceneGraph(const Enigma::SceneGraph::SpatialId& id, const Enigma::Primitives::PrimitiveId& primitive_id, const Enigma::SceneGraph::SpatialId& pawn_id, const Enigma::SceneGraph::SpatialId& stillpawn_id);
 };
 
 #endif // _SCENE_GRAPH_MAKER_H

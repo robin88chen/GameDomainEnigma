@@ -1,0 +1,3 @@
+floor,floor.geo@DataPath
+door,door.geo@DataPath
+cube,cube.geo@DataPath

@@ -1,0 +1,358 @@
+[{
+        "LocalTransform": {
+            "Type": "Matrix4",
+            "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+        },
+        "Rtti": {
+            "Type": "FactoryDesc",
+            "Value": {
+                "InstanceType": 0,
+                "ResourceName": "",
+                "ResourceFilename": "",
+                "RttiName": "En.SceneGraph.Node",
+                "PrefabFilename": ""
+            }
+        },
+        "ModelBound": {
+            "Type": "DataObject",
+            "Value": {
+                "BoxBV": {
+                    "Type": "Box3",
+                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0]
+                }
+            }
+        },
+        "TopLevel": {
+            "Type": "Boolean",
+            "Value": false
+        },
+        "Name": {
+            "Type": "String",
+            "Value": "root"
+        },
+        "NotifyFlag": {
+            "Type": "Uint32",
+            "Value": 0
+        },
+        "GraphDepth": {
+            "Type": "Uint32",
+            "Value": 0
+        },
+        "Id": {
+            "Type": "StringArray",
+            "Value": ["root", "En.SceneGraph.Node"]
+        },
+        "WorldTransform": {
+            "Type": "Matrix4",
+            "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+        },
+        "WorldBound": {
+            "Type": "DataObject",
+            "Value": {
+                "BoxBV": {
+                    "Type": "Box3",
+                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0]
+                }
+            }
+        },
+        "CullingMode": {
+            "Type": "Uint32",
+            "Value": 0
+        },
+        "SpatialFlag": {
+            "Type": "Uint32",
+            "Value": 4
+        },
+        "ChildIds": {
+            "Type": "StringArray",
+            "Value": ["child1", "En.SceneGraph.Node", "child2", "En.SceneGraph.Node"]
+        },
+        "ChildDtos": {
+            "Type": "DataObjectArray",
+            "Value": [{
+                    "LocalTransform": {
+                        "Type": "Matrix4",
+                        "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+                    },
+                    "Rtti": {
+                        "Type": "FactoryDesc",
+                        "Value": {
+                            "InstanceType": 0,
+                            "ResourceName": "",
+                            "ResourceFilename": "",
+                            "RttiName": "En.SceneGraph.Node",
+                            "PrefabFilename": ""
+                        }
+                    },
+                    "ModelBound": {
+                        "Type": "DataObject",
+                        "Value": {
+                            "BoxBV": {
+                                "Type": "Box3",
+                                "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0]
+                            }
+                        }
+                    },
+                    "TopLevel": {
+                        "Type": "Boolean",
+                        "Value": false
+                    },
+                    "NotifyFlag": {
+                        "Type": "Uint32",
+                        "Value": 0
+                    },
+                    "Name": {
+                        "Type": "String",
+                        "Value": "child1"
+                    },
+                    "Id": {
+                        "Type": "StringArray",
+                        "Value": ["child1", "En.SceneGraph.Node"]
+                    },
+                    "GraphDepth": {
+                        "Type": "Uint32",
+                        "Value": 0
+                    },
+                    "WorldTransform": {
+                        "Type": "Matrix4",
+                        "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+                    },
+                    "WorldBound": {
+                        "Type": "DataObject",
+                        "Value": {
+                            "BoxBV": {
+                                "Type": "Box3",
+                                "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0]
+                            }
+                        }
+                    },
+                    "CullingMode": {
+                        "Type": "Uint32",
+                        "Value": 0
+                    },
+                    "SpatialFlag": {
+                        "Type": "Uint32",
+                        "Value": 4
+                    },
+                    "ChildIds": {
+                        "Type": "StringArray",
+                        "Value": ["still_pawn", "En.SceneGraph.Pawn"]
+                    },
+                    "ChildDtos": {
+                        "Type": "DataObjectArray",
+                        "Value": [{
+                                "LocalTransform": {
+                                    "Type": "Matrix4",
+                                    "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+                                },
+                                "Rtti": {
+                                    "Type": "FactoryDesc",
+                                    "Value": {
+                                        "InstanceType": 0,
+                                        "ResourceName": "",
+                                        "ResourceFilename": "",
+                                        "RttiName": "En.SceneGraph.Pawn",
+                                        "PrefabFilename": ""
+                                    }
+                                },
+                                "ModelBound": {
+                                    "Type": "DataObject",
+                                    "Value": {
+                                        "BoxBV": {
+                                            "Type": "Box3",
+                                            "Value": [0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.5, 1.5, 0.5]
+                                        }
+                                    }
+                                },
+                                "TopLevel": {
+                                    "Type": "Boolean",
+                                    "Value": false
+                                },
+                                "Name": {
+                                    "Type": "String",
+                                    "Value": "still_pawn"
+                                },
+                                "NotifyFlag": {
+                                    "Type": "Uint32",
+                                    "Value": 31
+                                },
+                                "GraphDepth": {
+                                    "Type": "Uint32",
+                                    "Value": 0
+                                },
+                                "Id": {
+                                    "Type": "StringArray",
+                                    "Value": ["still_pawn", "En.SceneGraph.Pawn"]
+                                },
+                                "WorldTransform": {
+                                    "Type": "Matrix4",
+                                    "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+                                },
+                                "WorldBound": {
+                                    "Type": "DataObject",
+                                    "Value": {
+                                        "BoxBV": {
+                                            "Type": "Box3",
+                                            "Value": [0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.5, 1.5, 0.5]
+                                        }
+                                    }
+                                },
+                                "CullingMode": {
+                                    "Type": "Uint32",
+                                    "Value": 0
+                                },
+                                "SpatialFlag": {
+                                    "Type": "Uint32",
+                                    "Value": 4
+                                },
+                                "PawnPrimitiveId": {
+                                    "Type": "StringArray",
+                                    "Value": ["test_model", "2", "En.Renderables.ModelPrimitive"]
+                                }
+                            }]
+                    }
+                }, {
+                    "LocalTransform": {
+                        "Type": "Matrix4",
+                        "Value": [1.0, 0.0, 0.0, 2.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+                    },
+                    "Rtti": {
+                        "Type": "FactoryDesc",
+                        "Value": {
+                            "InstanceType": 0,
+                            "ResourceName": "",
+                            "ResourceFilename": "",
+                            "RttiName": "En.SceneGraph.Node",
+                            "PrefabFilename": ""
+                        }
+                    },
+                    "ModelBound": {
+                        "Type": "DataObject",
+                        "Value": {
+                            "BoxBV": {
+                                "Type": "Box3",
+                                "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0]
+                            }
+                        }
+                    },
+                    "TopLevel": {
+                        "Type": "Boolean",
+                        "Value": false
+                    },
+                    "NotifyFlag": {
+                        "Type": "Uint32",
+                        "Value": 0
+                    },
+                    "Name": {
+                        "Type": "String",
+                        "Value": "child2"
+                    },
+                    "Id": {
+                        "Type": "StringArray",
+                        "Value": ["child2", "En.SceneGraph.Node"]
+                    },
+                    "GraphDepth": {
+                        "Type": "Uint32",
+                        "Value": 0
+                    },
+                    "WorldTransform": {
+                        "Type": "Matrix4",
+                        "Value": [1.0, 0.0, 0.0, 2.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+                    },
+                    "WorldBound": {
+                        "Type": "DataObject",
+                        "Value": {
+                            "BoxBV": {
+                                "Type": "Box3",
+                                "Value": [2.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0]
+                            }
+                        }
+                    },
+                    "CullingMode": {
+                        "Type": "Uint32",
+                        "Value": 0
+                    },
+                    "SpatialFlag": {
+                        "Type": "Uint32",
+                        "Value": 4
+                    },
+                    "ChildIds": {
+                        "Type": "StringArray",
+                        "Value": ["pawn", "En.SceneGraph.Pawn"]
+                    },
+                    "ChildDtos": {
+                        "Type": "DataObjectArray",
+                        "Value": [{
+                                "LocalTransform": {
+                                    "Type": "Matrix4",
+                                    "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+                                },
+                                "Rtti": {
+                                    "Type": "FactoryDesc",
+                                    "Value": {
+                                        "InstanceType": 0,
+                                        "ResourceName": "",
+                                        "ResourceFilename": "",
+                                        "RttiName": "En.SceneGraph.Pawn",
+                                        "PrefabFilename": ""
+                                    }
+                                },
+                                "ModelBound": {
+                                    "Type": "DataObject",
+                                    "Value": {
+                                        "BoxBV": {
+                                            "Type": "Box3",
+                                            "Value": [0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.5, 1.5, 0.5]
+                                        }
+                                    }
+                                },
+                                "TopLevel": {
+                                    "Type": "Boolean",
+                                    "Value": false
+                                },
+                                "Name": {
+                                    "Type": "String",
+                                    "Value": "pawn"
+                                },
+                                "NotifyFlag": {
+                                    "Type": "Uint32",
+                                    "Value": 31
+                                },
+                                "GraphDepth": {
+                                    "Type": "Uint32",
+                                    "Value": 0
+                                },
+                                "Id": {
+                                    "Type": "StringArray",
+                                    "Value": ["pawn", "En.SceneGraph.Pawn"]
+                                },
+                                "WorldTransform": {
+                                    "Type": "Matrix4",
+                                    "Value": [1.0, 0.0, 0.0, 2.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+                                },
+                                "WorldBound": {
+                                    "Type": "DataObject",
+                                    "Value": {
+                                        "BoxBV": {
+                                            "Type": "Box3",
+                                            "Value": [2.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.5, 1.5, 0.5]
+                                        }
+                                    }
+                                },
+                                "CullingMode": {
+                                    "Type": "Uint32",
+                                    "Value": 0
+                                },
+                                "SpatialFlag": {
+                                    "Type": "Uint32",
+                                    "Value": 4
+                                },
+                                "PawnPrimitiveId": {
+                                    "Type": "StringArray",
+                                    "Value": ["test_model", "0", "En.Renderables.ModelPrimitive"]
+                                }
+                            }]
+                    }
+                }]
+        }
+    }]

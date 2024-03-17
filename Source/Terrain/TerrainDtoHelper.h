@@ -41,7 +41,7 @@ namespace Enigma::Terrain
     class TerrainPawnDtoHelper
     {
     public:
-        TerrainPawnDtoHelper(const std::string& name);
+        TerrainPawnDtoHelper(const SceneGraph::SpatialId& id);
 
         TerrainPawnDtoHelper& factory(const Engine::FactoryDesc& factory);
         TerrainPawnDtoHelper& localTransform(const MathLib::Matrix4& local_transform);

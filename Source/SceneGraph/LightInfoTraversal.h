@@ -8,12 +8,11 @@
 #ifndef LIGHT_INFO_TRAVERSAL_H
 #define LIGHT_INFO_TRAVERSAL_H
 
-#include "SpatialLightInfoRequest.h"
 #include "Frameworks/SystemService.h"
 #include "Frameworks/EventSubscriber.h"
-#include "Frameworks/Request.h"
-#include "Frameworks/RequestSubscriber.h"
+#include "Frameworks/QuerySubscriber.h"
 #include "SpatialId.h"
+#include "SpatialRenderState.h"
 #include <system_error>
 #include <unordered_map>
 #include <mutex>
@@ -37,33 +36,21 @@ namespace Enigma::SceneGraph
         LightInfoTraversal& operator=(const LightInfoTraversal&) = delete;
         LightInfoTraversal& operator=(LightInfoTraversal&&) = delete;
 
-        virtual Frameworks::ServiceResult onTick() override;
-
-        void QueryNextRequest();
-
-        void QuerySpatialLightInfo(SpatialLightInfoQuery& query);
-
     protected:
-        void OnLightInfoCreated(const Frameworks::IEventPtr& e);
-        void OnLightInfoDeleted(const Frameworks::IEventPtr& e);
+        SpatialRenderState queryLightingStateAt(const MathLib::Vector3& wolrd_position);
 
-        void DoQueryingLight(const Frameworks::IRequestPtr& r);
+        void onLightInfoCreated(const Frameworks::IEventPtr& e);
+        void onLightInfoDeleted(const Frameworks::IEventPtr& e);
+
+        void queryLightingStateAt(const Frameworks::IQueryPtr& q);
 
     protected:
         Frameworks::EventSubscriberPtr m_onLightInfoCreated;
         Frameworks::EventSubscriberPtr m_onLightInfoDeleted;
-
+        Frameworks::QuerySubscriberPtr m_queryLightingStateAt;
         typedef std::unordered_map<SpatialId, std::weak_ptr<Light>, SpatialId::hash> LightNodeMap;
         LightNodeMap m_lights;
         std::recursive_mutex m_mapLock;
-
-        std::deque<std::shared_ptr<RequestSpatialLightInfo>> m_queryRequests;
-        std::recursive_mutex m_queryRequestLock;
-        std::atomic_bool m_isCurrentQuerying;
-        Frameworks::Ruid m_requesterRuid;
-        MathLib::Vector3 m_querySpatialPos;
-
-        Frameworks::RequestSubscriberPtr m_doQueryingLight;
     };
 };
 

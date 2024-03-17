@@ -18,8 +18,41 @@ namespace Enigma::FileStorage
 {
     class SceneGraphFileStoreMapper : public SceneGraph::SceneGraphStoreMapper
     {
+        class SpatialFileMap
+        {
+        public:
+            SpatialFileMap(const std::string& filename, const std::shared_ptr<Gateways::IDtoGateway>& gateway);
+            ~SpatialFileMap();
+            SpatialFileMap(const SpatialFileMap&) = delete;
+            SpatialFileMap(SpatialFileMap&&) = delete;
+            SpatialFileMap& operator=(const SpatialFileMap&) = delete;
+            SpatialFileMap& operator=(SpatialFileMap&&) = delete;
+
+            std::error_code connect();
+            std::error_code disconnect();
+
+            bool has(const SceneGraph::SpatialId& id);
+            std::optional<Engine::GenericDto> query(const SceneGraph::SpatialId& id);
+            std::error_code remove(const SceneGraph::SpatialId& id);
+            std::error_code put(const SceneGraph::SpatialId& id, const Engine::GenericDto& dto);
+
+        protected:
+            void deserializeMapperFile(const std::string& content);
+            Engine::GenericDto deserializeDataTransferObjects(const std::string& filename);
+
+            std::error_code serializeMapperFile();
+            std::string extractFilename(const SceneGraph::SpatialId& id, const Engine::FactoryDesc& factory_desc);
+
+            std::error_code serializeDataTransferObjects(const std::string& filename, const Engine::GenericDto& dto);
+
+        protected:
+            std::shared_ptr<Gateways::IDtoGateway> m_gateway;
+            std::string m_filename;
+            std::unordered_map<SceneGraph::SpatialId, std::string, SceneGraph::SpatialId::hash> m_map;
+            std::recursive_mutex m_lock;
+        };
     public:
-        SceneGraphFileStoreMapper(const std::string& mapper_filename, const std::shared_ptr<Gateways::IDtoGateway>& gateway);
+        SceneGraphFileStoreMapper(const std::string& mapper_filename, const std::string& lazied_mapper_filename, const std::shared_ptr<Gateways::IDtoGateway>& gateway);
         ~SceneGraphFileStoreMapper() override;
         SceneGraphFileStoreMapper(const SceneGraphFileStoreMapper&) = delete;
         SceneGraphFileStoreMapper(SceneGraphFileStoreMapper&&) = delete;
@@ -39,20 +72,15 @@ namespace Enigma::FileStorage
         virtual std::error_code removeSpatial(const SceneGraph::SpatialId& id) override;
         virtual std::error_code putSpatial(const SceneGraph::SpatialId& id, const Engine::GenericDto& dto) override;
 
-    protected:
-        std::error_code serializeMapperFile();
-        void deserializeMapperFile(const std::string& mapper_file_content);
-        std::string extractFilename(const SceneGraph::SpatialId& id, const Engine::FactoryDesc& factory_desc);
-
-        std::error_code serializeDataTransferObjects(const std::string& filename, const Engine::GenericDto& dto);
-        Engine::GenericDto deserializeDataTransferObjects(const std::string& filename);
+        virtual bool hasLaziedContent(const SceneGraph::SpatialId& id) override;
+        virtual std::optional<Engine::GenericDto> queryLaziedContent(const SceneGraph::SpatialId& id) override;
+        virtual std::error_code removeLaziedContent(const SceneGraph::SpatialId& id) override;
+        virtual std::error_code putLaziedContent(const SceneGraph::SpatialId& id, const Engine::GenericDto& dto) override;
 
     protected:
-        bool m_has_connected;
-        std::shared_ptr<Gateways::IDtoGateway> m_gateway;
-        std::string m_mapper_filename;
-        std::unordered_map<SceneGraph::SpatialId, std::string, SceneGraph::SpatialId::hash> m_filename_map;
-        std::recursive_mutex m_fileMapLock;
+        bool m_hasConnected;
+        SpatialFileMap m_spatialMap;
+        SpatialFileMap m_laziedMap;
     };
 }
 

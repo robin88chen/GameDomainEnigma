@@ -45,9 +45,7 @@ Camera::~Camera()
 std::shared_ptr<Camera> Camera::queryCamera(const SpatialId& id)
 {
     assert(id.rtti().isDerived(Camera::TYPE_RTTI));
-    auto query = std::make_shared<QueryCamera>(id);
-    QueryDispatcher::dispatch(query);
-    return query->getResult();
+    return std::make_shared<QueryCamera>(id)->dispatch();
 }
 
 GenericDto Camera::serializeDto()

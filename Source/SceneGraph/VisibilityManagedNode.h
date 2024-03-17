@@ -17,20 +17,23 @@ namespace Enigma::SceneGraph
     {
         DECLARE_EN_RTTI;
     public:
-        VisibilityManagedNode(const std::string& name, const Engine::FactoryDesc& factory_desc);
-        VisibilityManagedNode(const Engine::GenericDto& dto);
+        VisibilityManagedNode(const SpatialId& id);
+        VisibilityManagedNode(const SpatialId& id, const Engine::GenericDto& o);
         VisibilityManagedNode(const VisibilityManagedNode&) = delete;
         VisibilityManagedNode(VisibilityManagedNode&&) = delete;
         virtual ~VisibilityManagedNode() override;
         VisibilityManagedNode& operator=(const VisibilityManagedNode&) = delete;
         VisibilityManagedNode& operator=(VisibilityManagedNode&&) = delete;
 
+        static std::shared_ptr<VisibilityManagedNode> create(const SpatialId& id);
+        static std::shared_ptr<VisibilityManagedNode> constitute(const SpatialId& id, const Engine::GenericDto& dto);
+
         virtual Engine::GenericDto serializeDto() override;
 
         virtual error onCullingVisible(Culler* culler, bool noCull) override;
         virtual void onCullingCompleteNotVisible(Culler* culler) override;
 
-        void ReleaseDeferredContent();
+        void dehydrate();
     };
 }
 

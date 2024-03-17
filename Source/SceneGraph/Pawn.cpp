@@ -5,6 +5,7 @@
 #include "SceneGraphDtos.h"
 #include "Frameworks/CommandBus.h"
 #include "Primitives/Primitive.h"
+#include "SceneGraphQueries.h"
 #include <cassert>
 
 using namespace Enigma::SceneGraph;
@@ -37,6 +38,12 @@ std::shared_ptr<Pawn> Pawn::create(const SpatialId& id)
 std::shared_ptr<Pawn> Pawn::constitute(const SpatialId& id, const Engine::GenericDto& dto)
 {
     return std::make_shared<Pawn>(id, dto);
+}
+
+std::shared_ptr<Pawn> Pawn::queryPawn(const SpatialId& id)
+{
+    assert(id.rtti().isDerived(Pawn::TYPE_RTTI));
+    return std::dynamic_pointer_cast<Pawn>(std::make_shared<QuerySpatial>(id)->dispatch());
 }
 
 Enigma::Engine::GenericDto Pawn::serializeDto()
@@ -72,7 +79,7 @@ error Pawn::insertToRenderer(const Engine::IRendererPtr& render)
     assert(render);
     if (!m_primitive) return ErrorCode::nullPrimitive;
 
-    error er = m_primitive->insertToRendererWithTransformUpdating(render, m_mxWorldTransform, m_spatialRenderState.ToLightingState());
+    error er = m_primitive->insertToRendererWithTransformUpdating(render, m_mxWorldTransform, m_spatialRenderState.lightingState());
     return er;
 }
 

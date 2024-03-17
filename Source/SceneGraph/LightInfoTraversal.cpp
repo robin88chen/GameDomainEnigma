@@ -2,12 +2,10 @@
 #include "SpatialLightInfoQuery.h"
 #include "Light.h"
 #include "SceneGraphEvents.h"
-#include "SpatialLightInfoRequest.h"
-#include "SpatialLightInfoResponse.h"
+#include "SceneGraphQueries.h"
 #include "SceneGraphErrors.h"
 #include "Frameworks/EventPublisher.h"
-#include "Frameworks/ResponseBus.h"
-#include "Frameworks/RequestBus.h"
+#include "Frameworks/QueryDispatcher.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Frameworks;
@@ -15,16 +13,16 @@ using namespace Enigma::Engine;
 
 DEFINE_RTTI(SceneGraph, LightInfoTraversal, ISystemService);
 
-LightInfoTraversal::LightInfoTraversal(Frameworks::ServiceManager* srv_mngr) : ISystemService(srv_mngr), m_isCurrentQuerying(false), m_requesterRuid()
+LightInfoTraversal::LightInfoTraversal(Frameworks::ServiceManager* srv_mngr) : ISystemService(srv_mngr)
 {
     m_needTick = false;
-    m_onLightInfoCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnLightInfoCreated(e); });
+    m_onLightInfoCreated = std::make_shared<EventSubscriber>([=](auto e) { this->onLightInfoCreated(e); });
     EventPublisher::subscribe(typeid(LightInfoCreated), m_onLightInfoCreated);
-    m_onLightInfoDeleted = std::make_shared<EventSubscriber>([=](auto e) { this->OnLightInfoDeleted(e); });
+    m_onLightInfoDeleted = std::make_shared<EventSubscriber>([=](auto e) { this->onLightInfoDeleted(e); });
     EventPublisher::subscribe(typeid(LightInfoDeleted), m_onLightInfoDeleted);
 
-    m_doQueryingLight = std::make_shared<RequestSubscriber>([=](auto r) { DoQueryingLight(r); });
-    RequestBus::subscribe(typeid(RequestSpatialLightInfo), m_doQueryingLight);
+    m_queryLightingStateAt = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { this->queryLightingStateAt(q); });
+    QueryDispatcher::subscribe(typeid(QueryLightingStateAt), m_queryLightingStateAt);
 }
 
 LightInfoTraversal::~LightInfoTraversal()
@@ -34,53 +32,32 @@ LightInfoTraversal::~LightInfoTraversal()
     EventPublisher::unsubscribe(typeid(LightInfoDeleted), m_onLightInfoDeleted);
     m_onLightInfoDeleted = nullptr;
 
-    RequestBus::unsubscribe(typeid(RequestSpatialLightInfo), m_doQueryingLight);
-    m_doQueryingLight = nullptr;
+    QueryDispatcher::unsubscribe(typeid(QueryLightingStateAt), m_queryLightingStateAt);
+    m_queryLightingStateAt = nullptr;
 }
 
-ServiceResult LightInfoTraversal::onTick()
+SpatialRenderState LightInfoTraversal::queryLightingStateAt(const MathLib::Vector3& wolrd_position)
 {
-    if (m_isCurrentQuerying) return ServiceResult::Pendding;
-    QueryNextRequest();
-    return ServiceResult::Pendding;
-}
-
-void LightInfoTraversal::QueryNextRequest()
-{
-    if (m_isCurrentQuerying) return;
-
-    {
-        std::lock_guard locker{ m_queryRequestLock };
-        if (m_queryRequests.empty())
-        {
-            m_needTick = false;
-            return;
-        }
-
-        const auto request = m_queryRequests.front();
-        m_queryRequests.pop_front();
-        m_requesterRuid = request->getRuid();
-        m_querySpatialPos = request->GetSpatialPos();
-        m_isCurrentQuerying = true;
-    }
-
     RenderLightingState lighting_state;
     SpatialLightInfoQuery query;
-    query.InitSpatialPosition(m_querySpatialPos);
-    QuerySpatialLightInfo(query);
-    if (query.GetResultList().empty())
+    query.initSpatialPosition(wolrd_position);
+    if (m_lights.empty()) return lighting_state;
+    std::lock_guard locker{ m_mapLock };
+    for (auto& kv : m_lights)
     {
-        ResponseBus::post(std::make_shared<SpatialLightInfoResponse>(
-            m_requesterRuid, lighting_state, ErrorCode::emptyLightQueryResult));
-        return;
+        if (!kv.second.expired())
+        {
+            query.test(kv.second.lock()->info());
+        }
     }
+    if (query.getResultList().empty()) return lighting_state;
 
     std::vector<MathLib::Vector4> light_positions;
     std::vector<MathLib::ColorRGBA> light_colors;
     std::vector<MathLib::Vector4> light_attenuations;
 
-    for (SpatialLightInfoQuery::LightInfoList::const_iterator iter = query.GetResultList().begin();
-        iter != query.GetResultList().end(); ++iter)
+    for (SpatialLightInfoQuery::LightInfoList::const_iterator iter = query.getResultList().begin();
+        iter != query.getResultList().end(); ++iter)
     {
         switch ((*iter).m_lightInfo.lightType())
         {
@@ -104,26 +81,10 @@ void LightInfoTraversal::QueryNextRequest()
             break;
         }
     }
-    lighting_state.SetPointLightArray(light_positions, light_colors, light_attenuations);
-    ResponseBus::post(std::make_shared<SpatialLightInfoResponse>(
-        m_requesterRuid, lighting_state, ErrorCode::ok));
-    m_isCurrentQuerying = false;
+    return lighting_state;
 }
 
-void LightInfoTraversal::QuerySpatialLightInfo(SpatialLightInfoQuery& query)
-{
-    if (m_lights.empty()) return;
-    std::lock_guard locker{ m_mapLock };
-    for (auto& kv : m_lights)
-    {
-        if (!kv.second.expired())
-        {
-            query.test(kv.second.lock()->info());
-        }
-    }
-}
-
-void LightInfoTraversal::OnLightInfoCreated(const IEventPtr& e)
+void LightInfoTraversal::onLightInfoCreated(const IEventPtr& e)
 {
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<LightInfoCreated, IEvent>(e);
@@ -133,7 +94,7 @@ void LightInfoTraversal::OnLightInfoCreated(const IEventPtr& e)
     m_lights.insert_or_assign(ev->light()->id(), ev->light());
 }
 
-void LightInfoTraversal::OnLightInfoDeleted(const IEventPtr& e)
+void LightInfoTraversal::onLightInfoDeleted(const IEventPtr& e)
 {
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<LightInfoDeleted, IEvent>(e);
@@ -142,12 +103,11 @@ void LightInfoTraversal::OnLightInfoDeleted(const IEventPtr& e)
     m_lights.erase(ev->lightId());
 }
 
-void LightInfoTraversal::DoQueryingLight(const Frameworks::IRequestPtr& r)
+void LightInfoTraversal::queryLightingStateAt(const Frameworks::IQueryPtr& q)
 {
-    if (!r) return;
-    auto req = std::dynamic_pointer_cast<RequestSpatialLightInfo, IRequest>(r);
-    if (!req) return;
-    std::lock_guard locker{ m_queryRequestLock };
-    m_queryRequests.push_back(req);
-    m_needTick = true;
+    if (!q) return;
+    auto query = std::dynamic_pointer_cast<QueryLightingStateAt, IQuery>(q);
+    if (!query) return;
+    auto lighting_state = queryLightingStateAt(query->worldPosition());
+    query->setResult(lighting_state);
 }

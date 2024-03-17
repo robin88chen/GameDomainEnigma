@@ -9,14 +9,17 @@
 #define _SCENE_GRAPH_MAKER_H
 
 #include "GameEngine/GenericDto.h"
+#include "SceneGraph/SpatialId.h"
+#include "Primitives/PrimitiveId.h"
 #include <vector>
 
 class SceneGraphMaker
 {
 public:
-    static void MakeSavedLazyNode(const std::string& name);
+    static void makePawm(const Enigma::SceneGraph::SpatialId& id, const Enigma::Primitives::PrimitiveId& primitive_id);
+    static Enigma::Engine::GenericDto makeLazyNode(const Enigma::SceneGraph::SpatialId& id, const Enigma::SceneGraph::SpatialId& parent_id, const std::vector<Enigma::SceneGraph::SpatialId>& children);
 
-    static std::vector<Enigma::Engine::GenericDto> MakeSceneGraphDtos(const std::string& lazy_node_name);
+    static Enigma::Engine::GenericDto makeSceneGraph(const Enigma::SceneGraph::SpatialId& root_id, const Enigma::SceneGraph::SpatialId& lazy_node_id);
 };
 
 #endif // _SCENE_GRAPH_MAKER_H

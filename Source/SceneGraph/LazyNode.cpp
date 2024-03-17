@@ -1,35 +1,77 @@
 ﻿#include "LazyNode.h"
 #include "SceneNonLazyFlattenTraversal.h"
 #include "SceneGraphDtos.h"
+#include "SceneGraphErrors.h"
 #include "Frameworks/Rtti.h"
 #include "GameEngine/FactoryDesc.h"
+#include "SceneGraphQueries.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Engine;
 
 DEFINE_RTTI(SceneGraph, LazyNode, Node);
 
-LazyNode::LazyNode(const std::string& name, const FactoryDesc& factory_desc) : Node(name)
+LazyNode::LazyNode(const SpatialId& id) : Node(id)
 {
-    assert(Frameworks::Rtti::isExactlyOrDerivedFrom(factory_desc.GetRttiName(), LazyNode::TYPE_RTTI.getName()));
-    m_factoryDesc = factory_desc;
-    if (m_factoryDesc.GetInstanceType() == FactoryDesc::InstanceType::Instanced)
-    {
-        m_lazyStatus.changeStatus(Frameworks::LazyStatus::Status::Ready);
-    }
+    m_factoryDesc = FactoryDesc(LazyNode::TYPE_RTTI.getName());
+    m_factoryDesc.ClaimAsDeferred();
+    m_lazyStatus.changeStatus(Frameworks::LazyStatus::Status::Ghost);
 }
 
-LazyNode::LazyNode(const GenericDto& o) : Node(o)
+LazyNode::LazyNode(const SpatialId& id, const Engine::GenericDto& o) : Node(id, o)
 {
     LazyNodeDto lazy_node_dto{ o };
-    if (m_factoryDesc.GetInstanceType() == FactoryDesc::InstanceType::Instanced)
-    {
-        m_lazyStatus.changeStatus(Frameworks::LazyStatus::Status::Ready);
-    }
+    m_factoryDesc = lazy_node_dto.factoryDesc();
+    m_lazyStatus.changeStatus(Frameworks::LazyStatus::Status::Ghost);
 }
 
 LazyNode::~LazyNode()
 {
+}
+
+std::shared_ptr<LazyNode> LazyNode::create(const SpatialId& id)
+{
+    return std::make_shared<LazyNode>(id);
+}
+
+std::shared_ptr<LazyNode> LazyNode::constitute(const SpatialId& id, const Engine::GenericDto& dto)
+{
+    return std::make_shared<LazyNode>(id, dto);
+}
+
+std::error_code LazyNode::hydrate(const Engine::GenericDto& dto)
+{
+    LazyNodeDto lazy_node_dto{ dto };
+    for (auto& child : lazy_node_dto.children())
+    {
+        auto child_spatial = std::make_shared<QuerySpatial>(child.id())->dispatch();
+        if (!child_spatial)
+        {
+            if (!child.dto().has_value()) return ErrorCode::childDtoNotFound;
+            child_spatial = std::make_shared<RequestSpatialConstitution>(child.id(), child.dto().value(), PersistenceLevel::Repository)->dispatch();
+        }
+        if (child_spatial)
+        {
+            auto er = attachChild(child_spatial, child_spatial->getLocalTransform());
+            if (er)
+            {
+                m_lazyStatus.changeStatus(Frameworks::LazyStatus::Status::Failed);
+                return er;
+            }
+        }
+    }
+    m_lazyStatus.changeStatus(Frameworks::LazyStatus::Status::Ready);
+    return ErrorCode::ok;
+}
+
+GenericDto LazyNode::serializeDto()
+{
+    return serializeAsLaziness();
+}
+
+GenericDto LazyNode::serializeLaziedContent()
+{
+    return serializeNodeDto().toGenericDto();
 }
 
 GenericDto LazyNode::serializeAsLaziness()

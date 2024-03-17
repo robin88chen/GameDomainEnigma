@@ -19,6 +19,7 @@
 #include "Frameworks/Rtti.h"
 #include "GameEngine/FactoryDesc.h"
 #include "GameEngine/LinkageResolver.h"
+#include "SceneGraphPersistenceLevel.h"
 #include <string>
 #include <memory>
 #include <system_error>
@@ -71,9 +72,7 @@ namespace Enigma::SceneGraph
         using NotifyFlags = std::bitset<5>;
 
     public:
-        Spatial(const std::string& name);
         Spatial(const SpatialId& id);
-        Spatial(const Engine::GenericDto& dto);
         Spatial(const SpatialId& id, const Engine::GenericDto& dto);
         Spatial(const Spatial&) = delete;
         Spatial(Spatial&&) = delete;
@@ -82,16 +81,18 @@ namespace Enigma::SceneGraph
         Spatial& operator=(Spatial&&) = delete;
 
         virtual Engine::GenericDto serializeDto();
-        virtual void resolveFactoryLinkage(const Engine::GenericDto& dto, Engine::FactoryLinkageResolver<Spatial>& resolver) {}
+
+        static std::shared_ptr<Spatial> querySpatial(const SpatialId& id);
 
         const SpatialId& id() const { return m_id; }
-        const std::string& getSpatialName() const { return m_name; }
+        PersistenceLevel persistenceLevel() const { return m_persistenceLevel; }
+        void persistenceLevel(PersistenceLevel level) { m_persistenceLevel = level; }
 
         const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
         /** @name scene graph relation */
         //@{
-        void linkParent(const std::shared_ptr<Spatial>& parent);
+        void linkParent(const std::optional<SpatialId>& parent);
         std::shared_ptr<Spatial> getParent() const;
         unsigned int getGraphDepth() { return m_graphDepth; }
         void detachFromParent();  ///< parent should not call this function, it will be recursive forever!!
@@ -239,7 +240,8 @@ namespace Enigma::SceneGraph
 
     protected:
         SpatialId m_id;
-        std::string m_name;
+        PersistenceLevel m_persistenceLevel;
+        //std::string m_name;
 
         Engine::FactoryDesc m_factoryDesc;
 
@@ -257,7 +259,7 @@ namespace Enigma::SceneGraph
 
         MathLib::Vector3 m_vecWorldPosition;
 
-        std::weak_ptr<Spatial> m_parent;
+        std::optional<SpatialId> m_parent;
         unsigned int m_graphDepth;
 
         CullingMode m_cullingMode;

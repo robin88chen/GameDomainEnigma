@@ -34,6 +34,8 @@ namespace Enigma::SceneGraph
         static std::shared_ptr<Pawn> create(const SpatialId& id);
         static std::shared_ptr<Pawn> constitute(const SpatialId& id, const Engine::GenericDto& dto);
 
+        static std::shared_ptr<Pawn> queryPawn(const SpatialId& id);
+
         virtual Engine::GenericDto serializeDto() override;
 
         /** on cull visible, insert this object to culler */

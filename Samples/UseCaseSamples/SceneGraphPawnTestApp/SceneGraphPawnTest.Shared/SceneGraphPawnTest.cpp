@@ -12,33 +12,51 @@
 #include "SceneGraph/SceneGraphCommands.h"
 #include "SceneGraph/SceneGraphEvents.h"
 #include "Gateways/JsonFileDtoDeserializer.h"
-#include "Gateways/JsonFileEffectProfileDeserializer.h"
-#include "GameEngine/Primitive.h"
 #include "CameraMaker.h"
 #include "Animators/AnimatorCommands.h"
-#include "Animators/ModelPrimitiveAnimator.h"
 #include "SceneGraph/Culler.h"
-#include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/MemoryMacro.h"
 #include "Gateways/DtoJsonGateway.h"
 #include "GameEngine/DeviceCreatingPolicy.h"
-#include "GameEngine/EngineInstallingPolicy.h"
-#include "Renderer/RendererInstallingPolicy.h"
+#include "FileStorage/AnimationAssetFileStoreMapper.h"
+#include "FileStorage/AnimatorFileStoreMapper.h"
+#include "FileStorage/EffectMaterialSourceFileStoreMapper.h"
+#include "FileStorage/GeometryDataFileStoreMapper.h"
+#include "FileStorage/PrimitiveFileStoreMapper.h"
+#include "FileStorage/SceneGraphFileStoreMapper.h"
+#include "FileStorage/TextureFileStoreMapper.h"
+#include "Geometries/GeometryInstallingPolicy.h"
 #include "Animators/AnimatorInstallingPolicy.h"
+#include "Primitives/PrimitiveRepositoryInstallingPolicy.h"
 #include "SceneGraph/SceneGraphInstallingPolicy.h"
+#include "GameEngine/EffectMaterialSourceRepositoryInstallingPolicy.h"
+#include "GameEngine/EngineInstallingPolicy.h"
+#include "GameEngine/TextureRepositoryInstallingPolicy.h"
+#include "Renderer/RendererInstallingPolicy.h"
+#include "Renderables/RenderablesInstallingPolicy.h"
+#include "Renderables/ModelPrimitiveAnimator.h"
+#include "SkinAnimationMaker.h"
+#include "SkinMeshModelMaker.h"
+#include "SceneGraph/SceneGraphQueries.h"
+#include "SceneGraph/SceneGraphPersistenceLevel.h"
 
 std::string PrimaryTargetName = "primary_target";
 std::string DefaultRendererName = "default_renderer";
 
+using namespace Enigma::Controllers;
 using namespace Enigma::Application;
 using namespace Enigma::Frameworks;
 using namespace Enigma::FileSystem;
 using namespace Enigma::Renderer;
-using namespace Enigma::Controllers;
-using namespace Enigma::SceneGraph;
-using namespace Enigma::Gateways;
+using namespace Enigma::Renderables;
+using namespace Enigma::MathLib;
 using namespace Enigma::Engine;
 using namespace Enigma::Animators;
+using namespace Enigma::FileStorage;
+using namespace Enigma::Gateways;
+using namespace Enigma::Geometries;
+using namespace Enigma::Primitives;
+using namespace Enigma::SceneGraph;
 
 SceneGraphPawnTest::SceneGraphPawnTest(const std::string app_name) : AppDelegate(app_name)
 {
@@ -49,64 +67,59 @@ SceneGraphPawnTest::~SceneGraphPawnTest()
 {
 }
 
-void SceneGraphPawnTest::InitializeMountPaths()
+void SceneGraphPawnTest::initializeMountPaths()
 {
 #if TARGET_PLATFORM == PLATFORM_WIN32
-    if (FileSystem::Instance())
+    if (FileSystem::instance())
     {
         auto path = std::filesystem::current_path();
         auto mediaPath = path / "../../../../Media/";
-        FileSystem::Instance()->AddMountPath(std::make_shared<StdMountPath>(mediaPath.string(), MediaPathName));
-        FileSystem::Instance()->AddMountPath(std::make_shared<StdMountPath>(path.string(), "DataPath"));
+        auto dataPath = path / "Data/";
+        if (!std::filesystem::exists(dataPath)) std::filesystem::create_directory(dataPath);
+        FileSystem::instance()->addMountPath(std::make_shared<StdMountPath>(mediaPath.string(), MediaPathName));
+        FileSystem::instance()->addMountPath(std::make_shared<StdMountPath>(dataPath.string(), "DataPath"));
     }
 #elif TARGET_PLATFORM == PLATFORM_ANDROID
-    if (FileSystem::Instance())
+    if (FileSystem::instance())
     {
-        FileSystem::Instance()->AddMountPath(std::make_shared<AndroidMountPath>("", MediaPathName));
+        FileSystem::instance()->addMountPath(std::make_shared<AndroidMountPath>("", MediaPathName));
 
-        std::string data_path = Enigma::Platforms::AndroidBridge::GetDataFilePath();
+        std::string data_path = Enigma::Platforms::AndroidBridge::getDataFilePath();
         char s[2048];
         memset(s, 0, 2048);
         memcpy(s, data_path.c_str(), data_path.size());
-        FileSystem::Instance()->AddMountPath(std::make_shared<StdMountPath>(data_path, "DataPath"));
+        FileSystem::instance()->addMountPath(std::make_shared<StdMountPath>(data_path, "DataPath"));
     }
 #endif
 }
 
-void SceneGraphPawnTest::InstallEngine()
+void SceneGraphPawnTest::installEngine()
 {
-    m_onRendererCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnRendererCreated(e); });
-    m_onRenderTargetCreated = std::make_shared<EventSubscriber>([=](auto e) { this->OnRenderTargetCreated(e); });
-    m_onSceneGraphBuilt = std::make_shared<EventSubscriber>([=](auto e) { this->OnSceneGraphBuilt(e); });
-    EventPublisher::Subscribe(typeid(RendererCreated), m_onRendererCreated);
-    EventPublisher::Subscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
-    EventPublisher::Subscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
+    m_onRendererCreated = std::make_shared<EventSubscriber>([=](auto e) { this->onRendererCreated(e); });
+    m_onRenderTargetCreated = std::make_shared<EventSubscriber>([=](auto e) { this->onRenderTargetCreated(e); });
+    EventPublisher::subscribe(typeid(RendererCreated), m_onRendererCreated);
+    EventPublisher::subscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
 
     assert(m_graphicMain);
 
-    auto creating_policy = std::make_shared<Enigma::Engine::DeviceCreatingPolicy>(Enigma::Graphics::DeviceRequiredBits(), m_hwnd);
-    auto engine_policy = std::make_shared<Enigma::Engine::EngineInstallingPolicy>(std::make_shared<JsonFileEffectProfileDeserializer>());
-    auto render_sys_policy = std::make_shared<Enigma::Renderer::RenderSystemInstallingPolicy>();
-    auto animator_policy = std::make_shared<Enigma::Animators::AnimatorInstallingPolicy>();
-    auto renderer_policy = std::make_shared<Enigma::Renderer::DefaultRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName);
-    auto scene_graph_policy = std::make_shared<Enigma::SceneGraph::SceneGraphInstallingPolicy>(
-        std::make_shared<JsonFileDtoDeserializer>());
-    m_graphicMain->InstallRenderEngine({ creating_policy, engine_policy, render_sys_policy, animator_policy, renderer_policy, scene_graph_policy });
-    CubeGeometryMaker::MakeSavedCube("test_geometry");
-    auto dtos = SceneGraphMaker::MakeSceneGraphDtos();
-    std::string json = DtoJsonGateway::Serialize(dtos);
-    IFilePtr iFile = FileSystem::Instance()->OpenFile(Filename("scene_graph.ctt@DataPath"), "w+b");
-    if (FATAL_LOG_EXPR(!iFile)) return;
-    iFile->Write(0, convert_to_buffer(json));
-    FileSystem::Instance()->CloseFile(iFile);
+    auto creating_policy = std::make_shared<DeviceCreatingPolicy>(Enigma::Graphics::DeviceRequiredBits(), m_hwnd);
+    auto engine_policy = std::make_shared<EngineInstallingPolicy>();
+    auto renderer_policy = std::make_shared<DefaultRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName);
+    auto render_sys_policy = std::make_shared<RenderSystemInstallingPolicy>();
+    auto geometry_policy = std::make_shared<GeometryInstallingPolicy>(std::make_shared<GeometryDataFileStoreMapper>("geometries.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
+    auto primitive_policy = std::make_shared<PrimitiveRepositoryInstallingPolicy>(std::make_shared<PrimitiveFileStoreMapper>("primitives.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
+    auto animator_policy = std::make_shared<AnimatorInstallingPolicy>(std::make_shared<AnimatorFileStoreMapper>("animators.db.txt@DataPath", std::make_shared<DtoJsonGateway>()), std::make_shared<AnimationAssetFileStoreMapper>("animation_assets.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
+    auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(std::make_shared<JsonFileDtoDeserializer>(), std::make_shared<SceneGraphFileStoreMapper>("scene_graph.db.txt@DataPath", "lazy_scene.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
+    auto effect_material_source_policy = std::make_shared<EffectMaterialSourceRepositoryInstallingPolicy>(std::make_shared<EffectMaterialSourceFileStoreMapper>("effect_materials.db.txt@APK_PATH"));
+    auto texture_policy = std::make_shared<TextureRepositoryInstallingPolicy>(std::make_shared<TextureFileStoreMapper>("textures.db.txt@APK_PATH", std::make_shared<DtoJsonGateway>()));
+    auto renderables_policy = std::make_shared<RenderablesInstallingPolicy>();
+    m_graphicMain->installRenderEngine({ creating_policy, engine_policy, renderer_policy, render_sys_policy, geometry_policy, primitive_policy, animator_policy, scene_graph_policy, effect_material_source_policy, texture_policy, renderables_policy });
 
-    CommandBus::Post(std::make_shared<BuildSceneGraph>("test_scene", dtos));
-
-    m_camera = CameraMaker::MakeCamera();
-    m_culler = menew Culler(m_camera);
+    makeCamera();
+    makeModel();
 }
 
-void SceneGraphPawnTest::ShutdownEngine()
+void SceneGraphPawnTest::shutdownEngine()
 {
     m_pawn = nullptr;
     m_sceneRoot = nullptr;
@@ -116,55 +129,69 @@ void SceneGraphPawnTest::ShutdownEngine()
     m_camera = nullptr;
     SAFE_DELETE(m_culler);
 
-    EventPublisher::Unsubscribe(typeid(RendererCreated), m_onRendererCreated);
-    EventPublisher::Unsubscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
-    EventPublisher::Unsubscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
+    EventPublisher::unsubscribe(typeid(RendererCreated), m_onRendererCreated);
+    EventPublisher::unsubscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
     m_onRendererCreated = nullptr;
     m_onRenderTargetCreated = nullptr;
-    m_onSceneGraphBuilt = nullptr;
 
-    m_graphicMain->ShutdownRenderEngine();
+    m_graphicMain->shutdownRenderEngine();
 }
 
-void SceneGraphPawnTest::FrameUpdate()
+void SceneGraphPawnTest::frameUpdate()
 {
-    AppDelegate::FrameUpdate();
-    //RetrieveDtoCreatedModel();
-    //InsertDtoCreatedModelToRenderer();
-
-    RetrieveDtoCreatedModel();
-    PrepareRenderScene();
+    AppDelegate::frameUpdate();
+    prepareRenderScene();
 }
 
-void SceneGraphPawnTest::RetrieveDtoCreatedModel()
+void SceneGraphPawnTest::makeCamera()
 {
-    if ((m_pawn) && (!m_model))
+    m_cameraId = SpatialId("camera", Camera::TYPE_RTTI);
+    if (const auto camera = Camera::queryCamera(m_cameraId))
     {
-        auto prim = m_pawn->GetPrimitive();
-        if (prim)
-        {
-            m_model = std::dynamic_pointer_cast<ModelPrimitive, Primitive>(prim);
-            if (auto ani = m_model->GetAnimator())
-            {
-                CommandBus::Post(std::make_shared<AddListeningAnimator>(ani));
-                if (auto model_ani = std::dynamic_pointer_cast<ModelPrimitiveAnimator, Animator>(ani))
-                {
-                    model_ani->PlayAnimation(AnimationClip{ 0.0f, 2.0f, AnimationClip::WarpMode::Loop, 0 });
-                }
-            }
-        }
+        m_camera = camera;
+        if ((m_camera) && (m_renderer)) m_renderer->setAssociatedCamera(m_camera);
+        m_culler = menew Culler(m_camera);
+    }
+    else
+    {
+        m_camera = CameraMaker::makeCamera(m_cameraId);
+        m_culler = menew Culler(m_camera);
     }
 }
 
-void SceneGraphPawnTest::InsertDtoCreatedModelToRenderer()
+void SceneGraphPawnTest::makeModel()
 {
-    if ((m_renderer) && (m_model))
+    std::vector<std::string> meshNodeNames = { "bone_root", "bone_one" };
+    auto cubeId = GeometryId("test_geometry");
+    auto meshId = PrimitiveId("test_mesh", MeshPrimitive::TYPE_RTTI);
+    auto modelId = PrimitiveId("test_model", ModelPrimitive::TYPE_RTTI);
+    auto animationId = AnimationAssetId("test_animation");
+    auto animatorId = AnimatorId("test_animator", ModelPrimitiveAnimator::TYPE_RTTI);
+    auto pawn_id = SpatialId("pawn", Pawn::TYPE_RTTI);
+    auto stillpawn_id = SpatialId("still_pawn", Pawn::TYPE_RTTI);
+    auto animation = SkinAnimationMaker::makeSkinMeshAnimationAsset(animationId, meshNodeNames);
+    auto animator = SkinAnimationMaker::makeModelAnimator(animatorId, animationId, modelId.origin(), meshId, meshNodeNames);
+    auto cube = CubeGeometryMaker::makeCube(cubeId);
+    auto mesh = SkinMeshModelMaker::makeCubeMeshPrimitive(meshId, cubeId);
+    m_model = SkinMeshModelMaker::makeModelPrimitive(modelId, meshId, animatorId, meshNodeNames);
+    m_rootId = SpatialId("root", Node::TYPE_RTTI);
+    m_sceneRoot = Node::queryNode(m_rootId);
+    if (!m_sceneRoot)
     {
-        m_model->InsertToRendererWithTransformUpdating(m_renderer, Enigma::MathLib::Matrix4::IDENTITY, RenderLightingState{});
+        auto scene_dto = SceneGraphMaker::makeSceneGraph(m_rootId, modelId, pawn_id, stillpawn_id);
+        m_sceneRoot = std::dynamic_pointer_cast<Node>(std::make_shared<RequestSpatialConstitution>(m_rootId, scene_dto, PersistenceLevel::Store)->dispatch());
     }
+    auto pawn = Pawn::queryPawn(pawn_id);
+    if (!pawn) return;
+    animatorId = pawn->getPrimitive()->animatorId();
+    if (const auto animator = std::dynamic_pointer_cast<ModelPrimitiveAnimator>(Animator::queryAnimator(animatorId)))
+    {
+        animator->playAnimation(Enigma::Renderables::AnimationClip{ 0.0f, 2.5f, Enigma::Renderables::AnimationClip::WarpMode::Loop, 0 });
+    }
+    CommandBus::post(std::make_shared<AddListeningAnimator>(animatorId));
 }
 
-void SceneGraphPawnTest::PrepareRenderScene()
+void SceneGraphPawnTest::prepareRenderScene()
 {
     if (m_sceneRoot)
     {
@@ -172,53 +199,35 @@ void SceneGraphPawnTest::PrepareRenderScene()
     }
     if (m_renderer)
     {
-        m_renderer->PrepareScene(m_culler->GetVisibleSet());
+        m_renderer->prepareScene(m_culler->getVisibleSet());
     }
 }
 
-void SceneGraphPawnTest::RenderFrame()
+void SceneGraphPawnTest::renderFrame()
 {
     if (!m_renderer) return;
-    m_renderer->BeginScene();
-    m_renderer->ClearRenderTarget();
-    m_renderer->DrawScene();
-    m_renderer->EndScene();
-    m_renderer->Flip();
+    m_renderer->beginScene();
+    m_renderer->clearRenderTarget();
+    m_renderer->drawScene();
+    m_renderer->endScene();
+    m_renderer->flip();
 }
 
-void SceneGraphPawnTest::OnRendererCreated(const IEventPtr& e)
+void SceneGraphPawnTest::onRendererCreated(const IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<RendererCreated, IEvent>(e);
     if (!ev) return;
-    m_renderer = std::dynamic_pointer_cast<Renderer, IRenderer>(ev->GetRenderer());
-    m_renderer->SetAssociatedCamera(m_camera);
-    if ((m_renderer) && (m_renderTarget)) m_renderer->SetRenderTarget(m_renderTarget);
+    m_renderer = std::dynamic_pointer_cast<Renderer, IRenderer>(ev->renderer());
+    m_renderer->setAssociatedCamera(m_camera);
+    if ((m_renderer) && (m_renderTarget)) m_renderer->setRenderTarget(m_renderTarget);
 }
 
-void SceneGraphPawnTest::OnRenderTargetCreated(const IEventPtr& e)
+void SceneGraphPawnTest::onRenderTargetCreated(const IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<PrimaryRenderTargetCreated, IEvent>(e);
     if (!ev) return;
-    m_renderTarget = ev->GetRenderTarget();
-    if ((m_renderer) && (m_renderTarget)) m_renderer->SetRenderTarget(m_renderTarget);
-}
-
-void SceneGraphPawnTest::OnSceneGraphBuilt(const IEventPtr& e)
-{
-    if (!e) return;
-    auto ev = std::dynamic_pointer_cast<FactorySceneGraphBuilt, IEvent>(e);
-    if (!ev) return;
-    auto top_spatials = ev->GetTopLevelSpatial();
-    if (top_spatials.empty()) return;
-    m_sceneRoot = std::dynamic_pointer_cast<Node, Spatial>(top_spatials[0]);
-    if (!m_sceneRoot) return;
-    for (auto child : m_sceneRoot->GetChildList())
-    {
-        if (child->GetSpatialName() == "child2")
-        {
-            m_pawn = std::dynamic_pointer_cast<Pawn, Spatial>(std::dynamic_pointer_cast<Node, Spatial>(child)->GetChildList().front());
-        }
-    }
+    m_renderTarget = ev->renderTarget();
+    if ((m_renderer) && (m_renderTarget)) m_renderer->setRenderTarget(m_renderTarget);
 }

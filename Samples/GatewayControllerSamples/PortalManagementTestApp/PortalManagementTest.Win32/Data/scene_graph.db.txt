@@ -1,0 +1,6 @@
+camera,En.SceneGraph.Camera,camera.cam@DataPath
+portal_management,En.SceneGraph.PortalManagementNode,portal_management.node@DataPath
+floor_pawn,En.SceneGraph.Pawn,floor_pawn.pawn@DataPath
+door_pawn,En.SceneGraph.Pawn,door_pawn.pawn@DataPath
+cube_pawn,En.SceneGraph.Pawn,cube_pawn.pawn@DataPath
+root,En.SceneGraph.Node,root.En.SceneGraph.Node.json

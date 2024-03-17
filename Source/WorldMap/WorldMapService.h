@@ -18,6 +18,7 @@
 #include "Terrain/TerrainPawn.h"
 #include "GameEngine/BoundingVolume.h"
 #include "GameEngine/GenericDto.h"
+#include "SceneGraph/SceneGraphDtos.h"
 #include <system_error>
 
 namespace Enigma::WorldMap

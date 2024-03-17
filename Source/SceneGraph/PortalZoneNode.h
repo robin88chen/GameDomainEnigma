@@ -19,24 +19,27 @@ namespace Enigma::SceneGraph
     {
         DECLARE_EN_RTTI;
     public:
-        PortalZoneNode(const std::string& name, const Engine::FactoryDesc& factory_desc);
-        PortalZoneNode(const Engine::GenericDto& dto);
+        PortalZoneNode(const SpatialId& id);
+        PortalZoneNode(const SpatialId& id, const Engine::GenericDto& o);
         PortalZoneNode(const PortalZoneNode&) = delete;
         PortalZoneNode(PortalZoneNode&&) = delete;
         PortalZoneNode& operator=(const PortalZoneNode&) = delete;
         PortalZoneNode& operator=(PortalZoneNode&&) = delete;
         virtual ~PortalZoneNode() override;
 
+        static std::shared_ptr<PortalZoneNode> create(const SpatialId& id);
+        static std::shared_ptr<PortalZoneNode> constitute(const SpatialId& id, const Engine::GenericDto& dto);
+
         virtual Engine::GenericDto serializeDto() override;
+        virtual Engine::GenericDto serializeLaziedContent() override;
         virtual Engine::GenericDto serializeAsLaziness() override;
 
         virtual error onCullingVisible(Culler* culler, bool noCull) override;
 
-        virtual void setPortalParent(const std::shared_ptr<Spatial>& portal_parent) { m_portalParent = portal_parent; }
+        virtual void setPortalParent(const SpatialId& id);
 
     protected:
-        std::weak_ptr<Spatial> m_portalParent; // either portal or portal management node
-        // for zone graph traversal
+        SpatialId m_portalParentId; // either portal or portal management node
         bool m_hasTraversed;
     };
     using PortalZoneNodePtr = std::shared_ptr<PortalZoneNode>;

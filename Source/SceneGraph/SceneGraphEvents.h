@@ -24,36 +24,36 @@ namespace Enigma::SceneGraph
     class SceneGraphEvent : public Frameworks::IEvent
     {
     public:
-        SceneGraphEvent(const std::shared_ptr<Spatial>& spatial) : m_spatial(spatial) {};
-        std::shared_ptr<Spatial> GetSpatial() { return m_spatial.lock(); }
+        SceneGraphEvent(const SpatialId& id) : m_id(id) {};
+        const SpatialId& id() { return m_id; }
 
     protected:
-        std::weak_ptr<Spatial> m_spatial;
+        SpatialId m_id;
     };
     class SpatialCullModeChanged : public SceneGraphEvent
     {
     public:
-        SpatialCullModeChanged(const std::shared_ptr<Spatial>& spatial) : SceneGraphEvent(spatial) {};
+        SpatialCullModeChanged(const SpatialId& id) : SceneGraphEvent(id) {};
     };
     class SpatialBoundChanged : public SceneGraphEvent
     {
     public:
-        SpatialBoundChanged(const std::shared_ptr<Spatial>& spatial) : SceneGraphEvent(spatial) {};
+        SpatialBoundChanged(const SpatialId& id) : SceneGraphEvent(id) {};
     };
     class SpatialLocationChanged : public SceneGraphEvent
     {
     public:
-        SpatialLocationChanged(const std::shared_ptr<Spatial>& spatial) : SceneGraphEvent(spatial) {};
+        SpatialLocationChanged(const SpatialId& id) : SceneGraphEvent(id) {};
     };
     class SpatialRenderStateChanged : public SceneGraphEvent
     {
     public:
-        SpatialRenderStateChanged(const std::shared_ptr<Spatial>& spatial) : SceneGraphEvent(spatial) {};
+        SpatialRenderStateChanged(const SpatialId& id) : SceneGraphEvent(id) {};
     };
     class SpatialVisibilityChanged : public SceneGraphEvent
     {
     public:
-        SpatialVisibilityChanged(const std::shared_ptr<Spatial>& spatial) : SceneGraphEvent(spatial) {};
+        SpatialVisibilityChanged(const SpatialId& id) : SceneGraphEvent(id) {};
     };
     class SceneGraphChanged : public SceneGraphEvent
     {
@@ -66,13 +66,13 @@ namespace Enigma::SceneGraph
             DeferredInstanced,
         };
     public:
-        SceneGraphChanged(const std::shared_ptr<Spatial>& parent, const std::shared_ptr<Spatial> child, NotifyCode code)
-            : SceneGraphEvent(parent), m_child(child), m_code(code) {};
-        std::shared_ptr<Spatial> GetParentNode() { return m_spatial.lock(); }
-        std::shared_ptr<Spatial> GetChild() { return m_child.lock(); }
-        const NotifyCode GetNotifyCode() const { return m_code; }
+        SceneGraphChanged(const SpatialId& parent_id, const SpatialId& child_id, NotifyCode code)
+            : SceneGraphEvent(parent_id), m_childId(child_id), m_code(code) {};
+        const SpatialId& parentId() { return m_id; }
+        const SpatialId& childId() { return m_childId; }
+        const NotifyCode notifyCode() const { return m_code; }
     protected:
-        std::weak_ptr<Spatial> m_child;
+        SpatialId m_childId;
         NotifyCode m_code;
     };
     //------------------------- Light Info Events --------------------------
@@ -175,27 +175,6 @@ namespace Enigma::SceneGraph
         std::string m_sceneGraphId;
         std::error_code m_error;
     };
-    class InPlaceSceneGraphBuilt : public Frameworks::IEvent
-    {
-    public:
-        InPlaceSceneGraphBuilt(const std::shared_ptr<Node>& in_place_root) : m_in_placeRoot(in_place_root) {};
-
-        const std::shared_ptr<Node>& GetInPlaceRootNode() { return m_in_placeRoot; }
-    protected:
-        std::shared_ptr<Node> m_in_placeRoot;
-    };
-    class BuildInPlaceSceneGraphFailed : public Frameworks::IEvent
-    {
-    public:
-        BuildInPlaceSceneGraphFailed(const std::string& in_place_root_name, std::error_code er) : m_in_placeRootName(in_place_root_name), m_error(er) {}
-
-        const std::string& GetInPlaceRootNodeName() { return m_in_placeRootName; }
-        std::error_code GetErrorCode() const { return m_error; }
-
-    protected:
-        std::string m_in_placeRootName;
-        std::error_code m_error;
-    };
 
     class LazyNodeInstanced : public Frameworks::IEvent
     {
@@ -246,37 +225,44 @@ namespace Enigma::SceneGraph
     class VisibilityChanged : public Frameworks::IEvent
     {
     public:
-        VisibilityChanged(const std::shared_ptr<LazyNode>& node, bool visible)
-            : m_node(node), m_isVisible(visible) {};
+        VisibilityChanged(const SpatialId& id, bool visible)
+            : m_id(id), m_isVisible(visible) {};
 
-        std::shared_ptr<LazyNode> GetNode() { return m_node.lock(); }
-        bool IsVisible() const { return m_isVisible; }
+        const SpatialId& id() { return m_id; }
+        bool isVisible() const { return m_isVisible; }
 
     protected:
-        std::weak_ptr<LazyNode> m_node;
+        SpatialId m_id;
         bool m_isVisible;
     };
-    //------------ creator response ------------
-    class NodeCreated : public Frameworks::IResponseEvent
+    //------------ node operation ------------
+    class NodeChildAttached : public Frameworks::IEvent
     {
     public:
-        NodeCreated(const Frameworks::Ruid& request_ruid, const std::shared_ptr<Node>& node) : IResponseEvent(request_ruid), m_node(node) {};
+        NodeChildAttached(const SceneGraph::SpatialId& node_id, const std::shared_ptr<SceneGraph::Spatial>& child) : m_nodeId(node_id), m_child(child) {}
 
-        std::shared_ptr<Node> node() const { return m_node; }
+        const SceneGraph::SpatialId& nodeId() const { return m_nodeId; }
+        std::shared_ptr<SceneGraph::Spatial> child() const { return m_child.lock(); }
 
     protected:
-        std::shared_ptr<Node> m_node;
+        SceneGraph::SpatialId m_nodeId;
+        std::weak_ptr<SceneGraph::Spatial> m_child;
     };
-    class CreateNodeFailed : public Frameworks::IResponseEvent
+    class AttachNodeChildFailed : public Frameworks::IEvent
     {
     public:
-        CreateNodeFailed(const Frameworks::Ruid& ruid, std::error_code err) : IResponseEvent(ruid), m_error(err) {}
+        AttachNodeChildFailed(const SceneGraph::SpatialId& node_id, const SceneGraph::SpatialId& child_id, std::error_code er) : m_nodeId(node_id), m_childId(child_id), m_error(er) {}
 
+        const SceneGraph::SpatialId& nodeId() const { return m_nodeId; }
+        const SceneGraph::SpatialId& childId() const { return m_childId; }
         std::error_code error() const { return m_error; }
 
     protected:
+        SceneGraph::SpatialId m_nodeId;
+        SceneGraph::SpatialId m_childId;
         std::error_code m_error;
     };
+    //------------ creator response ------------
     class SpatialCreated : public Frameworks::IEvent
     {
     public:
@@ -358,6 +344,68 @@ namespace Enigma::SceneGraph
     {
     public:
         RemoveSpatialFailed(const SpatialId& id, std::error_code err) : m_id(id), m_err(err) {};
+        const SpatialId& id() const { return m_id; }
+        std::error_code error() const { return m_err; }
+
+    protected:
+        SpatialId m_id;
+        std::error_code m_err;
+    };
+    class LaziedContentPut : public Frameworks::IEvent
+    {
+    public:
+        LaziedContentPut(const SpatialId& id) : m_id(id) {}
+
+        const SpatialId& id() const { return m_id; }
+    protected:
+        SpatialId m_id;
+    };
+    class PutLaziedContentFailed : public Frameworks::IEvent
+    {
+    public:
+        PutLaziedContentFailed(const SpatialId& id, std::error_code err) : m_id(id), m_err(err) {};
+        const SpatialId& id() const { return m_id; }
+        std::error_code error() const { return m_err; }
+
+    protected:
+        SpatialId m_id;
+        std::error_code m_err;
+    };
+    class LaziedContentRemoved : public Frameworks::IEvent
+    {
+    public:
+        LaziedContentRemoved(const SpatialId& id) : m_id(id) {}
+
+        const SpatialId& id() const { return m_id; }
+
+    protected:
+        SpatialId m_id;
+    };
+    class RemoveLaziedContentFailed : public Frameworks::IEvent
+    {
+    public:
+        RemoveLaziedContentFailed(const SpatialId& id, std::error_code err) : m_id(id), m_err(err) {};
+        const SpatialId& id() const { return m_id; }
+        std::error_code error() const { return m_err; }
+
+    protected:
+        SpatialId m_id;
+        std::error_code m_err;
+    };
+    class LazyNodeHydrated : public Frameworks::IEvent
+    {
+    public:
+        LazyNodeHydrated(const SpatialId& id) : m_id(id) {}
+
+        const SpatialId& id() const { return m_id; }
+
+    protected:
+        SpatialId m_id;
+    };
+    class LazyNodeHydrationFailed : public Frameworks::IEvent
+    {
+    public:
+        LazyNodeHydrationFailed(const SpatialId& id, std::error_code err) : m_id(id), m_err(err) {};
         const SpatialId& id() const { return m_id; }
         std::error_code error() const { return m_err; }
 

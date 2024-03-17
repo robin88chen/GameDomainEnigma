@@ -55,8 +55,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Spatial.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialId.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialLightInfoQuery.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialLightInfoRequest.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialLightInfoResponse.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialRenderState.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\VisibilityManagedNode.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\VisibleSet.h" />
@@ -94,7 +92,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Spatial.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialId.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialLightInfoQuery.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialRenderState.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\VisibilityManagedNode.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\VisibleSet.cpp" />
   </ItemGroup>

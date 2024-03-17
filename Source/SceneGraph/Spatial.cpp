@@ -315,8 +315,10 @@ error Spatial::_updateLocalTransform(const MathLib::Matrix4& mxLocal)
 error Spatial::_updateSpatialRenderState()
 {
     if (!isRenderable()) return ErrorCode::ok;  // only renderable entity need
-    if (!(testSpatialFlag(Spatial_Unlit))) m_spatialRenderState.QueryLightingState(m_vecWorldPosition);
-
+    if (!(testSpatialFlag(Spatial_Unlit)))
+    {
+        m_spatialRenderState = std::make_shared<QueryLightingStateAt>(m_vecWorldPosition)->dispatch();
+    }
     if (testNotifyFlag(Notify_RenderState))
     {
         Frameworks::EventPublisher::post(std::make_shared<SpatialRenderStateChanged>(m_id));

@@ -11,6 +11,7 @@
 #include "Frameworks/Query.h"
 #include "SceneGraphPersistenceLevel.h"
 #include "LightInfo.h"
+#include "SpatialRenderState.h"
 
 namespace Enigma::SceneGraph
 {
@@ -104,6 +105,15 @@ namespace Enigma::SceneGraph
         SpatialId m_id;
         LightInfo m_info;
         PersistenceLevel m_persistenceLevel;
+    };
+    class QueryLightingStateAt : public Frameworks::Query<SpatialRenderState>
+    {
+    public:
+        QueryLightingStateAt(const MathLib::Vector3& world_position) : m_worldPosition(world_position) {}
+
+        const MathLib::Vector3& worldPosition() const { return m_worldPosition; }
+    protected:
+        MathLib::Vector3 m_worldPosition;
     };
 }
 

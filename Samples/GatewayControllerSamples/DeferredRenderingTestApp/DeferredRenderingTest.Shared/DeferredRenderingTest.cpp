@@ -47,6 +47,8 @@
 #include "SceneGraph/SceneGraphQueries.h"
 #include "SceneGraph/Light.h"
 #include "SceneGraph/CameraFrustumDtos.h"
+#include "Controllers/ControllerEvents.h"
+#include "GameCommon/GameSceneCommands.h"
 #if TARGET_PLATFORM == PLATFORM_ANDROID
 #include "Application/ApplicationBridge.h"
 #endif
@@ -87,9 +89,14 @@ void DeferredRenderingTest::initializeMountPaths()
     if (FileSystem::instance())
     {
         auto path = std::filesystem::current_path();
+        auto dataPath = path / "Data";
         auto mediaPath = path / "../../../../Media/";
         FileSystem::instance()->addMountPath(std::make_shared<StdMountPath>(mediaPath.string(), MediaPathName));
-        FileSystem::instance()->addMountPath(std::make_shared<StdMountPath>(path.string(), "DataPath"));
+        if (!std::filesystem::exists(dataPath))
+        {
+            std::filesystem::create_directory(dataPath);
+        }
+        FileSystem::instance()->addMountPath(std::make_shared<StdMountPath>(dataPath.string(), "DataPath"));
     }
 #elif TARGET_PLATFORM == PLATFORM_ANDROID
     if (FileSystem::instance())
@@ -107,6 +114,8 @@ void DeferredRenderingTest::initializeMountPaths()
 
 void DeferredRenderingTest::installEngine()
 {
+    m_onRenderEngineInstalled = std::make_shared<EventSubscriber>([=](auto e) { this->onRenderEngineInstalled(e); });
+    EventPublisher::subscribe(typeid(RenderEngineInstalled), m_onRenderEngineInstalled);
     m_onSceneGraphRootCreated = std::make_shared<EventSubscriber>([=](auto e) { this->onSceneGraphRootCreated(e); });
     EventPublisher::subscribe(typeid(SceneRootCreated), m_onSceneGraphRootCreated);
 
@@ -118,12 +127,13 @@ void DeferredRenderingTest::installEngine()
     auto geometry_policy = std::make_shared<GeometryInstallingPolicy>(std::make_shared<GeometryDataFileStoreMapper>("geometries.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
     auto primitive_policy = std::make_shared<PrimitiveRepositoryInstallingPolicy>(std::make_shared<PrimitiveFileStoreMapper>("primitives.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
     auto animator_policy = std::make_shared<AnimatorInstallingPolicy>(std::make_shared<AnimatorFileStoreMapper>("animators.db.txt@DataPath", std::make_shared<DtoJsonGateway>()), std::make_shared<AnimationAssetFileStoreMapper>("animation_assets.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
-    auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(std::make_shared<JsonFileDtoDeserializer>(), std::make_shared<SceneGraphFileStoreMapper>("scene_graph.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
+    m_sceneGraphFileStoreMapper = std::make_shared<SceneGraphFileStoreMapper>("scene_graph.db.txt@DataPath", "lazy_scene.db.txt@DataPath", std::make_shared<DtoJsonGateway>());
+    auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(m_sceneGraphFileStoreMapper);
     auto effect_material_source_policy = std::make_shared<EffectMaterialSourceRepositoryInstallingPolicy>(std::make_shared<EffectMaterialSourceFileStoreMapper>("effect_materials.db.txt@APK_PATH"));
     auto input_handler_policy = std::make_shared<Enigma::InputHandlers::InputHandlerInstallingPolicy>();
     auto camera_id = SpatialId("camera", Camera::TYPE_RTTI);
     auto game_camera_policy = std::make_shared<GameCameraInstallingPolicy>(camera_id,
-        CameraAssembler(camera_id).eyePosition(Vector3(-5.0f, 5.0f, -5.0f)).lookAt(Vector3(1.0f, -1.0f, 1.0f)).upDirection(Vector3::UNIT_Y).frustum(Frustum::ProjectionType::Perspective).frustumFov(Math::PI / 4.0f).frustumFrontBackZ(0.1f, 100.0f).frustumNearPlaneDimension(40.0f, 30.0f).toCameraDto().toGenericDto());
+        CameraAssembler(camera_id).eyePosition(Vector3(-5.0f, 5.0f, -5.0f)).lookAt(Vector3(1.0f, -1.0f, 1.0f)).upDirection(Vector3::UNIT_Y).frustum(Frustum::ProjectionType::Perspective).frustumFov(Math::PI / 4.0f).frustumFrontBackZ(0.1f, 100.0f).frustumNearPlaneDimension(40.0f, 30.0f).asNative(camera_id.name() + ".cam@DataPath").toCameraDto().toGenericDto());
     auto deferred_config = std::make_unique<DeferredRendererServiceConfiguration>();
     deferred_config->ambientEffect() = EffectMaterialId("fx/DeferredShadingAmbientPass");
     deferred_config->sunLightEffect() = EffectMaterialId("fx/DeferredShadingSunLightPass");
@@ -140,7 +150,7 @@ void DeferredRenderingTest::installEngine()
     deferred_config->gbufferDepthSemantic() = "GBufferDepthMap";
     auto deferred_renderer_policy = stdext::make_shared<DeferredRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName, std::move(deferred_config));
     m_sceneRootId = SpatialId(SceneRootName, Node::TYPE_RTTI);
-    auto game_scene_policy = std::make_shared<GameSceneInstallingPolicy>(m_sceneRootId, Enigma::SceneGraph::PersistenceLevel::Repository, PortalManagementName);
+    auto game_scene_policy = std::make_shared<GameSceneInstallingPolicy>();
     auto game_light_policy = std::make_shared<GameLightInstallingPolicy>();
     auto texture_policy = std::make_shared<TextureRepositoryInstallingPolicy>(std::make_shared<TextureFileStoreMapper>("textures.db.txt@APK_PATH", std::make_shared<DtoJsonGateway>()));
     auto renderables_policy = std::make_shared<RenderablesInstallingPolicy>();
@@ -150,6 +160,7 @@ void DeferredRenderingTest::installEngine()
     ApplicationBridge::InitInputHandler(input_handler_policy->GetInputHandler());
 #endif
     m_sceneRendererService = m_graphicMain->getSystemServiceAs<SceneRendererService>();
+    m_sceneGraphRepository = m_graphicMain->getSystemServiceAs<SceneGraphRepository>();
 }
 
 void DeferredRenderingTest::shutdownEngine()
@@ -157,6 +168,8 @@ void DeferredRenderingTest::shutdownEngine()
     m_sceneRoot = nullptr;
     m_pawn = nullptr;
 
+    EventPublisher::unsubscribe(typeid(RenderEngineInstalled), m_onRenderEngineInstalled);
+    m_onRenderEngineInstalled = nullptr;
     EventPublisher::unsubscribe(typeid(SceneRootCreated), m_onSceneGraphRootCreated);
     m_onSceneGraphRootCreated = nullptr;
 
@@ -176,6 +189,18 @@ void DeferredRenderingTest::renderFrame()
         m_sceneRendererService.lock()->renderGameScene();
         m_sceneRendererService.lock()->flip();
     }
+}
+
+void DeferredRenderingTest::onRenderEngineInstalled(const Enigma::Frameworks::IEventPtr& e)
+{
+    if ((!e) || (e->typeInfo() != typeid(RenderEngineInstalled))) return;
+    if (!m_sceneGraphFileStoreMapper->hasSpatial(m_sceneRootId))
+    {
+        NodeAssembler root_assembler(m_sceneRootId);
+        root_assembler.asNative(m_sceneRootId.name() + ".node@DataPath");
+        m_sceneGraphFileStoreMapper->putSpatial(m_sceneRootId, root_assembler.toGenericDto());
+    }
+    CommandBus::post(std::make_shared<CreateSceneRoot>(m_sceneRootId, std::nullopt));
 }
 
 void DeferredRenderingTest::onSceneGraphRootCreated(const Enigma::Frameworks::IEventPtr& e)
@@ -209,7 +234,10 @@ void DeferredRenderingTest::createCubePawn()
     m_pawn = std::dynamic_pointer_cast<Pawn>(std::make_shared<QuerySpatial>(m_cubeId)->dispatch());
     if (!m_pawn)
     {
-        m_pawn = PawnAssembler(m_cubeId).primitive(cube_mesh_id).localTransform(Matrix4::IDENTITY).topLevel(true).constitute(Enigma::SceneGraph::PersistenceLevel::Repository);
+        PawnAssembler assembler(m_cubeId);
+        assembler.primitive(cube_mesh_id);
+        assembler.spatial().localTransform(Matrix4::IDENTITY).topLevel(true);
+        m_pawn = assembler.constitute(Enigma::SceneGraph::PersistenceLevel::Repository);
     }
     if ((m_sceneRoot) && (m_pawn))
     {

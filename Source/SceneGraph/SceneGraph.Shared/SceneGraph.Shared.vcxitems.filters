@@ -135,12 +135,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphInstallingPolicy.h">
       <Filter>Installing</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialLightInfoRequest.h">
-      <Filter>Scene Graph\LightInfo</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialLightInfoResponse.h">
-      <Filter>Scene Graph\LightInfo</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphAssemblers.h">
       <Filter>DTO &amp; Assemblers</Filter>
     </ClInclude>
@@ -282,9 +276,6 @@
       <Filter>Scene Graph</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Spatial.cpp">
-      <Filter>Scene Graph</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialRenderState.cpp">
       <Filter>Scene Graph</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneNonLazyFlattenTraversal.cpp">

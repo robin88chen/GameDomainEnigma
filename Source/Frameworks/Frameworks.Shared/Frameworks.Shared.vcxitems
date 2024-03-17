@@ -23,12 +23,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Query.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\QueryDispatcher.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\QuerySubscriber.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\Request.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\RequestBus.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\RequestSubscriber.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\Response.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\ResponseBus.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\ResponseSubscriber.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Rtti.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RttiDerivingMap.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ruid.cpp" />
@@ -52,12 +46,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Query.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\QueryDispatcher.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\QuerySubscriber.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Request.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RequestBus.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RequestSubscriber.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Response.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\ResponseBus.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\ResponseSubscriber.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Rtti.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RttiDerivingMap.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ruid.h" />

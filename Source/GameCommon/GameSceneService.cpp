@@ -86,6 +86,7 @@ void GameSceneService::createRootScene(const SpatialId& scene_root_id, const std
     assert(scene_root_id.isValid());
     m_sceneRoot = Node::queryNode(scene_root_id);
     assert(m_sceneRoot);
+    m_sceneGraphRepository.lock()->putSpatial(m_sceneRoot, PersistenceLevel::Repository);
     m_sceneRoot->setLocalTransform(Matrix4::IDENTITY);
 
     if (portal_management_node_id.has_value())
@@ -93,6 +94,7 @@ void GameSceneService::createRootScene(const SpatialId& scene_root_id, const std
         assert(portal_management_node_id.value().isValid());
         m_portalMgtNode = std::dynamic_pointer_cast<PortalManagementNode>(Node::queryNode(portal_management_node_id.value()));
         assert(m_portalMgtNode);
+        m_sceneGraphRepository.lock()->putSpatial(m_portalMgtNode, PersistenceLevel::Repository);
         m_sceneRoot->attachChild(m_portalMgtNode, Matrix4::IDENTITY);
     }
 

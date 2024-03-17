@@ -79,7 +79,7 @@ error Pawn::insertToRenderer(const Engine::IRendererPtr& render)
     assert(render);
     if (!m_primitive) return ErrorCode::nullPrimitive;
 
-    error er = m_primitive->insertToRendererWithTransformUpdating(render, m_mxWorldTransform, m_spatialRenderState.ToLightingState());
+    error er = m_primitive->insertToRendererWithTransformUpdating(render, m_mxWorldTransform, m_spatialRenderState.lightingState());
     return er;
 }
 

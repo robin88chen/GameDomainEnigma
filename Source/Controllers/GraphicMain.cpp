@@ -1,8 +1,6 @@
 ﻿#include "GraphicMain.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/CommandBus.h"
-#include "Frameworks/RequestBus.h"
-#include "Frameworks/ResponseBus.h"
 #include "Frameworks/QueryDispatcher.h"
 #include "Platforms/MemoryMacro.h"
 #include "ControllerErrors.h"
@@ -37,8 +35,6 @@ error GraphicMain::installFrameworks()
     assert(m_serviceManager);
     m_serviceManager->registerSystemService(std::make_shared<Frameworks::EventPublisher>(m_serviceManager));
     m_serviceManager->registerSystemService(std::make_shared <Frameworks::CommandBus>(m_serviceManager));
-    m_serviceManager->registerSystemService(std::make_shared<Frameworks::RequestBus>(m_serviceManager));
-    m_serviceManager->registerSystemService(std::make_shared<Frameworks::ResponseBus>(m_serviceManager));
     m_serviceManager->registerSystemService(std::make_shared<Frameworks::QueryDispatcher>(m_serviceManager));
 
     Frameworks::EventPublisher::post(std::make_shared<FrameworksInstalled>());
@@ -51,8 +47,6 @@ error GraphicMain::shutdownFrameworks()
     assert(m_serviceManager);
     m_serviceManager->shutdownSystemService(Frameworks::EventPublisher::TYPE_RTTI);
     m_serviceManager->shutdownSystemService(Frameworks::CommandBus::TYPE_RTTI);
-    m_serviceManager->shutdownSystemService(Frameworks::RequestBus::TYPE_RTTI);
-    m_serviceManager->shutdownSystemService(Frameworks::ResponseBus::TYPE_RTTI);
     m_serviceManager->shutdownSystemService(Frameworks::QueryDispatcher::TYPE_RTTI);
     return ErrorCode::ok;
 }

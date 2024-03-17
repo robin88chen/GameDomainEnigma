@@ -24,6 +24,8 @@
 #include "SceneGraph/Node.h"
 #include "SceneGraph/Pawn.h"
 #include "GameCommon/SceneRendererService.h"
+#include "FileStorage/SceneGraphFileStoreMapper.h"
+#include "SceneGraph/SceneGraphRepository.h"
 #include <memory>
 #include <string>
 
@@ -44,6 +46,7 @@ public:
     virtual void renderFrame() override;
 
 protected:
+    void onRenderEngineInstalled(const Enigma::Frameworks::IEventPtr& e);
     void onSceneGraphRootCreated(const Enigma::Frameworks::IEventPtr& e);
     void onRendererCreated(const Enigma::Frameworks::IEventPtr& e);
     void onRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e);
@@ -57,7 +60,10 @@ private:
 
 protected:
     std::weak_ptr<Enigma::GameCommon::SceneRendererService> m_sceneRendererService;
+    std::weak_ptr<Enigma::SceneGraph::SceneGraphRepository> m_sceneGraphRepository;
 
+    std::shared_ptr<Enigma::FileStorage::SceneGraphFileStoreMapper> m_sceneGraphFileStoreMapper;
+    Enigma::Frameworks::EventSubscriberPtr m_onRenderEngineInstalled;
     Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphRootCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onRendererCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onRenderTargetCreated;

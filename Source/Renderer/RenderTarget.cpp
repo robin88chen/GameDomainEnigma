@@ -220,7 +220,7 @@ error RenderTarget::resize(const MathLib::Dimension<unsigned>& dimension)
     // 好...來...因為back buffer surface實際上已經重新create了,
     // 所以這裡頭的shader resource view要重新綁定
     //todo : render target texture
-    if (m_renderTargetTexture)
+    if ((m_renderTargetTexture) && (m_renderTargetTexture->getDeviceTexture()))
     {
         m_renderTargetTexture->getDeviceTexture()->asBackSurface(m_backSurface, m_usages);
     }

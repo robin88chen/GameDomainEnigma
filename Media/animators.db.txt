@@ -1,0 +1,2 @@
+0
+animators/mb2011_zup,0,En.Renderables.ModelPrimitiveAnimator,animators/mb2011_zup.animator@APK_PATH

@@ -1,0 +1,2 @@
+animations/mb7013_zup,animations/mb7013_zup.ani@APK_PATH
+animations/mb2011_zup,animations/mb2011_zup.ani@APK_PATH

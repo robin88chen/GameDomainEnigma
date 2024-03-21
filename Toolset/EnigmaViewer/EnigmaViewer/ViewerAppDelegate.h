@@ -19,6 +19,10 @@
 #include "Frameworks/CommandSubscriber.h"
 #include "ShadowMap/ShadowMapService.h"
 #include "FileStorage/SceneGraphFileStoreMapper.h"
+#include "FileStorage/GeometryDataFileStoreMapper.h"
+#include "FileStorage/AnimationAssetFileStoreMapper.h"
+#include "FileStorage/AnimatorFileStoreMapper.h"
+#include "FileStorage/PrimitiveFileStoreMapper.h"
 #include <filesystem>
 
 namespace EnigmaViewer
@@ -43,6 +47,7 @@ namespace EnigmaViewer
 
         void onTimerElapsed();
 
+        void importDaeFile(const std::string& filename);
         void loadPawn(const Enigma::GameCommon::AnimatedPawnDto& pawn_dto);
 
         void savePawnFile(const std::filesystem::path& filepath);
@@ -73,6 +78,10 @@ namespace EnigmaViewer
 
         Enigma::Controllers::GraphicMain* m_graphicMain;
 
+        std::shared_ptr<Enigma::FileStorage::GeometryDataFileStoreMapper> m_geometryDataFileStoreMapper;
+        std::shared_ptr<Enigma::FileStorage::AnimationAssetFileStoreMapper> m_animationAssetFileStoreMapper;
+        std::shared_ptr<Enigma::FileStorage::AnimatorFileStoreMapper> m_animatorFileStoreMapper;
+        std::shared_ptr<Enigma::FileStorage::PrimitiveFileStoreMapper> m_primitiveFileStoreMapper;
         std::shared_ptr<Enigma::FileStorage::SceneGraphFileStoreMapper> m_sceneGraphFileStoreMapper;
 
         std::weak_ptr<Enigma::InputHandlers::InputHandlerService> m_inputHandler;

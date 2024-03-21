@@ -21,13 +21,8 @@ namespace EnigmaViewer
         void loadConfig();
 
         std::string defaultColorMeshEffectName();
-        std::string defaultColorMeshEffectFilename();
-
         std::string defaultTexturedMeshEffectName();
-        std::string defaultTexturedMeshEffectFilename();
-
         std::string defaultTexturedSkinMeshEffectName();
-        std::string defaultTexturedSkinMeshEffectFilename();
 
     private:
         Enigma::Engine::GenericDto m_configDto;

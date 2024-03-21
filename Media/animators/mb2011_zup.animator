@@ -1,0 +1,47 @@
+[{
+        "Id": {
+            "Type": "StringArray",
+            "Value": ["animators/mb2011_zup", "0", "En.Renderables.ModelPrimitiveAnimator"]
+        },
+        "Rtti": {
+            "Type": "FactoryDesc",
+            "Value": {
+                "InstanceType": 0,
+                "ResourceName": "",
+                "ResourceFilename": "",
+                "RttiName": "En.Renderables.ModelPrimitiveAnimator",
+                "PrefabFilename": "animators/mb2011_zup.animator@APK_PATH"
+            }
+        },
+        "ControlledPrimitiveId": {
+            "Type": "StringArray",
+            "Value": ["renderables/mb2011_zup", "0", "En.Renderables.ModelPrimitive"]
+        },
+        "SkinOperators": {
+            "Type": "DataObjectArray",
+            "Value": [{
+                    "Rtti": {
+                        "Type": "FactoryDesc",
+                        "Value": {
+                            "InstanceType": 0,
+                            "ResourceName": "",
+                            "ResourceFilename": "",
+                            "RttiName": "En.Renderables.SkinAnimationOperator",
+                            "PrefabFilename": ""
+                        }
+                    },
+                    "SkinMeshId": {
+                        "Type": "StringArray",
+                        "Value": ["renderables/mb2011_zup.m_a", "0", "En.Renderables.SkinMeshPrimitive"]
+                    },
+                    "BoneNodeNames": {
+                        "Type": "StringArray",
+                        "Value": ["Bip01 Pelvis", "Bip01 Spine", "Bip01 Spine1", "Bip01 Spine2", "Bip01 Head", "Bone06", "Bone04", "Bip01 L Clavicle", "Bip01 L UpperArm", "Bip01 L Forearm", "Bip01 L Hand", "Bip01 R Clavicle", "Bip01 R UpperArm", "Bip01 R Forearm", "Bip01 R Hand", "Bip01 L Thigh", "Bip01 L Calf", "Bip01 L Foot", "Bip01 R Thigh", "Bip01 R Calf", "Bip01 R Foot", "Bone01", "Bone02"]
+                    }
+                }]
+        },
+        "AssetId": {
+            "Type": "String",
+            "Value": "animations/mb2011_zup"
+        }
+    }]

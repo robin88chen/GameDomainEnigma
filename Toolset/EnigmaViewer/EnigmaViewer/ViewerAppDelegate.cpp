@@ -52,6 +52,7 @@
 #include "Renderables/RenderablePrimitiveDtos.h"
 #include "Controllers/ControllerEvents.h"
 #include "GameCommon/GameSceneCommands.h"
+#include "DaeParser.h"
 #include <memory>
 
 using namespace EnigmaViewer;
@@ -174,9 +175,13 @@ void ViewerAppDelegate::installEngine()
     auto creating_policy = std::make_shared<DeviceCreatingPolicy>(DeviceRequiredBits(), m_hwnd);
     auto engine_policy = std::make_shared<EngineInstallingPolicy>();
     auto render_sys_policy = std::make_shared<RenderSystemInstallingPolicy>();
-    auto geometry_policy = std::make_shared<GeometryInstallingPolicy>(std::make_shared<GeometryDataFileStoreMapper>("geometries.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
-    auto primitive_policy = std::make_shared<PrimitiveRepositoryInstallingPolicy>(std::make_shared<PrimitiveFileStoreMapper>("primitives.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
-    auto animator_policy = std::make_shared<AnimatorInstallingPolicy>(std::make_shared<AnimatorFileStoreMapper>("animators.db.txt@DataPath", std::make_shared<DtoJsonGateway>()), std::make_shared<AnimationAssetFileStoreMapper>("animation_assets.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
+    m_geometryDataFileStoreMapper = std::make_shared<GeometryDataFileStoreMapper>("geometries.db.txt@APK_PATH", std::make_shared<DtoJsonGateway>());
+    auto geometry_policy = std::make_shared<GeometryInstallingPolicy>(m_geometryDataFileStoreMapper);
+    m_primitiveFileStoreMapper = std::make_shared<PrimitiveFileStoreMapper>("primitives.db.txt@APK_PATH", std::make_shared<DtoJsonGateway>());
+    auto primitive_policy = std::make_shared<PrimitiveRepositoryInstallingPolicy>(m_primitiveFileStoreMapper);
+    m_animationAssetFileStoreMapper = std::make_shared<AnimationAssetFileStoreMapper>("animation_assets.db.txt@APK_PATH ", std::make_shared<DtoJsonGateway>());
+    m_animatorFileStoreMapper = std::make_shared<AnimatorFileStoreMapper>("animators.db.txt@APK_PATH", std::make_shared<DtoJsonGateway>());
+    auto animator_policy = std::make_shared<AnimatorInstallingPolicy>(m_animatorFileStoreMapper, m_animationAssetFileStoreMapper);
     m_sceneGraphFileStoreMapper = std::make_shared<SceneGraphFileStoreMapper>("scene_graph.db.txt@DataPath", "lazy_scene.db.txt@DataPath", std::make_shared<DtoJsonGateway>());
     auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(m_sceneGraphFileStoreMapper);
     auto effect_material_source_policy = std::make_shared<EffectMaterialSourceRepositoryInstallingPolicy>(std::make_shared<EffectMaterialSourceFileStoreMapper>("effect_materials.db.txt@APK_PATH"));
@@ -262,6 +267,15 @@ void ViewerAppDelegate::onTimerElapsed()
 
     prepareRender();
     renderFrame();
+}
+
+void ViewerAppDelegate::importDaeFile(const std::string& filename)
+{
+    DaeParser parser(m_geometryDataFileStoreMapper, m_animationAssetFileStoreMapper, m_animatorFileStoreMapper, m_primitiveFileStoreMapper);
+    parser.loadDaeFile(filename);
+    //auto pawn_dto = parser.pawnDto();
+    //pawn_dto.asTopLevel(true);
+    //CommandBus::post(std::make_shared<BuildSceneGraph>(ViewingPawnName, std::vector{ pawn_dto.toGenericDto() }));
 }
 
 void ViewerAppDelegate::loadPawn(const AnimatedPawnDto& pawn_dto)

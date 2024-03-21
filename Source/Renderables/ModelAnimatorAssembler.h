@@ -29,10 +29,9 @@ namespace Enigma::Renderables
         ModelAnimatorAssembler& skinOperator(const SkinOperatorAssembler& skin_operator);
         ModelAnimatorAssembler& asNative(const std::string& file_at_path);
 
-        std::shared_ptr<ModelPrimitiveAnimator> constitute(Animators::PersistenceLevel persistence_level);
-
-    protected:
         Engine::GenericDto toGenericDto();
+
+        std::shared_ptr<ModelPrimitiveAnimator> constitute(Animators::PersistenceLevel persistence_level);
 
     protected:
         Animators::AnimatorId m_id;

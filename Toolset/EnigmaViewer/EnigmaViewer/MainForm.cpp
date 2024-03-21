@@ -109,11 +109,12 @@ void MainForm::onImportDaeFile(const nana::menu::item_proxy& menu_item)
         {
             m_outputPanel->addMessage(std::string{ "open Collada file " } + paths[0].string());
         }
-        DaeParser* parser = new DaeParser(Enigma::Controllers::GraphicMain::instance()->getSystemServiceAs<Enigma::Geometries::GeometryRepository>());
-        parser->loadDaeFile(paths[0].string());
-        m_appDelegate->loadPawn(parser->pawnDto());
-        m_modelInfoPanel->setModelFileName(paths[0].stem().string());
-        delete parser;
+        m_appDelegate->importDaeFile(paths[0].string());
+        //DaeParser* parser = new DaeParser(Enigma::Controllers::GraphicMain::instance()->getSystemServiceAs<Enigma::Geometries::GeometryRepository>());
+        //parser->loadDaeFile(paths[0].string());
+        //m_appDelegate->loadPawn(parser->pawnDto());
+        //m_modelInfoPanel->setModelFileName(paths[0].stem().string());
+        //delete parser;
     }
 }
 

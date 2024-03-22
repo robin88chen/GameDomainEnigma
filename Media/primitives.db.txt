@@ -2,5 +2,6 @@
 renderables/mb2011_zup.k_headfront,0,En.Renderables.MeshPrimitive,renderables/mb2011_zup.k_headfront.mesh@APK_PATH
 renderables/mb2011_zup.k_headtop,0,En.Renderables.MeshPrimitive,renderables/mb2011_zup.k_headtop.mesh@APK_PATH
 renderables/mb2011_zup.k_heart,0,En.Renderables.MeshPrimitive,renderables/mb2011_zup.k_heart.mesh@APK_PATH
+renderables/mb2011_zup,0,En.Renderables.ModelPrimitive,renderables/mb2011_zup.model@APK_PATH
 renderables/mb2011_zup.m_eq01,0,En.Renderables.MeshPrimitive,renderables/mb2011_zup.m_eq01.mesh@APK_PATH
 renderables/mb2011_zup.m_a,0,En.Renderables.SkinMeshPrimitive,renderables/mb2011_zup.m_a.mesh@APK_PATH

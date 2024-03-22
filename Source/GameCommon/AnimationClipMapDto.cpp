@@ -15,16 +15,14 @@ AnimationClipMapDto::AnimationClipMapDto() : m_factoryDesc(AnimationClipMap::TYP
 {
 }
 
-AnimationClipMapDto AnimationClipMapDto::fromGenericDto(const Engine::GenericDto& dto)
+AnimationClipMapDto::AnimationClipMapDto(const Engine::GenericDto& dto) : m_factoryDesc(AnimationClipMap::TYPE_RTTI.getName())
 {
-    AnimationClipMapDto anim;
-    anim.m_factoryDesc = dto.getRtti();
-    if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_ANIM_NAMES)) anim.AnimNames() = v.value();
-    if (auto v = dto.tryGetValue<std::vector<float>>(TOKEN_START_OFFSETS)) anim.StartOffsets() = v.value();
-    if (auto v = dto.tryGetValue<std::vector<float>>(TOKEN_LOOP_TIMES)) anim.LoopTimes() = v.value();
-    if (auto v = dto.tryGetValue<std::vector<unsigned>>(TOKEN_WARP_MODES)) anim.WarpModes() = v.value();
-    if (auto v = dto.tryGetValue<std::vector<unsigned>>(TOKEN_DIVIDE_INDICES)) anim.DivideIndices() = v.value();
-    return anim;
+    m_factoryDesc = dto.getRtti();
+    if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_ANIM_NAMES)) m_animNames = v.value();
+    if (auto v = dto.tryGetValue<std::vector<float>>(TOKEN_START_OFFSETS)) m_startOffsets = v.value();
+    if (auto v = dto.tryGetValue<std::vector<float>>(TOKEN_LOOP_TIMES)) m_loopTimes = v.value();
+    if (auto v = dto.tryGetValue<std::vector<unsigned>>(TOKEN_WARP_MODES)) m_warpModes = v.value();
+    if (auto v = dto.tryGetValue<std::vector<unsigned>>(TOKEN_DIVIDE_INDICES)) m_divideIndices = v.value();
 }
 
 GenericDto AnimationClipMapDto::toGenericDto() const

@@ -53,6 +53,7 @@
 #include "Controllers/ControllerEvents.h"
 #include "GameCommon/GameSceneCommands.h"
 #include "DaeParser.h"
+#include "GameCommon/AnimatedPawnAssembler.h"
 #include <memory>
 
 using namespace EnigmaViewer;
@@ -273,7 +274,13 @@ void ViewerAppDelegate::importDaeFile(const std::string& filename)
 {
     DaeParser parser(m_geometryDataFileStoreMapper, m_animationAssetFileStoreMapper, m_animatorFileStoreMapper, m_primitiveFileStoreMapper);
     parser.loadDaeFile(filename);
-    //auto pawn_dto = parser.pawnDto();
+    AnimatedPawnAssembler assembler(SpatialId(ViewingPawnName, AnimatedPawn::TYPE_RTTI));
+    assembler.pawn().primitive(parser.getModelId());
+    assembler.pawn().spatial().localTransform(Matrix4::IDENTITY);
+    m_pawn = assembler.constitute(Enigma::SceneGraph::PersistenceLevel::Repository);
+    Enigma::MathLib::Matrix4 mx = Enigma::MathLib::Matrix4::MakeRotationXTransform(-Enigma::MathLib::Math::HALF_PI);
+    if (m_sceneRoot) m_sceneRoot->attachChild(m_pawn, mx);
+    // auto pawn_dto = parser.pawnDto();
     //pawn_dto.asTopLevel(true);
     //CommandBus::post(std::make_shared<BuildSceneGraph>(ViewingPawnName, std::vector{ pawn_dto.toGenericDto() }));
 }
@@ -329,8 +336,8 @@ void ViewerAppDelegate::loadPawnFile(const std::filesystem::path& filepath)
 void ViewerAppDelegate::onViewingPawnPrimitiveBuilt()
 {
     m_pawn->getPrimitive()->selectVisualTechnique("Default");
-    m_pawn->BakeAvatarRecipes();
-    CommandBus::post(std::make_shared<RefreshAnimationClipList>(m_pawn->TheAnimationClipMap()));
+    m_pawn->bakeAvatarRecipes();
+    CommandBus::post(std::make_shared<RefreshAnimationClipList>(m_pawn->animationClipMap()));
     auto scene_service = m_graphicMain->getSystemServiceAs<GameSceneService>();
     if (!scene_service) return;
     auto prim = m_pawn->getPrimitive();
@@ -412,8 +419,8 @@ void ViewerAppDelegate::changeMeshTexture(const Enigma::Frameworks::ICommandPtr&
     tex_dto.textureId() = cmd->textureId();
     tex_dto.semantic() = "DiffuseMap";
     auto recipe = std::make_shared<ChangeAvatarTexture>(cmd->meshName(), tex_dto);
-    m_pawn->AddAvatarRecipe(recipe);
-    m_pawn->BakeAvatarRecipes();
+    m_pawn->addAvatarRecipe(recipe);
+    m_pawn->bakeAvatarRecipes();
 }
 
 void ViewerAppDelegate::addAnimationClip(const Enigma::Frameworks::ICommandPtr& c)
@@ -422,14 +429,14 @@ void ViewerAppDelegate::addAnimationClip(const Enigma::Frameworks::ICommandPtr& 
     auto cmd = std::dynamic_pointer_cast<AddAnimationClip, ICommand>(c);
     if (!cmd) return;
     if (!m_pawn) return;
-    if (auto act_clip = m_pawn->TheAnimationClipMap().FindAnimationClip(cmd->name()); !act_clip)
+    if (auto act_clip = m_pawn->animationClipMap().findAnimationClip(cmd->name()); !act_clip)
     {
         AnimationClipMap::AnimClip act_clip_new(cmd->name(), cmd->clip());
-        m_pawn->TheAnimationClipMap().InsertClip(act_clip_new);
+        m_pawn->animationClipMap().insertClip(act_clip_new);
     }
     else
     {
-        act_clip.value().get().ChangeClip(cmd->clip());
+        act_clip.value().get().changeClip(cmd->clip());
     }
 }
 
@@ -439,7 +446,7 @@ void ViewerAppDelegate::deleteAnimationClip(const Enigma::Frameworks::ICommandPt
     auto cmd = std::dynamic_pointer_cast<DeleteAnimationClip, ICommand>(c);
     if (!cmd) return;
     if (!m_pawn) return;
-    m_pawn->TheAnimationClipMap().RemoveClip(cmd->name());
+    m_pawn->animationClipMap().removeClip(cmd->name());
 }
 
 void ViewerAppDelegate::playAnimationClip(const Enigma::Frameworks::ICommandPtr& c)
@@ -448,7 +455,7 @@ void ViewerAppDelegate::playAnimationClip(const Enigma::Frameworks::ICommandPtr&
     auto cmd = std::dynamic_pointer_cast<PlayAnimationClip, ICommand>(c);
     if (!cmd) return;
     if (!m_pawn) return;
-    m_pawn->PlayAnimation(cmd->name());
+    m_pawn->playAnimation(cmd->name());
 }
 
 void ViewerAppDelegate::changeAnimationTimeValue(const Enigma::Frameworks::ICommandPtr& c)
@@ -458,7 +465,7 @@ void ViewerAppDelegate::changeAnimationTimeValue(const Enigma::Frameworks::IComm
     if (!cmd) return;
     if (!m_pawn) return;
     bool isNameChanged = false;
-    if ((m_pawn->TheAnimationClipMap().FindAnimationClip(cmd->oldName()))
+    if ((m_pawn->animationClipMap().findAnimationClip(cmd->oldName()))
         && (cmd->oldName() != cmd->newName()))
     {
         isNameChanged = true;
@@ -466,16 +473,16 @@ void ViewerAppDelegate::changeAnimationTimeValue(const Enigma::Frameworks::IComm
 
     if (!isNameChanged)
     {
-        if (auto act_clip = m_pawn->TheAnimationClipMap().FindAnimationClip(cmd->newName()); act_clip)
+        if (auto act_clip = m_pawn->animationClipMap().findAnimationClip(cmd->newName()); act_clip)
         {
-            act_clip.value().get().ChangeClip(cmd->clip());
+            act_clip.value().get().changeClip(cmd->clip());
         }
     }
     else
     {
-        m_pawn->TheAnimationClipMap().RemoveClip(cmd->oldName());
+        m_pawn->animationClipMap().removeClip(cmd->oldName());
         Enigma::GameCommon::AnimationClipMap::AnimClip act_clip_new(cmd->newName(), cmd->clip());
-        m_pawn->TheAnimationClipMap().InsertClip(act_clip_new);
+        m_pawn->animationClipMap().insertClip(act_clip_new);
     }
 }
 

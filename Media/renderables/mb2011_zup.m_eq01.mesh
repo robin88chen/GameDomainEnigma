@@ -23,7 +23,7 @@
         },
         "Effects": {
             "Type": "StringArray",
-            "Value": ["default_textured_mesh_effect"]
+            "Value": ["fx/default_textured_mesh_effect"]
         },
         "VisualTechniqueSelection": {
             "Type": "String",
@@ -37,7 +37,7 @@
                         "Value": [{
                                 "TextureId.Name": {
                                     "Type": "String",
-                                    "Value": "image/mb20110700.png"
+                                    "Value": "image/mb20110700"
                                 },
                                 "Semantic": {
                                     "Type": "String",

@@ -32,6 +32,7 @@ namespace EnigmaViewer
         virtual ~DaeParser();
 
         void loadDaeFile(const std::string& filename);
+        Enigma::Primitives::PrimitiveId getModelId() const { return m_modelId; }
 
     private:
         struct GeometryValueOffsets

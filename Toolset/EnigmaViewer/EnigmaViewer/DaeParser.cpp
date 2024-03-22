@@ -1309,7 +1309,7 @@ std::string DaeParser::findMaterialTexImageFilename(const pugi::xml_node& collad
         filename = Filename(file_url);
     }
     outputLog("    " + material_id + " image file name: " + filename.getFileName());
-    return "image/" + filename.getFileName();
+    return "image/" + filename.getBaseFileName();
 }
 
 Enigma::Primitives::PrimitiveId DaeParser::meshIdInMeshNode(const std::string& name)

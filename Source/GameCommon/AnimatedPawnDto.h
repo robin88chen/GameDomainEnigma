@@ -16,14 +16,14 @@ namespace Enigma::GameCommon
     {
     public:
         AnimatedPawnDto();
+        AnimatedPawnDto(const Engine::GenericDto& dto);
         AnimatedPawnDto(const SceneGraph::PawnDto& dto);
 
-        std::optional<Engine::GenericDto>& TheAnimationClipMapDto() { return m_animationClipMapDto; }
-        [[nodiscard]] const std::optional<Engine::GenericDto>& TheAnimationClipMapDto() const { return m_animationClipMapDto; }
-        Engine::GenericDtoCollection& AvatarRecipeDtos() { return m_avatarRecipeDtos; }
-        [[nodiscard]] const Engine::GenericDtoCollection& AvatarRecipeDtos() const { return m_avatarRecipeDtos; }
+        std::optional<Engine::GenericDto>& animationClipMapDto() { return m_animationClipMapDto; }
+        [[nodiscard]] const std::optional<Engine::GenericDto>& animationClipMapDto() const { return m_animationClipMapDto; }
+        Engine::GenericDtoCollection& avatarRecipeDtos() { return m_avatarRecipeDtos; }
+        [[nodiscard]] const Engine::GenericDtoCollection& avatarRecipeDtos() const { return m_avatarRecipeDtos; }
 
-        static AnimatedPawnDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
 
     private:

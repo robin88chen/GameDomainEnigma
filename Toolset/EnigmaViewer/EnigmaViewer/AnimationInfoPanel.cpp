@@ -182,7 +182,7 @@ void AnimationInfoPanel::onAnimationClipMapChanged(const Enigma::Frameworks::IEv
     auto ev = std::dynamic_pointer_cast<Enigma::GameCommon::AnimationClipMapChanged, Enigma::Frameworks::IEvent>(e);
     if (!ev) return;
     m_actionCombox->clear();
-    for (auto clip : ev->GetClipMap())
+    for (auto clip : ev->clipMap())
     {
         m_actionCombox->push_back(clip.second.getName());
     }
@@ -207,10 +207,10 @@ void AnimationInfoPanel::refreshAnimClipMap(const Enigma::Frameworks::ICommandPt
     if (!cmd) return;
     m_actionCombox->clear();
     auto cat = m_actionTableBox->at(0); //Get the proxy to the default category
-    for (auto clip : cmd->clipMap().GetAnimationClipMap())
+    for (auto clip : cmd->clipMap().animationClipMap())
     {
         AnimClipInfoItem clip_info{ clip.second.getName() };
-        clip_info.m_clip = clip.second.GetClip();
+        clip_info.m_clip = clip.second.clip();
         cat.append(clip_info);
         m_actionCombox->push_back(clip.second.getName());
     }

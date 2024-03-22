@@ -23,7 +23,7 @@
         },
         "Effects": {
             "Type": "StringArray",
-            "Value": ["default_color_mesh_effect"]
+            "Value": ["fx/default_color_mesh_effect"]
         },
         "VisualTechniqueSelection": {
             "Type": "String",

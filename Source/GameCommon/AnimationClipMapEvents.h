@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   AnimationClipMapEvents.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   April 2023
  *********************************************************************/
@@ -18,7 +18,7 @@ namespace Enigma::GameCommon
     public:
         AnimationClipMapChanged(const AnimationClipMap::ClipMap& clip_map) : m_clipMap(clip_map) {};
 
-        const AnimationClipMap::ClipMap& GetClipMap() const { return m_clipMap; };
+        const AnimationClipMap::ClipMap& clipMap() const { return m_clipMap; };
     private:
         AnimationClipMap::ClipMap m_clipMap;
     };

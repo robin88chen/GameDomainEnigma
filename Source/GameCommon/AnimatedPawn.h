@@ -26,16 +26,19 @@ namespace Enigma::GameCommon
         AnimatedPawn& operator=(const AnimatedPawn&) = delete;
         AnimatedPawn& operator=(AnimatedPawn&&) = delete;
 
+        static std::shared_ptr<AnimatedPawn> create(const SceneGraph::SpatialId& id);
+        static std::shared_ptr<AnimatedPawn> constitute(const SceneGraph::SpatialId& id, const Engine::GenericDto& dto);
+
         virtual Engine::GenericDto serializeDto() override;
 
-        AnimationClipMap& TheAnimationClipMap() { return m_animationClipMap; };
-        const AnimationClipMap& TheAnimationClipMap() const { return m_animationClipMap; };
+        AnimationClipMap& animationClipMap() { return m_animationClipMap; };
+        const AnimationClipMap& animationClipMap() const { return m_animationClipMap; };
 
-        virtual void PlayAnimation(const std::string& name);
-        virtual void StopAnimation();
+        virtual void playAnimation(const std::string& name);
+        virtual void stopAnimation();
 
-        virtual void AddAvatarRecipe(const std::shared_ptr<AvatarRecipe>& recipe);
-        virtual void BakeAvatarRecipes();
+        virtual void addAvatarRecipe(const std::shared_ptr<AvatarRecipe>& recipe);
+        virtual void bakeAvatarRecipes();
 
     protected:
         AnimationClipMap m_animationClipMap;

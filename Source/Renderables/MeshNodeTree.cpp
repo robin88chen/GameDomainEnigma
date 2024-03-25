@@ -18,7 +18,7 @@ MeshNodeTree::MeshNodeTree(const Engine::GenericDto& dto) : m_factoryDesc(MeshNo
     m_factoryDesc = mesh_node_tree_dto.factoryDesc();
     for (auto& node_dto : mesh_node_tree_dto.meshNodes())
     {
-        m_meshNodes.emplace_back(node_dto);
+        addMeshNode(node_dto);
     }
 }
 
@@ -69,6 +69,17 @@ std::optional<unsigned> MeshNodeTree::findMeshNodeIndex(const std::string& node_
     for (unsigned i = 0; i < count; i++)
     {
         if (m_meshNodes[i].getName() == node_name) return i;
+    }
+    return std::nullopt;
+}
+
+std::optional<Enigma::Primitives::PrimitiveId> MeshNodeTree::findInstancedPrimitiveId(const Primitives::PrimitiveId& original_id) const
+{
+    if (m_meshNodes.empty()) return std::nullopt;
+    unsigned count = static_cast<unsigned>(m_meshNodes.size());
+    for (const auto& node : m_meshNodes)
+    {
+        if ((node.getMeshPrimitive()) && (node.getMeshPrimitive()->id().origin() == original_id)) return node.getMeshPrimitive()->id();
     }
     return std::nullopt;
 }

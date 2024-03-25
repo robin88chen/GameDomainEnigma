@@ -113,13 +113,17 @@ void SkinAnimationOperator::onAttachingMeshNodeTree(const MeshNodeTree& mesh_nod
     const unsigned bone_count = static_cast<unsigned>(m_boneNodeNames.size());
     m_nodeOffsets.resize(bone_count);
     m_skinNodeIndexMapping.resize(bone_count);
+    if (m_skinMeshId.has_value())
+    {
+        auto skin_id = mesh_node_tree.findInstancedPrimitiveId(m_skinMeshId.value().origin());
+        if (skin_id.has_value()) m_skinMeshId = skin_id.value();
+    }
     for (unsigned int i = 0; i < bone_count; i++)
     {
         auto node_idx = mesh_node_tree.findMeshNodeIndex(m_boneNodeNames[i]);
         m_skinNodeIndexMapping[i] = node_idx;
         if (!node_idx) continue;
         m_nodeOffsets[i] = t_posNodeOffset(i, mesh_node_tree.getMeshNode(node_idx.value()));
-        if (const auto skin_mesh = std::dynamic_pointer_cast<SkinMeshPrimitive>(mesh_node_tree.getMeshPrimitiveInNode(node_idx.value()))) m_skinMeshId = skin_mesh->id();
     }
     if (cacheSkinMesh()) cacheSkinMesh()->createBoneMatrixArray(bone_count);
 }

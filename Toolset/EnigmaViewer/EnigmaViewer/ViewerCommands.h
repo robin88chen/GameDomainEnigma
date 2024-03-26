@@ -101,5 +101,15 @@ namespace EnigmaViewer
         std::string m_newName;
         Enigma::Renderables::AnimationClip m_clip;
     };
+    class RefreshModelPrimitiveList : public Enigma::Frameworks::ICommand
+    {
+    public:
+        RefreshModelPrimitiveList(const std::vector<std::string>& model_list) : m_modelList(model_list) {}
+
+        const std::vector<std::string>& modelList() const { return m_modelList; }
+
+    private:
+        std::vector<std::string> m_modelList;
+    };
 }
 #endif // _VIEWER_COMMANDS_H

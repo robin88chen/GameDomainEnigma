@@ -16,6 +16,7 @@
 #include "GameEngine/TextureQueries.h"
 #include "GameEngine/Texture.h"
 #include "GameEngine/FactoryCommands.h"
+#include "Platforms/PlatformLayer.h"
 
 using namespace Enigma::Renderables;
 using namespace Enigma::Frameworks;
@@ -96,8 +97,8 @@ void MeshPrimitiveBuilder::onRenderBufferBuilt(const Frameworks::IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<RenderBufferBuilt, IEvent>(e);
     if (!ev) return;
-    if (ev->getName() != m_builtGeometry->makeRenderBufferSignature().getName()) return;
-    m_builtRenderBuffer = ev->GetBuffer();
+    if (ev->name() != m_builtGeometry->makeRenderBufferSignature().getName()) return;
+    m_builtRenderBuffer = ev->buffer();
     std::dynamic_pointer_cast<MeshPrimitive>(m_builtPrimitive)->linkGeometryData(m_builtGeometry, m_builtRenderBuffer);
     bool all_effect_ready = true;
     for (auto& id : m_metaDto->effects())
@@ -142,12 +143,14 @@ void MeshPrimitiveBuilder::onBuildRenderBufferFailed(const Frameworks::IEventPtr
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<BuildRenderBufferFailed, IEvent>(e);
     if (!ev) return;
-    if (ev->getName() != m_builtGeometry->makeRenderBufferSignature().getName()) return;
-    EventPublisher::post(std::make_shared<HydrateMeshPrimitiveFailed>(m_buildingId, m_buildingId.name(), ev->GetErrorCode()));
+    if (ev->name() != m_builtGeometry->makeRenderBufferSignature().getName()) return;
+    failMeshHydration(ev->error());
 }
 
 void MeshPrimitiveBuilder::onEffectMaterialHydrated(const Frameworks::IEventPtr& e)
 {
+    //? 發生奇怪的bug, 兩個 dto 是 empty, 卻沒有return, 一路走到 found_idx 出錯, ev的 id 與 builtEffects 也不符
+    //todo 先在 fail 時把資料清乾淨看看
     if (!m_metaDto) return;
     if (!m_buildingDto) return;
     if (!e) return;
@@ -168,7 +171,7 @@ void MeshPrimitiveBuilder::onHydrateEffectMaterialFailed(const Frameworks::IEven
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<HydrateEffectMaterialFailed>(e);
     if (!ev) return;
-    EventPublisher::post(std::make_shared<HydrateMeshPrimitiveFailed>(m_buildingId, m_buildingId.name(), ev->error()));
+    failMeshHydration(ev->error());
 }
 
 void MeshPrimitiveBuilder::onTextureHydrated(const Frameworks::IEventPtr& e)
@@ -193,7 +196,7 @@ void MeshPrimitiveBuilder::onHydrateTextureFailed(const Frameworks::IEventPtr& e
     if (!ev) return;
     if (ev->error())
     {
-        EventPublisher::post(std::make_shared<HydrateMeshPrimitiveFailed>(m_buildingId, m_buildingId.name(), ev->error()));
+        failMeshHydration(ev->error());
     }
 }
 
@@ -223,6 +226,17 @@ void MeshPrimitiveBuilder::tryCompletingMesh()
 
     m_buildingDto = std::nullopt;
     m_metaDto = nullptr;
+}
+
+void MeshPrimitiveBuilder::failMeshHydration(const std::error_code er)
+{
+    m_buildingDto = std::nullopt;
+    m_metaDto = nullptr;
+    m_builtEffects.clear();
+    m_builtTextures.clear();
+    Platforms::Debug::ErrorPrintf("mesh primitive %s build failed : %s\n", m_buildingId.name().c_str(), er.message().c_str());
+    EventPublisher::post(std::make_shared<HydrateMeshPrimitiveFailed>(m_buildingId, m_buildingId.name(), er));
+    m_buildingId = Primitives::PrimitiveId();
 }
 
 std::optional<unsigned> MeshPrimitiveBuilder::findBuildingEffectIndex(const EffectMaterialId& id)

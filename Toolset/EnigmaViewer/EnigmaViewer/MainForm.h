@@ -20,6 +20,8 @@ namespace EnigmaViewer
     class ModelInfoPanel;
     class OutputPanel;
     class AnimationInfoPanel;
+    class PawnListPanel;
+    class ModelListPanel;
 
     class MainForm : public nana::form
     {
@@ -41,13 +43,16 @@ namespace EnigmaViewer
 
     private:
         nana::menubar* m_menubar;
-        nana::tabbar<int>* m_tabbar;
+        nana::tabbar<int>* m_entitiesTabbar;
+        nana::tabbar<int>* m_toolsTabbar;
         ViewerAppDelegate* m_appDelegate;
         nana::timer* m_timer;
         RenderPanel* m_renderPanel;
         OutputPanel* m_outputPanel;
         ModelInfoPanel* m_modelInfoPanel;
         AnimationInfoPanel* m_animationInfoPanel;
+        PawnListPanel* m_pawnListPanel;
+        ModelListPanel* m_modelListPanel;
     };
 }
 

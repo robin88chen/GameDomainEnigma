@@ -111,7 +111,7 @@ void RenderBufferRepository::OnBuildRenderBufferFailed(const Frameworks::IEventP
     auto ev = std::dynamic_pointer_cast<BuildRenderBufferFailed, Frameworks::IEvent>(e);
     if (!ev) return;
     Platforms::Debug::ErrorPrintf("render buffer %s build failed : %s\n",
-        ev->getName().c_str(), ev->GetErrorCode().message().c_str());
+        ev->name().c_str(), ev->error().message().c_str());
     m_isCurrentBuilding = false;
 }
 

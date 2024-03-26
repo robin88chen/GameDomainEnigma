@@ -79,6 +79,12 @@
     <ClInclude Include="GeometryCreationHelper.h">
       <Filter>Helper</Filter>
     </ClInclude>
+    <ClInclude Include="PawnListPanel.h">
+      <Filter>Forms</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelListPanel.h">
+      <Filter>Forms</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainForm.cpp">
@@ -123,6 +129,12 @@
     </ClCompile>
     <ClCompile Include="GeometryCreationHelper.cpp">
       <Filter>Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="PawnListPanel.cpp">
+      <Filter>Forms</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelListPanel.cpp">
+      <Filter>Forms</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

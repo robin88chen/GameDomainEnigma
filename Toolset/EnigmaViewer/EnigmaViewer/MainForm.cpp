@@ -5,6 +5,8 @@
 #include "OutputPanel.h"
 #include "ModelInfoPanel.h"
 #include "AnimationInfoPanel.h"
+#include "PawnListPanel.h"
+#include "ModelListPanel.h"
 #include "Platforms/MemoryMacro.h"
 #include "GraphicKernel/IGraphicAPI.h"
 #include "nana/gui/filebox.hpp"
@@ -17,18 +19,22 @@ using namespace std::chrono_literals;
 MainForm::MainForm()
 {
     m_menubar = nullptr;
-    m_tabbar = nullptr;
+    m_entitiesTabbar = nullptr;
+    m_toolsTabbar = nullptr;
     m_appDelegate = nullptr;
     m_timer = nullptr;
     m_renderPanel = nullptr;
     m_outputPanel = nullptr;
     m_modelInfoPanel = nullptr;
     m_animationInfoPanel = nullptr;
+    m_pawnListPanel = nullptr;
+    m_modelListPanel = nullptr;
 }
 
 MainForm::~MainForm()
 {
-    SAFE_DELETE(m_tabbar);
+    SAFE_DELETE(m_entitiesTabbar);
+    SAFE_DELETE(m_toolsTabbar);
     SAFE_DELETE(m_menubar);
     SAFE_DELETE(m_timer);
     SAFE_DELETE(m_appDelegate);
@@ -36,30 +42,44 @@ MainForm::~MainForm()
     SAFE_DELETE(m_outputPanel);
     SAFE_DELETE(m_modelInfoPanel);
     SAFE_DELETE(m_animationInfoPanel);
+    SAFE_DELETE(m_pawnListPanel);
+    SAFE_DELETE(m_modelListPanel);
 }
 
 void MainForm::initialize()
 {
     UISchemeColors::ApplySchemaColors(scheme());
-    get_place().div("vert<menubar weight=28>< <renderpanel weight=70%> | <vert<toolsbar weight=28> <toolsframe> > > <outputpanel weight=100>");
+    get_place().div("vert<menubar weight=28>< <vert<entitiesbar weight=28> <entitiesframe> > | <renderpanel weight=60%> | <vert<toolsbar weight=28> <toolsframe> > > <outputpanel weight=100>");
     initMenu();
+
+    m_entitiesTabbar = menew nana::tabbar<int>{ *this };
+    UISchemeColors::ApplySchemaColors(m_entitiesTabbar->scheme());
+    get_place().field("entitiesbar") << *m_entitiesTabbar;
+    m_pawnListPanel = menew PawnListPanel{ *this };
+    m_pawnListPanel->initialize(this);
+    get_place().field("entitiesframe").fasten(*m_pawnListPanel);
+    m_entitiesTabbar->append("Pawn List", *m_pawnListPanel);
+    m_modelListPanel = menew ModelListPanel{ *this };
+    m_modelListPanel->initialize(this);
+    get_place().field("entitiesframe").fasten(*m_modelListPanel);
+    m_entitiesTabbar->append("Model List", *m_modelListPanel);
 
     m_renderPanel = menew RenderPanel{ *this };
     get_place().field("renderpanel") << *m_renderPanel;
 
-    m_tabbar = menew nana::tabbar<int>{ *this };
-    UISchemeColors::ApplySchemaColors(m_tabbar->scheme());
-    get_place().field("toolsbar") << *m_tabbar;
+    m_toolsTabbar = menew nana::tabbar<int>{ *this };
+    UISchemeColors::ApplySchemaColors(m_toolsTabbar->scheme());
+    get_place().field("toolsbar") << *m_toolsTabbar;
 
     m_modelInfoPanel = menew ModelInfoPanel{ *this };
     m_modelInfoPanel->initialize(this);
     get_place().field("toolsframe").fasten(*m_modelInfoPanel);
-    m_tabbar->append("Model Info", *m_modelInfoPanel);
+    m_toolsTabbar->append("Model Info", *m_modelInfoPanel);
 
     m_animationInfoPanel = menew AnimationInfoPanel{ *this };
     m_animationInfoPanel->initialize();
     get_place().field("toolsframe").fasten(*m_animationInfoPanel);
-    m_tabbar->append("Animation Info", *m_animationInfoPanel);
+    m_toolsTabbar->append("Animation Info", *m_animationInfoPanel);
 
     m_outputPanel = menew OutputPanel{ *this };
     m_outputPanel->initialize();
@@ -73,6 +93,7 @@ void MainForm::initialize()
     m_timer->start();
     events().destroy([this] { this->finalize(); });
 
+    m_modelListPanel->subscribeHandlers();
     m_renderPanel->initInputHandler(m_appDelegate->inputHandler());
     m_renderPanel->subscribeHandlers();
     m_outputPanel->subscribeHandlers();
@@ -155,6 +176,7 @@ void MainForm::onCloseCommand(const nana::menu::item_proxy& menu_item)
 
 void MainForm::finalize()
 {
+    if (m_modelListPanel) m_modelListPanel->unsubscribeHandlers();
     if (m_renderPanel) m_renderPanel->unsubscribeHandlers();
     if (m_outputPanel) m_outputPanel->unsubscribeHandlers();
     if (m_modelInfoPanel) m_modelInfoPanel->unsubscribeHandlers();

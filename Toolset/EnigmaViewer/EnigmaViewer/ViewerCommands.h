@@ -111,5 +111,15 @@ namespace EnigmaViewer
     private:
         std::vector<std::string> m_modelList;
     };
+    class LoadModelPrimitive : public Enigma::Frameworks::ICommand
+    {
+    public:
+        LoadModelPrimitive(const std::string& name) : m_name(name) {}
+
+        const std::string& name() const { return m_name; }
+
+    private:
+        std::string m_name;
+    };
 }
 #endif // _VIEWER_COMMANDS_H

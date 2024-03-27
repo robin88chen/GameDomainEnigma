@@ -27,6 +27,7 @@
 
 namespace EnigmaViewer
 {
+    class ViewerRenderablesFileStoreMapper;
     class ViewerAppDelegate
     {
     public:
@@ -65,6 +66,10 @@ namespace EnigmaViewer
         void deleteAnimationClip(const Enigma::Frameworks::ICommandPtr& c);
         void playAnimationClip(const Enigma::Frameworks::ICommandPtr& c);
         void changeAnimationTimeValue(const Enigma::Frameworks::ICommandPtr& c);
+        void loadModelPrimitive(const Enigma::Frameworks::ICommandPtr& c);
+
+        void refreshModelList();
+        void loadModelPrimitive(const std::string& model_name);
 
         void onViewingPawnPrimitiveBuilt();
         void onFloorPrimitiveBuilt();
@@ -81,7 +86,7 @@ namespace EnigmaViewer
         std::shared_ptr<Enigma::FileStorage::GeometryDataFileStoreMapper> m_geometryDataFileStoreMapper;
         std::shared_ptr<Enigma::FileStorage::AnimationAssetFileStoreMapper> m_animationAssetFileStoreMapper;
         std::shared_ptr<Enigma::FileStorage::AnimatorFileStoreMapper> m_animatorFileStoreMapper;
-        std::shared_ptr<Enigma::FileStorage::PrimitiveFileStoreMapper> m_primitiveFileStoreMapper;
+        std::shared_ptr<ViewerRenderablesFileStoreMapper> m_primitiveFileStoreMapper;
         std::shared_ptr<Enigma::FileStorage::SceneGraphFileStoreMapper> m_sceneGraphFileStoreMapper;
 
         std::weak_ptr<Enigma::InputHandlers::InputHandlerService> m_inputHandler;
@@ -98,6 +103,7 @@ namespace EnigmaViewer
         Enigma::Frameworks::CommandSubscriberPtr m_deleteAnimationClip;
         Enigma::Frameworks::CommandSubscriberPtr m_playAnimationClip;
         Enigma::Frameworks::CommandSubscriberPtr m_changeAnimationTimeValue;
+        Enigma::Frameworks::CommandSubscriberPtr m_loadModelPrimitive;
 
         Enigma::SceneGraph::SpatialId m_sceneRootId;
         std::shared_ptr<Enigma::SceneGraph::Node> m_sceneRoot;

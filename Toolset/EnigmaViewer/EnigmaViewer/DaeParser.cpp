@@ -1181,10 +1181,12 @@ void DaeParser::persistAnimator()
 {
     ModelAnimatorAssembler animator_assembler(m_animatorId);
     animator_assembler.animationAsset(m_animationAssetId).controlledPrimitive(m_modelId);
-    for (auto skin_bone_name : m_skinBoneNames)
+    for (const auto& [skin_name, bone_names] : m_skinBoneNames)
     {
+        auto skin_prim = meshIdInMeshNode(skin_name);
+        if (!skin_prim) continue;
         SkinOperatorAssembler operator_assembler;
-        operator_assembler.operatedSkin(meshIdInMeshNode(skin_bone_name.first)).bones(skin_bone_name.second);
+        operator_assembler.operatedSkin(skin_prim.value()).bones(bone_names);
         animator_assembler.skinOperator(operator_assembler);
     }
     animator_assembler.asNative(m_animatorId.name() + ".animator@APK_PATH");
@@ -1312,9 +1314,9 @@ std::string DaeParser::findMaterialTexImageFilename(const pugi::xml_node& collad
     return "image/" + filename.getBaseFileName();
 }
 
-Enigma::Primitives::PrimitiveId DaeParser::meshIdInMeshNode(const std::string& name)
+std::optional<Enigma::Primitives::PrimitiveId> DaeParser::meshIdInMeshNode(const std::string& name)
 {
-    assert(m_meshIdInMeshNode.find(name) != m_meshIdInMeshNode.end());
+    if (m_meshIdInMeshNode.find(name) == m_meshIdInMeshNode.end()) return std::nullopt;
     return m_meshIdInMeshNode[name];
 }
 

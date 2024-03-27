@@ -3,7 +3,6 @@
 #include "FileStorage/AnimationAssetFileStoreMapper.h"
 #include "FileStorage/AnimatorFileStoreMapper.h"
 #include "FileStorage/GeometryDataFileStoreMapper.h"
-#include "FileStorage/PrimitiveFileStoreMapper.h"
 #include "FileStorage/SceneGraphFileStoreMapper.h"
 #include "FileStorage/EffectMaterialSourceFileStoreMapper.h"
 #include "FileStorage/TextureFileStoreMapper.h"
@@ -23,9 +22,7 @@
 #include "GameEngine/EffectMaterialSourceRepositoryInstallingPolicy.h"
 #include "GameEngine/TextureRepositoryInstallingPolicy.h"
 #include "Gateways/DtoJsonGateway.h"
-#include "Gateways/JsonFileDtoDeserializer.h"
 #include "Geometries/GeometryInstallingPolicy.h"
-#include "Geometries/StandardGeometryAssemblers.h"
 #include "GraphicAPIDx11/GraphicAPIDx11.h"
 #include "InputHandlers/InputHandlerInstallingPolicy.h"
 #include "Platforms/MemoryMacro.h"
@@ -40,7 +37,6 @@
 #include "SceneGraph/Pawn.h"
 #include "SceneGraph/SceneGraphCommands.h"
 #include "SceneGraph/SceneGraphAssemblers.h"
-#include "SceneGraph/SceneGraphEvents.h"
 #include "SceneGraph/SceneGraphInstallingPolicy.h"
 #include "SceneGraph/SceneGraphQueries.h"
 #include "ShadowMap/ShadowMapInstallingPolicies.h"
@@ -54,6 +50,7 @@
 #include "GameCommon/GameSceneCommands.h"
 #include "DaeParser.h"
 #include "GameCommon/AnimatedPawnAssembler.h"
+#include "ViewerRenderablesFileStoreMapper.h"
 #include <memory>
 
 using namespace EnigmaViewer;
@@ -170,6 +167,8 @@ void ViewerAppDelegate::installEngine()
     CommandBus::subscribe(typeid(PlayAnimationClip), m_playAnimationClip);
     m_changeAnimationTimeValue = std::make_shared<CommandSubscriber>([=](auto c) { this->changeAnimationTimeValue(c); });
     CommandBus::subscribe(typeid(ChangeAnimationTimeValue), m_changeAnimationTimeValue);
+    m_loadModelPrimitive = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { this->loadModelPrimitive(c); });
+    CommandBus::subscribe(typeid(LoadModelPrimitive), m_loadModelPrimitive);
 
     assert(m_graphicMain);
 
@@ -178,7 +177,7 @@ void ViewerAppDelegate::installEngine()
     auto render_sys_policy = std::make_shared<RenderSystemInstallingPolicy>();
     m_geometryDataFileStoreMapper = std::make_shared<GeometryDataFileStoreMapper>("geometries.db.txt@APK_PATH", std::make_shared<DtoJsonGateway>());
     auto geometry_policy = std::make_shared<GeometryInstallingPolicy>(m_geometryDataFileStoreMapper);
-    m_primitiveFileStoreMapper = std::make_shared<PrimitiveFileStoreMapper>("primitives.db.txt@APK_PATH", std::make_shared<DtoJsonGateway>());
+    m_primitiveFileStoreMapper = std::make_shared<ViewerRenderablesFileStoreMapper>("primitives.db.txt@APK_PATH", std::make_shared<DtoJsonGateway>());
     auto primitive_policy = std::make_shared<PrimitiveRepositoryInstallingPolicy>(m_primitiveFileStoreMapper);
     m_animationAssetFileStoreMapper = std::make_shared<AnimationAssetFileStoreMapper>("animation_assets.db.txt@APK_PATH ", std::make_shared<DtoJsonGateway>());
     m_animatorFileStoreMapper = std::make_shared<AnimatorFileStoreMapper>("animators.db.txt@APK_PATH", std::make_shared<DtoJsonGateway>());
@@ -235,6 +234,8 @@ void ViewerAppDelegate::shutdownEngine()
     m_playAnimationClip = nullptr;
     CommandBus::unsubscribe(typeid(ChangeAnimationTimeValue), m_changeAnimationTimeValue);
     m_changeAnimationTimeValue = nullptr;
+    CommandBus::unsubscribe(typeid(LoadModelPrimitive), m_loadModelPrimitive);
+    m_loadModelPrimitive = nullptr;
 
     m_graphicMain->shutdownRenderEngine();
 }
@@ -274,18 +275,7 @@ void ViewerAppDelegate::importDaeFile(const std::string& filename)
 {
     DaeParser parser(m_geometryDataFileStoreMapper, m_animationAssetFileStoreMapper, m_animatorFileStoreMapper, m_primitiveFileStoreMapper);
     parser.loadDaeFile(filename);
-    AnimatedPawnAssembler assembler(SpatialId(ViewingPawnName, AnimatedPawn::TYPE_RTTI));
-    assembler.pawn().primitive(parser.getModelId());
-    assembler.pawn().spatial().localTransform(Matrix4::IDENTITY);
-    m_pawn = assembler.constitute(Enigma::SceneGraph::PersistenceLevel::Repository);
-    Enigma::MathLib::Matrix4 mx = Enigma::MathLib::Matrix4::MakeRotationXTransform(-Enigma::MathLib::Math::HALF_PI);
-    if (m_sceneRoot) m_sceneRoot->attachChild(m_pawn, mx);
-    auto animator_id = m_pawn->getPrimitive()->animatorId();
-    if (const auto animator = std::dynamic_pointer_cast<ModelPrimitiveAnimator>(Animator::queryAnimator(animator_id)))
-    {
-        animator->playAnimation(Enigma::Renderables::AnimationClip{ 0.0f, 2.5f, Enigma::Renderables::AnimationClip::WarpMode::Loop, 0 });
-    }
-    CommandBus::post(std::make_shared<AddListeningAnimator>(animator_id));
+    refreshModelList();
     // auto pawn_dto = parser.pawnDto();
     //pawn_dto.asTopLevel(true);
     //CommandBus::post(std::make_shared<BuildSceneGraph>(ViewingPawnName, std::vector{ pawn_dto.toGenericDto() }));
@@ -380,6 +370,8 @@ void ViewerAppDelegate::onRenderEngineInstalled(const Enigma::Frameworks::IEvent
         m_sceneGraphFileStoreMapper->putSpatial(m_sceneRootId, root_assembler.toGenericDto());
     }
     CommandBus::post(std::make_shared<CreateSceneRoot>(m_sceneRootId, std::nullopt));
+
+    refreshModelList();
 }
 
 void ViewerAppDelegate::onSceneGraphRootCreated(const Enigma::Frameworks::IEventPtr& e)
@@ -490,6 +482,42 @@ void ViewerAppDelegate::changeAnimationTimeValue(const Enigma::Frameworks::IComm
         Enigma::GameCommon::AnimationClipMap::AnimClip act_clip_new(cmd->newName(), cmd->clip());
         m_pawn->animationClipMap().insertClip(act_clip_new);
     }
+}
+
+void ViewerAppDelegate::loadModelPrimitive(const Enigma::Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<LoadModelPrimitive, ICommand>(c);
+    if (!cmd) return;
+    loadModelPrimitive(cmd->name());
+}
+
+void ViewerAppDelegate::refreshModelList()
+{
+    if (m_primitiveFileStoreMapper)
+    {
+        CommandBus::post(std::make_shared<RefreshModelPrimitiveList>(m_primitiveFileStoreMapper->modelNames()));
+    }
+}
+
+void ViewerAppDelegate::loadModelPrimitive(const std::string& model_name)
+{
+    if (!m_primitiveFileStoreMapper) return;
+    auto model_id = m_primitiveFileStoreMapper->modelId(model_name);
+    if (!model_id) return;
+
+    AnimatedPawnAssembler assembler(SpatialId(ViewingPawnName, AnimatedPawn::TYPE_RTTI));
+    assembler.pawn().primitive(model_id.value());
+    assembler.pawn().spatial().localTransform(Matrix4::IDENTITY);
+    m_pawn = assembler.constitute(Enigma::SceneGraph::PersistenceLevel::Repository);
+    Enigma::MathLib::Matrix4 mx = Enigma::MathLib::Matrix4::MakeRotationXTransform(-Enigma::MathLib::Math::HALF_PI);
+    if (m_sceneRoot) m_sceneRoot->attachChild(m_pawn, mx);
+    auto animator_id = m_pawn->getPrimitive()->animatorId();
+    if (const auto animator = std::dynamic_pointer_cast<ModelPrimitiveAnimator>(Animator::queryAnimator(animator_id)))
+    {
+        animator->playAnimation(Enigma::Renderables::AnimationClip{ 0.0f, 2.5f, Enigma::Renderables::AnimationClip::WarpMode::Loop, 0 });
+    }
+    CommandBus::post(std::make_shared<AddListeningAnimator>(animator_id));
 }
 
 void ViewerAppDelegate::createFloorReceiver()

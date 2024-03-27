@@ -8,6 +8,7 @@
 #ifndef MODEL_LIST_PANEL_H
 #define MODEL_LIST_PANEL_H
 
+#include "nana/gui/widgets/menu.hpp"
 #include "nana/gui/widgets/panel.hpp"
 #include "nana/gui/place.hpp"
 #include "nana/gui/widgets/listbox.hpp"
@@ -29,9 +30,12 @@ namespace EnigmaViewer
     private:
         void refreshModelList(const Enigma::Frameworks::ICommandPtr& c);
 
+        void onModelListMouseDown(const nana::arg_mouse& arg);
+        void onLoadModel(nana::menu::item_proxy& item);
     private:
         nana::place* m_place;
         nana::listbox* m_modelList;
+        nana::menu* m_popupMenu;
 
         Enigma::Frameworks::CommandSubscriberPtr m_refreshModelList;
     };

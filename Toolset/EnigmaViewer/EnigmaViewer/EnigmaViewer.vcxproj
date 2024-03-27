@@ -152,6 +152,7 @@
     <ClInclude Include="ViewerCommands.h" />
     <ClInclude Include="ViewerEvents.h" />
     <ClInclude Include="ViewerQueries.h" />
+    <ClInclude Include="ViewerRenderablesFileStoreMapper.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnimationInfoPanel.cpp" />
@@ -173,6 +174,7 @@
     <ClCompile Include="RenderPanel.cpp" />
     <ClCompile Include="SchemeColorDef.cpp" />
     <ClCompile Include="ViewerAppDelegate.cpp" />
+    <ClCompile Include="ViewerRenderablesFileStoreMapper.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -25,6 +25,9 @@
     <Filter Include="Helper">
       <UniqueIdentifier>{03453ef5-ca31-4811-9cd7-bbb3a1eb2630}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AppDelegate\StoreMapper">
+      <UniqueIdentifier>{8ac38c99-163a-4e22-8800-5dad4cf3eeed}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainForm.h">
@@ -85,6 +88,9 @@
     <ClInclude Include="ModelListPanel.h">
       <Filter>Forms</Filter>
     </ClInclude>
+    <ClInclude Include="ViewerRenderablesFileStoreMapper.h">
+      <Filter>AppDelegate\StoreMapper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainForm.cpp">
@@ -135,6 +141,9 @@
     </ClCompile>
     <ClCompile Include="ModelListPanel.cpp">
       <Filter>Forms</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewerRenderablesFileStoreMapper.cpp">
+      <Filter>AppDelegate\StoreMapper</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

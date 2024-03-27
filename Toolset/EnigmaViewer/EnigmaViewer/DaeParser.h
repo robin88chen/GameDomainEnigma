@@ -86,7 +86,7 @@ namespace EnigmaViewer
         void persistAnimator();
         void persistModel();
 
-        Enigma::Primitives::PrimitiveId meshIdInMeshNode(const std::string& name);
+        std::optional<Enigma::Primitives::PrimitiveId> meshIdInMeshNode(const std::string& name);
 
     private:
         DaeParserConfiguration m_config;

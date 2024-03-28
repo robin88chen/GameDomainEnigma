@@ -91,6 +91,9 @@
     <ClInclude Include="ViewerRenderablesFileStoreMapper.h">
       <Filter>AppDelegate\StoreMapper</Filter>
     </ClInclude>
+    <ClInclude Include="CreateNewPawnDlg.h">
+      <Filter>Forms</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainForm.cpp">
@@ -144,6 +147,9 @@
     </ClCompile>
     <ClCompile Include="ViewerRenderablesFileStoreMapper.cpp">
       <Filter>AppDelegate\StoreMapper</Filter>
+    </ClCompile>
+    <ClCompile Include="CreateNewPawnDlg.cpp">
+      <Filter>Forms</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

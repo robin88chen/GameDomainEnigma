@@ -11,6 +11,7 @@
 #include "GraphicKernel/IGraphicAPI.h"
 #include "nana/gui/filebox.hpp"
 #include "DaeParser.h"
+#include "CreateNewPawnDlg.h"
 
 using namespace EnigmaViewer;
 using namespace Enigma::Graphics;
@@ -112,8 +113,10 @@ void MainForm::initMenu()
     m_menubar->scheme().text_fgcolor = UISchemeColors::FOREGROUND;
     m_menubar->push_back("&File");
     m_menubar->at(0).append("Import DAE File", [this](auto item) { onImportDaeFile(item); });
-    m_menubar->at(0).append("Save Animated Pawn", [this](auto item) { onSaveAnimatedPawn(item); });
-    m_menubar->at(0).append("Load Animated Pawn", [this](auto item) { onLoadAnimatedPawn(item); });
+    //m_menubar->at(0).append("Save Animated Pawn", [this](auto item) { onSaveAnimatedPawn(item); });
+    //m_menubar->at(0).append("Load Animated Pawn", [this](auto item) { onLoadAnimatedPawn(item); });
+    m_menubar->at(0).append_splitter();
+    m_menubar->at(0).append("New Animated Pawn", [this](auto item) { onCreateNewAnimatedPawn(item); });
     m_menubar->at(0).append_splitter();
     m_menubar->at(0).append("Exit", [this](auto item) { onCloseCommand(item); });
     get_place().field("menubar") << *m_menubar;
@@ -131,15 +134,15 @@ void MainForm::onImportDaeFile(const nana::menu::item_proxy& menu_item)
             m_outputPanel->addMessage(std::string{ "open Collada file " } + paths[0].string());
         }
         m_appDelegate->importDaeFile(paths[0].string());
-        //DaeParser* parser = new DaeParser(Enigma::Controllers::GraphicMain::instance()->getSystemServiceAs<Enigma::Geometries::GeometryRepository>());
-        //parser->loadDaeFile(paths[0].string());
-        //m_appDelegate->loadPawn(parser->pawnDto());
-        //m_modelInfoPanel->setModelFileName(paths[0].stem().string());
-        //delete parser;
     }
 }
 
-void MainForm::onSaveAnimatedPawn(const nana::menu::item_proxy& menu_item)
+void MainForm::onCreateNewAnimatedPawn(const nana::menu::item_proxy& menu_item)
+{
+    nana::API::modal_window(CreateNewPawnDlg(*this));
+}
+
+/*void MainForm::onSaveAnimatedPawn(const nana::menu::item_proxy& menu_item)
 {
     nana::filebox fb{ *this, false };
     fb.add_filter({ {"Pawn File(*.pawn)", "*.pawn"} });
@@ -148,9 +151,9 @@ void MainForm::onSaveAnimatedPawn(const nana::menu::item_proxy& menu_item)
     {
         m_appDelegate->savePawnFile(paths[0].string());
     }
-}
+}*/
 
-void MainForm::onLoadAnimatedPawn(const nana::menu::item_proxy& menu_item)
+/*void MainForm::onLoadAnimatedPawn(const nana::menu::item_proxy& menu_item)
 {
     nana::filebox fb{ *this, true };
     fb.add_filter({ {"Pawn File(*.pawn)", "*.pawn"} });
@@ -159,15 +162,15 @@ void MainForm::onLoadAnimatedPawn(const nana::menu::item_proxy& menu_item)
     {
         m_appDelegate->loadPawnFile(paths[0].string());
         m_modelInfoPanel->setModelFileName(paths[0].stem().string());
-        /*m_modelInfoPanel->SetModelFileName(paths[0].stem().string());
+        //{/*m_modelInfoPanel->SetModelFileName(paths[0].stem().string());
         m_modelInfoPanel->EnumModelMeshNode(std::dynamic_pointer_cast<Enigma::ModelPrimitive, Enigma::Primitive>
             (m_appDelegate->GetEntityPrimitive()));
         Enigma::ActionClipMapPtr clip_map = std::dynamic_pointer_cast<Enigma::AnimatedEntity, Enigma::Entity>
             (m_appDelegate->GetEntity())->GetActionClipMap();
         m_animInfoPanel->RefreshActionTable(clip_map);
-        m_animInfoPanel->RefreshActionCombo(clip_map);*/
-    }
-}
+        m_animInfoPanel->RefreshActionCombo(clip_map);*/ //}
+        //}
+    //}
 
 void MainForm::onCloseCommand(const nana::menu::item_proxy& menu_item)
 {

@@ -134,6 +134,7 @@
   <ItemGroup>
     <ClInclude Include="AnimationClipInfoItem.h" />
     <ClInclude Include="AnimationInfoPanel.h" />
+    <ClInclude Include="CreateNewPawnDlg.h" />
     <ClInclude Include="DaeParser.h" />
     <ClInclude Include="DaeParserConfiguration.h" />
     <ClInclude Include="GeometryCreationHelper.h" />
@@ -156,6 +157,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnimationInfoPanel.cpp" />
+    <ClCompile Include="CreateNewPawnDlg.cpp" />
     <ClCompile Include="DaeParser.cpp" />
     <ClCompile Include="DaeParserConfiguration.cpp" />
     <ClCompile Include="GeometryCreationHelper.cpp" />

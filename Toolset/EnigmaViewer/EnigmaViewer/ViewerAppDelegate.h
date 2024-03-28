@@ -22,7 +22,6 @@
 #include "FileStorage/GeometryDataFileStoreMapper.h"
 #include "FileStorage/AnimationAssetFileStoreMapper.h"
 #include "FileStorage/AnimatorFileStoreMapper.h"
-#include "FileStorage/PrimitiveFileStoreMapper.h"
 #include <filesystem>
 
 namespace EnigmaViewer
@@ -57,11 +56,10 @@ namespace EnigmaViewer
         std::shared_ptr<Enigma::InputHandlers::InputHandlerService> inputHandler() const { return m_inputHandler.lock(); }
 
     protected:
-        //void onPawnPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
         void onRenderEngineInstalled(const Enigma::Frameworks::IEventPtr& e);
         void onSceneGraphRootCreated(const Enigma::Frameworks::IEventPtr& e);
         void onSpatialRemoved(const Enigma::Frameworks::IEventPtr& e);
-        //void onSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
+
         void changeMeshTexture(const Enigma::Frameworks::ICommandPtr& c);
         void addAnimationClip(const Enigma::Frameworks::ICommandPtr& c);
         void deleteAnimationClip(const Enigma::Frameworks::ICommandPtr& c);
@@ -96,11 +94,9 @@ namespace EnigmaViewer
         std::weak_ptr<Enigma::GameCommon::SceneRendererService> m_sceneRenderer;
         std::weak_ptr<Enigma::ShadowMap::ShadowMapService> m_shadowMapService;
 
-        //Enigma::Frameworks::EventSubscriberPtr m_onPawnPrimitiveBuilt;
         Enigma::Frameworks::EventSubscriberPtr m_onRenderEngineInstalled;
         Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphRootCreated;
         Enigma::Frameworks::EventSubscriberPtr m_onSpatialRemoved;
-        //Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
 
         Enigma::Frameworks::CommandSubscriberPtr m_changeMeshTexture;
         Enigma::Frameworks::CommandSubscriberPtr m_addAnimationClip;

@@ -1,42 +1,49 @@
 ﻿#include "Animators/AnimatorCommands.h"
 #include "Animators/AnimatorInstallingPolicy.h"
+#include "Controllers/ControllerEvents.h"
+#include "DaeParser.h"
 #include "FileStorage/AnimationAssetFileStoreMapper.h"
 #include "FileStorage/AnimatorFileStoreMapper.h"
+#include "FileStorage/EffectMaterialSourceFileStoreMapper.h"
 #include "FileStorage/GeometryDataFileStoreMapper.h"
 #include "FileStorage/SceneGraphFileStoreMapper.h"
-#include "FileStorage/EffectMaterialSourceFileStoreMapper.h"
 #include "FileStorage/TextureFileStoreMapper.h"
 #include "FileSystem/FileSystem.h"
 #include "FileSystem/StdMountPath.h"
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/EventPublisher.h"
+#include "GameCommon/AnimatedPawnAssembler.h"
 #include "GameCommon/AvatarRecipes.h"
 #include "GameCommon/GameCommonInstallingPolicies.h"
 #include "GameCommon/GameLightCommands.h"
+#include "GameCommon/GameSceneCommands.h"
 #include "GameCommon/GameSceneEvents.h"
 #include "GameCommon/GameSceneService.h"
 #include "GameCommon/SceneRendererInstallingPolicy.h"
 #include "GameEngine/DeviceCreatingPolicy.h"
 #include "GameEngine/EffectDtoHelper.h"
-#include "GameEngine/EngineInstallingPolicy.h"
 #include "GameEngine/EffectMaterialSourceRepositoryInstallingPolicy.h"
+#include "GameEngine/EngineInstallingPolicy.h"
 #include "GameEngine/TextureRepositoryInstallingPolicy.h"
 #include "Gateways/DtoJsonGateway.h"
 #include "Geometries/GeometryInstallingPolicy.h"
+#include "GeometryCreationHelper.h"
 #include "GraphicAPIDx11/GraphicAPIDx11.h"
 #include "InputHandlers/InputHandlerInstallingPolicy.h"
 #include "Platforms/MemoryMacro.h"
 #include "Platforms/PlatformLayerUtilities.h"
 #include "Primitives/Primitive.h"
-#include "Primitives/PrimitiveRepositoryInstallingPolicy.h"
 #include "Primitives/PrimitiveQueries.h"
+#include "Primitives/PrimitiveRepositoryInstallingPolicy.h"
 #include "Renderables/ModelPrimitive.h"
 #include "Renderables/ModelPrimitiveAnimator.h"
+#include "Renderables/RenderablePrimitiveDtos.h"
 #include "Renderables/RenderablesInstallingPolicy.h"
 #include "Renderer/RendererInstallingPolicy.h"
 #include "SceneGraph/Pawn.h"
-#include "SceneGraph/SceneGraphCommands.h"
 #include "SceneGraph/SceneGraphAssemblers.h"
+#include "SceneGraph/SceneGraphCommands.h"
+#include "SceneGraph/SceneGraphEvents.h"
 #include "SceneGraph/SceneGraphInstallingPolicy.h"
 #include "SceneGraph/SceneGraphQueries.h"
 #include "ShadowMap/ShadowMapInstallingPolicies.h"
@@ -44,12 +51,6 @@
 #include "ShadowMap/SpatialShadowFlags.h"
 #include "ViewerAppDelegate.h"
 #include "ViewerCommands.h"
-#include "GeometryCreationHelper.h"
-#include "Renderables/RenderablePrimitiveDtos.h"
-#include "Controllers/ControllerEvents.h"
-#include "GameCommon/GameSceneCommands.h"
-#include "DaeParser.h"
-#include "GameCommon/AnimatedPawnAssembler.h"
 #include "ViewerRenderablesFileStoreMapper.h"
 #include <memory>
 
@@ -156,6 +157,8 @@ void ViewerAppDelegate::installEngine()
     EventPublisher::subscribe(typeid(RenderEngineInstalled), m_onRenderEngineInstalled);
     m_onSceneGraphRootCreated = std::make_shared<EventSubscriber>([=](auto e) { this->onSceneGraphRootCreated(e); });
     EventPublisher::subscribe(typeid(SceneRootCreated), m_onSceneGraphRootCreated);
+    m_onSpatialRemoved = std::make_shared<EventSubscriber>([=](auto e) { this->onSpatialRemoved(e); });
+    EventPublisher::subscribe(typeid(SpatialRemoved), m_onSpatialRemoved);
 
     m_changeMeshTexture = std::make_shared<CommandSubscriber>([=](auto c) { this->changeMeshTexture(c); });
     CommandBus::subscribe(typeid(ChangeMeshTexture), m_changeMeshTexture);
@@ -207,6 +210,8 @@ void ViewerAppDelegate::installEngine()
     m_inputHandler = input_handler_policy->GetInputHandler();
     m_sceneRenderer = m_graphicMain->getSystemServiceAs<SceneRendererService>();
     m_shadowMapService = m_graphicMain->getSystemServiceAs<ShadowMapService>();
+
+    m_viewingPawnId = SpatialId(ViewingPawnName, AnimatedPawn::TYPE_RTTI);
 }
 
 void ViewerAppDelegate::registerMediaMountPaths(const std::string& media_path)
@@ -223,6 +228,8 @@ void ViewerAppDelegate::shutdownEngine()
     m_onRenderEngineInstalled = nullptr;
     EventPublisher::unsubscribe(typeid(SceneRootCreated), m_onSceneGraphRootCreated);
     m_onSceneGraphRootCreated = nullptr;
+    EventPublisher::unsubscribe(typeid(SpatialRemoved), m_onSpatialRemoved);
+    m_onSpatialRemoved = nullptr;
 
     CommandBus::unsubscribe(typeid(ChangeMeshTexture), m_changeMeshTexture);
     m_changeMeshTexture = nullptr;
@@ -276,9 +283,6 @@ void ViewerAppDelegate::importDaeFile(const std::string& filename)
     DaeParser parser(m_geometryDataFileStoreMapper, m_animationAssetFileStoreMapper, m_animatorFileStoreMapper, m_primitiveFileStoreMapper);
     parser.loadDaeFile(filename);
     refreshModelList();
-    // auto pawn_dto = parser.pawnDto();
-    //pawn_dto.asTopLevel(true);
-    //CommandBus::post(std::make_shared<BuildSceneGraph>(ViewingPawnName, std::vector{ pawn_dto.toGenericDto() }));
 }
 
 void ViewerAppDelegate::loadPawn(const AnimatedPawnDto& pawn_dto)
@@ -313,21 +317,6 @@ void ViewerAppDelegate::loadPawnFile(const std::filesystem::path& filepath)
     auto dtos = std::make_shared<DtoJsonGateway>()->deserialize(convert_to_string(read_buf.value(), file_size));
     CommandBus::post(std::make_shared<BuildSceneGraph>(ViewingPawnName, dtos));
 }
-
-/*void ViewerAppDelegate::onPawnPrimitiveBuilt(const IEventPtr& e)
-{
-    if (!e) return;
-    auto ev = std::dynamic_pointer_cast<PawnPrimitiveBuilt, IEvent>(e);
-    if (!ev) return;
-    if (ev->pawn() == m_pawn)
-    {
-        onViewingPawnPrimitiveBuilt();
-    }
-    else if (ev->pawn() == m_floor)
-    {
-        onFloorPrimitiveBuilt();
-    }
-}*/
 
 void ViewerAppDelegate::onViewingPawnPrimitiveBuilt()
 {
@@ -387,25 +376,17 @@ void ViewerAppDelegate::onSceneGraphRootCreated(const Enigma::Frameworks::IEvent
     createFloorReceiver();
 }
 
-/*void ViewerAppDelegate::onSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e)
+void ViewerAppDelegate::onSpatialRemoved(const Enigma::Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<FactorySceneGraphBuilt, IEvent>(e);
+    auto ev = std::dynamic_pointer_cast<SpatialRemoved, IEvent>(e);
     if (!ev) return;
-    auto top_spatials = ev->GetTopLevelSpatial();
-    if (top_spatials.empty()) return;
-    if (ev->GetSceneGraphId() == FloorReceiverName)
+    if (ev->id() != m_viewingPawnId) return;
+    if (m_viewingModelId)
     {
-        m_floor = std::dynamic_pointer_cast<Pawn, Spatial>(top_spatials[0]);
-        if (m_sceneRoot) m_sceneRoot->attachChild(m_floor, Matrix4::IDENTITY);
+        loadViewingPawn();
     }
-    else if (ev->GetSceneGraphId() == ViewingPawnName)
-    {
-        m_pawn = std::dynamic_pointer_cast<AnimatedPawn, Spatial>(top_spatials[0]);
-        Enigma::MathLib::Matrix4 mx = Enigma::MathLib::Matrix4::MakeRotationXTransform(-Enigma::MathLib::Math::HALF_PI);
-        if (m_sceneRoot) m_sceneRoot->attachChild(m_pawn, mx);
-    }
-}*/
+}
 
 void ViewerAppDelegate::changeMeshTexture(const Enigma::Frameworks::ICommandPtr& c)
 {
@@ -505,9 +486,31 @@ void ViewerAppDelegate::loadModelPrimitive(const std::string& model_name)
     if (!m_primitiveFileStoreMapper) return;
     auto model_id = m_primitiveFileStoreMapper->modelId(model_name);
     if (!model_id) return;
+    m_viewingModelId = model_id.value();
+    if (m_pawn)
+    {
+        removeLoadedViewingPawn();
+    }
+    else
+    {
+        loadViewingPawn();
+    }
+}
 
-    AnimatedPawnAssembler assembler(SpatialId(ViewingPawnName, AnimatedPawn::TYPE_RTTI));
-    assembler.pawn().primitive(model_id.value());
+void ViewerAppDelegate::removeLoadedViewingPawn()
+{
+    if (!m_pawn) return;
+    if (m_sceneRoot) m_sceneRoot->detachChild(m_pawn);
+    auto animator_id = m_pawn->getPrimitive()->animatorId();
+    CommandBus::post(std::make_shared<RemoveListeningAnimator>(animator_id));
+    CommandBus::post(std::make_shared<RemoveSpatial>(m_pawn->id()));
+    m_pawn = nullptr;
+}
+
+void ViewerAppDelegate::loadViewingPawn()
+{
+    AnimatedPawnAssembler assembler(m_viewingPawnId);
+    assembler.pawn().primitive(m_viewingModelId.value());
     assembler.pawn().spatial().localTransform(Matrix4::IDENTITY);
     m_pawn = assembler.constitute(Enigma::SceneGraph::PersistenceLevel::Repository);
     Enigma::MathLib::Matrix4 mx = Enigma::MathLib::Matrix4::MakeRotationXTransform(-Enigma::MathLib::Math::HALF_PI);
@@ -518,6 +521,7 @@ void ViewerAppDelegate::loadModelPrimitive(const std::string& model_name)
         animator->playAnimation(Enigma::Renderables::AnimationClip{ 0.0f, 2.5f, Enigma::Renderables::AnimationClip::WarpMode::Loop, 0 });
     }
     CommandBus::post(std::make_shared<AddListeningAnimator>(animator_id));
+    m_viewingModelId.reset();
 }
 
 void ViewerAppDelegate::createFloorReceiver()
@@ -527,8 +531,6 @@ void ViewerAppDelegate::createFloorReceiver()
     m_floorPawnId = SpatialId(FloorReceiverName, Pawn::TYPE_RTTI);
     PawnAssembler pawn_assembler(m_floorPawnId);
     MeshPrimitiveDto mesh_dto;
-    /*SquareQuadDtoHelper floor_dto(m_floorGeometryId);
-    floor_dto.xzQuad(Vector3(-5.0f, 0.0f, -5.0f), Vector3(5.0f, 0.0f, 5.0f)).normal().textureCoord(Vector2(0.0f, 1.0f), Vector2(1.0f, 0.0f));*/
     EffectTextureMapDtoHelper tex_dto;
     tex_dto.textureMapping(TextureId("image/du011"), std::nullopt, "DiffuseMap");
     m_floorMeshId = PrimitiveId("floor_mesh", MeshPrimitive::TYPE_RTTI);
@@ -545,7 +547,4 @@ void ViewerAppDelegate::createFloorReceiver()
     pawn_assembler.spatial().localTransform(Matrix4::IDENTITY).topLevel(true).spatialFlags(SpatialShadowFlags::Spatial_ShadowReceiver);
     m_floor = std::dynamic_pointer_cast<Pawn>(std::make_shared<RequestSpatialConstitution>(m_floorPawnId, pawn_assembler.toGenericDto(), Enigma::SceneGraph::PersistenceLevel::Repository)->dispatch());
     if (m_sceneRoot) m_sceneRoot->attachChild(m_floor, Matrix4::IDENTITY);
-    //auto dtos = { pawn_dto.toGenericDto() };
-    //CommandBus::post(std::make_shared<ConstituteSpatial>(pawn_dto.toPawnDto().id(), pawn_dto.toGenericDto()));
-    //CommandBus::post(std::make_shared<BuildSceneGraph>(FloorReceiverName, dtos));
 }

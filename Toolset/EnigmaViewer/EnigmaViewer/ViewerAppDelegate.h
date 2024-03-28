@@ -60,6 +60,7 @@ namespace EnigmaViewer
         //void onPawnPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
         void onRenderEngineInstalled(const Enigma::Frameworks::IEventPtr& e);
         void onSceneGraphRootCreated(const Enigma::Frameworks::IEventPtr& e);
+        void onSpatialRemoved(const Enigma::Frameworks::IEventPtr& e);
         //void onSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
         void changeMeshTexture(const Enigma::Frameworks::ICommandPtr& c);
         void addAnimationClip(const Enigma::Frameworks::ICommandPtr& c);
@@ -70,6 +71,8 @@ namespace EnigmaViewer
 
         void refreshModelList();
         void loadModelPrimitive(const std::string& model_name);
+        void removeLoadedViewingPawn();
+        void loadViewingPawn();
 
         void onViewingPawnPrimitiveBuilt();
         void onFloorPrimitiveBuilt();
@@ -96,6 +99,7 @@ namespace EnigmaViewer
         //Enigma::Frameworks::EventSubscriberPtr m_onPawnPrimitiveBuilt;
         Enigma::Frameworks::EventSubscriberPtr m_onRenderEngineInstalled;
         Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphRootCreated;
+        Enigma::Frameworks::EventSubscriberPtr m_onSpatialRemoved;
         //Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
 
         Enigma::Frameworks::CommandSubscriberPtr m_changeMeshTexture;
@@ -107,7 +111,9 @@ namespace EnigmaViewer
 
         Enigma::SceneGraph::SpatialId m_sceneRootId;
         std::shared_ptr<Enigma::SceneGraph::Node> m_sceneRoot;
+        Enigma::SceneGraph::SpatialId m_viewingPawnId;
         std::shared_ptr<Enigma::GameCommon::AnimatedPawn> m_pawn;
+        std::optional<Enigma::Primitives::PrimitiveId> m_viewingModelId;
         std::shared_ptr<Enigma::SceneGraph::Pawn> m_floor;
         Enigma::Geometries::GeometryId m_floorGeometryId;
         Enigma::Primitives::PrimitiveId m_floorMeshId;

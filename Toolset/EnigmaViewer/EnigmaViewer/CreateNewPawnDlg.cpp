@@ -1,6 +1,8 @@
 ﻿#include "CreateNewPawnDlg.h"
 #include "Platforms/MemoryMacro.h"
 #include "ViewerQueries.h"
+#include "ViewerCommands.h"
+#include "Frameworks/CommandBus.h"
 
 using namespace EnigmaViewer;
 
@@ -41,6 +43,26 @@ CreateNewPawnDlg::~CreateNewPawnDlg()
 
 void CreateNewPawnDlg::onOkButton(const nana::arg_click& arg)
 {
+    if (m_nameInputBox->text().empty() || m_modelSelectBox->option() == nana::npos)
+    {
+        Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Empty pawn name / model name"));
+        return;
+    }
+    auto pawn_name = m_nameInputBox->text();
+    auto model_name = m_modelSelectBox->text(m_modelSelectBox->option());
+    auto has_pawn = std::make_shared<HasAnimatedPawn>(pawn_name)->dispatch();
+    if (has_pawn)
+    {
+        Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Pawn already exists"));
+        return;
+    }
+    auto model_id = std::make_shared<ResolveModelId>(model_name)->dispatch();
+    if (!model_id.has_value())
+    {
+        Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Model not found"));
+        return;
+    }
+
     close();
 }
 

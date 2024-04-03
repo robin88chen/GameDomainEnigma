@@ -121,5 +121,17 @@ namespace EnigmaViewer
     private:
         std::string m_name;
     };
+    class CreateAnimatedPawn : public Enigma::Frameworks::ICommand
+    {
+    public:
+        CreateAnimatedPawn(const std::string& name, const Enigma::Primitives::PrimitiveId& model_id) : m_name(name), m_modelId(model_id) {}
+
+        const std::string& name() const { return m_name; }
+        const Enigma::Primitives::PrimitiveId& modelId() const { return m_modelId; }
+
+    protected:
+        std::string m_name;
+        Enigma::Primitives::PrimitiveId m_modelId;
+    };
 }
 #endif // _VIEWER_COMMANDS_H

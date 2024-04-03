@@ -8,6 +8,7 @@
 #ifndef VIEWER_QUERIES_H
 #define VIEWER_QUERIES_H
 
+#include "Primitives/PrimitiveId.h"
 #include "Frameworks/Query.h"
 #include "GameEngine/TextureId.h"
 
@@ -27,6 +28,26 @@ namespace EnigmaViewer
     {
     public:
         RequestModelNames() = default;
+    };
+    class ResolveModelId : public Enigma::Frameworks::Query<std::optional<Enigma::Primitives::PrimitiveId>>
+    {
+    public:
+        ResolveModelId(const std::string& model_name) : m_model_name(model_name) {}
+
+        const std::string& modelName() const { return m_model_name; }
+
+    protected:
+        std::string m_model_name;
+    };
+    class HasAnimatedPawn : public Enigma::Frameworks::Query<bool>
+    {
+    public:
+        HasAnimatedPawn(const std::string& name) : m_name(name) {}
+
+        const std::string& name() const { return m_name; }
+
+    protected:
+        std::string m_name;
     };
 }
 

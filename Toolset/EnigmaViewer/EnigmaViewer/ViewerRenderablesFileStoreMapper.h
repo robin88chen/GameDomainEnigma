@@ -27,9 +27,11 @@ namespace EnigmaViewer
 
     private:
         void requestModelNames(const Enigma::Frameworks::IQueryPtr& q);
+        void resolveModelId(const Enigma::Frameworks::IQueryPtr& q);
 
     private:
         Enigma::Frameworks::QuerySubscriberPtr m_requestModelNames;
+        Enigma::Frameworks::QuerySubscriberPtr m_resolveModelId;
     };
 }
 

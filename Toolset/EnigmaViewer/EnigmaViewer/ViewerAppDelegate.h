@@ -18,15 +18,17 @@
 #include "GameCommon/AnimatedPawn.h"
 #include "Frameworks/CommandSubscriber.h"
 #include "ShadowMap/ShadowMapService.h"
-#include "FileStorage/SceneGraphFileStoreMapper.h"
 #include "FileStorage/GeometryDataFileStoreMapper.h"
 #include "FileStorage/AnimationAssetFileStoreMapper.h"
 #include "FileStorage/AnimatorFileStoreMapper.h"
 #include <filesystem>
 
+#include "ViewerSceneGraphFileStoreMapper.h"
+
 namespace EnigmaViewer
 {
     class ViewerRenderablesFileStoreMapper;
+    class ViewerSceneGraphFileStoreMapper;
     class ViewerAppDelegate
     {
     public:
@@ -88,7 +90,7 @@ namespace EnigmaViewer
         std::shared_ptr<Enigma::FileStorage::AnimationAssetFileStoreMapper> m_animationAssetFileStoreMapper;
         std::shared_ptr<Enigma::FileStorage::AnimatorFileStoreMapper> m_animatorFileStoreMapper;
         std::shared_ptr<ViewerRenderablesFileStoreMapper> m_primitiveFileStoreMapper;
-        std::shared_ptr<Enigma::FileStorage::SceneGraphFileStoreMapper> m_sceneGraphFileStoreMapper;
+        std::shared_ptr<ViewerSceneGraphFileStoreMapper> m_sceneGraphFileStoreMapper;
 
         std::weak_ptr<Enigma::InputHandlers::InputHandlerService> m_inputHandler;
         std::weak_ptr<Enigma::GameCommon::SceneRendererService> m_sceneRenderer;

@@ -23,6 +23,11 @@ namespace EnigmaViewer
     protected:
         std::string m_filename;
     };
+    class RequestModelNames : public Enigma::Frameworks::Query<std::vector<std::string>>
+    {
+    public:
+        RequestModelNames() = default;
+    };
 }
 
 #endif // VIEWER_QUERIES_H

@@ -10,6 +10,9 @@
 
 #include <nana/gui/widgets/form.hpp>
 #include <nana/gui/widgets/button.hpp>
+#include <nana/gui/widgets/textbox.hpp>
+#include <nana/gui/widgets/label.hpp>
+#include <nana/gui/widgets/combox.hpp>
 
 namespace EnigmaViewer
 {
@@ -25,6 +28,10 @@ namespace EnigmaViewer
     private:
         nana::button* m_okButton;
         nana::button* m_cancelButton;
+        nana::label* m_namePrompt;
+        nana::textbox* m_nameInputBox;
+        nana::label* m_modelSelectPrompt;
+        nana::combox* m_modelSelectBox;
     };
 }
 

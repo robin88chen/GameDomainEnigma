@@ -9,6 +9,7 @@
 #define VIEWER_RENDERABLES_FILE_STORE_MAPPER_H
 
 #include "FileStorage/PrimitiveFileStoreMapper.h"
+#include "Frameworks/QuerySubscriber.h"
 
 namespace EnigmaViewer
 {
@@ -18,8 +19,17 @@ namespace EnigmaViewer
         ViewerRenderablesFileStoreMapper(const std::string& mapper_filename, const std::shared_ptr<Enigma::Gateways::IDtoGateway>& gateway);
         ~ViewerRenderablesFileStoreMapper() override;
 
+        void subscribeHandlers();
+        void unsubscribeHandlers();
+
         std::vector<std::string> modelNames() const;
         std::optional<Enigma::Primitives::PrimitiveId> modelId(const std::string& model_name) const;
+
+    private:
+        void requestModelNames(const Enigma::Frameworks::IQueryPtr& q);
+
+    private:
+        Enigma::Frameworks::QuerySubscriberPtr m_requestModelNames;
     };
 }
 

@@ -1,5 +1,7 @@
 ﻿#include "ViewerRenderablesFileStoreMapper.h"
 #include "Renderables/ModelPrimitive.h"
+#include "ViewerQueries.h"
+#include "Frameworks/QueryDispatcher.h"
 
 using namespace EnigmaViewer;
 
@@ -9,6 +11,18 @@ ViewerRenderablesFileStoreMapper::ViewerRenderablesFileStoreMapper(const std::st
 
 ViewerRenderablesFileStoreMapper::~ViewerRenderablesFileStoreMapper()
 {
+}
+
+void ViewerRenderablesFileStoreMapper::subscribeHandlers()
+{
+    m_requestModelNames = std::make_shared<Enigma::Frameworks::QuerySubscriber>([=](const Enigma::Frameworks::IQueryPtr& q) { requestModelNames(q); });
+    Enigma::Frameworks::QueryDispatcher::subscribe(typeid(RequestModelNames), m_requestModelNames);
+}
+
+void ViewerRenderablesFileStoreMapper::unsubscribeHandlers()
+{
+    Enigma::Frameworks::QueryDispatcher::unsubscribe(typeid(RequestModelNames), m_requestModelNames);
+    m_requestModelNames = nullptr;
 }
 
 std::vector<std::string> ViewerRenderablesFileStoreMapper::modelNames() const
@@ -28,4 +42,11 @@ std::optional<Enigma::Primitives::PrimitiveId> ViewerRenderablesFileStoreMapper:
         if (id.name() == model_name) return id;
     }
     return std::nullopt;
+}
+
+void ViewerRenderablesFileStoreMapper::requestModelNames(const Enigma::Frameworks::IQueryPtr& q)
+{
+    const auto query = std::dynamic_pointer_cast<RequestModelNames>(q);
+    if (query == nullptr) return;
+    query->setResult(modelNames());
 }

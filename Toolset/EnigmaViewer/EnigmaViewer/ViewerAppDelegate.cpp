@@ -211,6 +211,7 @@ void ViewerAppDelegate::installEngine()
     m_sceneRenderer = m_graphicMain->getSystemServiceAs<SceneRendererService>();
     m_shadowMapService = m_graphicMain->getSystemServiceAs<ShadowMapService>();
 
+    m_primitiveFileStoreMapper->subscribeHandlers();
     m_viewingPawnId = SpatialId(ViewingPawnName, AnimatedPawn::TYPE_RTTI);
 }
 
@@ -223,6 +224,8 @@ void ViewerAppDelegate::shutdownEngine()
     m_pawn = nullptr;
     m_sceneRoot = nullptr;
     m_floor = nullptr;
+
+    m_primitiveFileStoreMapper->unsubscribeHandlers();
 
     EventPublisher::unsubscribe(typeid(RenderEngineInstalled), m_onRenderEngineInstalled);
     m_onRenderEngineInstalled = nullptr;

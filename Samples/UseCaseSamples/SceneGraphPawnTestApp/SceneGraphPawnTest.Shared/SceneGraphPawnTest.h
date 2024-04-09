@@ -23,6 +23,7 @@
 #include "Renderer/Renderer.h"
 #include "SceneGraph/Node.h"
 #include "SceneGraph/Pawn.h"
+#include "SceneGraph/NodalSceneGraph.h"
 
 class SceneGraphPawnTest : public Enigma::Application::AppDelegate
 {
@@ -54,11 +55,12 @@ protected:
     Enigma::Frameworks::EventSubscriberPtr m_onRendererCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onRenderTargetCreated;
 
+    std::unique_ptr<Enigma::SceneGraph::SceneGraph> m_sceneGraph;
     Enigma::Renderer::RendererPtr m_renderer;
     Enigma::Renderer::RenderTargetPtr m_renderTarget;
     std::shared_ptr<Enigma::Renderables::ModelPrimitive> m_model;
     Enigma::SceneGraph::SpatialId m_rootId;
-    Enigma::SceneGraph::NodePtr m_sceneRoot;
+    //Enigma::SceneGraph::NodePtr m_sceneRoot;
     Enigma::SceneGraph::PawnPtr m_pawn;
 
     bool m_isPrefabBuilt;

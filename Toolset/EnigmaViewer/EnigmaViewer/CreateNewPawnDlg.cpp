@@ -63,6 +63,7 @@ void CreateNewPawnDlg::onOkButton(const nana::arg_click& arg)
         return;
     }
 
+    Enigma::Frameworks::CommandBus::post(std::make_shared<CreateAnimatedPawn>(pawn_name, model_id.value()));
     close();
 }
 

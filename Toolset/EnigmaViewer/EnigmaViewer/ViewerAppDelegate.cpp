@@ -172,6 +172,8 @@ void ViewerAppDelegate::installEngine()
     CommandBus::subscribe(typeid(ChangeAnimationTimeValue), m_changeAnimationTimeValue);
     m_loadModelPrimitive = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { this->loadModelPrimitive(c); });
     CommandBus::subscribe(typeid(LoadModelPrimitive), m_loadModelPrimitive);
+    m_createAnimatedPawn = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { this->createAnimatedPawn(c); });
+    CommandBus::subscribe(typeid(CreateAnimatedPawn), m_createAnimatedPawn);
 
     assert(m_graphicMain);
 
@@ -246,6 +248,8 @@ void ViewerAppDelegate::shutdownEngine()
     m_changeAnimationTimeValue = nullptr;
     CommandBus::unsubscribe(typeid(LoadModelPrimitive), m_loadModelPrimitive);
     m_loadModelPrimitive = nullptr;
+    CommandBus::unsubscribe(typeid(CreateAnimatedPawn), m_createAnimatedPawn);
+    m_createAnimatedPawn = nullptr;
 
     m_graphicMain->shutdownRenderEngine();
 }
@@ -474,6 +478,10 @@ void ViewerAppDelegate::loadModelPrimitive(const Enigma::Frameworks::ICommandPtr
     auto cmd = std::dynamic_pointer_cast<LoadModelPrimitive, ICommand>(c);
     if (!cmd) return;
     loadModelPrimitive(cmd->name());
+}
+
+void ViewerAppDelegate::createAnimatedPawn(const Enigma::Frameworks::ICommandPtr& c)
+{
 }
 
 void ViewerAppDelegate::refreshModelList()

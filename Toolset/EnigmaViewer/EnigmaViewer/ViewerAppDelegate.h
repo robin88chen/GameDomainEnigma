@@ -68,6 +68,7 @@ namespace EnigmaViewer
         void playAnimationClip(const Enigma::Frameworks::ICommandPtr& c);
         void changeAnimationTimeValue(const Enigma::Frameworks::ICommandPtr& c);
         void loadModelPrimitive(const Enigma::Frameworks::ICommandPtr& c);
+        void createAnimatedPawn(const Enigma::Frameworks::ICommandPtr& c);
 
         void refreshModelList();
         void loadModelPrimitive(const std::string& model_name);
@@ -106,6 +107,7 @@ namespace EnigmaViewer
         Enigma::Frameworks::CommandSubscriberPtr m_playAnimationClip;
         Enigma::Frameworks::CommandSubscriberPtr m_changeAnimationTimeValue;
         Enigma::Frameworks::CommandSubscriberPtr m_loadModelPrimitive;
+        Enigma::Frameworks::CommandSubscriberPtr m_createAnimatedPawn;
 
         Enigma::SceneGraph::SpatialId m_sceneRootId;
         std::shared_ptr<Enigma::SceneGraph::Node> m_sceneRoot;

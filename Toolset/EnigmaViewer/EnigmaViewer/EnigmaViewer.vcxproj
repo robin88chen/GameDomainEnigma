@@ -132,6 +132,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AnimatedPawnPresentation.h" />
     <ClInclude Include="AnimationClipInfoItem.h" />
     <ClInclude Include="AnimationInfoPanel.h" />
     <ClInclude Include="CreateNewPawnDlg.h" />
@@ -157,6 +158,7 @@
     <ClInclude Include="ViewerSceneGraphFileStoreMapper.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AnimatedPawnPresentation.cpp" />
     <ClCompile Include="AnimationInfoPanel.cpp" />
     <ClCompile Include="CreateNewPawnDlg.cpp" />
     <ClCompile Include="DaeParser.cpp" />

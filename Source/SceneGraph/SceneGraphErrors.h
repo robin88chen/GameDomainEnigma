@@ -21,6 +21,7 @@ namespace Enigma::SceneGraph
         dataNotReady,
         parentNode,
         nodeNotFound,
+        spatialNotFound,
         nullPrimitive,
         nullCullerCamera,
         unsupportPawnPrimitive,

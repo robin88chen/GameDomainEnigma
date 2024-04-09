@@ -14,6 +14,7 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::dataNotReady: return "Data not ready";
     case ErrorCode::parentNode: return "Parent node error";
     case ErrorCode::nodeNotFound: return "Node not found";
+    case ErrorCode::spatialNotFound: return "Spatial not found";
     case ErrorCode::nullPrimitive: return "Null primitive";
     case ErrorCode::nullCullerCamera: return "Null culler camera";
     case ErrorCode::unsupportPawnPrimitive: return "Unsupport pawn primitive";

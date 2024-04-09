@@ -87,8 +87,6 @@ namespace Enigma::SceneGraph
         void putLaziedContent(const Frameworks::ICommandPtr& c);
         void removeLaziedContent(const Frameworks::ICommandPtr& c);
 
-        void attachNodeChild(const Frameworks::ICommandPtr& c);
-
     private:
         SceneGraphFactory* m_factory;
         std::shared_ptr<SceneGraphStoreMapper> m_storeMapper;
@@ -115,7 +113,6 @@ namespace Enigma::SceneGraph
         Frameworks::CommandSubscriberPtr m_putLaziedContent;
         Frameworks::CommandSubscriberPtr m_removeLaziedContent;
 
-        Frameworks::CommandSubscriberPtr m_attachNodeChild;
     };
 }
 

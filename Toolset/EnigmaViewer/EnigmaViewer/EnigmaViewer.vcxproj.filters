@@ -97,6 +97,9 @@
     <ClInclude Include="ViewerSceneGraphFileStoreMapper.h">
       <Filter>AppDelegate\StoreMapper</Filter>
     </ClInclude>
+    <ClInclude Include="AnimatedPawnPresentation.h">
+      <Filter>AppDelegate</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainForm.cpp">
@@ -156,6 +159,9 @@
     </ClCompile>
     <ClCompile Include="ViewerSceneGraphFileStoreMapper.cpp">
       <Filter>AppDelegate\StoreMapper</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimatedPawnPresentation.cpp">
+      <Filter>AppDelegate</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -37,6 +37,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalDtos.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalManagementNode.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalSceneGraph.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalZoneNode.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneFlattenTraversal.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphCommands.h" />
@@ -82,6 +83,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Portal.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalDtos.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalManagementNode.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalSceneGraph.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalZoneNode.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneFlattenTraversal.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphAssemblers.cpp" />

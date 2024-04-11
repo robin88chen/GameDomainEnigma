@@ -43,13 +43,9 @@ namespace Enigma::GameCommon
         /** @name scene root */
         //@{
         void createNodalSceneRoot(const SceneGraph::SpatialId& scene_root_id);
-        //void createRootScene(const SceneGraph::SpatialId& scene_root_id, const std::optional<SceneGraph::SpatialId>& portal_management_node_id);
+        void createPortalSceneRoot(const SceneGraph::SpatialId& scene_root_id);
         void destroyRootScene();
-        //const std::shared_ptr<SceneGraph::Node>& getSceneRoot() { return m_sceneRoot; };
         //@}
-
-        const std::shared_ptr<SceneGraph::PortalManagementNode>& getPortalManagementNode() { return m_portalMgtNode; };
-        error attachOutsideZone(const std::shared_ptr<SceneGraph::PortalZoneNode>& node);
 
         /** create culler */
         void createSceneCuller(const std::shared_ptr<SceneGraph::Camera>& camera);
@@ -68,12 +64,12 @@ namespace Enigma::GameCommon
         std::weak_ptr<SceneGraph::SceneGraphRepository> m_sceneGraphRepository;
         std::weak_ptr<GameCameraService> m_cameraService;
         std::unique_ptr<SceneGraph::SceneGraph> m_sceneGraph;
-        std::shared_ptr<SceneGraph::PortalManagementNode> m_portalMgtNode;
         SceneGraph::Culler* m_culler;
 
         Frameworks::EventSubscriberPtr m_onCameraCreated;
         Frameworks::EventSubscriberPtr m_onCameraUpdated;
         Frameworks::CommandSubscriberPtr m_createNodalSceneRoot;
+        Frameworks::CommandSubscriberPtr m_createPortalSceneRoot;
         Frameworks::CommandSubscriberPtr m_attachSceneRootChild;
     };
 }

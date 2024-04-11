@@ -119,6 +119,7 @@ void PortalSystemTest::installEngine()
     auto renderables_policy = std::make_shared<RenderablesInstallingPolicy>();
     m_graphicMain->installRenderEngine({ creating_policy, engine_policy, renderer_policy, render_sys_policy, geometry_policy, primitive_policy, animator_policy, scene_graph_policy, effect_material_source_policy, texture_policy, renderables_policy });
 
+    m_sceneGraph = std::make_unique<PortalSceneGraph>(m_graphicMain->getSystemServiceAs<SceneGraphRepository>());
     makeCamera();
     makeSceneGraph();
 }
@@ -126,7 +127,8 @@ void PortalSystemTest::installEngine()
 void PortalSystemTest::shutdownEngine()
 {
     m_pawn = nullptr;
-    m_sceneRoot = nullptr;
+    m_sceneGraph->destroyRoot();
+    m_sceneGraph = nullptr;
     m_model = nullptr;
     m_renderer = nullptr;
     m_renderTarget = nullptr;
@@ -159,11 +161,11 @@ void PortalSystemTest::renderFrame()
 
 void PortalSystemTest::prepareRenderScene()
 {
-    if (m_sceneRoot)
+    if (m_sceneGraph)
     {
-        m_culler->ComputeVisibleSet(m_sceneRoot);
+        m_culler->ComputeVisibleSet(m_sceneGraph->root());
     }
-    if ((m_renderer) && (m_sceneRoot) && (m_culler->getVisibleSet().getCount() != 0))
+    if ((m_renderer) && (m_sceneGraph) && (m_sceneGraph->root()) && (m_culler->getVisibleSet().getCount() != 0))
     {
         m_renderer->prepareScene(m_culler->getVisibleSet());
     }
@@ -261,11 +263,12 @@ void PortalSystemTest::makeSceneGraph()
         inside_zone_assembler = SceneGraphMaker::makeInsideZoneNode(inside_zone_node_id, portal_id, { board_pawn_id });
         m_sceneGraphFileStoreMapper->putLaziedContent(inside_zone_node_id, inside_zone_assembler.toHydratedGenericDto());
     }
-    m_sceneRoot = Node::queryNode(m_rootId);
-    if (!m_sceneRoot)
+    m_sceneGraph->createRoot(m_rootId);
+    if (!m_sceneGraph->root())
     {
         auto root_dto = SceneGraphMaker::makeSceneGraph(m_rootId, outside_region_assembler, portal_id, inside_zone_assembler);
-        m_sceneRoot = std::dynamic_pointer_cast<Node>(std::make_shared<RequestSpatialConstitution>(m_rootId, root_dto, PersistenceLevel::Store)->dispatch());
+        std::make_shared<RequestSpatialConstitution>(m_rootId, root_dto, PersistenceLevel::Store)->dispatch();
+        m_sceneGraph->createRoot(m_rootId);
     }
 }
 

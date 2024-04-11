@@ -25,7 +25,7 @@ namespace Enigma::SceneGraph
 
         virtual error createRoot(const SpatialId& scene_root_id) override;
         virtual error destroyRoot() override;
-        virtual const std::shared_ptr<Node>& root() const override { return m_root; };
+        virtual std::shared_ptr<Node> root() const override { return m_root; };
 
     protected:
         std::shared_ptr<Node> m_root;

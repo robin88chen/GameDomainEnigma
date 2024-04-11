@@ -36,26 +36,26 @@ namespace Enigma::GameCommon
         SceneGraph::SpatialId m_rootId;
         std::error_code m_error;
     };
-    class PortalManagementNodeCreated : public Frameworks::IEvent
+    class PortalSceneRootCreated : public Frameworks::IEvent
     {
     public:
-        PortalManagementNodeCreated(const std::shared_ptr<SceneGraph::PortalManagementNode>& management_node) : m_managementNode(management_node) {}
+        PortalSceneRootCreated(const std::shared_ptr<SceneGraph::Node>& root) : m_root(root) {}
 
-        std::shared_ptr<SceneGraph::PortalManagementNode> managementNode() const { return m_managementNode.lock(); }
+        std::shared_ptr<SceneGraph::Node> root() const { return m_root.lock(); }
 
     protected:
-        std::weak_ptr<SceneGraph::PortalManagementNode> m_managementNode;
+        std::weak_ptr<SceneGraph::Node> m_root;
     };
-    class CreatePortalManagementNodeFailed : public Frameworks::IEvent
+    class CreatePortalSceneRootFailed : public Frameworks::IEvent
     {
     public:
-        CreatePortalManagementNodeFailed(const SceneGraph::SpatialId& portal_management_id, std::error_code er) : m_portalManagementId(portal_management_id), m_error(er) {}
+        CreatePortalSceneRootFailed(const SceneGraph::SpatialId& root_id, std::error_code er) : m_rootId(root_id), m_error(er) {}
 
-        const SceneGraph::SpatialId& portalManagementId() const { return m_portalManagementId; }
+        const SceneGraph::SpatialId& rootId() const { return m_rootId; }
         std::error_code error() const { return m_error; }
 
     protected:
-        SceneGraph::SpatialId m_portalManagementId;
+        SceneGraph::SpatialId m_rootId;
         std::error_code m_error;
     };
     //-----------------------------------------------------------------------------------

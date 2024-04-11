@@ -12,6 +12,7 @@
 #include "GameSceneCommands.h"
 #include "GameCommonErrors.h"
 #include "SceneGraph/NodalSceneGraph.h"
+#include "SceneGraph/PortalSceneGraph.h"
 #include "SceneGraph/SceneGraphQueries.h"
 
 using namespace Enigma::GameCommon;
@@ -44,6 +45,8 @@ ServiceResult GameSceneService::onInit()
 
     m_createNodalSceneRoot = std::make_shared<CommandSubscriber>([=](auto c) { createSceneRoot(c); });
     CommandBus::subscribe(typeid(CreateNodalSceneRoot), m_createNodalSceneRoot);
+    m_createPortalSceneRoot = std::make_shared<CommandSubscriber>([=](auto c) { createSceneRoot(c); });
+    CommandBus::subscribe(typeid(CreatePortalSceneRoot), m_createPortalSceneRoot);
     m_attachSceneRootChild = std::make_shared<CommandSubscriber>([=](auto c) { attachSceneRootChild(c); });
     CommandBus::subscribe(typeid(AttachSceneRootChild), m_attachSceneRootChild);
 
@@ -70,6 +73,8 @@ ServiceResult GameSceneService::onTerm()
     m_onCameraUpdated = nullptr;
     CommandBus::unsubscribe(typeid(CreateNodalSceneRoot), m_createNodalSceneRoot);
     m_createNodalSceneRoot = nullptr;
+    CommandBus::unsubscribe(typeid(CreatePortalSceneRoot), m_createPortalSceneRoot);
+    m_createPortalSceneRoot = nullptr;
     CommandBus::unsubscribe(typeid(AttachSceneRootChild), m_attachSceneRootChild);
     m_attachSceneRootChild = nullptr;
 
@@ -106,41 +111,36 @@ void GameSceneService::createNodalSceneRoot(const SceneGraph::SpatialId& scene_r
     EventPublisher::post(std::make_shared<NodalSceneRootCreated>(m_sceneGraph->root()));
 }
 
-/*void GameSceneService::createRootScene(const SpatialId& scene_root_id, const std::optional<SpatialId>& portal_management_node_id)
+void GameSceneService::createPortalSceneRoot(const SceneGraph::SpatialId& scene_root_id)
 {
-    if (m_sceneGraph) m_sceneGraph->createRoot(scene_root_id);
-
     assert(!m_sceneGraphRepository.expired());
     assert(scene_root_id.isValid());
-
-    if (portal_management_node_id.has_value())
+    if (m_sceneGraph == nullptr)
     {
-        assert(portal_management_node_id.value().isValid());
-        m_portalMgtNode = std::dynamic_pointer_cast<PortalManagementNode>(Node::queryNode(portal_management_node_id.value()));
-        assert(m_portalMgtNode);
-        m_sceneGraphRepository.lock()->putSpatial(m_portalMgtNode, PersistenceLevel::Repository);
-        m_sceneGraph->root()->attachChild(m_portalMgtNode, Matrix4::IDENTITY);
+        m_sceneGraph = std::make_unique<PortalSceneGraph>(m_sceneGraphRepository.lock());
+        m_sceneGraph->registerHandlers();
     }
-
+    else
+    {
+        auto& r = *m_sceneGraph.get();
+        assert(typeid(r) == typeid(PortalSceneGraph));
+    }
+    const auto er = m_sceneGraph->createRoot(scene_root_id);
+    if (er)
+    {
+        EventPublisher::post(std::make_shared<CreatePortalSceneRootFailed>(scene_root_id, er));
+        return;
+    }
     if ((!m_cameraService.expired()) && m_cameraService.lock()->primaryCamera())
     {
         createSceneCuller(m_cameraService.lock()->primaryCamera());
     }
-    EventPublisher::post(std::make_shared<SceneRootCreated>(m_sceneGraph->root()));
-    EventPublisher::post(std::make_shared<PortalManagementNodeCreated>(m_portalMgtNode));
-}*/
+    EventPublisher::post(std::make_shared<PortalSceneRootCreated>(m_sceneGraph->root()));
+}
 
 void GameSceneService::destroyRootScene()
 {
     if (m_sceneGraph) m_sceneGraph->destroyRoot();
-    m_portalMgtNode = nullptr;
-}
-
-error GameSceneService::attachOutsideZone(const std::shared_ptr<SceneGraph::PortalZoneNode>& node)
-{
-    if (!m_portalMgtNode) return ErrorCode::nullPortalManagement;
-    m_portalMgtNode->attachOutsideZone(node);
-    return ErrorCode::ok;
 }
 
 void GameSceneService::createSceneCuller(const std::shared_ptr<Camera>& camera)
@@ -194,28 +194,20 @@ void GameSceneService::createSceneRoot(const Frameworks::ICommandPtr& c)
         }
         createNodalSceneRoot(cmd->sceneRootId());
     }
-    /*if (!cmd) return;
-    if (!cmd->sceneRootId().isValid())
+    else if (const auto cmd = std::dynamic_pointer_cast<CreatePortalSceneRoot, ICommand>(c))
     {
-        EventPublisher::post(std::make_shared<CreateSceneRootFailed>(cmd->sceneRootId(), ErrorCode::invalidSceneRootId));
-        return;
+        if (!cmd->portalManagementNodeId().isValid())
+        {
+            EventPublisher::post(std::make_shared<CreatePortalSceneRootFailed>(cmd->portalManagementNodeId(), ErrorCode::invalidSceneRootId));
+            return;
+        }
+        if ((m_sceneGraph) && (m_sceneGraph->root()))
+        {
+            EventPublisher::post(std::make_shared<CreatePortalSceneRootFailed>(cmd->portalManagementNodeId(), ErrorCode::sceneRootAlreadyExist));
+            return;
+        }
+        createPortalSceneRoot(cmd->portalManagementNodeId());
     }
-    if (cmd->portalManagementNodeId().has_value() && !cmd->portalManagementNodeId().value().isValid())
-    {
-        EventPublisher::post(std::make_shared<CreatePortalManagementNodeFailed>(cmd->sceneRootId(), ErrorCode::invalidSceneRootId));
-        return;
-    }
-    if (m_sceneGraph->root())
-    {
-        EventPublisher::post(std::make_shared<CreateSceneRootFailed>(cmd->sceneRootId(), ErrorCode::sceneRootAlreadyExist));
-        return;
-    }
-    if (cmd->portalManagementNodeId().has_value() && m_portalMgtNode)
-    {
-        EventPublisher::post(std::make_shared<CreatePortalManagementNodeFailed>(cmd->portalManagementNodeId().value(), ErrorCode::portalManagementAlreadyExist));
-        return;
-    }
-    createRootScene(cmd->sceneRootId(), cmd->portalManagementNodeId());*/
 }
 
 void GameSceneService::attachSceneRootChild(const Frameworks::ICommandPtr& c)

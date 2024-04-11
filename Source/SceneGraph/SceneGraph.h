@@ -35,7 +35,9 @@ namespace Enigma::SceneGraph
 
         virtual error createRoot(const SpatialId& scene_root_id) = 0;
         virtual error destroyRoot() = 0;
-        virtual const std::shared_ptr<Node>& root() const = 0;
+
+        // 不能傳回 const 參考，會有轉型問題
+        virtual std::shared_ptr<Node> root() const = 0;
 
     protected:
         std::shared_ptr<Spatial> findSpatial(const SpatialId& spatial_id);

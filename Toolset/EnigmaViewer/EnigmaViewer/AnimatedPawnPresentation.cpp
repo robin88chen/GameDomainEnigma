@@ -5,6 +5,8 @@
 #include "Frameworks/CommandBus.h"
 #include "Renderables/ModelPrimitiveAnimator.h"
 #include "Animators/AnimatorCommands.h"
+#include "SceneGraph/SceneGraphEvents.h"
+#include "Frameworks/EventPublisher.h"
 
 using namespace EnigmaViewer;
 using namespace Enigma::SceneGraph;
@@ -25,17 +27,32 @@ AnimatedPawnPresentation::~AnimatedPawnPresentation()
     m_pawn = nullptr;
 }
 
+void AnimatedPawnPresentation::subscribeHandlers()
+{
+    m_onSpatialRemoved = std::make_shared<EventSubscriber>([=](const IEventPtr& e) { onSpatialRemoved(e); });
+    EventPublisher::subscribe(typeid(SpatialRemoved), m_onSpatialRemoved);
+}
+
+void AnimatedPawnPresentation::unsubscribeHandlers()
+{
+    EventPublisher::unsubscribe(typeid(SpatialRemoved), m_onSpatialRemoved);
+    m_onSpatialRemoved = nullptr;
+}
+
 void AnimatedPawnPresentation::presentPawn(const Enigma::SceneGraph::SpatialId& pawn_id, const Enigma::Primitives::PrimitiveId& model_id, const Enigma::SceneGraph::SpatialId& scene_root_id)
 {
-    m_pawnId = pawn_id;
-    m_presentingModelId = model_id;
     m_sceneRootId = scene_root_id;
     if (hasPawn())
     {
+        m_removingPawnId = m_presentingPawnId;
+        m_presentingModelId = model_id;
+        m_presentingPawnId = pawn_id;
         removePawn(scene_root_id);
     }
     else
     {
+        m_presentingModelId = model_id;
+        m_presentingPawnId = pawn_id;
         assemblePawn();
     }
 }
@@ -43,7 +60,7 @@ void AnimatedPawnPresentation::presentPawn(const Enigma::SceneGraph::SpatialId& 
 void AnimatedPawnPresentation::removePawn(const Enigma::SceneGraph::SpatialId& scene_root_id)
 {
     if (!m_pawn) return;
-    CommandBus::post(std::make_shared<DetachNodeChild>(scene_root_id, m_pawn));
+    CommandBus::post(std::make_shared<DetachNodeChild>(scene_root_id, m_pawn->id()));
     auto animator_id = m_pawn->getPrimitive()->animatorId();
     CommandBus::post(std::make_shared<RemoveListeningAnimator>(animator_id));
     CommandBus::post(std::make_shared<RemoveSpatial>(m_pawn->id()));
@@ -52,7 +69,7 @@ void AnimatedPawnPresentation::removePawn(const Enigma::SceneGraph::SpatialId& s
 
 void AnimatedPawnPresentation::assemblePawn()
 {
-    AnimatedPawnAssembler assembler(m_pawnId);
+    AnimatedPawnAssembler assembler(m_presentingPawnId);
     assembler.pawn().primitive(m_presentingModelId.value());
     assembler.pawn().spatial().localTransform(Matrix4::IDENTITY);
     m_pawn = assembler.constitute(Enigma::SceneGraph::PersistenceLevel::Repository);
@@ -65,5 +82,16 @@ void AnimatedPawnPresentation::assemblePawn()
     }
     CommandBus::post(std::make_shared<AddListeningAnimator>(animator_id));
     m_presentingModelId.reset();
+}
+
+void AnimatedPawnPresentation::onSpatialRemoved(const Enigma::Frameworks::IEventPtr& e)
+{
+    const auto event = std::dynamic_pointer_cast<SpatialRemoved>(e);
+    if (event == nullptr) return;
+    if (event->id() != m_removingPawnId) return;
+    if (m_presentingModelId)
+    {
+        assemblePawn();
+    }
 }
 

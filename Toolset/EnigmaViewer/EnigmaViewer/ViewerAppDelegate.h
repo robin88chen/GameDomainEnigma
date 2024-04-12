@@ -21,9 +21,9 @@
 #include "FileStorage/GeometryDataFileStoreMapper.h"
 #include "FileStorage/AnimationAssetFileStoreMapper.h"
 #include "FileStorage/AnimatorFileStoreMapper.h"
-#include <filesystem>
-
 #include "ViewerSceneGraphFileStoreMapper.h"
+#include "AnimatedPawnPresentation.h"
+#include <filesystem>
 
 namespace EnigmaViewer
 {
@@ -50,17 +50,15 @@ namespace EnigmaViewer
         void onTimerElapsed();
 
         void importDaeFile(const std::string& filename);
-        void loadPawn(const Enigma::GameCommon::AnimatedPawnDto& pawn_dto);
 
-        void savePawnFile(const std::filesystem::path& filepath);
-        void loadPawnFile(const std::filesystem::path& filepath);
+        //void savePawnFile(const std::filesystem::path& filepath);
+        //void loadPawnFile(const std::filesystem::path& filepath);
 
         std::shared_ptr<Enigma::InputHandlers::InputHandlerService> inputHandler() const { return m_inputHandler.lock(); }
 
     protected:
         void onRenderEngineInstalled(const Enigma::Frameworks::IEventPtr& e);
         void onSceneGraphRootCreated(const Enigma::Frameworks::IEventPtr& e);
-        void onSpatialRemoved(const Enigma::Frameworks::IEventPtr& e);
 
         void changeMeshTexture(const Enigma::Frameworks::ICommandPtr& c);
         void addAnimationClip(const Enigma::Frameworks::ICommandPtr& c);
@@ -72,11 +70,7 @@ namespace EnigmaViewer
 
         void refreshModelList();
         void loadModelPrimitive(const std::string& model_name);
-        void removeLoadedViewingPawn();
-        void loadViewingPawn();
 
-        void onViewingPawnPrimitiveBuilt();
-        void onFloorPrimitiveBuilt();
         void createFloorReceiver();
 
     protected:
@@ -99,7 +93,6 @@ namespace EnigmaViewer
 
         Enigma::Frameworks::EventSubscriberPtr m_onRenderEngineInstalled;
         Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphRootCreated;
-        Enigma::Frameworks::EventSubscriberPtr m_onSpatialRemoved;
 
         Enigma::Frameworks::CommandSubscriberPtr m_changeMeshTexture;
         Enigma::Frameworks::CommandSubscriberPtr m_addAnimationClip;
@@ -111,9 +104,9 @@ namespace EnigmaViewer
 
         Enigma::SceneGraph::SpatialId m_sceneRootId;
         std::shared_ptr<Enigma::SceneGraph::Node> m_sceneRoot;
+        AnimatedPawnPresentation m_viewingPawnPresentation;
         Enigma::SceneGraph::SpatialId m_viewingPawnId;
         std::shared_ptr<Enigma::GameCommon::AnimatedPawn> m_pawn;
-        std::optional<Enigma::Primitives::PrimitiveId> m_viewingModelId;
         std::shared_ptr<Enigma::SceneGraph::Pawn> m_floor;
         Enigma::Geometries::GeometryId m_floorGeometryId;
         Enigma::Primitives::PrimitiveId m_floorMeshId;

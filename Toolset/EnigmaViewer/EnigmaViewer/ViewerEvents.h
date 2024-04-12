@@ -9,6 +9,8 @@
 #define _VIEWER_EVENTS_H
 
 #include "Frameworks/Event.h"
+#include "SceneGraph/SpatialId.h"
+#include "Primitives/PrimitiveId.h"
 #include <string>
 
 namespace EnigmaViewer
@@ -30,6 +32,30 @@ namespace EnigmaViewer
         unsigned int m_itemIdx;
         std::string m_oldText;
         std::string m_newText;
+    };
+    class ViewingPawnConstituted : public Enigma::Frameworks::IEvent
+    {
+    public:
+        ViewingPawnConstituted(const Enigma::SceneGraph::SpatialId& id, const Enigma::Primitives::PrimitiveId& primitive_id) : m_id{ id }, m_primitiveId{ primitive_id } {}
+
+        const Enigma::SceneGraph::SpatialId& id() const { return m_id; }
+        const Enigma::Primitives::PrimitiveId& primitiveId() const { return m_primitiveId; }
+
+    protected:
+        Enigma::SceneGraph::SpatialId m_id;
+        Enigma::Primitives::PrimitiveId m_primitiveId;
+    };
+    class ConstituteViewingPawnFailed : public Enigma::Frameworks::IEvent
+    {
+    public:
+        ConstituteViewingPawnFailed(const Enigma::SceneGraph::SpatialId& id, std::error_code er) : m_id{ id }, m_error{ er } {}
+
+        const Enigma::SceneGraph::SpatialId& id() const { return m_id; }
+        std::error_code error() const { return m_error; }
+
+    protected:
+        Enigma::SceneGraph::SpatialId m_id;
+        std::error_code m_error;
     };
 }
 #endif // _VIEWER_EVENTS_H

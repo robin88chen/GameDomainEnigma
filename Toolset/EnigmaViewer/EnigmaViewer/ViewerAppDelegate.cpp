@@ -49,6 +49,7 @@
 #include "ShadowMap/SpatialShadowFlags.h"
 #include "ViewerAppDelegate.h"
 #include "ViewerCommands.h"
+#include "ViewerEvents.h"
 #include "ViewerRenderablesFileStoreMapper.h"
 #include <memory>
 
@@ -210,6 +211,7 @@ void ViewerAppDelegate::installEngine()
     m_shadowMapService = m_graphicMain->getSystemServiceAs<ShadowMapService>();
 
     m_primitiveFileStoreMapper->subscribeHandlers();
+    m_sceneGraphFileStoreMapper->subscribeHandlers();
     m_viewingPawnId = SpatialId(ViewingPawnName, AnimatedPawn::TYPE_RTTI);
     m_viewingPawnPresentation.subscribeHandlers();
 }
@@ -227,6 +229,7 @@ void ViewerAppDelegate::shutdownEngine()
     m_floor = nullptr;
 
     m_primitiveFileStoreMapper->unsubscribeHandlers();
+    m_sceneGraphFileStoreMapper->unsubscribeHandlers();
 
     EventPublisher::unsubscribe(typeid(RenderEngineInstalled), m_onRenderEngineInstalled);
     m_onRenderEngineInstalled = nullptr;
@@ -344,6 +347,7 @@ void ViewerAppDelegate::onSceneGraphRootCreated(const Enigma::Frameworks::IEvent
     createFloorReceiver();
 }
 
+
 void ViewerAppDelegate::changeMeshTexture(const Enigma::Frameworks::ICommandPtr& c)
 {
     if (!c) return;
@@ -431,6 +435,11 @@ void ViewerAppDelegate::loadModelPrimitive(const Enigma::Frameworks::ICommandPtr
 
 void ViewerAppDelegate::createAnimatedPawn(const Enigma::Frameworks::ICommandPtr& c)
 {
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<CreateAnimatedPawn, ICommand>(c);
+    if (!cmd) return;
+    m_creatingPawnId = SpatialId(cmd->name(), AnimatedPawn::TYPE_RTTI);
+    m_viewingPawnPresentation.presentPawn(m_creatingPawnId, cmd->modelId(), m_sceneRootId);
 }
 
 void ViewerAppDelegate::refreshModelList()

@@ -36,6 +36,8 @@ namespace EnigmaViewer
     protected:
         void assemblePawn();
         void onSpatialRemoved(const Enigma::Frameworks::IEventPtr& e);
+        void onSpatialConstituted(const Enigma::Frameworks::IEventPtr& e);
+        void onConstituteSpatialFailed(const Enigma::Frameworks::IEventPtr& e);
 
     protected:
         Enigma::SceneGraph::SpatialId m_presentingPawnId;
@@ -45,6 +47,8 @@ namespace EnigmaViewer
         Enigma::SceneGraph::SpatialId m_sceneRootId;
 
         Enigma::Frameworks::EventSubscriberPtr m_onSpatialRemoved;
+        Enigma::Frameworks::EventSubscriberPtr m_onSpatialConstituted;
+        Enigma::Frameworks::EventSubscriberPtr m_onConstituteSpatialFailed;
     };
 }
 

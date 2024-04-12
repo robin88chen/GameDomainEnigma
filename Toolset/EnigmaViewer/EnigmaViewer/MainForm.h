@@ -8,6 +8,7 @@
 #ifndef MAIN_FORM_H
 #define MAIN_FORM_H
 
+#include "Frameworks/EventSubscriber.h"
 #include "nana/gui.hpp"
 #include "nana/gui/widgets/menubar.hpp"
 #include "nana/gui/widgets/tabbar.hpp"
@@ -42,7 +43,15 @@ namespace EnigmaViewer
 
         void finalize();
 
+        void onViewingPawnConstituted(const Enigma::Frameworks::IEventPtr& e);
+        void onConstituteViewingPawnFailed(const Enigma::Frameworks::IEventPtr& e);
+
     private:
+        Enigma::Frameworks::EventSubscriberPtr m_onViewingPawnConstituted;
+        Enigma::Frameworks::EventSubscriberPtr m_onConstituteViewingPawnFailed;
+
+        inline static std::string m_appCaption = "Enigma Viewer";
+
         nana::menubar* m_menubar;
         nana::tabbar<int>* m_entitiesTabbar;
         nana::tabbar<int>* m_toolsTabbar;

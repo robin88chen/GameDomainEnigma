@@ -12,9 +12,12 @@
 #include "nana/gui/filebox.hpp"
 #include "DaeParser.h"
 #include "CreateNewPawnDlg.h"
+#include "ViewerEvents.h"
+#include "Frameworks/EventPublisher.h"
 
 using namespace EnigmaViewer;
 using namespace Enigma::Graphics;
+using namespace Enigma::Frameworks;
 using namespace std::chrono_literals;
 
 MainForm::MainForm()
@@ -49,6 +52,7 @@ MainForm::~MainForm()
 
 void MainForm::initialize()
 {
+    caption(m_appCaption);
     UISchemeColors::ApplySchemaColors(scheme());
     get_place().div("vert<menubar weight=28>< <vert<entitiesbar weight=28> <entitiesframe> > | <renderpanel weight=60%> | <vert<toolsbar weight=28> <toolsframe> > > <outputpanel weight=100>");
     initMenu();
@@ -100,6 +104,11 @@ void MainForm::initialize()
     m_outputPanel->subscribeHandlers();
     m_modelInfoPanel->subscribeHandlers();
     m_animationInfoPanel->subscribeHandlers();
+
+    m_onViewingPawnConstituted = std::make_shared<EventSubscriber>([this](const IEventPtr& e) { this->onViewingPawnConstituted(e); });
+    EventPublisher::subscribe(typeid(ViewingPawnConstituted), m_onViewingPawnConstituted);
+    m_onConstituteViewingPawnFailed = std::make_shared<EventSubscriber>([this](const IEventPtr& e) { this->onConstituteViewingPawnFailed(e); });
+    EventPublisher::subscribe(typeid(ConstituteViewingPawnFailed), m_onConstituteViewingPawnFailed);
 
     get_place().collocate();
 }
@@ -179,10 +188,32 @@ void MainForm::onCloseCommand(const nana::menu::item_proxy& menu_item)
 
 void MainForm::finalize()
 {
+    EventPublisher::unsubscribe(typeid(ViewingPawnConstituted), m_onViewingPawnConstituted);
+    m_onViewingPawnConstituted = nullptr;
+    EventPublisher::unsubscribe(typeid(ConstituteViewingPawnFailed), m_onConstituteViewingPawnFailed);
+    m_onConstituteViewingPawnFailed = nullptr;
+
     if (m_modelListPanel) m_modelListPanel->unsubscribeHandlers();
     if (m_renderPanel) m_renderPanel->unsubscribeHandlers();
     if (m_outputPanel) m_outputPanel->unsubscribeHandlers();
     if (m_modelInfoPanel) m_modelInfoPanel->unsubscribeHandlers();
     if (m_animationInfoPanel) m_animationInfoPanel->unsubscribeHandlers();
     if (m_appDelegate) m_appDelegate->finalize();
+}
+
+void MainForm::onViewingPawnConstituted(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<ViewingPawnConstituted, IEvent>(e);
+    if (!ev) return;
+    std::string caption_text = m_appCaption + " - " + ev->id().name() + " - " + ev->primitiveId().name();
+    caption(caption_text);
+}
+
+void MainForm::onConstituteViewingPawnFailed(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<ConstituteViewingPawnFailed, IEvent>(e);
+    if (!ev) return;
+    caption(m_appCaption);
 }

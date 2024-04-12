@@ -7,6 +7,7 @@
 #include "Animators/AnimatorCommands.h"
 #include "SceneGraph/SceneGraphEvents.h"
 #include "Frameworks/EventPublisher.h"
+#include "ViewerEvents.h"
 
 using namespace EnigmaViewer;
 using namespace Enigma::SceneGraph;
@@ -31,12 +32,20 @@ void AnimatedPawnPresentation::subscribeHandlers()
 {
     m_onSpatialRemoved = std::make_shared<EventSubscriber>([=](const IEventPtr& e) { onSpatialRemoved(e); });
     EventPublisher::subscribe(typeid(SpatialRemoved), m_onSpatialRemoved);
+    m_onSpatialConstituted = std::make_shared<EventSubscriber>([=](const IEventPtr& e) { onSpatialConstituted(e); });
+    EventPublisher::subscribe(typeid(SpatialConstituted), m_onSpatialConstituted);
+    m_onConstituteSpatialFailed = std::make_shared<EventSubscriber>([=](const IEventPtr& e) { onConstituteSpatialFailed(e); });
+    EventPublisher::subscribe(typeid(ConstituteSpatialFailed), m_onConstituteSpatialFailed);
 }
 
 void AnimatedPawnPresentation::unsubscribeHandlers()
 {
     EventPublisher::unsubscribe(typeid(SpatialRemoved), m_onSpatialRemoved);
     m_onSpatialRemoved = nullptr;
+    EventPublisher::unsubscribe(typeid(SpatialConstituted), m_onSpatialConstituted);
+    m_onSpatialConstituted = nullptr;
+    EventPublisher::unsubscribe(typeid(ConstituteSpatialFailed), m_onConstituteSpatialFailed);
+    m_onConstituteSpatialFailed = nullptr;
 }
 
 void AnimatedPawnPresentation::presentPawn(const Enigma::SceneGraph::SpatialId& pawn_id, const Enigma::Primitives::PrimitiveId& model_id, const Enigma::SceneGraph::SpatialId& scene_root_id)
@@ -93,5 +102,26 @@ void AnimatedPawnPresentation::onSpatialRemoved(const Enigma::Frameworks::IEvent
     {
         assemblePawn();
     }
+}
+
+void AnimatedPawnPresentation::onSpatialConstituted(const Enigma::Frameworks::IEventPtr& e)
+{
+    const auto event = std::dynamic_pointer_cast<SpatialConstituted>(e);
+    if (event == nullptr) return;
+    if (event->id() != m_presentingPawnId) return;
+    Enigma::Primitives::PrimitiveId model_id;
+    if ((m_pawn) && (m_pawn->getPrimitive()))
+    {
+        model_id = m_pawn->getPrimitive()->id();
+    }
+    EventPublisher::post(std::make_shared<ViewingPawnConstituted>(m_presentingPawnId, model_id));
+}
+
+void AnimatedPawnPresentation::onConstituteSpatialFailed(const Enigma::Frameworks::IEventPtr& e)
+{
+    const auto event = std::dynamic_pointer_cast<ConstituteSpatialFailed>(e);
+    if (event == nullptr) return;
+    if (event->id() != m_presentingPawnId) return;
+    EventPublisher::post(std::make_shared<ConstituteViewingPawnFailed>(m_presentingPawnId, event->error()));
 }
 

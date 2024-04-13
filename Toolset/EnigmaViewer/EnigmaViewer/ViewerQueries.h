@@ -8,6 +8,7 @@
 #ifndef VIEWER_QUERIES_H
 #define VIEWER_QUERIES_H
 
+#include "SceneGraph/SpatialId.h"
 #include "Primitives/PrimitiveId.h"
 #include "Frameworks/Query.h"
 #include "GameEngine/TextureId.h"
@@ -48,6 +49,21 @@ namespace EnigmaViewer
 
     protected:
         std::string m_name;
+    };
+    class RequestPawnNames : public Enigma::Frameworks::Query<std::vector<std::string>>
+    {
+    public:
+        RequestPawnNames() = default;
+    };
+    class ResolvePawnId : public Enigma::Frameworks::Query<std::optional<Enigma::SceneGraph::SpatialId>>
+    {
+    public:
+        ResolvePawnId(const std::string& pawn_name) : m_pawn_name(pawn_name) {}
+
+        const std::string& pawnName() const { return m_pawn_name; }
+
+    protected:
+        std::string m_pawn_name;
     };
 }
 

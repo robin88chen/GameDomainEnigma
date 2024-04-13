@@ -38,7 +38,7 @@ namespace EnigmaViewer
         void onCloseCommand(const nana::menu::item_proxy& menu_item);
         void onImportDaeFile(const nana::menu::item_proxy& menu_item);
         void onCreateNewAnimatedPawn(const nana::menu::item_proxy& menu_item);
-        //void onSaveAnimatedPawn(const nana::menu::item_proxy& menu_item);
+        void onSaveAnimatedPawn(const nana::menu::item_proxy& menu_item);
         //void onLoadAnimatedPawn(const nana::menu::item_proxy& menu_item);
 
         void finalize();

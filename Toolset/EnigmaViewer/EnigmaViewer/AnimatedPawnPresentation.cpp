@@ -66,6 +66,30 @@ void AnimatedPawnPresentation::presentPawn(const Enigma::SceneGraph::SpatialId& 
     }
 }
 
+void AnimatedPawnPresentation::loadPawn(const Enigma::SceneGraph::SpatialId& pawn_id,
+    const Enigma::SceneGraph::SpatialId& scene_root_id)
+{
+    m_sceneRootId = scene_root_id;
+    if (hasPawn())
+    {
+        CommandBus::post(std::make_shared<DetachNodeChild>(scene_root_id, m_pawn->id()));
+        auto animator_id = m_pawn->getPrimitive()->animatorId();
+        CommandBus::post(std::make_shared<RemoveListeningAnimator>(animator_id));
+        m_pawn = nullptr;
+    }
+    m_pawn = std::dynamic_pointer_cast<AnimatedPawn>(Pawn::queryPawn(pawn_id));
+    if (!m_pawn) return;
+    m_presentingPawnId = pawn_id;
+    Enigma::MathLib::Matrix4 mx = Enigma::MathLib::Matrix4::MakeRotationXTransform(-Enigma::MathLib::Math::HALF_PI);
+    CommandBus::post(std::make_shared<AttachNodeChild>(m_sceneRootId, m_pawn, mx));
+    auto animator_id = m_pawn->getPrimitive()->animatorId();
+    if (const auto animator = std::dynamic_pointer_cast<ModelPrimitiveAnimator>(Animator::queryAnimator(animator_id)))
+    {
+        animator->playAnimation(Enigma::Renderables::AnimationClip{ 0.0f, 2.5f, Enigma::Renderables::AnimationClip::WarpMode::Loop, 0 });
+    }
+    CommandBus::post(std::make_shared<AddListeningAnimator>(animator_id));
+}
+
 void AnimatedPawnPresentation::removePawn(const Enigma::SceneGraph::SpatialId& scene_root_id)
 {
     if (!m_pawn) return;
@@ -79,6 +103,7 @@ void AnimatedPawnPresentation::removePawn(const Enigma::SceneGraph::SpatialId& s
 void AnimatedPawnPresentation::assemblePawn()
 {
     AnimatedPawnAssembler assembler(m_presentingPawnId);
+    assembler.asNative(m_presentingPawnId.name() + ".pawn@APK_PATH");
     assembler.pawn().primitive(m_presentingModelId.value());
     assembler.pawn().spatial().localTransform(Matrix4::IDENTITY);
     m_pawn = assembler.constitute(Enigma::SceneGraph::PersistenceLevel::Repository);

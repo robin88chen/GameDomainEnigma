@@ -51,6 +51,7 @@ namespace EnigmaViewer
 
         void importDaeFile(const std::string& filename);
 
+        void saveAnimatedPawn();
         //void savePawnFile(const std::filesystem::path& filepath);
         //void loadPawnFile(const std::filesystem::path& filepath);
 
@@ -67,9 +68,12 @@ namespace EnigmaViewer
         void changeAnimationTimeValue(const Enigma::Frameworks::ICommandPtr& c);
         void loadModelPrimitive(const Enigma::Frameworks::ICommandPtr& c);
         void createAnimatedPawn(const Enigma::Frameworks::ICommandPtr& c);
+        void loadAnimatedPawn(const Enigma::Frameworks::ICommandPtr& c);
 
         void refreshModelList();
         void loadModelPrimitive(const std::string& model_name);
+        void refreshPawnList();
+        void loadAnimatedPawn(const std::string& pawn_name);
 
         void createFloorReceiver();
 
@@ -101,6 +105,7 @@ namespace EnigmaViewer
         Enigma::Frameworks::CommandSubscriberPtr m_changeAnimationTimeValue;
         Enigma::Frameworks::CommandSubscriberPtr m_loadModelPrimitive;
         Enigma::Frameworks::CommandSubscriberPtr m_createAnimatedPawn;
+        Enigma::Frameworks::CommandSubscriberPtr m_loadAnimatedPawn;
 
         Enigma::SceneGraph::SpatialId m_sceneRootId;
         std::shared_ptr<Enigma::SceneGraph::Node> m_sceneRoot;

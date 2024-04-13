@@ -133,5 +133,26 @@ namespace EnigmaViewer
         std::string m_name;
         Enigma::Primitives::PrimitiveId m_modelId;
     };
+    class RefreshPawnList : public Enigma::Frameworks::ICommand
+    {
+    public:
+        RefreshPawnList(const std::vector<std::string>& pawn_list) : m_pawnList{ pawn_list } {}
+
+        const std::vector<std::string>& pawnList() const { return m_pawnList; }
+
+    private:
+        std::vector<std::string> m_pawnList;
+    };
+    class LoadAnimatedPawn : public Enigma::Frameworks::ICommand
+    {
+    public:
+        LoadAnimatedPawn(const std::string& name) : m_name(name) {}
+
+        const std::string& name() const { return m_name; }
+
+    private:
+        std::string m_name;
+    };
 }
+
 #endif // _VIEWER_COMMANDS_H

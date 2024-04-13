@@ -29,9 +29,13 @@ namespace EnigmaViewer
         void unsubscribeHandlers();
 
         void presentPawn(const Enigma::SceneGraph::SpatialId& pawn_id, const Enigma::Primitives::PrimitiveId& model_id, const Enigma::SceneGraph::SpatialId& scene_root_id);
+        void loadPawn(const Enigma::SceneGraph::SpatialId& pawn_id, const Enigma::SceneGraph::SpatialId& scene_root_id);
         void removePawn(const Enigma::SceneGraph::SpatialId& scene_root_id);
 
         bool hasPawn() const { return m_pawn != nullptr; }
+
+        const Enigma::SceneGraph::SpatialId& presentingPawnId() const { return m_presentingPawnId; }
+        const std::shared_ptr<Enigma::GameCommon::AnimatedPawn>& pawn() const { return m_pawn; }
 
     protected:
         void assemblePawn();

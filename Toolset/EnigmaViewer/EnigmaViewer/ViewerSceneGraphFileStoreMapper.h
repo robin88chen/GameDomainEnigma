@@ -24,11 +24,18 @@ namespace EnigmaViewer
 
         bool hasAnimatedPawn(const std::string& name);
 
+        std::vector<std::string> pawnNames() const;
+        std::optional<Enigma::SceneGraph::SpatialId> pawnId(const std::string& pawn_name) const;
+
     protected:
         void hasAnimatedPawn(const Enigma::Frameworks::IQueryPtr& q);
+        void requestPawnNames(const Enigma::Frameworks::IQueryPtr& q);
+        void resolvePawnId(const Enigma::Frameworks::IQueryPtr& q);
 
     protected:
         Enigma::Frameworks::QuerySubscriberPtr m_hasAnimatedPawn;
+        Enigma::Frameworks::QuerySubscriberPtr m_requestPawnNames;
+        Enigma::Frameworks::QuerySubscriberPtr m_resolvePawnId;
     };
 }
 

@@ -99,6 +99,7 @@ void MainForm::initialize()
     events().destroy([this] { this->finalize(); });
 
     m_modelListPanel->subscribeHandlers();
+    m_pawnListPanel->subscribeHandlers();
     m_renderPanel->initInputHandler(m_appDelegate->inputHandler());
     m_renderPanel->subscribeHandlers();
     m_outputPanel->subscribeHandlers();
@@ -122,10 +123,10 @@ void MainForm::initMenu()
     m_menubar->scheme().text_fgcolor = UISchemeColors::FOREGROUND;
     m_menubar->push_back("&File");
     m_menubar->at(0).append("Import DAE File", [this](auto item) { onImportDaeFile(item); });
-    //m_menubar->at(0).append("Save Animated Pawn", [this](auto item) { onSaveAnimatedPawn(item); });
     //m_menubar->at(0).append("Load Animated Pawn", [this](auto item) { onLoadAnimatedPawn(item); });
     m_menubar->at(0).append_splitter();
     m_menubar->at(0).append("New Animated Pawn", [this](auto item) { onCreateNewAnimatedPawn(item); });
+    m_menubar->at(0).append("Save Animated Pawn", [this](auto item) { onSaveAnimatedPawn(item); });
     m_menubar->at(0).append_splitter();
     m_menubar->at(0).append("Exit", [this](auto item) { onCloseCommand(item); });
     get_place().field("menubar") << *m_menubar;
@@ -151,16 +152,10 @@ void MainForm::onCreateNewAnimatedPawn(const nana::menu::item_proxy& menu_item)
     nana::API::modal_window(CreateNewPawnDlg(*this));
 }
 
-/*void MainForm::onSaveAnimatedPawn(const nana::menu::item_proxy& menu_item)
+void MainForm::onSaveAnimatedPawn(const nana::menu::item_proxy& menu_item)
 {
-    nana::filebox fb{ *this, false };
-    fb.add_filter({ {"Pawn File(*.pawn)", "*.pawn"} });
-    auto paths = fb.show();
-    if (paths.size() > 0)
-    {
-        m_appDelegate->savePawnFile(paths[0].string());
-    }
-}*/
+    m_appDelegate->saveAnimatedPawn();
+}
 
 /*void MainForm::onLoadAnimatedPawn(const nana::menu::item_proxy& menu_item)
 {
@@ -194,6 +189,7 @@ void MainForm::finalize()
     m_onConstituteViewingPawnFailed = nullptr;
 
     if (m_modelListPanel) m_modelListPanel->unsubscribeHandlers();
+    if (m_pawnListPanel) m_pawnListPanel->unsubscribeHandlers();
     if (m_renderPanel) m_renderPanel->unsubscribeHandlers();
     if (m_outputPanel) m_outputPanel->unsubscribeHandlers();
     if (m_modelInfoPanel) m_modelInfoPanel->unsubscribeHandlers();

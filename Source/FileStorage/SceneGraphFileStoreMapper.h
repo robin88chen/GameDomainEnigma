@@ -36,6 +36,9 @@ namespace Enigma::FileStorage
             std::error_code remove(const SceneGraph::SpatialId& id);
             std::error_code put(const SceneGraph::SpatialId& id, const Engine::GenericDto& dto);
 
+            //todo: 這個直接開放出來不太好，但是目前沒有更好的方法，不過至少是const, 不會被破壞
+            const auto& map() const { return m_map; };
+
         protected:
             void deserializeMapperFile(const std::string& content);
             Engine::GenericDto deserializeDataTransferObjects(const std::string& filename);

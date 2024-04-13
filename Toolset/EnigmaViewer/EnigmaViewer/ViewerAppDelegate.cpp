@@ -171,6 +171,8 @@ void ViewerAppDelegate::installEngine()
     CommandBus::subscribe(typeid(LoadModelPrimitive), m_loadModelPrimitive);
     m_createAnimatedPawn = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { this->createAnimatedPawn(c); });
     CommandBus::subscribe(typeid(CreateAnimatedPawn), m_createAnimatedPawn);
+    m_loadAnimatedPawn = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { this->loadAnimatedPawn(c); });
+    CommandBus::subscribe(typeid(LoadAnimatedPawn), m_loadAnimatedPawn);
 
     assert(m_graphicMain);
 
@@ -250,6 +252,8 @@ void ViewerAppDelegate::shutdownEngine()
     m_loadModelPrimitive = nullptr;
     CommandBus::unsubscribe(typeid(CreateAnimatedPawn), m_createAnimatedPawn);
     m_createAnimatedPawn = nullptr;
+    CommandBus::unsubscribe(typeid(LoadAnimatedPawn), m_loadAnimatedPawn);
+    m_loadAnimatedPawn = nullptr;
 
     m_graphicMain->shutdownRenderEngine();
 }
@@ -292,6 +296,13 @@ void ViewerAppDelegate::importDaeFile(const std::string& filename)
     refreshModelList();
 }
 
+void ViewerAppDelegate::saveAnimatedPawn()
+{
+    if (!m_viewingPawnPresentation.hasPawn()) return;
+    if (!m_sceneGraphFileStoreMapper) return;
+    m_sceneGraphFileStoreMapper->putSpatial(m_viewingPawnPresentation.presentingPawnId(), m_viewingPawnPresentation.pawn()->serializeDto());
+}
+
 /*void ViewerAppDelegate::savePawnFile(const std::filesystem::path& filepath)
 {
     if (!m_pawn) return;
@@ -332,6 +343,7 @@ void ViewerAppDelegate::onRenderEngineInstalled(const Enigma::Frameworks::IEvent
     CommandBus::post(std::make_shared<CreateNodalSceneRoot>(m_sceneRootId));
 
     refreshModelList();
+    refreshPawnList();
 }
 
 void ViewerAppDelegate::onSceneGraphRootCreated(const Enigma::Frameworks::IEventPtr& e)
@@ -442,6 +454,14 @@ void ViewerAppDelegate::createAnimatedPawn(const Enigma::Frameworks::ICommandPtr
     m_viewingPawnPresentation.presentPawn(m_creatingPawnId, cmd->modelId(), m_sceneRootId);
 }
 
+void ViewerAppDelegate::loadAnimatedPawn(const Enigma::Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<LoadAnimatedPawn, ICommand>(c);
+    if (!cmd) return;
+    loadAnimatedPawn(cmd->name());
+}
+
 void ViewerAppDelegate::refreshModelList()
 {
     if (m_primitiveFileStoreMapper)
@@ -456,6 +476,22 @@ void ViewerAppDelegate::loadModelPrimitive(const std::string& model_name)
     auto model_id = m_primitiveFileStoreMapper->modelId(model_name);
     if (!model_id) return;
     m_viewingPawnPresentation.presentPawn(m_viewingPawnId, model_id.value(), m_sceneRootId);
+}
+
+void ViewerAppDelegate::refreshPawnList()
+{
+    if (m_sceneGraphFileStoreMapper)
+    {
+        CommandBus::post(std::make_shared<RefreshPawnList>(m_sceneGraphFileStoreMapper->pawnNames()));
+    }
+}
+
+void ViewerAppDelegate::loadAnimatedPawn(const std::string& pawn_name)
+{
+    if (!m_sceneGraphFileStoreMapper) return;
+    auto pawn_id = m_sceneGraphFileStoreMapper->pawnId(pawn_name);
+    if (!pawn_id) return;
+    m_viewingPawnPresentation.loadPawn(pawn_id.value(), m_sceneRootId);
 }
 
 void ViewerAppDelegate::createFloorReceiver()

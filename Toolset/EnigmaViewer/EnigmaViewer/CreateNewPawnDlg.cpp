@@ -48,7 +48,7 @@ void CreateNewPawnDlg::onOkButton(const nana::arg_click& arg)
         Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Empty pawn name / model name"));
         return;
     }
-    auto pawn_name = m_nameInputBox->text();
+    auto pawn_name = "pawns/" + m_nameInputBox->text();
     auto model_name = m_modelSelectBox->text(m_modelSelectBox->option());
     auto has_pawn = std::make_shared<HasAnimatedPawn>(pawn_name)->dispatch();
     if (has_pawn)

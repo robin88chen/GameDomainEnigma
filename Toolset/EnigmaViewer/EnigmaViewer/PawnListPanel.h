@@ -11,6 +11,8 @@
 #include "nana/gui/widgets/panel.hpp"
 #include "nana/gui/place.hpp"
 #include "nana/gui/widgets/listbox.hpp"
+#include "nana/gui/widgets/menu.hpp"
+#include "Frameworks/CommandSubscriber.h"
 
 namespace EnigmaViewer
 {
@@ -23,10 +25,21 @@ namespace EnigmaViewer
         virtual ~PawnListPanel();
 
         void initialize(MainForm* main_form);
+        void subscribeHandlers();
+        void unsubscribeHandlers();
+
+    private:
+        void refreshPawnList(const Enigma::Frameworks::ICommandPtr& c);
+
+        void onPawnListMouseDown(const nana::arg_mouse& arg);
+        void onLoadPawn(nana::menu::item_proxy& item);
 
     private:
         nana::place* m_place;
         nana::listbox* m_pawnList;
+        nana::menu* m_popupMenu;
+
+        Enigma::Frameworks::CommandSubscriberPtr m_refreshPawnList;
     };
 }
 

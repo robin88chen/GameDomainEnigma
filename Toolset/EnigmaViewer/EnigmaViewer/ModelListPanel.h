@@ -32,6 +32,7 @@ namespace EnigmaViewer
 
         void onModelListMouseDown(const nana::arg_mouse& arg);
         void onLoadModel(nana::menu::item_proxy& item);
+        void onRemoveModel(nana::menu::item_proxy& item);
     private:
         nana::place* m_place;
         nana::listbox* m_modelList;

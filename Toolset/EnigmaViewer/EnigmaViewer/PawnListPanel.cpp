@@ -37,6 +37,8 @@ void PawnListPanel::initialize(MainForm* main_form)
 
     m_popupMenu = menew nana::menu{};
     m_popupMenu->append("Load Pawn", [this](auto item) { this->onLoadPawn(item); });
+    m_popupMenu->append_splitter();
+    m_popupMenu->append("Remove Pawn", [this](auto item) { this->onRemovePawn(item); });
 
     m_place->collocate();
 }
@@ -78,4 +80,12 @@ void PawnListPanel::onLoadPawn(nana::menu::item_proxy& item)
     const auto selected = m_pawnList->selected().front();
     const auto name = m_pawnList->at(selected).text(0);
     Enigma::Frameworks::CommandBus::post(std::make_shared<LoadAnimatedPawn>(name));
+}
+
+void PawnListPanel::onRemovePawn(nana::menu::item_proxy& item)
+{
+    if (m_pawnList->selected().empty()) return;
+    const auto selected = m_pawnList->selected().front();
+    const auto name = m_pawnList->at(selected).text(0);
+    Enigma::Frameworks::CommandBus::post(std::make_shared<RemoveAnimatedPawn>(name));
 }

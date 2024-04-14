@@ -33,6 +33,7 @@ namespace EnigmaViewer
 
         void onPawnListMouseDown(const nana::arg_mouse& arg);
         void onLoadPawn(nana::menu::item_proxy& item);
+        void onRemovePawn(nana::menu::item_proxy& item);
 
     private:
         nana::place* m_place;

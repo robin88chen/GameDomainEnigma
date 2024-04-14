@@ -138,6 +138,7 @@
     <ClInclude Include="CreateNewPawnDlg.h" />
     <ClInclude Include="DaeParser.h" />
     <ClInclude Include="DaeParserConfiguration.h" />
+    <ClInclude Include="FloorReceiverMaker.h" />
     <ClInclude Include="GeometryCreationHelper.h" />
     <ClInclude Include="ListboxInlineCombox.h" />
     <ClInclude Include="ListboxInlineTextbox.h" />
@@ -163,6 +164,7 @@
     <ClCompile Include="CreateNewPawnDlg.cpp" />
     <ClCompile Include="DaeParser.cpp" />
     <ClCompile Include="DaeParserConfiguration.cpp" />
+    <ClCompile Include="FloorReceiverMaker.cpp" />
     <ClCompile Include="GeometryCreationHelper.cpp" />
     <ClCompile Include="ListboxInlineCombox.cpp" />
     <ClCompile Include="ListboxInlineTextbox.cpp" />

@@ -37,6 +37,8 @@ void ModelListPanel::initialize(MainForm* main_form)
 
     m_popupMenu = menew nana::menu{};
     m_popupMenu->append("Load Model", [this](auto item) { this->onLoadModel(item); });
+    m_popupMenu->append_splitter();
+    m_popupMenu->append("Remove Model", [this](auto item) { this->onRemoveModel(item); });
     m_place->collocate();
 }
 
@@ -77,5 +79,13 @@ void ModelListPanel::onLoadModel(nana::menu::item_proxy& item)
     const auto selected = m_modelList->selected().front();
     const auto name = m_modelList->at(selected).text(0);
     Enigma::Frameworks::CommandBus::post(std::make_shared<LoadModelPrimitive>(name));
+}
+
+void ModelListPanel::onRemoveModel(nana::menu::item_proxy& item)
+{
+    if (m_modelList->selected().empty()) return;
+    const auto selected = m_modelList->selected().front();
+    const auto name = m_modelList->at(selected).text(0);
+    Enigma::Frameworks::CommandBus::post(std::make_shared<RemoveModelPrimitive>(name));
 }
 

@@ -121,6 +121,16 @@ namespace EnigmaViewer
     private:
         std::string m_name;
     };
+    class RemoveModelPrimitive : public Enigma::Frameworks::ICommand
+    {
+    public:
+        RemoveModelPrimitive(const std::string& name) : m_name(name) {}
+
+        const std::string& name() const { return m_name; }
+
+    private:
+        std::string m_name;
+    };
     class CreateAnimatedPawn : public Enigma::Frameworks::ICommand
     {
     public:
@@ -147,6 +157,16 @@ namespace EnigmaViewer
     {
     public:
         LoadAnimatedPawn(const std::string& name) : m_name(name) {}
+
+        const std::string& name() const { return m_name; }
+
+    private:
+        std::string m_name;
+    };
+    class RemoveAnimatedPawn : public Enigma::Frameworks::ICommand
+    {
+    public:
+        RemoveAnimatedPawn(const std::string& name) : m_name(name) {}
 
         const std::string& name() const { return m_name; }
 

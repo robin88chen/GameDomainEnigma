@@ -13,7 +13,6 @@
 #include "Controllers/GraphicMain.h"
 #include "InputHandlers/InputHandlerService.h"
 #include "GameCommon/SceneRendererService.h"
-#include "GameCommon/AnimatedPawnDto.h"
 #include "Frameworks/EventSubscriber.h"
 #include "GameCommon/AnimatedPawn.h"
 #include "Frameworks/CommandSubscriber.h"
@@ -23,7 +22,6 @@
 #include "FileStorage/AnimatorFileStoreMapper.h"
 #include "ViewerSceneGraphFileStoreMapper.h"
 #include "AnimatedPawnPresentation.h"
-#include <filesystem>
 
 namespace EnigmaViewer
 {
@@ -52,8 +50,6 @@ namespace EnigmaViewer
         void importDaeFile(const std::string& filename);
 
         void saveAnimatedPawn();
-        //void savePawnFile(const std::filesystem::path& filepath);
-        //void loadPawnFile(const std::filesystem::path& filepath);
 
         std::shared_ptr<Enigma::InputHandlers::InputHandlerService> inputHandler() const { return m_inputHandler.lock(); }
 
@@ -69,13 +65,15 @@ namespace EnigmaViewer
         void loadModelPrimitive(const Enigma::Frameworks::ICommandPtr& c);
         void createAnimatedPawn(const Enigma::Frameworks::ICommandPtr& c);
         void loadAnimatedPawn(const Enigma::Frameworks::ICommandPtr& c);
+        void removeModelPrimitive(const Enigma::Frameworks::ICommandPtr& c);
+        void removeAnimatedPawn(const Enigma::Frameworks::ICommandPtr& c);
 
         void refreshModelList();
         void loadModelPrimitive(const std::string& model_name);
+        void removeModelPrimitive(const std::string& model_name);
         void refreshPawnList();
         void loadAnimatedPawn(const std::string& pawn_name);
-
-        void createFloorReceiver();
+        void removeAnimatedPawn(const std::string& pawn_name);
 
     protected:
         HWND m_hwnd;
@@ -106,6 +104,8 @@ namespace EnigmaViewer
         Enigma::Frameworks::CommandSubscriberPtr m_loadModelPrimitive;
         Enigma::Frameworks::CommandSubscriberPtr m_createAnimatedPawn;
         Enigma::Frameworks::CommandSubscriberPtr m_loadAnimatedPawn;
+        Enigma::Frameworks::CommandSubscriberPtr m_removeModelPrimitive;
+        Enigma::Frameworks::CommandSubscriberPtr m_removeAnimatedPawn;
 
         Enigma::SceneGraph::SpatialId m_sceneRootId;
         std::shared_ptr<Enigma::SceneGraph::Node> m_sceneRoot;
@@ -113,10 +113,6 @@ namespace EnigmaViewer
         Enigma::SceneGraph::SpatialId m_viewingPawnId;
         Enigma::SceneGraph::SpatialId m_creatingPawnId;
         std::shared_ptr<Enigma::GameCommon::AnimatedPawn> m_pawn;
-        std::shared_ptr<Enigma::SceneGraph::Pawn> m_floor;
-        Enigma::Geometries::GeometryId m_floorGeometryId;
-        Enigma::Primitives::PrimitiveId m_floorMeshId;
-        Enigma::SceneGraph::SpatialId m_floorPawnId;
     };
 }
 

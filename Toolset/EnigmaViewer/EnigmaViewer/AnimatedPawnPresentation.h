@@ -39,6 +39,9 @@ namespace EnigmaViewer
 
     protected:
         void assemblePawn();
+        void attatchPawnToRoot();
+        void listenPawnAnimation();
+        void refreshPawnModelTree();
         void onSpatialRemoved(const Enigma::Frameworks::IEventPtr& e);
         void onSpatialConstituted(const Enigma::Frameworks::IEventPtr& e);
         void onConstituteSpatialFailed(const Enigma::Frameworks::IEventPtr& e);

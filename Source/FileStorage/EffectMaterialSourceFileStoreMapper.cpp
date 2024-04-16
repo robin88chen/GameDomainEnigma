@@ -20,6 +20,7 @@ EffectMaterialSourceFileStoreMapper::~EffectMaterialSourceFileStoreMapper()
 std::error_code EffectMaterialSourceFileStoreMapper::connect()
 {
     if (m_has_connected) return FileSystem::ErrorCode::ok;
+    std::lock_guard locker{ m_fileMapLock };
     m_filename_map.clear();
     FileSystem::IFilePtr mapper_file = FileSystem::FileSystem::instance()->openFile(m_mapper_filename, FileSystem::read | FileSystem::binary);
     if (!mapper_file)
@@ -38,6 +39,7 @@ std::error_code EffectMaterialSourceFileStoreMapper::connect()
 
 std::error_code EffectMaterialSourceFileStoreMapper::disconnect()
 {
+    std::lock_guard locker{ m_fileMapLock };
     m_filename_map.clear();
     m_has_connected = false;
     return FileSystem::ErrorCode::ok;
@@ -52,6 +54,7 @@ bool EffectMaterialSourceFileStoreMapper::hasEffectMaterial(const EffectMaterial
 
 std::optional<EffectCompilingProfile> EffectMaterialSourceFileStoreMapper::queryEffectMaterial(const EffectMaterialId& id)
 {
+    std::lock_guard locker{ m_fileMapLock };
     auto it = m_filename_map.find(id);
     if (it == m_filename_map.end()) return std::nullopt;
     return deserializeEffectCompilingProfile(it->second);
@@ -60,6 +63,7 @@ std::optional<EffectCompilingProfile> EffectMaterialSourceFileStoreMapper::query
 void EffectMaterialSourceFileStoreMapper::deserializeMapperFile(const std::string& mapper_file_content)
 {
     if (mapper_file_content.empty()) return;
+    std::lock_guard locker{ m_fileMapLock };
     auto lines = split_token(mapper_file_content, "\n\r");
     for (auto& line : lines)
     {

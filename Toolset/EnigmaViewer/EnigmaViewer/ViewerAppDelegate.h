@@ -27,6 +27,7 @@ namespace EnigmaViewer
 {
     class ViewerRenderablesFileStoreMapper;
     class ViewerSceneGraphFileStoreMapper;
+    class ViewerTextureFileStoreMapper;
     class ViewerAppDelegate
     {
     public:
@@ -88,6 +89,7 @@ namespace EnigmaViewer
         std::shared_ptr<Enigma::FileStorage::AnimatorFileStoreMapper> m_animatorFileStoreMapper;
         std::shared_ptr<ViewerRenderablesFileStoreMapper> m_primitiveFileStoreMapper;
         std::shared_ptr<ViewerSceneGraphFileStoreMapper> m_sceneGraphFileStoreMapper;
+        std::shared_ptr<ViewerTextureFileStoreMapper> m_textureFileStoreMapper;
 
         std::weak_ptr<Enigma::InputHandlers::InputHandlerService> m_inputHandler;
         std::weak_ptr<Enigma::GameCommon::SceneRendererService> m_sceneRenderer;

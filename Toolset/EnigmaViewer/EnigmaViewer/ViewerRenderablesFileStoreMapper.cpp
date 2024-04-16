@@ -31,6 +31,7 @@ void ViewerRenderablesFileStoreMapper::unsubscribeHandlers()
 
 std::vector<std::string> ViewerRenderablesFileStoreMapper::modelNames() const
 {
+    std::lock_guard lock(m_fileMapLock);
     std::vector<std::string> model_names;
     for (const auto& [id, filename] : m_filename_map)
     {
@@ -41,6 +42,7 @@ std::vector<std::string> ViewerRenderablesFileStoreMapper::modelNames() const
 
 std::optional<Enigma::Primitives::PrimitiveId> ViewerRenderablesFileStoreMapper::modelId(const std::string& model_name) const
 {
+    std::lock_guard lock(m_fileMapLock);
     for (const auto& [id, filename] : m_filename_map)
     {
         if (id.name() == model_name) return id;

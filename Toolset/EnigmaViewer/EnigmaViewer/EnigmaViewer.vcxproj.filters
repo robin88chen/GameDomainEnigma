@@ -103,6 +103,9 @@
     <ClInclude Include="FloorReceiverMaker.h">
       <Filter>Helper</Filter>
     </ClInclude>
+    <ClInclude Include="ViewerTextureFileStoreMapper.h">
+      <Filter>AppDelegate\StoreMapper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainForm.cpp">
@@ -168,6 +171,9 @@
     </ClCompile>
     <ClCompile Include="FloorReceiverMaker.cpp">
       <Filter>Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewerTextureFileStoreMapper.cpp">
+      <Filter>AppDelegate\StoreMapper</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

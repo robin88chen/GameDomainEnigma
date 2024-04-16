@@ -49,13 +49,13 @@ namespace EnigmaViewer
     class ChangeMeshTexture : public Enigma::Frameworks::ICommand
     {
     public:
-        ChangeMeshTexture(const std::string& mesh_name, const Enigma::Engine::TextureId& tex_id) : m_meshName(mesh_name), m_texId(tex_id) {};
+        ChangeMeshTexture(const Enigma::Primitives::PrimitiveId& mesh_id, const Enigma::Engine::TextureId& tex_id) : m_meshId(mesh_id), m_texId(tex_id) {};
 
-        const std::string& meshName() const { return m_meshName; }
+        const Enigma::Primitives::PrimitiveId& meshId() const { return m_meshId; }
         const Enigma::Engine::TextureId& textureId() const { return m_texId; }
 
     private:
-        std::string m_meshName;
+        Enigma::Primitives::PrimitiveId m_meshId;
         Enigma::Engine::TextureId m_texId;
     };
     class AddAnimationClip : public Enigma::Frameworks::ICommand

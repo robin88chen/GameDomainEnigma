@@ -4,6 +4,8 @@
 #include "AvatarRecipes.h"
 #include "AnimatedPawnDto.h"
 #include "Animators/AnimatorCommands.h"
+#include "Renderables/RenderableEvents.h"
+#include "Frameworks/EventPublisher.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::SceneGraph;
@@ -16,6 +18,7 @@ DEFINE_RTTI(GameCommon, AnimatedPawn, Pawn);
 AnimatedPawn::AnimatedPawn(const SpatialId& id) : Pawn(id)
 {
     m_factoryDesc = FactoryDesc(AnimatedPawn::TYPE_RTTI.getName());
+    registerHandlers();
 }
 
 AnimatedPawn::AnimatedPawn(const SpatialId& id, const Engine::GenericDto& o) : Pawn(id, o)
@@ -26,10 +29,12 @@ AnimatedPawn::AnimatedPawn(const SpatialId& id, const Engine::GenericDto& o) : P
     {
         m_avatarRecipeList.push_back(AvatarRecipe::createFromGenericDto(avatar_dto));
     }
+    registerHandlers();
 }
 
 AnimatedPawn::~AnimatedPawn()
 {
+    unregisterHandlers();
     m_avatarRecipeList.clear();
 }
 
@@ -40,7 +45,8 @@ std::shared_ptr<AnimatedPawn> AnimatedPawn::create(const SceneGraph::SpatialId& 
 
 std::shared_ptr<AnimatedPawn> AnimatedPawn::constitute(const SceneGraph::SpatialId& id, const Engine::GenericDto& o)
 {
-    return std::make_shared<AnimatedPawn>(id, o);
+    auto pawn = std::make_shared<AnimatedPawn>(id, o);
+    return pawn;
 }
 
 GenericDto AnimatedPawn::serializeDto()
@@ -52,6 +58,18 @@ GenericDto AnimatedPawn::serializeDto()
         dto.avatarRecipeDtos().push_back(avatar_recipe->serializeDto());
     }
     return dto.toGenericDto();
+}
+
+void AnimatedPawn::registerHandlers()
+{
+    m_onRenderablePrimitiveHydrated = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { onRenderablePrimitiveHydrated(e); });
+    Frameworks::EventPublisher::subscribe(typeid(RenderablePrimitiveHydrated), m_onRenderablePrimitiveHydrated);
+}
+
+void AnimatedPawn::unregisterHandlers()
+{
+    Frameworks::EventPublisher::unsubscribe(typeid(RenderablePrimitiveHydrated), m_onRenderablePrimitiveHydrated);
+    m_onRenderablePrimitiveHydrated = nullptr;
 }
 
 void AnimatedPawn::playAnimation(const std::string& name)
@@ -108,5 +126,15 @@ void AnimatedPawn::bakeAvatarRecipes()
     for (auto& recipe : m_avatarRecipeList)
     {
         recipe->bake(std::dynamic_pointer_cast<Pawn, Spatial>(shared_from_this()));
+    }
+}
+
+void AnimatedPawn::onRenderablePrimitiveHydrated(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    if (const auto ev = std::dynamic_pointer_cast<RenderablePrimitiveHydrated, Frameworks::IEvent>(e))
+    {
+        if (ev->id() != m_primitive->id()) return;
+        bakeAvatarRecipes();
     }
 }

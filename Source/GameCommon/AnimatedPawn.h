@@ -10,6 +10,8 @@
 
 #include "SceneGraph/Pawn.h"
 #include "AnimationClipMap.h"
+#include "Frameworks/EventSubscriber.h"
+
 namespace Enigma::GameCommon
 {
     class AvatarRecipe;
@@ -31,6 +33,9 @@ namespace Enigma::GameCommon
 
         virtual Engine::GenericDto serializeDto() override;
 
+        void registerHandlers();
+        void unregisterHandlers();
+
         AnimationClipMap& animationClipMap() { return m_animationClipMap; };
         const AnimationClipMap& animationClipMap() const { return m_animationClipMap; };
 
@@ -41,9 +46,14 @@ namespace Enigma::GameCommon
         virtual void bakeAvatarRecipes();
 
     protected:
+        void onRenderablePrimitiveHydrated(const Frameworks::IEventPtr& e);
+
+    protected:
         AnimationClipMap m_animationClipMap;
         using AvatarRecipeList = std::list<std::shared_ptr<AvatarRecipe>>;
         AvatarRecipeList m_avatarRecipeList;
+
+        Frameworks::EventSubscriberPtr m_onRenderablePrimitiveHydrated;
     };
 }
 

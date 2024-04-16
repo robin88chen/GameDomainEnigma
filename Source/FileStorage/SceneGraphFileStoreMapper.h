@@ -52,7 +52,7 @@ namespace Enigma::FileStorage
             std::shared_ptr<Gateways::IDtoGateway> m_gateway;
             std::string m_filename;
             std::unordered_map<SceneGraph::SpatialId, std::string, SceneGraph::SpatialId::hash> m_map;
-            std::recursive_mutex m_lock;
+            mutable std::recursive_mutex m_lock;
         };
     public:
         SceneGraphFileStoreMapper(const std::string& mapper_filename, const std::string& lazied_mapper_filename, const std::shared_ptr<Gateways::IDtoGateway>& gateway);

@@ -180,8 +180,8 @@ void ReplaceAvatarMaterial::onHydrateMaterialFailed(const IEventPtr& e)
     Platforms::Debug::ErrorPrintf("ReplaceAvatarMaterial::OnContentEffectMaterialFailed: %s, %s\n", ev->id().name().c_str(), ev->error().message().c_str());
 }
 
-ChangeAvatarTexture::ChangeAvatarTexture(const std::string& mesh_name, const TextureMappingDto& texture_dto)
-    : m_meshName(mesh_name), m_textureDto(texture_dto)
+ChangeAvatarTexture::ChangeAvatarTexture(const Primitives::PrimitiveId& mesh_id, const TextureMappingDto& texture_dto)
+    : m_meshId(mesh_id), m_textureDto(texture_dto)
 {
     m_factoryDesc = FactoryDesc(ChangeAvatarTexture::TYPE_RTTI.getName());
     m_onTextureHydrated = std::make_shared<EventSubscriber>([=](auto e) { this->onTextureHydrated(e); });
@@ -193,8 +193,8 @@ ChangeAvatarTexture::ChangeAvatarTexture(const std::string& mesh_name, const Tex
 ChangeAvatarTexture::ChangeAvatarTexture(const Engine::GenericDto& o) : AvatarRecipe(o)
 {
     AvatarRecipeChangeTextureDto dto = AvatarRecipeChangeTextureDto::fromGenericDto(o);
-    m_meshName = dto.MeshName();
-    m_textureDto = dto.TextureDto();
+    m_meshId = dto.meshId();
+    m_textureDto = dto.textureDto();
     m_onTextureHydrated = std::make_shared<EventSubscriber>([=](auto e) { this->onTextureHydrated(e); });
     EventPublisher::subscribe(typeid(TextureHydrated), m_onTextureHydrated);
     m_onHydrateTextureFailed = std::make_shared<EventSubscriber>([=](auto e) { this->onHydrateTextureFailed(e); });
@@ -213,28 +213,28 @@ GenericDto ChangeAvatarTexture::serializeDto() const
 {
     AvatarRecipeChangeTextureDto dto;
     dto.factoryDesc() = m_factoryDesc;
-    dto.MeshName() = m_meshName;
-    dto.TextureDto() = m_textureDto;
+    dto.meshId() = m_meshId;
+    dto.textureDto() = m_textureDto;
     return dto.toGenericDto();
 }
 
 void ChangeAvatarTexture::bake(const std::shared_ptr<Pawn>& pawn)
 {
     if (!pawn) return;
-    if (m_meshName.empty()) return;
+    if (m_meshId.name().empty()) return;
     std::shared_ptr<Primitives::Primitive> prim = pawn->getPrimitive();
     if (!prim) return;
     std::shared_ptr<ModelPrimitive> model = std::dynamic_pointer_cast<ModelPrimitive>(prim);
     if (model)
     {
-        auto mesh = model->findMeshPrimitive(m_meshName);
+        auto mesh = model->findMeshPrimitive(m_meshId);
         if (!mesh) return;
         changeMeshTexture(mesh);
     }
     std::shared_ptr<MeshPrimitive> mesh = std::dynamic_pointer_cast<MeshPrimitive>(prim);
     if (mesh)
     {
-        if (mesh->getName() != m_meshName) return;
+        if (mesh->id().origin() != m_meshId.origin()) return;
         changeMeshTexture(mesh);
     }
 }
@@ -242,7 +242,7 @@ void ChangeAvatarTexture::bake(const std::shared_ptr<Pawn>& pawn)
 void ChangeAvatarTexture::changeMeshTexture(const std::shared_ptr<MeshPrimitive>& mesh)
 {
     if (!mesh) return;
-    if (m_meshName.empty()) return;
+    if (m_meshId.name().empty()) return;
     auto query = std::make_shared<QueryTexture>(m_textureDto.textureId());
     QueryDispatcher::dispatch(query);
     if ((query->getResult()) && (query->getResult()->lazyStatus().isReady()))

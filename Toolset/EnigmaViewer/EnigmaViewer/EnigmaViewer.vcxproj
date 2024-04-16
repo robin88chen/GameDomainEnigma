@@ -157,6 +157,7 @@
     <ClInclude Include="ViewerQueries.h" />
     <ClInclude Include="ViewerRenderablesFileStoreMapper.h" />
     <ClInclude Include="ViewerSceneGraphFileStoreMapper.h" />
+    <ClInclude Include="ViewerTextureFileStoreMapper.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnimatedPawnPresentation.cpp" />
@@ -183,6 +184,7 @@
     <ClCompile Include="ViewerAppDelegate.cpp" />
     <ClCompile Include="ViewerRenderablesFileStoreMapper.cpp" />
     <ClCompile Include="ViewerSceneGraphFileStoreMapper.cpp" />
+    <ClCompile Include="ViewerTextureFileStoreMapper.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

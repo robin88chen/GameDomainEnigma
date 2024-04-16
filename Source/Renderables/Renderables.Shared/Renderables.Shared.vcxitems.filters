@@ -34,6 +34,9 @@
     <Filter Include="Primitives\Dto and Assemblers">
       <UniqueIdentifier>{06e7a9c5-c85b-4009-b0e6-5e20db6ad5b6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Events">
+      <UniqueIdentifier>{c9a31e1a-36c7-4ef6-a80a-2b5d3b54a322}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshPrimitive.cpp">
@@ -181,6 +184,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimatorAssembler.h">
       <Filter>Animators\Dto and Assemblers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderableEvents.h">
+      <Filter>Events</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

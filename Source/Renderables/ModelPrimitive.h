@@ -12,6 +12,7 @@
 #include "Primitives/Primitive.h"
 #include "MeshNodeTree.h"
 #include "Animators/Animator.h"
+#include "Frameworks/EventSubscriber.h"
 #include <string>
 #include <vector>
 #include <optional>
@@ -37,6 +38,9 @@ namespace Enigma::Renderables
 
         virtual Engine::GenericDto serializeDto() const override;
 
+        void registerHandlers();
+        void unregisterHandlers();
+
         const std::string& getName() const { return m_name; }
 
         const MeshNodeTree& getMeshNodeTree() const { return m_nodeTree; };
@@ -47,7 +51,7 @@ namespace Enigma::Renderables
         @param cached_index index in cached mesh primitive array
         */
         std::shared_ptr<MeshPrimitive> getMeshPrimitive(unsigned int cached_index);
-        std::shared_ptr<MeshPrimitive> findMeshPrimitive(const std::string& name);
+        std::shared_ptr<MeshPrimitive> findMeshPrimitive(const Primitives::PrimitiveId& id);
         /** get mesh node
         @param cached_index index in cached mesh primitive array
         */
@@ -79,10 +83,13 @@ namespace Enigma::Renderables
         /** sometimes we need re-cache */
         void cacheMeshPrimitive();
 
+        void onMeshHydrated(const Frameworks::IEventPtr& e);
     protected:
         std::string m_name;
         MeshNodeTree m_nodeTree;
         std::vector<unsigned int> m_meshPrimitiveIndexCache;  ///< 記錄哪個index的mesh node擁有mesh primitive
+
+        Frameworks::EventSubscriberPtr m_onMeshHydrated;
     };
 }
 

@@ -23,6 +23,7 @@ PrimitiveFileStoreMapper::~PrimitiveFileStoreMapper()
 std::error_code PrimitiveFileStoreMapper::connect()
 {
     if (m_has_connected) return FileSystem::ErrorCode::ok;
+    std::lock_guard locker{ m_fileMapLock };
     m_filename_map.clear();
     FileSystem::IFilePtr mapper_file = FileSystem::FileSystem::instance()->openFile(m_mapper_filename, FileSystem::read | FileSystem::binary);
     if (!mapper_file)
@@ -41,6 +42,7 @@ std::error_code PrimitiveFileStoreMapper::connect()
 
 std::error_code PrimitiveFileStoreMapper::disconnect()
 {
+    std::lock_guard locker{ m_fileMapLock };
     m_filename_map.clear();
     m_has_connected = false;
     return FileSystem::ErrorCode::ok;
@@ -55,6 +57,7 @@ bool PrimitiveFileStoreMapper::hasPrimitive(const Primitives::PrimitiveId& id)
 
 std::optional<Enigma::Engine::GenericDto> PrimitiveFileStoreMapper::queryPrimitive(const Primitives::PrimitiveId& id)
 {
+    std::lock_guard locker{ m_fileMapLock };
     auto it = m_filename_map.find(id);
     if (it == m_filename_map.end()) return std::nullopt;
     return deserializeDataTransferObject(it->second);
@@ -90,6 +93,7 @@ std::uint64_t PrimitiveFileStoreMapper::nextSequenceNumber()
 void PrimitiveFileStoreMapper::deserializeMapperFile(const std::string& mapper_file_content)
 {
     if (mapper_file_content.empty()) return;
+    std::lock_guard locker{ m_fileMapLock };
     auto lines = split_token(mapper_file_content, "\n\r");
     m_sequence_number = std::stoul(lines[0]);
     for (auto& line : lines)

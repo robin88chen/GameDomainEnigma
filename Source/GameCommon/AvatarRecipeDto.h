@@ -10,6 +10,7 @@
 
 #include "GameEngine/EffectTextureMapDto.h"
 #include "GameEngine/EffectMaterialId.h"
+#include "Primitives/Primitive.h"
 
 namespace Enigma::GameCommon
 {
@@ -53,15 +54,15 @@ namespace Enigma::GameCommon
     public:
         AvatarRecipeChangeTextureDto();
 
-        std::string& MeshName() { return m_meshName; }
-        [[nodiscard]] const std::string& MeshName() const { return m_meshName; }
-        Engine::TextureMappingDto& TextureDto() { return m_textureDto; }
-        [[nodiscard]] const Engine::TextureMappingDto& TextureDto() const { return m_textureDto; }
+        Primitives::PrimitiveId& meshId() { return m_meshId; }
+        [[nodiscard]] const Primitives::PrimitiveId& meshId() const { return m_meshId; }
+        Engine::TextureMappingDto& textureDto() { return m_textureDto; }
+        [[nodiscard]] const Engine::TextureMappingDto& textureDto() const { return m_textureDto; }
 
         static AvatarRecipeChangeTextureDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
     private:
-        std::string m_meshName;
+        Primitives::PrimitiveId m_meshId;
         Engine::TextureMappingDto m_textureDto;
     };
 }

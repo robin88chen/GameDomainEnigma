@@ -44,6 +44,7 @@
 #include "ViewerCommands.h"
 #include "ViewerRenderablesFileStoreMapper.h"
 #include "FloorReceiverMaker.h"
+#include "ViewerTextureFileStoreMapper.h"
 #include <memory>
 
 using namespace EnigmaViewer;
@@ -182,7 +183,8 @@ void ViewerAppDelegate::installEngine()
     m_sceneGraphFileStoreMapper = std::make_shared<ViewerSceneGraphFileStoreMapper>("scene_graph.db.txt@DataPath", "lazy_scene.db.txt@DataPath", std::make_shared<DtoJsonGateway>());
     auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(m_sceneGraphFileStoreMapper);
     auto effect_material_source_policy = std::make_shared<EffectMaterialSourceRepositoryInstallingPolicy>(std::make_shared<EffectMaterialSourceFileStoreMapper>("effect_materials.db.txt@APK_PATH"));
-    auto texture_policy = std::make_shared<TextureRepositoryInstallingPolicy>(std::make_shared<TextureFileStoreMapper>("textures.db.txt@APK_PATH", std::make_shared<DtoJsonGateway>()));
+    m_textureFileStoreMapper = std::make_shared<ViewerTextureFileStoreMapper>("textures.db.txt@APK_PATH", std::make_shared<DtoJsonGateway>());
+    auto texture_policy = std::make_shared<TextureRepositoryInstallingPolicy>(m_textureFileStoreMapper);
     auto renderables_policy = std::make_shared<Enigma::Renderables::RenderablesInstallingPolicy>();
     auto input_handler_policy = std::make_shared<Enigma::InputHandlers::InputHandlerInstallingPolicy>();
     auto camera_id = SpatialId("camera", Camera::TYPE_RTTI);
@@ -207,6 +209,7 @@ void ViewerAppDelegate::installEngine()
 
     m_primitiveFileStoreMapper->subscribeHandlers();
     m_sceneGraphFileStoreMapper->subscribeHandlers();
+    m_textureFileStoreMapper->subscribeHandlers();
     m_viewingPawnId = SpatialId(ViewingPawnName, AnimatedPawn::TYPE_RTTI);
     m_viewingPawnPresentation.subscribeHandlers();
 }
@@ -224,6 +227,7 @@ void ViewerAppDelegate::shutdownEngine()
 
     m_primitiveFileStoreMapper->unsubscribeHandlers();
     m_sceneGraphFileStoreMapper->unsubscribeHandlers();
+    m_textureFileStoreMapper->unsubscribeHandlers();
 
     EventPublisher::unsubscribe(typeid(RenderEngineInstalled), m_onRenderEngineInstalled);
     m_onRenderEngineInstalled = nullptr;
@@ -335,13 +339,14 @@ void ViewerAppDelegate::changeMeshTexture(const Enigma::Frameworks::ICommandPtr&
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<ChangeMeshTexture, ICommand>(c);
     if (!cmd) return;
-    if (!m_pawn) return;
+    auto pawn = m_viewingPawnPresentation.pawn();
+    if (!pawn) return;
     TextureMappingDto tex_dto;
     tex_dto.textureId() = cmd->textureId();
     tex_dto.semantic() = "DiffuseMap";
-    auto recipe = std::make_shared<ChangeAvatarTexture>(cmd->meshName(), tex_dto);
-    m_pawn->addAvatarRecipe(recipe);
-    m_pawn->bakeAvatarRecipes();
+    auto recipe = std::make_shared<ChangeAvatarTexture>(cmd->meshId(), tex_dto);
+    pawn->addAvatarRecipe(recipe);
+    pawn->bakeAvatarRecipes();
 }
 
 void ViewerAppDelegate::addAnimationClip(const Enigma::Frameworks::ICommandPtr& c)

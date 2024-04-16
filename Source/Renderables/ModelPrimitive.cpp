@@ -2,9 +2,11 @@
 #include "GameEngine/IRenderer.h"
 #include "Platforms/PlatformLayer.h"
 #include "RenderableErrors.h"
+#include "RenderableEvents.h"
 #include "MathLib/Matrix4.h"
 #include "RenderablePrimitiveDtos.h"
 #include "ModelPrimitiveAnimator.h"
+#include "Frameworks/EventPublisher.h"
 #include <memory>
 
 using namespace Enigma::Renderables;
@@ -21,6 +23,7 @@ ModelPrimitive::ModelPrimitive(const PrimitiveId& id) : Primitive(id)
     m_factoryDesc = FactoryDesc(TYPE_RTTI.getName());
     m_name = id.name();
     m_meshPrimitiveIndexCache.clear();
+    registerHandlers();
 }
 
 ModelPrimitive::ModelPrimitive(const PrimitiveId& id, const GenericDto& dto) : Primitive(id)
@@ -32,10 +35,12 @@ ModelPrimitive::ModelPrimitive(const PrimitiveId& id, const GenericDto& dto) : P
     {
         ModelPrimitive::animatorId(primDto.animatorId().value());
     }
+    registerHandlers();
 }
 
 ModelPrimitive::~ModelPrimitive()
 {
+    unregisterHandlers();
     m_meshPrimitiveIndexCache.clear();
 }
 
@@ -47,6 +52,18 @@ GenericDto ModelPrimitive::serializeDto() const
     dto.nodeTree() = m_nodeTree.serializeDto();
     if (m_animatorId.isValid()) dto.animatorId() = m_animatorId.origin();
     return dto.toGenericDto();
+}
+
+void ModelPrimitive::registerHandlers()
+{
+    m_onMeshHydrated = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { onMeshHydrated(e); });
+    Frameworks::EventPublisher::subscribe(typeid(RenderablePrimitiveHydrated), m_onMeshHydrated);
+}
+
+void ModelPrimitive::unregisterHandlers()
+{
+    Frameworks::EventPublisher::unsubscribe(typeid(RenderablePrimitiveHydrated), m_onMeshHydrated);
+    m_onMeshHydrated = nullptr;
 }
 
 unsigned ModelPrimitive::getMeshPrimitiveCount()
@@ -72,20 +89,42 @@ void ModelPrimitive::cacheMeshPrimitive()
     }
 }
 
+void ModelPrimitive::onMeshHydrated(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<RenderablePrimitiveHydrated>(e);
+    if (!ev) return;
+    if (!findMeshPrimitive(ev->id())) return;
+    const unsigned mesh_count = getMeshPrimitiveCount();
+    bool all_hydrated = true;
+    for (unsigned i = 0; i < mesh_count; i++)
+    {
+        if (!getMeshPrimitive(i)->lazyStatus().isReady())
+        {
+            all_hydrated = false;
+            break;
+        }
+    }
+    if (all_hydrated)
+    {
+        Frameworks::EventPublisher::post(std::make_shared<RenderablePrimitiveHydrated>(m_id));
+    }
+}
+
 std::shared_ptr<MeshPrimitive> ModelPrimitive::getMeshPrimitive(unsigned cached_index)
 {
     if (cached_index >= getMeshPrimitiveCount()) return nullptr;
     return m_nodeTree.getMeshPrimitiveInNode(m_meshPrimitiveIndexCache[cached_index]);
 }
 
-std::shared_ptr<MeshPrimitive> ModelPrimitive::findMeshPrimitive(const std::string& name)
+std::shared_ptr<MeshPrimitive> ModelPrimitive::findMeshPrimitive(const PrimitiveId& id)
 {
     const unsigned mesh_count = getMeshPrimitiveCount();
     if (mesh_count == 0) return nullptr;
     for (unsigned int i = 0; i < mesh_count; i++)
     {
         std::shared_ptr<MeshPrimitive> mesh_prim = getMeshPrimitive(i);
-        if ((mesh_prim) && (mesh_prim->getName() == name)) return mesh_prim;
+        if ((mesh_prim) && (mesh_prim->id().isEqual(id))) return mesh_prim;
     }
     return nullptr;
 }

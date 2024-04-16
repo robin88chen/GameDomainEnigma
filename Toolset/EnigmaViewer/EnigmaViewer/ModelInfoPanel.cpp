@@ -100,13 +100,15 @@ void ModelInfoPanel::enumModelMeshNode(const std::shared_ptr<Enigma::Renderables
         {
             parent_pos = mesh_pos_map.find("root")->second;
         }
-        nana::treebox::item_proxy node_pos = m_meshNodeTree->insert(
-            parent_pos, mesh_node.value().get().getName(), mesh_node.value().get().getName());
+        nana::treebox::item_proxy node_pos = parent_pos.append(mesh_node.value().get().getName(), mesh_node.value().get().getName());
+        //nana::treebox::item_proxy node_pos = m_meshNodeTree->insert(
+          //  parent_pos, mesh_node.value().get().getName(), mesh_node.value().get().getName());
         mesh_pos_map.emplace(mesh_node.value().get().getName(), node_pos);
         if (mesh_node.value().get().getMeshPrimitive())
         {
-            m_meshNodeTree->insert(node_pos,
-                mesh_node.value().get().getMeshPrimitive()->getName(), mesh_node.value().get().getMeshPrimitive()->getName());
+            node_pos.append(mesh_node.value().get().getMeshPrimitive()->getName(), mesh_node.value().get().getMeshPrimitive()->getName(), mesh_node.value().get().getMeshPrimitive()->id());
+            //m_meshNodeTree->insert(node_pos,
+              //  mesh_node.value().get().getMeshPrimitive()->getName(), mesh_node.value().get().getMeshPrimitive()->getName());
         }
     }
 }
@@ -134,14 +136,17 @@ void ModelInfoPanel::onAddSuperSprayParticle(const nana::menu::item_proxy& menu_
 void ModelInfoPanel::onChangeMeshTexture(const nana::menu::item_proxy& menu_item)
 {
     if (m_meshNodeTree->selected().empty()) return;
+    Enigma::Primitives::PrimitiveId mesh_id = m_meshNodeTree->selected().value<Enigma::Primitives::PrimitiveId>();
     nana::filebox fb{ *this, true };
     fb.add_filter({ {"Image File(*.png)", "*.png"} });
     auto paths = fb.show();
     if (paths.size() > 0)
     {
-        auto query = std::make_shared<ResolveTextureId>(paths[0].filename().generic_string());
-        Enigma::Frameworks::QueryDispatcher::dispatch(query);
-        Enigma::Frameworks::CommandBus::post(std::make_shared<ChangeMeshTexture>(m_meshNodeTree->selected().key(), query->getResult()));
+        std::string stem = paths[0].stem().generic_string();
+        std::string sub_path = (--(--paths[0].end()))->generic_string();
+        auto texure_id = std::make_shared<ResolveTextureId>(sub_path + "/" + stem)->dispatch();
+        if (texure_id.name().empty()) return;
+        Enigma::Frameworks::CommandBus::post(std::make_shared<ChangeMeshTexture>(mesh_id, texure_id));
     }
     //m_main->GetAppDelegate()->ChangeMeshTexture(m_meshNodeTree->selected().key());
 }

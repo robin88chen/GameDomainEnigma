@@ -35,7 +35,7 @@ namespace Enigma::FileStorage
         Gateways::EffectProfileJsonGateway m_gateway;
         std::string m_mapper_filename;
         std::unordered_map<Engine::EffectMaterialId, std::string, Engine::EffectMaterialId::hash> m_filename_map;
-        std::recursive_mutex m_fileMapLock;
+        mutable std::recursive_mutex m_fileMapLock;
     };
 }
 

@@ -85,6 +85,7 @@ void AnimatedPawnPresentation::loadPawn(const Enigma::SceneGraph::SpatialId& paw
     attatchPawnToRoot();
     listenPawnAnimation();
     refreshPawnModelTree();
+    refreshPawnAnimationClipMap();
 }
 
 void AnimatedPawnPresentation::removePawn(const Enigma::SceneGraph::SpatialId& scene_root_id)
@@ -107,6 +108,7 @@ void AnimatedPawnPresentation::assemblePawn()
     attatchPawnToRoot();
     listenPawnAnimation();
     refreshPawnModelTree();
+    refreshPawnAnimationClipMap();
     m_presentingModelId.reset();
 }
 
@@ -133,6 +135,12 @@ void AnimatedPawnPresentation::refreshPawnModelTree()
     {
         CommandBus::post(std::make_shared<RefreshModelNodeTree>(model));
     }
+}
+
+void AnimatedPawnPresentation::refreshPawnAnimationClipMap()
+{
+    if (!m_pawn) return;
+    CommandBus::post(std::make_shared<RefreshAnimationClipList>(m_pawn->animationClipMap()));
 }
 
 void AnimatedPawnPresentation::onSpatialRemoved(const Enigma::Frameworks::IEventPtr& e)

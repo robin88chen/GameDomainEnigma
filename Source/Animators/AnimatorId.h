@@ -30,7 +30,7 @@ namespace Enigma::Animators
         bool operator==(const AnimatorId& other) const { return m_name == other.m_name && m_sequence == other.m_sequence && m_rtti == other.m_rtti; }
         bool operator!=(const AnimatorId& other) const { return m_name != other.m_name || m_sequence != other.m_sequence || m_rtti != other.m_rtti; }
 
-        bool isValid() const { return m_rtti != nullptr; }
+        bool empty() const { return m_rtti == nullptr || m_name.empty(); }
         std::vector<std::string> tokens() const;
         const std::string& name() const { return m_name; }
         const std::uint64_t sequence() const { return m_sequence; }

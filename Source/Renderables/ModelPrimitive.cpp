@@ -50,7 +50,7 @@ GenericDto ModelPrimitive::serializeDto() const
     dto.id() = m_id.origin();
     dto.factoryDesc() = m_factoryDesc;
     dto.nodeTree() = m_nodeTree.serializeDto();
-    if (m_animatorId.isValid()) dto.animatorId() = m_animatorId.origin();
+    if (!m_animatorId.empty()) dto.animatorId() = m_animatorId.origin();
     return dto.toGenericDto();
 }
 

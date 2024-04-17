@@ -222,7 +222,6 @@ void ViewerAppDelegate::shutdownEngine()
 {
     m_viewingPawnPresentation.removePawn(m_sceneRootId);
     m_viewingPawnPresentation.unsubscribeHandlers();
-    m_pawn = nullptr;
     m_sceneRoot = nullptr;
 
     m_primitiveFileStoreMapper->unsubscribeHandlers();
@@ -354,11 +353,12 @@ void ViewerAppDelegate::addAnimationClip(const Enigma::Frameworks::ICommandPtr& 
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<AddAnimationClip, ICommand>(c);
     if (!cmd) return;
-    if (!m_pawn) return;
-    if (auto act_clip = m_pawn->animationClipMap().findAnimationClip(cmd->name()); !act_clip)
+    auto pawn = m_viewingPawnPresentation.pawn();
+    if (!pawn) return;
+    if (auto act_clip = pawn->animationClipMap().findAnimationClip(cmd->name()); !act_clip)
     {
         AnimationClipMap::AnimClip act_clip_new(cmd->name(), cmd->clip());
-        m_pawn->animationClipMap().insertClip(act_clip_new);
+        pawn->animationClipMap().insertClip(act_clip_new);
     }
     else
     {
@@ -371,8 +371,9 @@ void ViewerAppDelegate::deleteAnimationClip(const Enigma::Frameworks::ICommandPt
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<DeleteAnimationClip, ICommand>(c);
     if (!cmd) return;
-    if (!m_pawn) return;
-    m_pawn->animationClipMap().removeClip(cmd->name());
+    auto pawn = m_viewingPawnPresentation.pawn();
+    if (!pawn) return;
+    pawn->animationClipMap().removeClip(cmd->name());
 }
 
 void ViewerAppDelegate::playAnimationClip(const Enigma::Frameworks::ICommandPtr& c)
@@ -380,8 +381,9 @@ void ViewerAppDelegate::playAnimationClip(const Enigma::Frameworks::ICommandPtr&
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<PlayAnimationClip, ICommand>(c);
     if (!cmd) return;
-    if (!m_pawn) return;
-    m_pawn->playAnimation(cmd->name());
+    auto pawn = m_viewingPawnPresentation.pawn();
+    if (!pawn) return;
+    pawn->playAnimation(cmd->name());
 }
 
 void ViewerAppDelegate::changeAnimationTimeValue(const Enigma::Frameworks::ICommandPtr& c)
@@ -389,9 +391,10 @@ void ViewerAppDelegate::changeAnimationTimeValue(const Enigma::Frameworks::IComm
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<ChangeAnimationTimeValue, ICommand>(c);
     if (!cmd) return;
-    if (!m_pawn) return;
+    auto pawn = m_viewingPawnPresentation.pawn();
+    if (!pawn) return;
     bool isNameChanged = false;
-    if ((m_pawn->animationClipMap().findAnimationClip(cmd->oldName()))
+    if ((pawn->animationClipMap().findAnimationClip(cmd->oldName()))
         && (cmd->oldName() != cmd->newName()))
     {
         isNameChanged = true;
@@ -399,16 +402,16 @@ void ViewerAppDelegate::changeAnimationTimeValue(const Enigma::Frameworks::IComm
 
     if (!isNameChanged)
     {
-        if (auto act_clip = m_pawn->animationClipMap().findAnimationClip(cmd->newName()); act_clip)
+        if (auto act_clip = pawn->animationClipMap().findAnimationClip(cmd->newName()); act_clip)
         {
             act_clip.value().get().changeClip(cmd->clip());
         }
     }
     else
     {
-        m_pawn->animationClipMap().removeClip(cmd->oldName());
+        pawn->animationClipMap().removeClip(cmd->oldName());
         Enigma::GameCommon::AnimationClipMap::AnimClip act_clip_new(cmd->newName(), cmd->clip());
-        m_pawn->animationClipMap().insertClip(act_clip_new);
+        pawn->animationClipMap().insertClip(act_clip_new);
     }
 }
 

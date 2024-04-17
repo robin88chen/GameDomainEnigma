@@ -1,4 +1,7 @@
 ﻿#include "ModelInfoPanel.h"
+
+#include <Frameworks/StringFormat.h>
+
 #include "SchemeColorDef.h"
 #include "Platforms/MemoryMacro.h"
 #include "ViewerCommands.h"
@@ -168,5 +171,8 @@ void ModelInfoPanel::refreshModelNodeTree(const Enigma::Frameworks::ICommandPtr&
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<RefreshModelNodeTree, Enigma::Frameworks::ICommand>(c);
     if (!cmd) return;
+    auto model_id = cmd->model()->id();
+    auto id_text = string_format("%s/%d/%s", model_id.name().c_str(), model_id.sequence(), model_id.rtti().getName().c_str());
+    setModelFileName(id_text);
     enumModelMeshNode(cmd->model());
 }

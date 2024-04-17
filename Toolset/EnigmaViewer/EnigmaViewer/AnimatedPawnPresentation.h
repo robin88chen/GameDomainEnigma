@@ -42,6 +42,7 @@ namespace EnigmaViewer
         void attatchPawnToRoot();
         void listenPawnAnimation();
         void refreshPawnModelTree();
+        void refreshPawnAnimationClipMap();
         void onSpatialRemoved(const Enigma::Frameworks::IEventPtr& e);
         void onSpatialConstituted(const Enigma::Frameworks::IEventPtr& e);
         void onConstituteSpatialFailed(const Enigma::Frameworks::IEventPtr& e);

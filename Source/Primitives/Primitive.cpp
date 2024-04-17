@@ -34,5 +34,6 @@ void Primitive::enumAnimatorListDeep(std::list<std::shared_ptr<Animators::Animat
 
 std::shared_ptr<Enigma::Animators::Animator> Primitive::getAnimator()
 {
+    if (m_animatorId.empty()) return nullptr;
     return Animators::Animator::queryAnimator(m_animatorId);
 }

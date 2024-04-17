@@ -114,7 +114,6 @@ namespace EnigmaViewer
         AnimatedPawnPresentation m_viewingPawnPresentation;
         Enigma::SceneGraph::SpatialId m_viewingPawnId;
         Enigma::SceneGraph::SpatialId m_creatingPawnId;
-        std::shared_ptr<Enigma::GameCommon::AnimatedPawn> m_pawn;
     };
 }
 

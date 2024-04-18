@@ -22,6 +22,7 @@ SceneGraphFileStoreMapper::SpatialFileMap::~SpatialFileMap()
 
 std::error_code SceneGraphFileStoreMapper::SpatialFileMap::connect()
 {
+    std::lock_guard locker{ m_lock };
     m_map.clear();
     FileSystem::IFilePtr mapper_file = FileSystem::FileSystem::instance()->openFile(m_filename, FileSystem::read | FileSystem::binary);
     if (!mapper_file) return FileSystem::ErrorCode::ok;
@@ -36,6 +37,7 @@ std::error_code SceneGraphFileStoreMapper::SpatialFileMap::connect()
 
 std::error_code SceneGraphFileStoreMapper::SpatialFileMap::disconnect()
 {
+    std::lock_guard locker{ m_lock };
     m_map.clear();
     return FileSystem::ErrorCode::ok;
 }

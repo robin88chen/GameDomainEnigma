@@ -132,43 +132,63 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AnimatedPawnPresentation.h" />
     <ClInclude Include="AnimationClipInfoItem.h" />
     <ClInclude Include="AnimationInfoPanel.h" />
+    <ClInclude Include="CreateNewPawnDlg.h" />
     <ClInclude Include="DaeParser.h" />
     <ClInclude Include="DaeParserConfiguration.h" />
+    <ClInclude Include="FloorReceiverMaker.h" />
     <ClInclude Include="GeometryCreationHelper.h" />
     <ClInclude Include="ListboxInlineCombox.h" />
     <ClInclude Include="ListboxInlineTextbox.h" />
     <ClInclude Include="MainForm.h" />
     <ClInclude Include="ModelInfoPanel.h" />
+    <ClInclude Include="ModelListPanel.h" />
     <ClInclude Include="OutputPanel.h" />
+    <ClInclude Include="PawnListPanel.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="pugixml.hpp" />
     <ClInclude Include="RenderPanel.h" />
     <ClInclude Include="SchemeColorDef.h" />
+    <ClInclude Include="ViewerAnimationClipCommandHandler.h" />
     <ClInclude Include="ViewerAppDelegate.h" />
+    <ClInclude Include="ViewerAvatarBaker.h" />
     <ClInclude Include="ViewerCommands.h" />
     <ClInclude Include="ViewerEvents.h" />
     <ClInclude Include="ViewerQueries.h" />
+    <ClInclude Include="ViewerRenderablesFileStoreMapper.h" />
+    <ClInclude Include="ViewerSceneGraphFileStoreMapper.h" />
+    <ClInclude Include="ViewerTextureFileStoreMapper.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AnimatedPawnPresentation.cpp" />
     <ClCompile Include="AnimationInfoPanel.cpp" />
+    <ClCompile Include="CreateNewPawnDlg.cpp" />
     <ClCompile Include="DaeParser.cpp" />
     <ClCompile Include="DaeParserConfiguration.cpp" />
+    <ClCompile Include="FloorReceiverMaker.cpp" />
     <ClCompile Include="GeometryCreationHelper.cpp" />
     <ClCompile Include="ListboxInlineCombox.cpp" />
     <ClCompile Include="ListboxInlineTextbox.cpp" />
     <ClCompile Include="MainApplication.cpp" />
     <ClCompile Include="MainForm.cpp" />
     <ClCompile Include="ModelInfoPanel.cpp" />
+    <ClCompile Include="ModelListPanel.cpp" />
     <ClCompile Include="OutputPanel.cpp" />
+    <ClCompile Include="PawnListPanel.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="pugixml.cpp" />
     <ClCompile Include="RenderPanel.cpp" />
     <ClCompile Include="SchemeColorDef.cpp" />
+    <ClCompile Include="ViewerAnimationClipCommandHandler.cpp" />
     <ClCompile Include="ViewerAppDelegate.cpp" />
+    <ClCompile Include="ViewerAvatarBaker.cpp" />
+    <ClCompile Include="ViewerRenderablesFileStoreMapper.cpp" />
+    <ClCompile Include="ViewerSceneGraphFileStoreMapper.cpp" />
+    <ClCompile Include="ViewerTextureFileStoreMapper.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

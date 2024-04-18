@@ -49,13 +49,13 @@ namespace EnigmaViewer
     class ChangeMeshTexture : public Enigma::Frameworks::ICommand
     {
     public:
-        ChangeMeshTexture(const std::string& mesh_name, const Enigma::Engine::TextureId& tex_id) : m_meshName(mesh_name), m_texId(tex_id) {};
+        ChangeMeshTexture(const Enigma::Primitives::PrimitiveId& mesh_id, const Enigma::Engine::TextureId& tex_id) : m_meshId(mesh_id), m_texId(tex_id) {};
 
-        const std::string& meshName() const { return m_meshName; }
+        const Enigma::Primitives::PrimitiveId& meshId() const { return m_meshId; }
         const Enigma::Engine::TextureId& textureId() const { return m_texId; }
 
     private:
-        std::string m_meshName;
+        Enigma::Primitives::PrimitiveId m_meshId;
         Enigma::Engine::TextureId m_texId;
     };
     class AddAnimationClip : public Enigma::Frameworks::ICommand
@@ -101,5 +101,78 @@ namespace EnigmaViewer
         std::string m_newName;
         Enigma::Renderables::AnimationClip m_clip;
     };
+    class RefreshModelPrimitiveList : public Enigma::Frameworks::ICommand
+    {
+    public:
+        RefreshModelPrimitiveList(const std::vector<std::string>& model_list) : m_modelList(model_list) {}
+
+        const std::vector<std::string>& modelList() const { return m_modelList; }
+
+    private:
+        std::vector<std::string> m_modelList;
+    };
+    class LoadModelPrimitive : public Enigma::Frameworks::ICommand
+    {
+    public:
+        LoadModelPrimitive(const std::string& name) : m_name(name) {}
+
+        const std::string& name() const { return m_name; }
+
+    private:
+        std::string m_name;
+    };
+    class RemoveModelPrimitive : public Enigma::Frameworks::ICommand
+    {
+    public:
+        RemoveModelPrimitive(const std::string& name) : m_name(name) {}
+
+        const std::string& name() const { return m_name; }
+
+    private:
+        std::string m_name;
+    };
+    class CreateAnimatedPawn : public Enigma::Frameworks::ICommand
+    {
+    public:
+        CreateAnimatedPawn(const std::string& name, const Enigma::Primitives::PrimitiveId& model_id) : m_name(name), m_modelId(model_id) {}
+
+        const std::string& name() const { return m_name; }
+        const Enigma::Primitives::PrimitiveId& modelId() const { return m_modelId; }
+
+    protected:
+        std::string m_name;
+        Enigma::Primitives::PrimitiveId m_modelId;
+    };
+    class RefreshPawnList : public Enigma::Frameworks::ICommand
+    {
+    public:
+        RefreshPawnList(const std::vector<std::string>& pawn_list) : m_pawnList{ pawn_list } {}
+
+        const std::vector<std::string>& pawnList() const { return m_pawnList; }
+
+    private:
+        std::vector<std::string> m_pawnList;
+    };
+    class LoadAnimatedPawn : public Enigma::Frameworks::ICommand
+    {
+    public:
+        LoadAnimatedPawn(const std::string& name) : m_name(name) {}
+
+        const std::string& name() const { return m_name; }
+
+    private:
+        std::string m_name;
+    };
+    class RemoveAnimatedPawn : public Enigma::Frameworks::ICommand
+    {
+    public:
+        RemoveAnimatedPawn(const std::string& name) : m_name(name) {}
+
+        const std::string& name() const { return m_name; }
+
+    private:
+        std::string m_name;
+    };
 }
+
 #endif // _VIEWER_COMMANDS_H

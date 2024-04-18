@@ -26,17 +26,7 @@ MeshNode::MeshNode(const MeshNode& node) : m_factoryDesc(node.factoryDesc())
     m_mxLocalTransform = node.m_mxLocalTransform;
     m_mxRootRefTransform = node.m_mxRootRefTransform;
     m_hasSkinMeshPrimitive = node.m_hasSkinMeshPrimitive;
-    if (node.m_meshPrimitive)
-    {
-        if (auto skinmesh = dynamic_cast<SkinMeshPrimitive*>(node.m_meshPrimitive.get()))
-        {
-            //m_meshPrimitive = std::make_shared<SkinMeshPrimitive>(*skinmesh);
-        }
-        else
-        {
-            //m_meshPrimitive = std::make_shared<MeshPrimitive>(*(node.m_meshPrimitive));
-        }
-    }
+    m_meshPrimitive = node.m_meshPrimitive;
     m_parentIndexInArray = node.m_parentIndexInArray;
 }
 
@@ -48,15 +38,19 @@ MeshNode::MeshNode(const GenericDto& dto) : m_factoryDesc(TYPE_RTTI.getName())
     m_mxLocalTransform = m_mxT_PosTransform;
     m_mxRootRefTransform = m_mxT_PosTransform;
     //m_mxRootRefTransform = mesh_node_dto.RootRefTransform();
+    m_hasSkinMeshPrimitive = false;
     if (mesh_node_dto.meshPrimitiveId())
     {
         m_meshPrimitive = std::dynamic_pointer_cast<MeshPrimitive>(Primitive::queryPrimitive(mesh_node_dto.meshPrimitiveId().value().next()));
+        if ((m_meshPrimitive) && (m_meshPrimitive->typeInfo().isDerived(SkinMeshPrimitive::TYPE_RTTI)))
+        {
+            m_hasSkinMeshPrimitive = true;
+        }
     }
     if (mesh_node_dto.parentIndexInArray())
     {
         m_parentIndexInArray = mesh_node_dto.parentIndexInArray().value();
     }
-    m_hasSkinMeshPrimitive = false;
 }
 
 MeshNode::MeshNode(MeshNode&& node) noexcept : m_factoryDesc(std::move(node.factoryDesc()))
@@ -84,17 +78,7 @@ MeshNode& MeshNode::operator=(const MeshNode& node)
     m_mxLocalTransform = node.m_mxLocalTransform;
     m_mxRootRefTransform = node.m_mxRootRefTransform;
     m_hasSkinMeshPrimitive = node.m_hasSkinMeshPrimitive;
-    if (node.m_meshPrimitive)
-    {
-        if (auto skinmesh = dynamic_cast<SkinMeshPrimitive*>(node.m_meshPrimitive.get()))
-        {
-            //m_meshPrimitive = std::make_shared<SkinMeshPrimitive>(*skinmesh);
-        }
-        else
-        {
-            //m_meshPrimitive = std::make_shared<MeshPrimitive>(*(node.m_meshPrimitive));
-        }
-    }
+    m_meshPrimitive = node.m_meshPrimitive;
     m_parentIndexInArray = node.m_parentIndexInArray;
     return *this;
 }

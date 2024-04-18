@@ -23,6 +23,7 @@ AnimationAssetFileStoreMapper::~AnimationAssetFileStoreMapper()
 std::error_code AnimationAssetFileStoreMapper::connect()
 {
     if (m_has_connected) return FileSystem::ErrorCode::ok;
+    std::lock_guard locker{ m_file_map_lock };
     m_filename_map.clear();
     FileSystem::IFilePtr mapper_file = FileSystem::FileSystem::instance()->openFile(m_mapper_filename, FileSystem::read | FileSystem::binary);
     if (!mapper_file)
@@ -41,6 +42,7 @@ std::error_code AnimationAssetFileStoreMapper::connect()
 
 std::error_code AnimationAssetFileStoreMapper::disconnect()
 {
+    std::lock_guard locker{ m_file_map_lock };
     m_filename_map.clear();
     m_has_connected = false;
     return FileSystem::ErrorCode::ok;
@@ -55,6 +57,7 @@ bool AnimationAssetFileStoreMapper::hasAnimationAsset(const Animators::Animation
 
 std::optional<Enigma::Engine::GenericDto> AnimationAssetFileStoreMapper::queryAnimationAsset(const Animators::AnimationAssetId& id)
 {
+    std::lock_guard locker{ m_file_map_lock };
     auto it = m_filename_map.find(id);
     if (it == m_filename_map.end()) return std::nullopt;
     return deserializeDataTransferObject(it->second);
@@ -100,6 +103,7 @@ std::error_code AnimationAssetFileStoreMapper::serializeMapperFile()
 void AnimationAssetFileStoreMapper::deserializeMapperFile(const std::string& mapper_file_content)
 {
     if (mapper_file_content.empty()) return;
+    std::lock_guard locker{ m_file_map_lock };
     auto lines = split_token(mapper_file_content, "\n\r");
     for (auto& line : lines)
     {

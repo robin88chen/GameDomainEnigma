@@ -1,0 +1,109 @@
+[{
+        "LocalTransform": {
+            "Type": "Matrix4",
+            "Value": [1.0, 0.0, 0.0, 0.0, 0.0, -4.371138828673793e-8, 1.0, 0.0, 0.0, -1.0, -4.371138828673793e-8, 0.0, 0.0, 0.0, 0.0, 1.0]
+        },
+        "Rtti": {
+            "Type": "FactoryDesc",
+            "Value": {
+                "InstanceType": 0,
+                "ResourceName": "",
+                "ResourceFilename": "",
+                "RttiName": "En.GameCommon.AnimatedPawn",
+                "PrefabFilename": "pawns/bear.pawn@APK_PATH"
+            }
+        },
+        "ModelBound": {
+            "Type": "DataObject",
+            "Value": {
+                "BoxBV": {
+                    "Type": "Box3",
+                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0]
+                }
+            }
+        },
+        "TopLevel": {
+            "Type": "Boolean",
+            "Value": false
+        },
+        "GraphDepth": {
+            "Type": "Uint32",
+            "Value": 0
+        },
+        "Id": {
+            "Type": "StringArray",
+            "Value": ["pawns/bear", "En.GameCommon.AnimatedPawn"]
+        },
+        "ParentName": {
+            "Type": "String",
+            "Value": "_SceneRoot_"
+        },
+        "WorldTransform": {
+            "Type": "Matrix4",
+            "Value": [1.0, 0.0, 0.0, 0.0, 0.0, -4.371138828673793e-8, 1.0, 0.0, 0.0, -1.0, -4.371138828673793e-8, 0.0, 0.0, 0.0, 0.0, 1.0]
+        },
+        "WorldBound": {
+            "Type": "DataObject",
+            "Value": {
+                "BoxBV": {
+                    "Type": "Box3",
+                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -4.371138828673793e-8, -1.0, 0.0, 1.0, -4.371138828673793e-8, 1.0, 1.0, 1.0]
+                }
+            }
+        },
+        "CullingMode": {
+            "Type": "Uint32",
+            "Value": 0
+        },
+        "SpatialFlag": {
+            "Type": "Uint32",
+            "Value": 4
+        },
+        "NotifyFlag": {
+            "Type": "Uint32",
+            "Value": 31
+        },
+        "PawnPrimitiveId": {
+            "Type": "StringArray",
+            "Value": ["renderables/mb2011_zup", "0", "En.Renderables.ModelPrimitive"]
+        },
+        "AnimClipMap": {
+            "Type": "DataObject",
+            "Value": {
+                "Rtti": {
+                    "Type": "FactoryDesc",
+                    "Value": {
+                        "InstanceType": 0,
+                        "ResourceName": "",
+                        "ResourceFilename": "",
+                        "RttiName": "En.GameCommon.AnimationClipMap",
+                        "PrefabFilename": ""
+                    }
+                },
+                "AnimationNames": {
+                    "Type": "StringArray",
+                    "Value": []
+                },
+                "StartOffsets": {
+                    "Type": "FloatArray",
+                    "Value": []
+                },
+                "DivideIndices": {
+                    "Type": "Uint32Array",
+                    "Value": []
+                },
+                "LoopTimes": {
+                    "Type": "FloatArray",
+                    "Value": []
+                },
+                "WarpModes": {
+                    "Type": "Uint32Array",
+                    "Value": []
+                }
+            }
+        },
+        "AvatarRecipes": {
+            "Type": "DataObjectArray",
+            "Value": []
+        }
+    }]

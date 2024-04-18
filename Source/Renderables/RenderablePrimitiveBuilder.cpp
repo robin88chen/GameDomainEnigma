@@ -1,5 +1,4 @@
-﻿#include <memory>
-#include "RenderablePrimitiveBuilder.h"
+﻿#include "RenderablePrimitiveBuilder.h"
 #include "MeshPrimitiveBuilder.h"
 #include "Renderer/RendererErrors.h"
 #include "Frameworks/CommandBus.h"
@@ -10,6 +9,8 @@
 #include "MeshPrimitive.h"
 #include "SkinMeshPrimitive.h"
 #include "ModelPrimitive.h"
+#include "RenderableEvents.h"
+#include <memory>
 
 using namespace Enigma::Renderables;
 using namespace Enigma::Frameworks;
@@ -138,6 +139,7 @@ void RenderablePrimitiveBuilder::onPrimitiveHydrated(const IEventPtr& e)
     if (const auto ev = std::dynamic_pointer_cast<MeshPrimitiveBuilder::MeshPrimitiveHydrated, IEvent>(e))
     {
         if (ev->id() != m_currentBuildingId.value()) return;
+        EventPublisher::post(std::make_shared<RenderablePrimitiveHydrated>(m_currentBuildingId.value()));
         m_currentBuildingId = std::nullopt;
     }
 }
@@ -151,6 +153,7 @@ void RenderablePrimitiveBuilder::onHydratePrimitiveFailed(const IEventPtr& e)
         if (ev->id() != m_currentBuildingId.value()) return;
         Platforms::Debug::ErrorPrintf("mesh primitive %s build failed : %s\n",
             ev->name().c_str(), ev->error().message().c_str());
+        EventPublisher::post(std::make_shared<RenderablePrimitiveHydrationFailed>(m_currentBuildingId.value(), ev->error()));
         m_currentBuildingId = std::nullopt;
     }
 }

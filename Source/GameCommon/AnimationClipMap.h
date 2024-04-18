@@ -34,8 +34,8 @@ namespace Enigma::GameCommon
             };
             // copy-er, move-er, destructor 會自動建立
             const std::string& getName() const { return m_actionName; };
-            void ChangeClip(const Renderables::AnimationClip& clip) { m_animClip = clip; };
-            const Renderables::AnimationClip& GetClip() const { return m_animClip; };
+            void changeClip(const Renderables::AnimationClip& clip) { m_animClip = clip; };
+            const Renderables::AnimationClip& clip() const { return m_animClip; };
 
         private:
             std::string m_actionName;
@@ -53,13 +53,13 @@ namespace Enigma::GameCommon
 
         Engine::GenericDto serializeDto() const;
 
-        stdext::optional_ref<AnimClip> FindAnimationClip(const std::string& name);
-        std::optional<AnimClip> FindAnimationClip(const std::string& name) const;
-        unsigned GetSize() const { return static_cast<unsigned int>(m_animClips.size()); };
-        const ClipMap& GetAnimationClipMap() const { return m_animClips; };
+        stdext::optional_ref<AnimClip> findAnimationClip(const std::string& name);
+        std::optional<AnimClip> findAnimationClip(const std::string& name) const;
+        unsigned size() const { return static_cast<unsigned int>(m_animClips.size()); };
+        const ClipMap& animationClipMap() const { return m_animClips; };
 
-        void InsertClip(const AnimClip& anim_clip);
-        void RemoveClip(const std::string& name);
+        void insertClip(const AnimClip& anim_clip);
+        void removeClip(const std::string& name);
 
     protected:
         ClipMap m_animClips;

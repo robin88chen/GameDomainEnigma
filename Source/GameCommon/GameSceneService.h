@@ -16,6 +16,7 @@
 #include "SceneGraph/Culler.h"
 #include "Frameworks/EventSubscriber.h"
 #include "Frameworks/CommandSubscriber.h"
+#include "SceneGraph/SceneGraph.h"
 
 namespace Enigma::GameCommon
 {
@@ -41,15 +42,10 @@ namespace Enigma::GameCommon
 
         /** @name scene root */
         //@{
-        void createRootScene(const SceneGraph::SpatialId& scene_root_id, const std::optional<SceneGraph::SpatialId>& portal_management_node_id);
+        void createNodalSceneRoot(const SceneGraph::SpatialId& scene_root_id);
+        void createPortalSceneRoot(const SceneGraph::SpatialId& scene_root_id);
         void destroyRootScene();
-        const std::shared_ptr<SceneGraph::Node>& getSceneRoot() { return m_sceneRoot; };
         //@}
-
-        const std::shared_ptr<SceneGraph::PortalManagementNode>& getPortalManagementNode() { return m_portalMgtNode; };
-        error attachOutsideZone(const std::shared_ptr<SceneGraph::PortalZoneNode>& node);
-
-        std::shared_ptr<SceneGraph::Spatial> findSpatial(const SceneGraph::SpatialId& spatial_id);
 
         /** create culler */
         void createSceneCuller(const std::shared_ptr<SceneGraph::Camera>& camera);
@@ -63,20 +59,18 @@ namespace Enigma::GameCommon
         void onGameCameraUpdated(const Frameworks::IEventPtr& e);
         void createSceneRoot(const Frameworks::ICommandPtr& c);
         void attachSceneRootChild(const Frameworks::ICommandPtr& c);
-        void deleteSceneSpatial(const Frameworks::ICommandPtr& c);
 
     protected:
         std::weak_ptr<SceneGraph::SceneGraphRepository> m_sceneGraphRepository;
         std::weak_ptr<GameCameraService> m_cameraService;
-        std::shared_ptr<SceneGraph::Node> m_sceneRoot;
-        std::shared_ptr<SceneGraph::PortalManagementNode> m_portalMgtNode;
+        std::unique_ptr<SceneGraph::SceneGraph> m_sceneGraph;
         SceneGraph::Culler* m_culler;
 
         Frameworks::EventSubscriberPtr m_onCameraCreated;
         Frameworks::EventSubscriberPtr m_onCameraUpdated;
-        Frameworks::CommandSubscriberPtr m_createSceneRoot;
+        Frameworks::CommandSubscriberPtr m_createNodalSceneRoot;
+        Frameworks::CommandSubscriberPtr m_createPortalSceneRoot;
         Frameworks::CommandSubscriberPtr m_attachSceneRootChild;
-        Frameworks::CommandSubscriberPtr m_deleteSceneSpatial;
     };
 }
 

@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   RenderBufferEvents.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   September 2022
  *********************************************************************/
@@ -20,9 +20,9 @@ namespace Enigma::Engine
     public:
         RenderBufferBuilt(const std::string& name, const RenderBufferSignature& signature, const RenderBufferPtr& buffer) :
             m_name(name), m_signature(signature), m_buffer(buffer) {};
-        const std::string& getName() const { return m_name; }
-        const RenderBufferSignature& GetSignature() const { return m_signature; }
-        const RenderBufferPtr& GetBuffer() const { return m_buffer; }
+        const std::string& name() const { return m_name; }
+        const RenderBufferSignature& signature() const { return m_signature; }
+        const RenderBufferPtr& buffer() const { return m_buffer; }
     private:
         std::string m_name;
         RenderBufferSignature m_signature;
@@ -33,8 +33,8 @@ namespace Enigma::Engine
     public:
         BuildRenderBufferFailed(const std::string& name, std::error_code er) :
             m_name(name), m_error(er) {};
-        const std::string& getName() const { return m_name; }
-        std::error_code GetErrorCode() const { return m_error; }
+        const std::string& name() const { return m_name; }
+        std::error_code error() const { return m_error; }
     private:
         std::string m_name;
         std::error_code m_error;

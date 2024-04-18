@@ -41,10 +41,9 @@ namespace Enigma::Renderables
         ModelAnimationAssembler& nodeSRT(const std::string& node_name, const AnimationTimeSRTAssembler& assembler);
         ModelAnimationAssembler& asAsset(const std::string& name, const std::string& filename, const std::string& path_id);
 
-        std::shared_ptr<ModelAnimationAsset> constitute(Animators::PersistenceLevel persistence_level);
-
-    protected:
         Engine::GenericDto toGenericDto();
+
+        std::shared_ptr<ModelAnimationAsset> constitute(Animators::PersistenceLevel persistence_level);
 
     protected:
         Animators::AnimationAssetId m_id;

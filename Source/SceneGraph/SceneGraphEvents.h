@@ -235,33 +235,6 @@ namespace Enigma::SceneGraph
         SpatialId m_id;
         bool m_isVisible;
     };
-    //------------ node operation ------------
-    class NodeChildAttached : public Frameworks::IEvent
-    {
-    public:
-        NodeChildAttached(const SceneGraph::SpatialId& node_id, const std::shared_ptr<SceneGraph::Spatial>& child) : m_nodeId(node_id), m_child(child) {}
-
-        const SceneGraph::SpatialId& nodeId() const { return m_nodeId; }
-        std::shared_ptr<SceneGraph::Spatial> child() const { return m_child.lock(); }
-
-    protected:
-        SceneGraph::SpatialId m_nodeId;
-        std::weak_ptr<SceneGraph::Spatial> m_child;
-    };
-    class AttachNodeChildFailed : public Frameworks::IEvent
-    {
-    public:
-        AttachNodeChildFailed(const SceneGraph::SpatialId& node_id, const SceneGraph::SpatialId& child_id, std::error_code er) : m_nodeId(node_id), m_childId(child_id), m_error(er) {}
-
-        const SceneGraph::SpatialId& nodeId() const { return m_nodeId; }
-        const SceneGraph::SpatialId& childId() const { return m_childId; }
-        std::error_code error() const { return m_error; }
-
-    protected:
-        SceneGraph::SpatialId m_nodeId;
-        SceneGraph::SpatialId m_childId;
-        std::error_code m_error;
-    };
     //------------ creator response ------------
     class SpatialCreated : public Frameworks::IEvent
     {
@@ -412,6 +385,81 @@ namespace Enigma::SceneGraph
     protected:
         SpatialId m_id;
         std::error_code m_err;
+    };
+    //------------ node operation ------------
+    class NodeChildAttached : public Frameworks::IEvent
+    {
+    public:
+        NodeChildAttached(const SpatialId& node_id, const std::shared_ptr<Spatial>& child) : m_nodeId(node_id), m_child(child) {}
+
+        const SpatialId& nodeId() const { return m_nodeId; }
+        std::shared_ptr<Spatial> child() const { return m_child.lock(); }
+
+    protected:
+        SpatialId m_nodeId;
+        std::weak_ptr<Spatial> m_child;
+    };
+    class AttachNodeChildFailed : public Frameworks::IEvent
+    {
+    public:
+        AttachNodeChildFailed(const SpatialId& node_id, const SpatialId& child_id, std::error_code er) : m_nodeId(node_id), m_childId(child_id), m_error(er) {}
+
+        const SpatialId& nodeId() const { return m_nodeId; }
+        const SpatialId& childId() const { return m_childId; }
+        std::error_code error() const { return m_error; }
+
+    protected:
+        SpatialId m_nodeId;
+        SpatialId m_childId;
+        std::error_code m_error;
+    };
+    class NodeChildDetached : public Frameworks::IEvent
+    {
+    public:
+        NodeChildDetached(const SpatialId& node_id, const SpatialId& child_id) : m_nodeId(node_id), m_childId(child_id) {}
+
+        const SpatialId& nodeId() const { return m_nodeId; }
+        const SpatialId& childId() const { return m_childId; }
+
+    protected:
+        SpatialId m_nodeId;
+        SpatialId m_childId;
+    };
+    class DetachNodeChildFailed : public Frameworks::IEvent
+    {
+    public:
+        DetachNodeChildFailed(const SpatialId& node_id, const SpatialId& child_id, std::error_code er) : m_nodeId(node_id), m_childId(child_id), m_error(er) {}
+
+        const SpatialId& nodeId() const { return m_nodeId; }
+        const SpatialId& childId() const { return m_childId; }
+        std::error_code error() const { return m_error; }
+
+    protected:
+        SpatialId m_nodeId;
+        SpatialId m_childId;
+        std::error_code m_error;
+    };
+    //--------------------------------------------------------------------------
+    class SceneSpatialDeleted : public Frameworks::IEvent
+    {
+    public:
+        SceneSpatialDeleted(const SpatialId& id) : m_id(id) {}
+
+        const SpatialId& id() const { return m_id; }
+    protected:
+        SpatialId m_id;
+    };
+    class DeleteSceneSpatialFailed : public Frameworks::IEvent
+    {
+    public:
+        DeleteSceneSpatialFailed(const SpatialId& id, std::error_code er) : m_id(id), m_error(er) {}
+
+        const SpatialId& id() const { return m_id; }
+        std::error_code error() const { return m_error; }
+
+    protected:
+        SpatialId m_id;
+        std::error_code m_error;
     };
 }
 

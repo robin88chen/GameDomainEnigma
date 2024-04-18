@@ -4,9 +4,6 @@
     <Filter Include="Scene Graph Errors">
       <UniqueIdentifier>{b60ba73c-4987-47ae-9ddc-c73a2fbf7d7b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene Graph">
-      <UniqueIdentifier>{87f32871-2883-4a67-aa50-4872c8b6f4c1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Scene Traveler">
       <UniqueIdentifier>{a612705c-1d5b-4847-b7d6-a6dda06d0ff7}</UniqueIdentifier>
     </Filter>
@@ -40,9 +37,6 @@
     <Filter Include="Queries">
       <UniqueIdentifier>{1afd4c29-661a-4759-b666-b605a72f0cac}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene Graph\LightInfo">
-      <UniqueIdentifier>{a324eb2b-2215-44f4-9ee8-09f24c4b48af}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Repository\StoreMapper">
       <UniqueIdentifier>{227981a7-1c6e-4575-af21-6bf16d55db5d}</UniqueIdentifier>
     </Filter>
@@ -51,6 +45,15 @@
     </Filter>
     <Filter Include="Lazy Node Hydration">
       <UniqueIdentifier>{4e37e94c-8b2a-49e1-adcf-8d4049626af6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene Graph">
+      <UniqueIdentifier>{a7fe7513-103c-4f54-9e89-709da1138a37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Spatial">
+      <UniqueIdentifier>{87f32871-2883-4a67-aa50-4872c8b6f4c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Spatial\LightInfo">
+      <UniqueIdentifier>{a324eb2b-2215-44f4-9ee8-09f24c4b48af}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -82,13 +85,13 @@
       <Filter>Events</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightInfo.h">
-      <Filter>Scene Graph\LightInfo</Filter>
+      <Filter>Spatial\LightInfo</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightInfoTraversal.h">
-      <Filter>Scene Graph\LightInfo</Filter>
+      <Filter>Spatial\LightInfo</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialLightInfoQuery.h">
-      <Filter>Scene Graph\LightInfo</Filter>
+      <Filter>Spatial\LightInfo</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneFlattenTraversal.h">
       <Filter>Scene Traveler</Filter>
@@ -154,22 +157,22 @@
       <Filter>Queries</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LazyNode.h">
-      <Filter>Scene Graph</Filter>
+      <Filter>Spatial</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Light.h">
-      <Filter>Scene Graph</Filter>
+      <Filter>Spatial</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Node.h">
-      <Filter>Scene Graph</Filter>
+      <Filter>Spatial</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Pawn.h">
-      <Filter>Scene Graph</Filter>
+      <Filter>Spatial</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Spatial.h">
-      <Filter>Scene Graph</Filter>
+      <Filter>Spatial</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialRenderState.h">
-      <Filter>Scene Graph</Filter>
+      <Filter>Spatial</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneNonLazyFlattenTraversal.h">
       <Filter>Scene Traveler</Filter>
@@ -185,6 +188,15 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphPersistenceLevel.h">
       <Filter>Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\NodalSceneGraph.h">
+      <Filter>Scene Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraph.h">
+      <Filter>Scene Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalSceneGraph.h">
+      <Filter>Scene Graph</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -207,13 +219,13 @@
       <Filter>Cullers</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightInfo.cpp">
-      <Filter>Scene Graph\LightInfo</Filter>
+      <Filter>Spatial\LightInfo</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightInfoTraversal.cpp">
-      <Filter>Scene Graph\LightInfo</Filter>
+      <Filter>Spatial\LightInfo</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialLightInfoQuery.cpp">
-      <Filter>Scene Graph\LightInfo</Filter>
+      <Filter>Spatial\LightInfo</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneFlattenTraversal.cpp">
       <Filter>Scene Traveler</Filter>
@@ -264,19 +276,19 @@
       <Filter>Scene Traveler</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LazyNode.cpp">
-      <Filter>Scene Graph</Filter>
+      <Filter>Spatial</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Light.cpp">
-      <Filter>Scene Graph</Filter>
+      <Filter>Spatial</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Node.cpp">
-      <Filter>Scene Graph</Filter>
+      <Filter>Spatial</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Pawn.cpp">
-      <Filter>Scene Graph</Filter>
+      <Filter>Spatial</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Spatial.cpp">
-      <Filter>Scene Graph</Filter>
+      <Filter>Spatial</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneNonLazyFlattenTraversal.cpp">
       <Filter>Scene Traveler</Filter>
@@ -289,6 +301,15 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphCommands.cpp">
       <Filter>Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\NodalSceneGraph.cpp">
+      <Filter>Scene Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraph.cpp">
+      <Filter>Scene Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalSceneGraph.cpp">
+      <Filter>Scene Graph</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

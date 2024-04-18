@@ -254,7 +254,7 @@ void PortalManagementTest::makeSceneGraph()
         NodeAssembler root_assembler(m_rootId);
         m_sceneGraphFileStoreMapper->putSpatial(m_rootId, root_assembler.toGenericDto());
     }
-    CommandBus::post(std::make_shared<CreateSceneRoot>(m_rootId, m_portalManagementId));
+    CommandBus::post(std::make_shared<CreatePortalSceneRoot>(m_portalManagementId));
 }
 
 void PortalManagementTest::prepareRenderScene()

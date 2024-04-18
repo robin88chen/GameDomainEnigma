@@ -74,6 +74,7 @@ namespace Enigma::Renderables
         void onHydrateTextureFailed(const Frameworks::IEventPtr& e);
 
         void tryCompletingMesh();
+        void failMeshHydration(const std::error_code er);
 
         std::optional<unsigned> findBuildingEffectIndex(const Engine::EffectMaterialId& id);
         std::optional<std::tuple<unsigned, unsigned>> findLoadingTextureIndex(const Engine::TextureId& id);

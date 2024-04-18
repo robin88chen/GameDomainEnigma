@@ -30,10 +30,13 @@ namespace Enigma::Primitives
         bool operator==(const PrimitiveId& other) const { return m_name == other.m_name && m_sequence == other.m_sequence && m_rtti == other.m_rtti; }
         bool operator!=(const PrimitiveId& other) const { return m_name != other.m_name || m_sequence != other.m_sequence || m_rtti != other.m_rtti; }
 
+        bool empty() const { return m_rtti == nullptr || m_name.empty(); }
         std::vector<std::string> tokens() const;
         const std::string& name() const { return m_name; }
         const std::uint64_t sequence() const { return m_sequence; }
         const Frameworks::Rtti& rtti() const { return *m_rtti; }
+        bool isOrigin() const { return m_sequence == 0; }
+        bool isEqual(const PrimitiveId& other) const { return isOrigin() ? operator==(other.origin()) : operator==(other); }
 
         PrimitiveId origin() const { return PrimitiveId(m_name, 0, *m_rtti); }
         PrimitiveId next() const;

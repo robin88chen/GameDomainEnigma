@@ -9,9 +9,7 @@
 #include "Frameworks/CommandBus.h"
 #include "CubeGeometryMaker.h"
 #include "SceneGraphMaker.h"
-#include "SceneGraph/SceneGraphCommands.h"
 #include "SceneGraph/SceneGraphEvents.h"
-#include "Gateways/JsonFileDtoDeserializer.h"
 #include "CameraMaker.h"
 #include "Animators/AnimatorCommands.h"
 #include "SceneGraph/Culler.h"
@@ -39,6 +37,7 @@
 #include "SkinMeshModelMaker.h"
 #include "SceneGraph/SceneGraphQueries.h"
 #include "SceneGraph/SceneGraphPersistenceLevel.h"
+#include "SceneGraph/SceneGraphRepository.h"
 
 std::string PrimaryTargetName = "primary_target";
 std::string DefaultRendererName = "default_renderer";
@@ -109,12 +108,13 @@ void SceneGraphPawnTest::installEngine()
     auto geometry_policy = std::make_shared<GeometryInstallingPolicy>(std::make_shared<GeometryDataFileStoreMapper>("geometries.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
     auto primitive_policy = std::make_shared<PrimitiveRepositoryInstallingPolicy>(std::make_shared<PrimitiveFileStoreMapper>("primitives.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
     auto animator_policy = std::make_shared<AnimatorInstallingPolicy>(std::make_shared<AnimatorFileStoreMapper>("animators.db.txt@DataPath", std::make_shared<DtoJsonGateway>()), std::make_shared<AnimationAssetFileStoreMapper>("animation_assets.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
-    auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(std::make_shared<JsonFileDtoDeserializer>(), std::make_shared<SceneGraphFileStoreMapper>("scene_graph.db.txt@DataPath", "lazy_scene.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
+    auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(std::make_shared<SceneGraphFileStoreMapper>("scene_graph.db.txt@DataPath", "lazy_scene.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
     auto effect_material_source_policy = std::make_shared<EffectMaterialSourceRepositoryInstallingPolicy>(std::make_shared<EffectMaterialSourceFileStoreMapper>("effect_materials.db.txt@APK_PATH"));
     auto texture_policy = std::make_shared<TextureRepositoryInstallingPolicy>(std::make_shared<TextureFileStoreMapper>("textures.db.txt@APK_PATH", std::make_shared<DtoJsonGateway>()));
     auto renderables_policy = std::make_shared<RenderablesInstallingPolicy>();
     m_graphicMain->installRenderEngine({ creating_policy, engine_policy, renderer_policy, render_sys_policy, geometry_policy, primitive_policy, animator_policy, scene_graph_policy, effect_material_source_policy, texture_policy, renderables_policy });
 
+    m_sceneGraph = std::make_unique<NodalSceneGraph>(m_graphicMain->getSystemServiceAs<SceneGraphRepository>());
     makeCamera();
     makeModel();
 }
@@ -122,7 +122,9 @@ void SceneGraphPawnTest::installEngine()
 void SceneGraphPawnTest::shutdownEngine()
 {
     m_pawn = nullptr;
-    m_sceneRoot = nullptr;
+    m_sceneGraph->destroyRoot();
+    m_sceneGraph = nullptr;
+    //m_sceneRoot = nullptr;
     m_model = nullptr;
     m_renderer = nullptr;
     m_renderTarget = nullptr;
@@ -175,11 +177,14 @@ void SceneGraphPawnTest::makeModel()
     auto mesh = SkinMeshModelMaker::makeCubeMeshPrimitive(meshId, cubeId);
     m_model = SkinMeshModelMaker::makeModelPrimitive(modelId, meshId, animatorId, meshNodeNames);
     m_rootId = SpatialId("root", Node::TYPE_RTTI);
-    m_sceneRoot = Node::queryNode(m_rootId);
-    if (!m_sceneRoot)
+    m_sceneGraph->createRoot(m_rootId);
+    //m_sceneRoot = Node::queryNode(m_rootId);
+    //if (!m_sceneRoot)
+    if (!m_sceneGraph->root())
     {
         auto scene_dto = SceneGraphMaker::makeSceneGraph(m_rootId, modelId, pawn_id, stillpawn_id);
-        m_sceneRoot = std::dynamic_pointer_cast<Node>(std::make_shared<RequestSpatialConstitution>(m_rootId, scene_dto, PersistenceLevel::Store)->dispatch());
+        std::make_shared<RequestSpatialConstitution>(m_rootId, scene_dto, PersistenceLevel::Store)->dispatch();
+        m_sceneGraph->createRoot(m_rootId);
     }
     auto pawn = Pawn::queryPawn(pawn_id);
     if (!pawn) return;
@@ -193,9 +198,9 @@ void SceneGraphPawnTest::makeModel()
 
 void SceneGraphPawnTest::prepareRenderScene()
 {
-    if (m_sceneRoot)
+    if (m_sceneGraph)
     {
-        m_culler->ComputeVisibleSet(m_sceneRoot);
+        m_culler->ComputeVisibleSet(m_sceneGraph->root());
     }
     if (m_renderer)
     {

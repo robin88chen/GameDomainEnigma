@@ -61,21 +61,6 @@ namespace Enigma::SceneGraph
     private:
         std::string m_rtti;
     };
-    //--------------------------- Node operations ------------------------------
-    class AttachNodeChild : public Frameworks::ICommand
-    {
-    public:
-        AttachNodeChild(const SceneGraph::SpatialId& node_id, const std::shared_ptr<SceneGraph::Spatial>& child, const MathLib::Matrix4& local_transform) : m_nodeId(node_id), m_child(child), m_localTransform(local_transform) {}
-
-        const SceneGraph::SpatialId& nodeId() const { return m_nodeId; }
-        const std::shared_ptr<SceneGraph::Spatial>& child() const { return m_child; }
-        const MathLib::Matrix4& localTransform() const { return m_localTransform; }
-
-    protected:
-        SceneGraph::SpatialId m_nodeId;
-        std::shared_ptr<SceneGraph::Spatial> m_child;
-        MathLib::Matrix4 m_localTransform;
-    };
     //--------------------------- Repository operations ------------------------
     class PutSpatial : public Frameworks::ICommand
     {
@@ -127,6 +112,44 @@ namespace Enigma::SceneGraph
         HydrateLazyNode(const SpatialId& id);
 
         const SpatialId& id() { return m_id; }
+
+    protected:
+        SpatialId m_id;
+    };
+    //--------------------------- Node operations ------------------------------
+    class AttachNodeChild : public Frameworks::ICommand
+    {
+    public:
+        AttachNodeChild(const SpatialId& node_id, const std::shared_ptr<Spatial>& child, const MathLib::Matrix4& local_transform) : m_nodeId(node_id), m_child(child), m_localTransform(local_transform) {}
+
+        const SpatialId& nodeId() const { return m_nodeId; }
+        const std::shared_ptr<Spatial>& child() const { return m_child; }
+        const MathLib::Matrix4& localTransform() const { return m_localTransform; }
+
+    protected:
+        SpatialId m_nodeId;
+        std::shared_ptr<Spatial> m_child;
+        MathLib::Matrix4 m_localTransform;
+    };
+    class DetachNodeChild : public Frameworks::ICommand
+    {
+    public:
+        DetachNodeChild(const SpatialId& node_id, const SpatialId& child_id) : m_nodeId(node_id), m_childId(child_id) {}
+
+        const SpatialId& nodeId() const { return m_nodeId; }
+        const SpatialId& childId() const { return m_childId; }
+
+    protected:
+        SpatialId m_nodeId;
+        SpatialId m_childId;
+    };
+    //----------------------------------------------------------------
+    class DeleteSceneSpatial : public Frameworks::ICommand
+    {
+    public:
+        DeleteSceneSpatial(const SpatialId& id) : m_id(id) {}
+
+        const SpatialId& id() const { return m_id; }
 
     protected:
         SpatialId m_id;

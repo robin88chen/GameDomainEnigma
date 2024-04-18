@@ -1,0 +1,50 @@
+[{
+        "Rtti": {
+            "Type": "FactoryDesc",
+            "Value": {
+                "InstanceType": 0,
+                "ResourceName": "",
+                "ResourceFilename": "",
+                "RttiName": "En.Renderables.SkinMeshPrimitive",
+                "PrefabFilename": "renderables/mb2011_zup.m_a.mesh@APK_PATH"
+            }
+        },
+        "GeometryId": {
+            "Type": "String",
+            "Value": "geometries/mb2011_zup.m_a"
+        },
+        "RenderListId": {
+            "Type": "Uint32",
+            "Value": 1
+        },
+        "Id": {
+            "Type": "StringArray",
+            "Value": ["renderables/mb2011_zup.m_a", "0", "En.Renderables.SkinMeshPrimitive"]
+        },
+        "Effects": {
+            "Type": "StringArray",
+            "Value": ["fx/default_textured_skinmesh_effect"]
+        },
+        "VisualTechniqueSelection": {
+            "Type": "String",
+            "Value": "Default"
+        },
+        "TextureMaps": {
+            "Type": "DataObjectArray",
+            "Value": [{
+                    "TextureMappings": {
+                        "Type": "DataObjectArray",
+                        "Value": [{
+                                "TextureId.Name": {
+                                    "Type": "String",
+                                    "Value": "image/mb20110801"
+                                },
+                                "Semantic": {
+                                    "Type": "String",
+                                    "Value": "DiffuseMap"
+                                }
+                            }]
+                    }
+                }]
+        }
+    }]

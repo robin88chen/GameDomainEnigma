@@ -12,7 +12,7 @@ int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char*, int n
     EnigmaViewer::MainForm form;
     form.initialize();
     form.caption("Enigma Viewer");
-    form.size(nana::size(1024, 768));
+    form.size(nana::size(1200, 800));
     form.move(nana::point(60, 60));
     form.show();
 

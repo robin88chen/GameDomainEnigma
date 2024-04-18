@@ -1,0 +1,36 @@
+[{
+        "Rtti": {
+            "Type": "FactoryDesc",
+            "Value": {
+                "InstanceType": 0,
+                "ResourceName": "",
+                "ResourceFilename": "",
+                "RttiName": "En.Renderables.MeshPrimitive",
+                "PrefabFilename": "renderables/mb2011_zup.k_headfront.mesh@APK_PATH"
+            }
+        },
+        "GeometryId": {
+            "Type": "String",
+            "Value": "geometries/mb2011_zup.k_headfront"
+        },
+        "RenderListId": {
+            "Type": "Uint32",
+            "Value": 1
+        },
+        "Id": {
+            "Type": "StringArray",
+            "Value": ["renderables/mb2011_zup.k_headfront", "0", "En.Renderables.MeshPrimitive"]
+        },
+        "Effects": {
+            "Type": "StringArray",
+            "Value": ["fx/default_color_mesh_effect"]
+        },
+        "VisualTechniqueSelection": {
+            "Type": "String",
+            "Value": "Default"
+        },
+        "TextureMaps": {
+            "Type": "DataObjectArray",
+            "Value": []
+        }
+    }]

@@ -24,38 +24,10 @@ SkinMeshPrimitive::SkinMeshPrimitive(const PrimitiveId& id, const Engine::Generi
     m_ownerNodeRootRefTransform = Matrix4::IDENTITY;
 }
 
-/*SkinMeshPrimitive::SkinMeshPrimitive(const SkinMeshPrimitive& skin) : MeshPrimitive(skin)
-{
-    m_boneEffectMatrix = skin.m_boneEffectMatrix;
-    m_ownerNodeRootRefTransform = skin.m_ownerNodeRootRefTransform;
-}
-
-SkinMeshPrimitive::SkinMeshPrimitive(SkinMeshPrimitive&& skin) noexcept : MeshPrimitive(std::move(static_cast<MeshPrimitive&>(skin)))
-{
-    m_boneEffectMatrix = std::move(skin.m_boneEffectMatrix);
-    m_ownerNodeRootRefTransform = std::move(skin.m_ownerNodeRootRefTransform);
-}*/
-
 SkinMeshPrimitive::~SkinMeshPrimitive()
 {
     loosePrimitiveBoneMatrix();
 }
-
-/*SkinMeshPrimitive& SkinMeshPrimitive::operator=(const SkinMeshPrimitive& skin)
-{
-    MeshPrimitive::operator=(skin);
-    m_boneEffectMatrix = skin.m_boneEffectMatrix;
-    m_ownerNodeRootRefTransform = skin.m_ownerNodeRootRefTransform;
-    return *this;
-}
-
-SkinMeshPrimitive& SkinMeshPrimitive::operator=(SkinMeshPrimitive&& skin) noexcept
-{
-    MeshPrimitive::operator=(skin);
-    m_boneEffectMatrix = std::move(skin.m_boneEffectMatrix);
-    m_ownerNodeRootRefTransform = std::move(skin.m_ownerNodeRootRefTransform);
-    return *this;
-}*/
 
 GenericDto SkinMeshPrimitive::serializeDto() const
 {
@@ -142,6 +114,7 @@ void SkinMeshPrimitive::looseSegmentBoneMatrix(unsigned index)
 
 void SkinMeshPrimitive::assignBoneMatrix(Engine::EffectVariable& var)
 {
+    if (m_boneEffectMatrix.empty()) return;
     var.assignValues(m_boneEffectMatrix, static_cast<unsigned>(m_boneEffectMatrix.size()));
 }
 

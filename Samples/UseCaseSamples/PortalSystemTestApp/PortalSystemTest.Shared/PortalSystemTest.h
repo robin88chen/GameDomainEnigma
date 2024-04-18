@@ -23,6 +23,7 @@
 #include "Renderer/Renderer.h"
 #include "SceneGraph/Node.h"
 #include "SceneGraph/Pawn.h"
+#include "SceneGraph/PortalSceneGraph.h"
 #include "FileStorage/GeometryDataFileStoreMapper.h"
 #include "FileStorage/SceneGraphFileStoreMapper.h"
 #include "FileStorage/PrimitiveFileStoreMapper.h"
@@ -66,7 +67,8 @@ protected:
     Enigma::Renderer::RenderTargetPtr m_renderTarget;
     std::shared_ptr<Enigma::Renderables::ModelPrimitive> m_model;
     Enigma::SceneGraph::SpatialId m_rootId;
-    Enigma::SceneGraph::NodePtr m_sceneRoot;
+    std::unique_ptr<Enigma::SceneGraph::SceneGraph> m_sceneGraph;
+    //Enigma::SceneGraph::NodePtr m_sceneRoot;
     Enigma::SceneGraph::PawnPtr m_pawn;
 
     Enigma::SceneGraph::SpatialId m_cameraId;

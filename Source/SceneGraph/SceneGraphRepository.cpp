@@ -87,9 +87,6 @@ void SceneGraphRepository::registerHandlers()
     CommandBus::subscribe(typeid(PutLaziedContent), m_putLaziedContent);
     m_removeLaziedContent = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { removeLaziedContent(c); });
     CommandBus::subscribe(typeid(RemoveLaziedContent), m_removeLaziedContent);
-
-    m_attachNodeChild = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { attachNodeChild(c); });
-    CommandBus::subscribe(typeid(AttachNodeChild), m_attachNodeChild);
 }
 
 void SceneGraphRepository::unregisterHandlers()
@@ -121,9 +118,6 @@ void SceneGraphRepository::unregisterHandlers()
     m_putLaziedContent = nullptr;
     CommandBus::unsubscribe(typeid(RemoveLaziedContent), m_removeLaziedContent);
     m_removeLaziedContent = nullptr;
-
-    CommandBus::unsubscribe(typeid(AttachNodeChild), m_attachNodeChild);
-    m_attachNodeChild = nullptr;
 }
 
 void SceneGraphRepository::setCoordinateSystem(GraphicCoordSys hand)
@@ -478,27 +472,5 @@ void SceneGraphRepository::removeLaziedContent(const Frameworks::ICommandPtr& c)
     const auto cmd = std::dynamic_pointer_cast<RemoveLaziedContent>(c);
     assert(cmd);
     removeLaziedContent(cmd->id());
-}
-
-
-void SceneGraphRepository::attachNodeChild(const Frameworks::ICommandPtr& c)
-{
-    if (!c) return;
-    const auto cmd = std::dynamic_pointer_cast<AttachNodeChild>(c);
-    assert(cmd);
-    auto node = std::dynamic_pointer_cast<Node>(querySpatial(cmd->nodeId()));
-    if (!node)
-    {
-        EventPublisher::post(std::make_shared<AttachNodeChildFailed>(cmd->nodeId(), cmd->child()->id(), ErrorCode::nodeNotFound));
-        return;
-    }
-    if (error er = node->attachChild(cmd->child(), cmd->localTransform()))
-    {
-        EventPublisher::post(std::make_shared<AttachNodeChildFailed>(cmd->nodeId(), cmd->child()->id(), er));
-    }
-    else
-    {
-        EventPublisher::post(std::make_shared<NodeChildAttached>(cmd->nodeId(), cmd->child()));
-    }
 }
 

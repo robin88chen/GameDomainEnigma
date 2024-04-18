@@ -3,11 +3,8 @@
 #include "Gateways/DtoJsonGateway.h"
 #include "Frameworks/ExtentTypesDefine.h"
 
-#define TOKEN_COLOR_MESH_EFFECT_FILENAME "ColorMeshEffectFilename"
 #define TOKEN_COLOR_MESH_EFFECT_NAME "ColorMeshEffectName"
-#define TOKEN_TEXTURED_MESH_EFFECT_FILENAME "TexturedMeshEffectFilename"
 #define TOKEN_TEXTURED_MESH_EFFECT_NAME "TexturedMeshEffectName"
-#define TOKEN_TEXTURED_SKIN_MESH_EFFECT_FILENAME "TexturedSkinmeshEffectFilename"
 #define TOKEN_TEXTURED_SKIN_MESH_EFFECT_NAME "TexturedSkinmeshEffectName"
 
 using namespace EnigmaViewer;
@@ -25,13 +22,6 @@ void DaeParserConfiguration::loadConfig()
     }
 }
 
-std::string DaeParserConfiguration::defaultColorMeshEffectFilename()
-{
-    assert(!m_configDto.isEmpty());
-    if (auto v = m_configDto.tryGetValue<std::string>(TOKEN_COLOR_MESH_EFFECT_FILENAME)) return v.value();
-    return "";
-}
-
 std::string DaeParserConfiguration::defaultColorMeshEffectName()
 {
     assert(!m_configDto.isEmpty());
@@ -39,24 +29,10 @@ std::string DaeParserConfiguration::defaultColorMeshEffectName()
     return "";
 }
 
-std::string DaeParserConfiguration::defaultTexturedMeshEffectFilename()
-{
-    assert(!m_configDto.isEmpty());
-    if (auto v = m_configDto.tryGetValue<std::string>(TOKEN_TEXTURED_MESH_EFFECT_FILENAME)) return v.value();
-    return "";
-}
-
 std::string DaeParserConfiguration::defaultTexturedMeshEffectName()
 {
     assert(!m_configDto.isEmpty());
     if (auto v = m_configDto.tryGetValue<std::string>(TOKEN_TEXTURED_MESH_EFFECT_NAME)) return v.value();
-    return "";
-}
-
-std::string DaeParserConfiguration::defaultTexturedSkinMeshEffectFilename()
-{
-    assert(!m_configDto.isEmpty());
-    if (auto v = m_configDto.tryGetValue<std::string>(TOKEN_TEXTURED_SKIN_MESH_EFFECT_FILENAME)) return v.value();
     return "";
 }
 

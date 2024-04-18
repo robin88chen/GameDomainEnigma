@@ -30,12 +30,14 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightInfo.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightInfoTraversal.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightInfoDtos.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\NodalSceneGraph.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Node.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Pawn.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Portal.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalDtos.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalManagementNode.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalSceneGraph.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalZoneNode.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneFlattenTraversal.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphCommands.h" />
@@ -46,6 +48,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphFactory.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphInstallingPolicy.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraph.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphPersistenceLevel.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphQueries.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphRepository.h" />
@@ -74,11 +77,13 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightInfo.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightInfoDtos.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightInfoTraversal.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\NodalSceneGraph.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Node.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Pawn.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Portal.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalDtos.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalManagementNode.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalSceneGraph.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalZoneNode.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneFlattenTraversal.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphAssemblers.cpp" />
@@ -87,6 +92,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphFactory.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphInstallingPolicy.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraph.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphRepository.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneNonLazyFlattenTraversal.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Spatial.cpp" />

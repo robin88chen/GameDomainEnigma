@@ -27,6 +27,8 @@ namespace Enigma::Renderables
     public:
         MeshPrimitiveAssembler(const Primitives::PrimitiveId& id);
 
+        const Primitives::PrimitiveId& id() const { return m_id; }
+
         MeshPrimitiveAssembler& geometryId(const Geometries::GeometryId& id);
         MeshPrimitiveAssembler& effect(const Engine::EffectMaterialId& id);
         MeshPrimitiveAssembler& textureMap(const Engine::EffectTextureMapDtoHelper& texture_map);
@@ -49,6 +51,8 @@ namespace Enigma::Renderables
     public:
         SkinMeshPrimitiveAssembler(const Primitives::PrimitiveId& id);
 
+        const Primitives::PrimitiveId& id() const { return m_id; }
+
         SkinMeshPrimitiveAssembler& geometryId(const Geometries::GeometryId& id);
         SkinMeshPrimitiveAssembler& effect(const Engine::EffectMaterialId& id);
         SkinMeshPrimitiveAssembler& textureMap(const Engine::EffectTextureMapDtoHelper& texture_map);
@@ -70,6 +74,8 @@ namespace Enigma::Renderables
     {
     public:
         MeshNodeAssembler(const std::string& name);
+
+        const std::string& name() const { return m_name; }
 
         MeshNodeAssembler& localT_PosTransform(MathLib::Matrix4& transform);
         MeshNodeAssembler& meshPrimitive(const Primitives::PrimitiveId& id);
@@ -106,14 +112,15 @@ namespace Enigma::Renderables
     public:
         ModelPrimitiveAssembler(const Primitives::PrimitiveId& id);
 
+        const Primitives::PrimitiveId& id() const { return m_id; }
+
         ModelPrimitiveAssembler& asNative(const std::string& file_at_path);
         ModelPrimitiveAssembler& meshNodeTree(const MeshNodeTreeAssembler& tree);
         ModelPrimitiveAssembler& animator(const Animators::AnimatorId& id);
 
-        std::shared_ptr<ModelPrimitive> constitute(Primitives::PersistenceLevel persistence_level);
-
-    protected:
         Engine::GenericDto toGenericDto();
+
+        std::shared_ptr<ModelPrimitive> constitute(Primitives::PersistenceLevel persistence_level);
 
     protected:
         Primitives::PrimitiveId m_id;

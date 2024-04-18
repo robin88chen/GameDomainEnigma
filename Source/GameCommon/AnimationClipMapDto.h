@@ -18,21 +18,21 @@ namespace Enigma::GameCommon
     {
     public:
         AnimationClipMapDto();
+        AnimationClipMapDto(const Engine::GenericDto& dto);
 
         [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
-        std::vector<std::string>& AnimNames() { return m_animNames; }
-        [[nodiscard]] const std::vector<std::string>& AnimNames() const { return m_animNames; }
-        std::vector<float>& StartOffsets() { return m_startOffsets; }
-        [[nodiscard]] const std::vector<float>& StartOffsets() const { return m_startOffsets; }
-        std::vector<float>& LoopTimes() { return m_loopTimes; }
-        [[nodiscard]] const std::vector<float>& LoopTimes() const { return m_loopTimes; }
-        std::vector<unsigned>& WarpModes() { return m_warpModes; }
-        [[nodiscard]] const std::vector<unsigned>& WarpModes() const { return m_warpModes; }
-        std::vector<unsigned>& DivideIndices() { return m_divideIndices; }
-        [[nodiscard]] const std::vector<unsigned>& DivideIndices() const { return m_divideIndices; }
+        std::vector<std::string>& animationNames() { return m_animNames; }
+        [[nodiscard]] const std::vector<std::string>& animationNames() const { return m_animNames; }
+        std::vector<float>& startOffsets() { return m_startOffsets; }
+        [[nodiscard]] const std::vector<float>& startOffsets() const { return m_startOffsets; }
+        std::vector<float>& loopTimes() { return m_loopTimes; }
+        [[nodiscard]] const std::vector<float>& loopTimes() const { return m_loopTimes; }
+        std::vector<unsigned>& warpModes() { return m_warpModes; }
+        [[nodiscard]] const std::vector<unsigned>& warpModes() const { return m_warpModes; }
+        std::vector<unsigned>& divideIndices() { return m_divideIndices; }
+        [[nodiscard]] const std::vector<unsigned>& divideIndices() const { return m_divideIndices; }
 
-        static AnimationClipMapDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
 
     private:

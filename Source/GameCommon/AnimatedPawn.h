@@ -10,6 +10,8 @@
 
 #include "SceneGraph/Pawn.h"
 #include "AnimationClipMap.h"
+#include "Frameworks/EventSubscriber.h"
+
 namespace Enigma::GameCommon
 {
     class AvatarRecipe;
@@ -26,21 +28,32 @@ namespace Enigma::GameCommon
         AnimatedPawn& operator=(const AnimatedPawn&) = delete;
         AnimatedPawn& operator=(AnimatedPawn&&) = delete;
 
+        static std::shared_ptr<AnimatedPawn> create(const SceneGraph::SpatialId& id);
+        static std::shared_ptr<AnimatedPawn> constitute(const SceneGraph::SpatialId& id, const Engine::GenericDto& dto);
+
         virtual Engine::GenericDto serializeDto() override;
 
-        AnimationClipMap& TheAnimationClipMap() { return m_animationClipMap; };
-        const AnimationClipMap& TheAnimationClipMap() const { return m_animationClipMap; };
+        void registerHandlers();
+        void unregisterHandlers();
 
-        virtual void PlayAnimation(const std::string& name);
-        virtual void StopAnimation();
+        AnimationClipMap& animationClipMap() { return m_animationClipMap; };
+        const AnimationClipMap& animationClipMap() const { return m_animationClipMap; };
 
-        virtual void AddAvatarRecipe(const std::shared_ptr<AvatarRecipe>& recipe);
-        virtual void BakeAvatarRecipes();
+        virtual void playAnimation(const std::string& name);
+        virtual void stopAnimation();
+
+        virtual void addAvatarRecipe(const std::shared_ptr<AvatarRecipe>& recipe);
+        virtual void bakeAvatarRecipes();
+
+    protected:
+        void onRenderablePrimitiveHydrated(const Frameworks::IEventPtr& e);
 
     protected:
         AnimationClipMap m_animationClipMap;
         using AvatarRecipeList = std::list<std::shared_ptr<AvatarRecipe>>;
         AvatarRecipeList m_avatarRecipeList;
+
+        Frameworks::EventSubscriberPtr m_onRenderablePrimitiveHydrated;
     };
 }
 

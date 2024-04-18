@@ -13,6 +13,7 @@
 #include "MathLib/Matrix4.h"
 #include "Frameworks/optional_ref.hpp"
 #include "GameEngine/GenericDto.h"
+#include "Primitives/Primitive.h"
 #include <vector>
 #include <optional>
 
@@ -36,6 +37,7 @@ namespace Enigma::Renderables
         Engine::GenericDto serializeDto() const;
 
         std::optional<unsigned> findMeshNodeIndex(const std::string& node_name) const;
+        std::optional<Primitives::PrimitiveId> findInstancedPrimitiveId(const Primitives::PrimitiveId& original_id) const;
         /** add mesh node to tree
             @return  the index in array of this node */
         unsigned addMeshNode(const MeshNode& node);

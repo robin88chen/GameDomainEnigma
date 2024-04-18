@@ -29,8 +29,8 @@ namespace Enigma::SceneGraph
 
         SpatialId& id() { return m_id; }
         [[nodiscard]] const SpatialId& id() const { return m_id; }
-        SceneGraph::GraphicCoordSys& HandSystem() { return m_handSys; }
-        [[nodiscard]] SceneGraph::GraphicCoordSys HandSystem() const { return m_handSys; }
+        Enigma::SceneGraph::GraphicCoordSys& HandSystem() { return m_handSys; }
+        [[nodiscard]] Enigma::SceneGraph::GraphicCoordSys HandSystem() const { return m_handSys; }
         MathLib::Vector3& EyePosition() { return m_eyePosition; }
         [[nodiscard]] MathLib::Vector3 EyePosition() const { return m_eyePosition; }
         MathLib::Vector3& LookAtDirection() { return m_lookAtDir; }
@@ -46,7 +46,7 @@ namespace Enigma::SceneGraph
     protected:
         Engine::FactoryDesc m_factoryDesc;
         SpatialId m_id;
-        SceneGraph::GraphicCoordSys m_handSys;
+        Enigma::SceneGraph::GraphicCoordSys m_handSys;
         MathLib::Vector3 m_eyePosition;
         MathLib::Vector3 m_lookAtDir;
         MathLib::Vector3 m_up;
@@ -66,8 +66,8 @@ namespace Enigma::SceneGraph
         [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
-        SceneGraph::GraphicCoordSys& HandSystem() { return m_handSys; }
-        [[nodiscard]] SceneGraph::GraphicCoordSys HandSystem() const { return m_handSys; }
+        GraphicCoordSys& HandSystem() { return m_handSys; }
+        [[nodiscard]] GraphicCoordSys HandSystem() const { return m_handSys; }
         Frustum::ProjectionType& ProjectionType() { return m_projectionType; }
         [[nodiscard]] Frustum::ProjectionType ProjectionType() const { return m_projectionType; }
 
@@ -89,7 +89,7 @@ namespace Enigma::SceneGraph
 
     protected:
         Engine::FactoryDesc m_factoryDesc;
-        SceneGraph::GraphicCoordSys m_handSys;
+        GraphicCoordSys m_handSys;
         Frustum::ProjectionType m_projectionType;
         float m_fov;
         float m_nearPlaneZ;

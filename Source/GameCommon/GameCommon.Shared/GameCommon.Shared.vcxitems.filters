@@ -120,6 +120,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCameraCommands.h">
       <Filter>GameCamera</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatedPawnAssembler.h">
+      <Filter>AnimatedPawn</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClipMapAssembler.h">
+      <Filter>AnimationClipMap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCameraService.cpp">
@@ -181,6 +187,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightingPawnDto.cpp">
       <Filter>DeferredRenderer\LightingPawn</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatedPawnAssembler.cpp">
+      <Filter>AnimatedPawn</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationClipMapAssembler.cpp">
+      <Filter>AnimationClipMap</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

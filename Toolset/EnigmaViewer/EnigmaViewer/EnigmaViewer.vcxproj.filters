@@ -106,6 +106,12 @@
     <ClInclude Include="ViewerTextureFileStoreMapper.h">
       <Filter>AppDelegate\StoreMapper</Filter>
     </ClInclude>
+    <ClInclude Include="ViewerAvatarBaker.h">
+      <Filter>AppDelegate</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewerAnimationClipCommandHandler.h">
+      <Filter>AppDelegate</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainForm.cpp">
@@ -174,6 +180,12 @@
     </ClCompile>
     <ClCompile Include="ViewerTextureFileStoreMapper.cpp">
       <Filter>AppDelegate\StoreMapper</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewerAvatarBaker.cpp">
+      <Filter>AppDelegate</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewerAnimationClipCommandHandler.cpp">
+      <Filter>AppDelegate</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

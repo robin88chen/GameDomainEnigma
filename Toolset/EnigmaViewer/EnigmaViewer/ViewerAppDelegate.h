@@ -22,6 +22,8 @@
 #include "FileStorage/AnimatorFileStoreMapper.h"
 #include "ViewerSceneGraphFileStoreMapper.h"
 #include "AnimatedPawnPresentation.h"
+#include "ViewerAvatarBaker.h"
+#include "ViewerAnimationClipCommandHandler.h"
 
 namespace EnigmaViewer
 {
@@ -58,11 +60,6 @@ namespace EnigmaViewer
         void onRenderEngineInstalled(const Enigma::Frameworks::IEventPtr& e);
         void onSceneGraphRootCreated(const Enigma::Frameworks::IEventPtr& e);
 
-        void changeMeshTexture(const Enigma::Frameworks::ICommandPtr& c);
-        void addAnimationClip(const Enigma::Frameworks::ICommandPtr& c);
-        void deleteAnimationClip(const Enigma::Frameworks::ICommandPtr& c);
-        void playAnimationClip(const Enigma::Frameworks::ICommandPtr& c);
-        void changeAnimationTimeValue(const Enigma::Frameworks::ICommandPtr& c);
         void loadModelPrimitive(const Enigma::Frameworks::ICommandPtr& c);
         void createAnimatedPawn(const Enigma::Frameworks::ICommandPtr& c);
         void loadAnimatedPawn(const Enigma::Frameworks::ICommandPtr& c);
@@ -98,11 +95,6 @@ namespace EnigmaViewer
         Enigma::Frameworks::EventSubscriberPtr m_onRenderEngineInstalled;
         Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphRootCreated;
 
-        Enigma::Frameworks::CommandSubscriberPtr m_changeMeshTexture;
-        Enigma::Frameworks::CommandSubscriberPtr m_addAnimationClip;
-        Enigma::Frameworks::CommandSubscriberPtr m_deleteAnimationClip;
-        Enigma::Frameworks::CommandSubscriberPtr m_playAnimationClip;
-        Enigma::Frameworks::CommandSubscriberPtr m_changeAnimationTimeValue;
         Enigma::Frameworks::CommandSubscriberPtr m_loadModelPrimitive;
         Enigma::Frameworks::CommandSubscriberPtr m_createAnimatedPawn;
         Enigma::Frameworks::CommandSubscriberPtr m_loadAnimatedPawn;
@@ -112,6 +104,8 @@ namespace EnigmaViewer
         Enigma::SceneGraph::SpatialId m_sceneRootId;
         std::shared_ptr<Enigma::SceneGraph::Node> m_sceneRoot;
         AnimatedPawnPresentation m_viewingPawnPresentation;
+        ViewerAvatarBaker m_avatarBaker;
+        ViewerAnimationClipCommandHandler m_animationClipCommandHandler;
         Enigma::SceneGraph::SpatialId m_viewingPawnId;
         Enigma::SceneGraph::SpatialId m_creatingPawnId;
     };

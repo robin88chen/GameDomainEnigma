@@ -7,7 +7,6 @@
 #include "FileStorage/EffectMaterialSourceFileStoreMapper.h"
 #include "FileStorage/GeometryDataFileStoreMapper.h"
 #include "FileStorage/SceneGraphFileStoreMapper.h"
-#include "FileStorage/TextureFileStoreMapper.h"
 #include "FileSystem/FileSystem.h"
 #include "FileSystem/StdMountPath.h"
 #include "Frameworks/CommandBus.h"
@@ -45,6 +44,7 @@
 #include "ViewerRenderablesFileStoreMapper.h"
 #include "FloorReceiverMaker.h"
 #include "ViewerTextureFileStoreMapper.h"
+#include "ViewerAvatarBaker.h"
 #include <memory>
 
 using namespace EnigmaViewer;
@@ -147,16 +147,6 @@ void ViewerAppDelegate::installEngine()
     m_onSceneGraphRootCreated = std::make_shared<EventSubscriber>([=](auto e) { this->onSceneGraphRootCreated(e); });
     EventPublisher::subscribe(typeid(NodalSceneRootCreated), m_onSceneGraphRootCreated);
 
-    m_changeMeshTexture = std::make_shared<CommandSubscriber>([=](auto c) { this->changeMeshTexture(c); });
-    CommandBus::subscribe(typeid(ChangeMeshTexture), m_changeMeshTexture);
-    m_addAnimationClip = std::make_shared<CommandSubscriber>([=](auto c) { this->addAnimationClip(c); });
-    CommandBus::subscribe(typeid(AddAnimationClip), m_addAnimationClip);
-    m_deleteAnimationClip = std::make_shared<CommandSubscriber>([=](auto c) { this->deleteAnimationClip(c); });
-    CommandBus::subscribe(typeid(DeleteAnimationClip), m_deleteAnimationClip);
-    m_playAnimationClip = std::make_shared<CommandSubscriber>([=](auto c) { this->playAnimationClip(c); });
-    CommandBus::subscribe(typeid(PlayAnimationClip), m_playAnimationClip);
-    m_changeAnimationTimeValue = std::make_shared<CommandSubscriber>([=](auto c) { this->changeAnimationTimeValue(c); });
-    CommandBus::subscribe(typeid(ChangeAnimationTimeValue), m_changeAnimationTimeValue);
     m_loadModelPrimitive = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { this->loadModelPrimitive(c); });
     CommandBus::subscribe(typeid(LoadModelPrimitive), m_loadModelPrimitive);
     m_removeModelPrimitive = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { this->removeModelPrimitive(c); });
@@ -212,6 +202,10 @@ void ViewerAppDelegate::installEngine()
     m_textureFileStoreMapper->subscribeHandlers();
     m_viewingPawnId = SpatialId(ViewingPawnName, AnimatedPawn::TYPE_RTTI);
     m_viewingPawnPresentation.subscribeHandlers();
+    ViewerAvatarBaker::GetCurrentPawn get_current_pawn = [=]() { return m_viewingPawnPresentation.pawn(); };
+    m_avatarBaker.subscribeHandlers(get_current_pawn);
+    ViewerAnimationClipCommandHandler::GetCurrentPawn get_current_pawn2 = [=]() { return m_viewingPawnPresentation.pawn(); };
+    m_animationClipCommandHandler.registerHandlers(get_current_pawn2);
 }
 
 void ViewerAppDelegate::registerMediaMountPaths(const std::string& media_path)
@@ -220,6 +214,8 @@ void ViewerAppDelegate::registerMediaMountPaths(const std::string& media_path)
 
 void ViewerAppDelegate::shutdownEngine()
 {
+    m_animationClipCommandHandler.unregisterHandlers();
+    m_avatarBaker.unsubscribeHandlers();
     m_viewingPawnPresentation.removePawn(m_sceneRootId);
     m_viewingPawnPresentation.unsubscribeHandlers();
     m_sceneRoot = nullptr;
@@ -233,16 +229,6 @@ void ViewerAppDelegate::shutdownEngine()
     EventPublisher::unsubscribe(typeid(NodalSceneRootCreated), m_onSceneGraphRootCreated);
     m_onSceneGraphRootCreated = nullptr;
 
-    CommandBus::unsubscribe(typeid(ChangeMeshTexture), m_changeMeshTexture);
-    m_changeMeshTexture = nullptr;
-    CommandBus::unsubscribe(typeid(AddAnimationClip), m_addAnimationClip);
-    m_addAnimationClip = nullptr;
-    CommandBus::unsubscribe(typeid(DeleteAnimationClip), m_deleteAnimationClip);
-    m_deleteAnimationClip = nullptr;
-    CommandBus::unsubscribe(typeid(PlayAnimationClip), m_playAnimationClip);
-    m_playAnimationClip = nullptr;
-    CommandBus::unsubscribe(typeid(ChangeAnimationTimeValue), m_changeAnimationTimeValue);
-    m_changeAnimationTimeValue = nullptr;
     CommandBus::unsubscribe(typeid(LoadModelPrimitive), m_loadModelPrimitive);
     m_loadModelPrimitive = nullptr;
     CommandBus::unsubscribe(typeid(RemoveModelPrimitive), m_removeModelPrimitive);
@@ -330,89 +316,6 @@ void ViewerAppDelegate::onSceneGraphRootCreated(const Enigma::Frameworks::IEvent
     auto mx = Enigma::MathLib::Matrix4::MakeTranslateTransform(2.0f, 2.0f, 2.0f);
     CommandBus::post(std::make_shared<CreatePointLight>(m_sceneRootId, mx, SpatialId("point_lit", Light::TYPE_RTTI), Enigma::MathLib::Vector3(2.0f, 2.0f, 2.0f), Enigma::MathLib::ColorRGBA(3.0f, 0.0f, 3.0f, 1.0f), 3.50f));
     FloorReceiverMaker::makeFloorReceiver(m_sceneRoot);
-}
-
-
-void ViewerAppDelegate::changeMeshTexture(const Enigma::Frameworks::ICommandPtr& c)
-{
-    if (!c) return;
-    auto cmd = std::dynamic_pointer_cast<ChangeMeshTexture, ICommand>(c);
-    if (!cmd) return;
-    auto pawn = m_viewingPawnPresentation.pawn();
-    if (!pawn) return;
-    TextureMappingDto tex_dto;
-    tex_dto.textureId() = cmd->textureId();
-    tex_dto.semantic() = "DiffuseMap";
-    auto recipe = std::make_shared<ChangeAvatarTexture>(cmd->meshId(), tex_dto);
-    pawn->addAvatarRecipe(recipe);
-    pawn->bakeAvatarRecipes();
-}
-
-void ViewerAppDelegate::addAnimationClip(const Enigma::Frameworks::ICommandPtr& c)
-{
-    if (!c) return;
-    auto cmd = std::dynamic_pointer_cast<AddAnimationClip, ICommand>(c);
-    if (!cmd) return;
-    auto pawn = m_viewingPawnPresentation.pawn();
-    if (!pawn) return;
-    if (auto act_clip = pawn->animationClipMap().findAnimationClip(cmd->name()); !act_clip)
-    {
-        AnimationClipMap::AnimClip act_clip_new(cmd->name(), cmd->clip());
-        pawn->animationClipMap().insertClip(act_clip_new);
-    }
-    else
-    {
-        act_clip.value().get().changeClip(cmd->clip());
-    }
-}
-
-void ViewerAppDelegate::deleteAnimationClip(const Enigma::Frameworks::ICommandPtr& c)
-{
-    if (!c) return;
-    auto cmd = std::dynamic_pointer_cast<DeleteAnimationClip, ICommand>(c);
-    if (!cmd) return;
-    auto pawn = m_viewingPawnPresentation.pawn();
-    if (!pawn) return;
-    pawn->animationClipMap().removeClip(cmd->name());
-}
-
-void ViewerAppDelegate::playAnimationClip(const Enigma::Frameworks::ICommandPtr& c)
-{
-    if (!c) return;
-    auto cmd = std::dynamic_pointer_cast<PlayAnimationClip, ICommand>(c);
-    if (!cmd) return;
-    auto pawn = m_viewingPawnPresentation.pawn();
-    if (!pawn) return;
-    pawn->playAnimation(cmd->name());
-}
-
-void ViewerAppDelegate::changeAnimationTimeValue(const Enigma::Frameworks::ICommandPtr& c)
-{
-    if (!c) return;
-    auto cmd = std::dynamic_pointer_cast<ChangeAnimationTimeValue, ICommand>(c);
-    if (!cmd) return;
-    auto pawn = m_viewingPawnPresentation.pawn();
-    if (!pawn) return;
-    bool isNameChanged = false;
-    if ((pawn->animationClipMap().findAnimationClip(cmd->oldName()))
-        && (cmd->oldName() != cmd->newName()))
-    {
-        isNameChanged = true;
-    }
-
-    if (!isNameChanged)
-    {
-        if (auto act_clip = pawn->animationClipMap().findAnimationClip(cmd->newName()); act_clip)
-        {
-            act_clip.value().get().changeClip(cmd->clip());
-        }
-    }
-    else
-    {
-        pawn->animationClipMap().removeClip(cmd->oldName());
-        Enigma::GameCommon::AnimationClipMap::AnimClip act_clip_new(cmd->newName(), cmd->clip());
-        pawn->animationClipMap().insertClip(act_clip_new);
-    }
 }
 
 void ViewerAppDelegate::loadModelPrimitive(const Enigma::Frameworks::ICommandPtr& c)

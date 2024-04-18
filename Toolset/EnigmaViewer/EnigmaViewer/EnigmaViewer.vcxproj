@@ -151,7 +151,9 @@
     <ClInclude Include="pugixml.hpp" />
     <ClInclude Include="RenderPanel.h" />
     <ClInclude Include="SchemeColorDef.h" />
+    <ClInclude Include="ViewerAnimationClipCommandHandler.h" />
     <ClInclude Include="ViewerAppDelegate.h" />
+    <ClInclude Include="ViewerAvatarBaker.h" />
     <ClInclude Include="ViewerCommands.h" />
     <ClInclude Include="ViewerEvents.h" />
     <ClInclude Include="ViewerQueries.h" />
@@ -181,7 +183,9 @@
     <ClCompile Include="pugixml.cpp" />
     <ClCompile Include="RenderPanel.cpp" />
     <ClCompile Include="SchemeColorDef.cpp" />
+    <ClCompile Include="ViewerAnimationClipCommandHandler.cpp" />
     <ClCompile Include="ViewerAppDelegate.cpp" />
+    <ClCompile Include="ViewerAvatarBaker.cpp" />
     <ClCompile Include="ViewerRenderablesFileStoreMapper.cpp" />
     <ClCompile Include="ViewerSceneGraphFileStoreMapper.cpp" />
     <ClCompile Include="ViewerTextureFileStoreMapper.cpp" />

@@ -204,7 +204,7 @@ PawnAssembler& PawnAssembler::asNative(const std::string& file_at_path)
     return *this;
 }
 
-PawnDto PawnAssembler::toPawnDto()
+PawnDto PawnAssembler::toPawnDto() const
 {
     PawnDto pawn_dto(m_spatialAssembler.toGenericDto());
     pawn_dto.id() = m_dto.id();
@@ -213,7 +213,7 @@ PawnDto PawnAssembler::toPawnDto()
     return pawn_dto;
 }
 
-Enigma::Engine::GenericDto PawnAssembler::toGenericDto()
+Enigma::Engine::GenericDto PawnAssembler::toGenericDto() const
 {
     return toPawnDto().toGenericDto();
 }

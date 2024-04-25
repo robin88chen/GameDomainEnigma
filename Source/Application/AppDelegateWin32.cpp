@@ -19,7 +19,7 @@ using namespace Enigma::InputHandlers;
 
 AppDelegate* AppDelegate::m_instance = nullptr;
 
-AppDelegate::AppDelegate(const std::string app_name)
+AppDelegate::AppDelegate(const std::string& app_name)
     : m_appName(app_name), m_atom(0), m_hwnd(NULL)
 {
     m_instance = this;

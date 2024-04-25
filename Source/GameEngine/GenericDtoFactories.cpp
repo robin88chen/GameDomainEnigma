@@ -21,12 +21,6 @@ GenericDtoFactories::GenericDtoFactories(ServiceManager* srv_mngr) : ISystemServ
     m_invokeDtoFactory =
         std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { this->invokeDtoFactory(c); });
     CommandBus::subscribe(typeid(InvokeDtoFactory), m_invokeDtoFactory);
-    m_registerConverter =
-        std::make_shared<CommandSubscriber>([=](auto c) { this->registerConverter(c); });
-    CommandBus::subscribe(typeid(RegisterDtoPolicyConverter), m_registerConverter);
-    m_unregisterConverter =
-        std::make_shared<CommandSubscriber>([=](auto c) { this->unregisterConverter(c); });
-    CommandBus::subscribe(typeid(UnRegisterDtoPolicyConverter), m_unregisterConverter);
 }
 
 GenericDtoFactories::~GenericDtoFactories()
@@ -37,10 +31,6 @@ GenericDtoFactories::~GenericDtoFactories()
     m_unregisterFactory = nullptr;
     CommandBus::unsubscribe(typeid(InvokeDtoFactory), m_invokeDtoFactory);
     m_invokeDtoFactory = nullptr;
-    CommandBus::unsubscribe(typeid(RegisterDtoPolicyConverter), m_registerConverter);
-    m_registerConverter = nullptr;
-    CommandBus::unsubscribe(typeid(UnRegisterDtoPolicyConverter), m_unregisterConverter);
-    m_unregisterConverter = nullptr;
 }
 
 void GenericDtoFactories::registerFactory(const std::string& rtti, const DtoFactory& factory)
@@ -86,20 +76,4 @@ void GenericDtoFactories::invokeDtoFactory(const ICommandPtr& c)
     auto cmd = std::dynamic_pointer_cast<InvokeDtoFactory, ICommand>(c);
     if (!cmd) return;
     invokeFactory(cmd->GetDto());
-}
-
-void GenericDtoFactories::registerConverter(const ICommandPtr& c)
-{
-    if (!c) return;
-    auto cmd = std::dynamic_pointer_cast<RegisterDtoPolicyConverter, ICommand>(c);
-    if (!cmd) return;
-    GenericDto::registerConverter(cmd->getRtti(), cmd->GetPolicyConverter());
-}
-
-void GenericDtoFactories::unregisterConverter(const ICommandPtr& c)
-{
-    if (!c) return;
-    auto cmd = std::dynamic_pointer_cast<UnRegisterDtoPolicyConverter, ICommand>(c);
-    if (!cmd) return;
-    GenericDto::unregisterConverter(cmd->getRtti());
 }

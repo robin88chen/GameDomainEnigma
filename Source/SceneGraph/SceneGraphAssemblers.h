@@ -88,8 +88,8 @@ namespace Enigma::SceneGraph
         PawnAssembler& primitive(const Primitives::PrimitiveId& primitive_id);
         PawnAssembler& asNative(const std::string& file_at_path);
 
-        Engine::GenericDto toGenericDto();
-        PawnDto toPawnDto();
+        Engine::GenericDto toGenericDto() const;
+        PawnDto toPawnDto() const;
         std::shared_ptr<Pawn> constitute(PersistenceLevel persistence_level);
 
     private:

@@ -43,9 +43,6 @@ MeshPrimitiveBuilder::MeshPrimitiveBuilder()
 
 MeshPrimitiveBuilder::~MeshPrimitiveBuilder()
 {
-    CommandBus::post(std::make_shared<UnRegisterDtoPolicyConverter>(MeshPrimitive::TYPE_RTTI.getName()));
-    CommandBus::post(std::make_shared<UnRegisterDtoPolicyConverter>(SkinMeshPrimitive::TYPE_RTTI.getName()));
-
     EventPublisher::unsubscribe(typeid(RenderBufferBuilt), m_onRenderBufferBuilt);
     m_onRenderBufferBuilt = nullptr;
     EventPublisher::unsubscribe(typeid(BuildRenderBufferFailed), m_onBuildRenderBufferFailed);

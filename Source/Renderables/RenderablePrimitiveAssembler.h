@@ -38,8 +38,8 @@ namespace Enigma::Renderables
 
         std::shared_ptr<MeshPrimitive> constitute(Primitives::PersistenceLevel persistence_level);
 
-    protected:
-        Engine::GenericDto toGenericDto();
+        MeshPrimitiveDto dto() const;
+        Engine::GenericDto toGenericDto() const;
 
     protected:
         Primitives::PrimitiveId m_id;

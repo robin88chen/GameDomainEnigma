@@ -28,10 +28,3 @@ Enigma::Engine::GenericDto TerrainPrimitiveDto::toGenericDto() const
     //dto.addRtti(Engine::FactoryDesc(TerrainPrimitive::TYPE_RTTI.getName()));
     return dto;
 }
-
-std::shared_ptr<GenericPolicy> TerrainPrimitiveDto::TerrainMeshConvertToPolicy(const Engine::GenericDto& dto, const std::shared_ptr<Engine::IDtoDeserializer>& deserializer)
-{
-    return nullptr;
-    //auto mesh_policy = std::dynamic_pointer_cast<Renderer::MeshPrimitivePolicy, GenericPolicy>(MeshPrimitiveDto::meshDtoConvertToPolicy(dto, deserializer));
-    //return std::make_shared<TerrainPrimitivePolicy>(*mesh_policy);
-}

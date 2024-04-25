@@ -17,12 +17,15 @@ namespace Enigma::Terrain
         DECLARE_EN_RTTI;
     public:
         TerrainPrimitive(const Primitives::PrimitiveId& id);
+        TerrainPrimitive(const Primitives::PrimitiveId& id, const Engine::GenericDto& dto, const std::shared_ptr<Geometries::GeometryRepository>& geometry_repository);
         virtual ~TerrainPrimitive() override;
         TerrainPrimitive(const TerrainPrimitive&) = delete;
         TerrainPrimitive& operator=(const TerrainPrimitive&) = delete;
         TerrainPrimitive(TerrainPrimitive&&) = delete;
         TerrainPrimitive& operator=(TerrainPrimitive&&) = delete;
 
+        static std::shared_ptr<Primitives::Primitive> create(const Primitives::PrimitiveId& id);
+        static std::shared_ptr<Primitives::Primitive> constitute(const Primitives::PrimitiveId& id, const Engine::GenericDto& dto, const std::shared_ptr<Geometries::GeometryRepository>& geometry_repository);
         virtual Engine::GenericDto serializeDto() const override;
     };
 }

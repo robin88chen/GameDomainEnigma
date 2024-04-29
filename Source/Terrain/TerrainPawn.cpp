@@ -22,6 +22,16 @@ TerrainPawn::~TerrainPawn()
 
 }
 
+std::shared_ptr<TerrainPawn> TerrainPawn::create(const SceneGraph::SpatialId& id)
+{
+    return std::make_shared<TerrainPawn>(id);
+}
+
+std::shared_ptr<TerrainPawn> TerrainPawn::constitute(const SceneGraph::SpatialId& id, const Engine::GenericDto& o)
+{
+    return std::make_shared<TerrainPawn>(id, o);
+}
+
 GenericDto TerrainPawn::serializeDto()
 {
     TerrainPawnDto dto(SerializePawnDto());

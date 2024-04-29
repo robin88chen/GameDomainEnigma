@@ -14,9 +14,13 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)CameraMaker.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)TerrainMaker.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)TerrainPrimitiveTest.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CameraMaker.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)TerrainMaker.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)TerrainPrimitiveTest.h" />
   </ItemGroup>
 </Project>

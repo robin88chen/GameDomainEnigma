@@ -16,7 +16,7 @@
 #include "SceneGraph/SceneGraphEvents.h"
 #include "SceneGraph/SceneGraphRepository.h"
 #include "Frameworks/CommandSubscriber.h"
-#include "GameEngine/EffectDtoHelper.h"
+#include "GameEngine/EffectTextureMapAssembler.h"
 #include <memory>
 #include <unordered_map>
 
@@ -77,7 +77,7 @@ namespace Enigma::GameCommon
         void checkLightVolumeBackfaceCulling(const SceneGraph::SpatialId& lit_id);
         void checkLightVolumeBackfaceCulling(const std::shared_ptr<LightVolumePawn>& lit_vol, const std::shared_ptr<SceneGraph::Camera>& cam);
 
-        Engine::EffectTextureMapDtoHelper getGBufferTextureSemantics();
+        Engine::EffectTextureMapAssembler getGBufferTextureSemantics();
 
     private:
         std::shared_ptr<DeferredRendererServiceConfiguration> m_configuration;

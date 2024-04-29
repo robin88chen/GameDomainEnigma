@@ -27,8 +27,6 @@ namespace Enigma::Terrain
 
         static TerrainPrimitiveDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
-
-        static std::shared_ptr<Engine::GenericPolicy> TerrainMeshConvertToPolicy(const Engine::GenericDto&, const std::shared_ptr<Engine::IDtoDeserializer>&);
     };
 }
 

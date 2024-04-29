@@ -13,7 +13,7 @@
     <Filter Include="Pawn">
       <UniqueIdentifier>{3cf4c682-f4ab-42aa-a693-8cd7ee6bc652}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DtoHelper">
+    <Filter Include="Assemblers">
       <UniqueIdentifier>{15e3fd43-ed8c-4da7-83fc-a2c3c112bd39}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -39,8 +39,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPawnDto.h">
       <Filter>Pawn</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainDtoHelper.h">
-      <Filter>DtoHelper</Filter>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainAssemblers.h">
+      <Filter>Assemblers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -65,8 +65,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPawnDto.cpp">
       <Filter>Pawn</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainDtoHelper.cpp">
-      <Filter>DtoHelper</Filter>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainAssemblers.cpp">
+      <Filter>Assemblers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

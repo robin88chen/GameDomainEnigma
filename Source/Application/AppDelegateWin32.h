@@ -22,7 +22,7 @@ namespace Enigma::Application
     class AppDelegate
     {
     public:
-        AppDelegate(const std::string app_name);
+        AppDelegate(const std::string& app_name);
         virtual ~AppDelegate();
 
         static AppDelegate* instance() { return m_instance; };

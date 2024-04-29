@@ -213,7 +213,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureEvents.h">
       <Filter>Events</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectDtoHelper.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMapAssembler.h">
       <Filter>DTOs\Effect Dto</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GenericPolicy.h">
@@ -365,7 +365,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineInstallingPolicy.cpp">
       <Filter>Installing Policies</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectDtoHelper.cpp">
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectTextureMapAssembler.cpp">
       <Filter>DTOs\Effect Dto</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrBVRay3.cpp">

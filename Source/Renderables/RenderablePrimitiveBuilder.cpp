@@ -81,6 +81,15 @@ ServiceResult RenderablePrimitiveBuilder::onTerm()
     return ServiceResult::Complete;
 }
 
+void RenderablePrimitiveBuilder::registerCustomMeshFactory(const std::string& rtti, const CustomMeshCreator creator, const CustomMeshConstitutor& constitutor)
+{
+    m_customMeshCreators.emplace(rtti, creator);
+    m_customMeshConstitutors.emplace(rtti, constitutor);
+    m_primitiveRepository.lock()->factory()->registerPrimitiveFactory(rtti,
+        [=](const PrimitiveId& id) { return createCustomMesh(id); },
+        [=](const PrimitiveId& id, const GenericDto& dto) { return constituteCustomMesh(id, dto); });
+}
+
 void RenderablePrimitiveBuilder::hydrateRenderablePrimitive(const PrimitiveHydratingPlan& plan)
 {
     assert(m_meshBuilder);
@@ -130,6 +139,24 @@ std::shared_ptr<Primitive> RenderablePrimitiveBuilder::createModel(const Primiti
 std::shared_ptr<Primitive> RenderablePrimitiveBuilder::constituteModel(const PrimitiveId& id, const GenericDto& dto)
 {
     return std::make_shared<ModelPrimitive>(id, dto);
+}
+
+std::shared_ptr<Primitive> RenderablePrimitiveBuilder::createCustomMesh(const Primitives::PrimitiveId& id)
+{
+    assert(m_customMeshCreators.find(id.rtti().getName()) != m_customMeshCreators.end());
+    return m_customMeshCreators.at(id.rtti().getName())(id);
+}
+
+std::shared_ptr<Primitive> RenderablePrimitiveBuilder::constituteCustomMesh(const Primitives::PrimitiveId& id, const Engine::GenericDto& dto)
+{
+    assert(m_customMeshConstitutors.find(id.rtti().getName()) != m_customMeshConstitutors.end());
+    assert(!m_geometryRepository.expired());
+    auto prim = m_customMeshConstitutors.at(id.rtti().getName())(id, dto, m_geometryRepository.lock());
+    std::lock_guard locker{ m_primitivePlansLock };
+    m_primitivePlans.emplace(PrimitiveHydratingPlan{ id, prim, dto });
+    prim->lazyStatus().changeStatus(LazyStatus::Status::InQueue);
+    m_needTick = true;
+    return prim;
 }
 
 void RenderablePrimitiveBuilder::onPrimitiveHydrated(const IEventPtr& e)

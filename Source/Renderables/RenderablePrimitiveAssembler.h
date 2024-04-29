@@ -12,7 +12,7 @@
 #include "RenderablePrimitiveDtos.h"
 #include "Geometries/GeometryId.h"
 #include "GameEngine/EffectMaterialId.h"
-#include "GameEngine/EffectDtoHelper.h"
+#include "GameEngine/EffectTextureMapAssembler.h"
 #include "Animators/AnimatorId.h"
 #include "Primitives/PrimitivePersistenceLevel.h"
 
@@ -31,15 +31,15 @@ namespace Enigma::Renderables
 
         MeshPrimitiveAssembler& geometryId(const Geometries::GeometryId& id);
         MeshPrimitiveAssembler& effect(const Engine::EffectMaterialId& id);
-        MeshPrimitiveAssembler& textureMap(const Engine::EffectTextureMapDtoHelper& texture_map);
+        MeshPrimitiveAssembler& textureMap(const Engine::EffectTextureMapAssembler& texture_map);
         MeshPrimitiveAssembler& renderListID(Renderer::Renderer::RenderListID id);
         MeshPrimitiveAssembler& visualTechnique(const std::string& technique);
         MeshPrimitiveAssembler& asNative(const std::string& file_at_path);
 
         std::shared_ptr<MeshPrimitive> constitute(Primitives::PersistenceLevel persistence_level);
 
-    protected:
-        Engine::GenericDto toGenericDto();
+        MeshPrimitiveDto dto() const;
+        Engine::GenericDto toGenericDto() const;
 
     protected:
         Primitives::PrimitiveId m_id;
@@ -55,7 +55,7 @@ namespace Enigma::Renderables
 
         SkinMeshPrimitiveAssembler& geometryId(const Geometries::GeometryId& id);
         SkinMeshPrimitiveAssembler& effect(const Engine::EffectMaterialId& id);
-        SkinMeshPrimitiveAssembler& textureMap(const Engine::EffectTextureMapDtoHelper& texture_map);
+        SkinMeshPrimitiveAssembler& textureMap(const Engine::EffectTextureMapAssembler& texture_map);
         SkinMeshPrimitiveAssembler& renderListID(Renderer::Renderer::RenderListID id);
         SkinMeshPrimitiveAssembler& visualTechnique(const std::string& technique);
         SkinMeshPrimitiveAssembler& asNative(const std::string& file_at_path);

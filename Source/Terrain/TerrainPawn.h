@@ -24,6 +24,9 @@ namespace Enigma::Terrain
         TerrainPawn& operator=(TerrainPawn&&) = delete;
         virtual ~TerrainPawn() override;
 
+        static std::shared_ptr<TerrainPawn> create(const SceneGraph::SpatialId& id);
+        static std::shared_ptr<TerrainPawn> constitute(const SceneGraph::SpatialId& id, const Engine::GenericDto& o);
+
         virtual Engine::GenericDto serializeDto() override;
     };
 }

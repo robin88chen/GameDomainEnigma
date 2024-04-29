@@ -24,9 +24,9 @@ MeshPrimitiveAssembler& MeshPrimitiveAssembler::effect(const Engine::EffectMater
     return *this;
 }
 
-MeshPrimitiveAssembler& MeshPrimitiveAssembler::textureMap(const Engine::EffectTextureMapDtoHelper& texture_map)
+MeshPrimitiveAssembler& MeshPrimitiveAssembler::textureMap(const Engine::EffectTextureMapAssembler& texture_map)
 {
-    Engine::EffectTextureMapDtoHelper texture_map_dto = texture_map;
+    Engine::EffectTextureMapAssembler texture_map_dto = texture_map;
     m_dto.textureMaps().emplace_back(texture_map_dto.toGenericDto());
     return *this;
 }
@@ -49,14 +49,19 @@ MeshPrimitiveAssembler& MeshPrimitiveAssembler::asNative(const std::string& file
     return *this;
 }
 
-Enigma::Engine::GenericDto MeshPrimitiveAssembler::toGenericDto()
+Enigma::Engine::GenericDto MeshPrimitiveAssembler::toGenericDto() const
 {
-    return m_dto.toGenericDto();
+    return dto().toGenericDto();
 }
 
 std::shared_ptr<MeshPrimitive> MeshPrimitiveAssembler::constitute(Primitives::PersistenceLevel persistence_level)
 {
     return std::dynamic_pointer_cast<MeshPrimitive>(std::make_shared<Primitives::RequestPrimitiveConstitution>(m_id, toGenericDto(), persistence_level)->dispatch());
+}
+
+MeshPrimitiveDto MeshPrimitiveAssembler::dto() const
+{
+    return m_dto;
 }
 
 SkinMeshPrimitiveAssembler::SkinMeshPrimitiveAssembler(const Primitives::PrimitiveId& id)
@@ -77,9 +82,9 @@ SkinMeshPrimitiveAssembler& SkinMeshPrimitiveAssembler::effect(const Engine::Eff
     return *this;
 }
 
-SkinMeshPrimitiveAssembler& SkinMeshPrimitiveAssembler::textureMap(const Engine::EffectTextureMapDtoHelper& texture_map)
+SkinMeshPrimitiveAssembler& SkinMeshPrimitiveAssembler::textureMap(const Engine::EffectTextureMapAssembler& texture_map)
 {
-    Engine::EffectTextureMapDtoHelper texture_map_dto = texture_map;
+    Engine::EffectTextureMapAssembler texture_map_dto = texture_map;
     m_dto.textureMaps().emplace_back(texture_map_dto.toGenericDto());
     return *this;
 }

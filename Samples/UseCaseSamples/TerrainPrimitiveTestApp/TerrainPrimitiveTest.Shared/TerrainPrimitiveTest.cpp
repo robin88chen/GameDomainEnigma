@@ -7,27 +7,40 @@
 #include "Renderer/RendererInstallingPolicy.h"
 #include "Frameworks/EventPublisher.h"
 #include "Renderer/RendererEvents.h"
-#include "Gateways/JsonFileEffectProfileDeserializer.h"
 #include "Gateways/JsonFileDtoDeserializer.h"
 #include "GameEngine/EngineInstallingPolicy.h"
-#include "SceneGraph/SceneGraphDtoHelper.h"
 #include "Terrain/TerrainPrimitiveDto.h"
 #include "Terrain/TerrainGeometryDto.h"
-#include "Frameworks/RequestBus.h"
 #include "Frameworks/CommandBus.h"
-#include "Renderer/RenderablePrimitiveRequests.h"
-#include "Terrain/TerrainPrimitivePolicy.h"
 #include "Terrain/TerrainInstallingPolicy.h"
-#include "GameEngine/EffectDtoHelper.h"
-#include "Renderer/RenderablePrimitiveResponses.h"
-#include "Frameworks/ResponseBus.h"
+#include "GameEngine/EffectTextureMapAssembler.h"
 #include "Terrain/TerrainPawn.h"
-#include "Terrain/TerrainDtoHelper.h"
 #include "SceneGraph/SceneGraphCommands.h"
 #include "SceneGraph/SceneGraphInstallingPolicy.h"
 #if TARGET_PLATFORM == PLATFORM_ANDROID
 #include "Application/ApplicationBridge.h"
 #endif
+#include "Gateways/DtoJsonGateway.h"
+#include "Controllers/GraphicMain.h"
+#include "Geometries/GeometryInstallingPolicy.h"
+#include "Animators/AnimatorInstallingPolicy.h"
+#include "Primitives/PrimitiveRepositoryInstallingPolicy.h"
+#include "SceneGraph/SceneGraphInstallingPolicy.h"
+#include "GameEngine/EffectMaterialSourceRepositoryInstallingPolicy.h"
+#include "GameEngine/EngineInstallingPolicy.h"
+#include "GameEngine/TextureRepositoryInstallingPolicy.h"
+#include "Renderer/RendererInstallingPolicy.h"
+#include "Renderables/RenderablesInstallingPolicy.h"
+#include "FileStorage/AnimationAssetFileStoreMapper.h"
+#include "FileStorage/AnimatorFileStoreMapper.h"
+#include "FileStorage/EffectMaterialSourceFileStoreMapper.h"
+#include "FileStorage/TextureFileStoreMapper.h"
+#include "Terrain/TerrainGeometry.h"
+#include "Controllers/ControllerEvents.h"
+#include "CameraMaker.h"
+#include "TerrainMaker.h"
+#include "GameEngine/TextureDto.h"
+#include "GameEngine/Texture.h"
 
 using namespace Enigma::FileSystem;
 using namespace Enigma::Engine;
@@ -37,142 +50,197 @@ using namespace Enigma::Gateways;
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Terrain;
 using namespace Enigma::MathLib;
+using namespace Enigma::Application;
+using namespace Enigma::Controllers;
+using namespace Enigma::FileStorage;
+using namespace Enigma::Geometries;
+using namespace Enigma::Animators;
+using namespace Enigma::Primitives;
+using namespace Enigma::Renderables;
 
 std::string PrimaryTargetName = "primary_target";
 std::string DefaultRendererName = "default_renderer";
 
-TerrainPrimitiveTest::TerrainPrimitiveTest(const std::string app_name) : AppDelegate(app_name)
+TerrainPrimitiveTest::TerrainPrimitiveTest(const std::string& app_name) : AppDelegate(app_name)
 {
-
 }
 
 TerrainPrimitiveTest::~TerrainPrimitiveTest()
 {
-
 }
 
-void TerrainPrimitiveTest::InitializeMountPaths()
+void TerrainPrimitiveTest::initializeMountPaths()
 {
 #if TARGET_PLATFORM == PLATFORM_WIN32
-    if (FileSystem::Instance())
+    if (FileSystem::instance())
     {
         auto path = std::filesystem::current_path();
+        auto dataPath = path / "Data";
         auto mediaPath = path / "../../../../Media/";
-        FileSystem::Instance()->AddMountPath(std::make_shared<StdMountPath>(mediaPath.string(), MediaPathName));
-        FileSystem::Instance()->AddMountPath(std::make_shared<StdMountPath>(path.string(), "DataPath"));
+        FileSystem::instance()->addMountPath(std::make_shared<StdMountPath>(mediaPath.string(), MediaPathName));
+        if (!std::filesystem::exists(dataPath))
+        {
+            std::filesystem::create_directory(dataPath);
+        }
+        FileSystem::instance()->addMountPath(std::make_shared<StdMountPath>(dataPath.string(), "DataPath"));
     }
 #elif TARGET_PLATFORM == PLATFORM_ANDROID
-    if (FileSystem::Instance())
+    if (FileSystem::instance())
     {
-        FileSystem::Instance()->AddMountPath(std::make_shared<AndroidMountPath>("", MediaPathName));
+        FileSystem::instance()->addMountPath(std::make_shared<AndroidMountPath>("", MediaPathName));
 
-        std::string data_path = Enigma::Platforms::AndroidBridge::GetDataFilePath();
+        std::string data_path = Enigma::Platforms::AndroidBridge::getDataFilePath();
         char s[2048];
         memset(s, 0, 2048);
         memcpy(s, data_path.c_str(), data_path.size());
-        FileSystem::Instance()->AddMountPath(std::make_shared<StdMountPath>(data_path, "DataPath"));
+        FileSystem::instance()->addMountPath(std::make_shared<StdMountPath>(data_path, "DataPath"));
     }
 #endif
 }
 
-void TerrainPrimitiveTest::InstallEngine()
+void TerrainPrimitiveTest::installEngine()
 {
-    m_onRendererCreated = std::make_shared<EventSubscriber>([=](auto e) {this->OnRendererCreated(e); });
-    EventPublisher::Subscribe(typeid(RendererCreated), m_onRendererCreated);
-    m_onRenderTargetCreated = std::make_shared<EventSubscriber>([=](auto e) {this->OnRenderTargetCreated(e); });
-    EventPublisher::Subscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
-    m_onBuildRenderablePrimitiveResponse = std::make_shared<ResponseSubscriber>([=](auto r) { OnBuildRenderablePrimitiveResponse(r); });
-    ResponseBus::Subscribe(typeid(BuildRenderablePrimitiveResponse), m_onBuildRenderablePrimitiveResponse);
+    m_onRenderEngineInstalled = std::make_shared<EventSubscriber>([=](auto e) { this->onRenderEngineInstalled(e); });
+    EventPublisher::subscribe(typeid(RenderEngineInstalled), m_onRenderEngineInstalled);
+    m_onRendererCreated = std::make_shared<EventSubscriber>([=](auto e) { this->onRendererCreated(e); });
+    EventPublisher::subscribe(typeid(RendererCreated), m_onRendererCreated);
+    m_onRenderTargetCreated = std::make_shared<EventSubscriber>([=](auto e) { this->onRenderTargetCreated(e); });
+    EventPublisher::subscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
 
     assert(m_graphicMain);
 
     auto creating_policy = std::make_shared<DeviceCreatingPolicy>(Enigma::Graphics::DeviceRequiredBits(), m_hwnd);
-    auto engine_policy = std::make_shared<EngineInstallingPolicy>(std::make_shared<JsonFileEffectProfileDeserializer>());
+    auto engine_policy = std::make_shared<EngineInstallingPolicy>();
+    auto renderer_policy = std::make_shared<DefaultRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName);
     auto render_sys_policy = std::make_shared<RenderSystemInstallingPolicy>();
-    auto default_render_policy = std::make_shared<DefaultRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName);
+    m_geometryDataFileStoreMapper = std::make_shared<GeometryDataFileStoreMapper>("geometries.db.txt@DataPath", std::make_shared<DtoJsonGateway>());
+    auto geometry_policy = std::make_shared<GeometryInstallingPolicy>(m_geometryDataFileStoreMapper);
+    m_primitiveFileStoreMapper = std::make_shared<PrimitiveFileStoreMapper>("primitives.db.txt@DataPath", std::make_shared<DtoJsonGateway>());
+    auto primitive_policy = std::make_shared<PrimitiveRepositoryInstallingPolicy>(m_primitiveFileStoreMapper);
+    auto animator_policy = std::make_shared<AnimatorInstallingPolicy>(std::make_shared<AnimatorFileStoreMapper>("animators.db.txt@DataPath", std::make_shared<DtoJsonGateway>()), std::make_shared<AnimationAssetFileStoreMapper>("animation_assets.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
+    m_sceneGraphFileStoreMapper = std::make_shared<SceneGraphFileStoreMapper>("scene_graph.db.txt@DataPath", "lazy_scene.db.txt@DataPath", std::make_shared<DtoJsonGateway>());
+    auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(m_sceneGraphFileStoreMapper);
+    auto effect_material_source_policy = std::make_shared<EffectMaterialSourceRepositoryInstallingPolicy>(std::make_shared<EffectMaterialSourceFileStoreMapper>("effect_materials.db.txt@APK_PATH"));
+    m_textureFileStoreMapper = std::make_shared<TextureFileStoreMapper>("textures.db.txt@APK_PATH", std::make_shared<DtoJsonGateway>());
+    auto texture_policy = std::make_shared<TextureRepositoryInstallingPolicy>(m_textureFileStoreMapper);
+    auto renderables_policy = std::make_shared<RenderablesInstallingPolicy>();
     auto terrain_policy = std::make_shared<TerrainInstallingPolicy>();
-    auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(std::make_shared<JsonFileDtoDeserializer>());
-    m_graphicMain->InstallRenderEngine({ creating_policy, engine_policy, render_sys_policy, default_render_policy, terrain_policy,
-        scene_graph_policy });
-    CameraDto camera_dto = CameraDtoHelper("camera").EyePosition(Enigma::MathLib::Vector3(-5.0f, 5.0f, -5.0f)).LookAt(Enigma::MathLib::Vector3(1.0f, -1.0f, 1.0f)).UpDirection(Enigma::MathLib::Vector3::UNIT_Y)
-        .Frustum("frustum", Frustum::ProjectionType::Perspective).FrustumFov(Enigma::MathLib::Math::PI / 4.0f).FrustumFrontBackZ(0.1f, 100.0f)
-        .FrustumNearPlaneDimension(40.0f, 30.0f).ToCameraDto();
-    m_camera = std::make_shared<Camera>(camera_dto);
-    //RequestBuildTerrainPrimitive();
-    RequestBuildTerrainPawn();
+    m_graphicMain->installRenderEngine({ creating_policy, engine_policy, renderer_policy, render_sys_policy, geometry_policy, primitive_policy, animator_policy, scene_graph_policy, effect_material_source_policy, texture_policy, renderables_policy, terrain_policy });
 }
 
-void TerrainPrimitiveTest::ShutdownEngine()
+void TerrainPrimitiveTest::shutdownEngine()
 {
+    m_textureFileStoreMapper->removeTexture(m_splatTextureId);
     m_camera = nullptr;
     m_renderer = nullptr;
     m_renderTarget = nullptr;
     m_terrain = nullptr;
 
-    EventPublisher::Unsubscribe(typeid(RendererCreated), m_onRendererCreated);
+    EventPublisher::unsubscribe(typeid(RenderEngineInstalled), m_onRenderEngineInstalled);
+    m_onRenderEngineInstalled = nullptr;
+    EventPublisher::unsubscribe(typeid(RendererCreated), m_onRendererCreated);
     m_onRendererCreated = nullptr;
-    EventPublisher::Unsubscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
+    EventPublisher::unsubscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
     m_onRenderTargetCreated = nullptr;
-    ResponseBus::Unsubscribe(typeid(BuildRenderablePrimitiveResponse), m_onBuildRenderablePrimitiveResponse);
-    m_onBuildRenderablePrimitiveResponse = nullptr;
 
-    m_graphicMain->ShutdownRenderEngine();
+    m_graphicMain->shutdownRenderEngine();
 }
 
-void TerrainPrimitiveTest::FrameUpdate()
+void TerrainPrimitiveTest::frameUpdate()
 {
-    AppDelegate::FrameUpdate();
+    AppDelegate::frameUpdate();
     if ((m_renderer) && (m_terrain))
     {
-        m_terrain->InsertToRendererWithTransformUpdating(m_renderer, Matrix4::IDENTITY, RenderLightingState{});
+        m_terrain->insertToRendererWithTransformUpdating(m_renderer, Matrix4::IDENTITY, RenderLightingState{});
     }
 }
 
-void TerrainPrimitiveTest::RenderFrame()
+void TerrainPrimitiveTest::renderFrame()
 {
     if (!m_renderer) return;
-    m_renderer->BeginScene();
-    m_renderer->ClearRenderTarget();
-    m_renderer->DrawScene();
-    m_renderer->EndScene();
-    m_renderer->Flip();
+    m_renderer->beginScene();
+    m_renderer->clearRenderTarget();
+    m_renderer->drawScene();
+    m_renderer->endScene();
+    m_renderer->flip();
 }
 
-void TerrainPrimitiveTest::OnRendererCreated(const Enigma::Frameworks::IEventPtr& e)
+void TerrainPrimitiveTest::makeCamera()
+{
+    m_cameraId = SpatialId("camera", Camera::TYPE_RTTI);
+    if (const auto camera = Camera::queryCamera(m_cameraId))
+    {
+        m_camera = camera;
+    }
+    else
+    {
+        m_camera = CameraMaker::makeCamera(m_cameraId);
+    }
+    if ((m_camera) && (m_renderer)) m_renderer->setAssociatedCamera(m_camera);
+}
+
+void TerrainPrimitiveTest::makeTerrain()
+{
+    auto geo_id = GeometryId("terrain_geo");
+    if (!m_geometryDataFileStoreMapper->hasGeometry(geo_id))
+    {
+        auto geo_dto = TerrainMaker::makeTerrainGeometry(geo_id);
+        m_geometryDataFileStoreMapper->putGeometry(geo_id, geo_dto);
+    }
+    auto prim_id = PrimitiveId("terrain", TerrainPrimitive::TYPE_RTTI);
+    if (!m_primitiveFileStoreMapper->hasPrimitive(prim_id))
+    {
+        m_terrain = TerrainMaker::makeTerrainPrimitive(prim_id, geo_id, m_splatTextureId);
+    }
+    else
+    {
+        m_terrain = std::dynamic_pointer_cast<TerrainPrimitive>(Primitive::queryPrimitive(prim_id));
+    }
+}
+
+void TerrainPrimitiveTest::makeSplatTextureDto()
+{
+    Enigma::Engine::TextureDto dto;
+    m_splatTextureId = Enigma::Engine::TextureId("splat");
+    auto asset_filename = m_splatTextureId.name() + ".tex@DataPath";
+    auto image_filename = "splat.png@DataPath";
+    dto.id() = m_splatTextureId;
+    dto.factoryDesc() = Enigma::Engine::FactoryDesc(Enigma::Engine::Texture::TYPE_RTTI.getName()).ClaimAsResourceAsset(m_splatTextureId.name(), asset_filename);
+    dto.format() = Enigma::Graphics::GraphicFormat::FMT_A8R8G8B8;
+    dto.dimension() = Enigma::MathLib::Dimension<unsigned>{ 512, 512 };
+    dto.isCubeTexture() = false;
+    dto.surfaceCount() = 1;
+    dto.filePaths().push_back(image_filename);
+    m_textureFileStoreMapper->putTexture(m_splatTextureId, dto.toGenericDto());
+}
+
+void TerrainPrimitiveTest::onRenderEngineInstalled(const IEventPtr& e)
+{
+    makeCamera();
+    makeSplatTextureDto();
+    makeTerrain();
+}
+
+void TerrainPrimitiveTest::onRendererCreated(const Enigma::Frameworks::IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<RendererCreated, IEvent>(e);
     if (!ev) return;
-    m_renderer = std::dynamic_pointer_cast<Renderer, IRenderer>(ev->GetRenderer());
-    m_renderer->SetAssociatedCamera(m_camera);
-    if ((m_renderer) && (m_renderTarget)) m_renderer->SetRenderTarget(m_renderTarget);
+    m_renderer = std::dynamic_pointer_cast<Renderer, IRenderer>(ev->renderer());
+    m_renderer->setAssociatedCamera(m_camera);
+    if ((m_renderer) && (m_renderTarget)) m_renderer->setRenderTarget(m_renderTarget);
 }
 
-void TerrainPrimitiveTest::OnRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e)
+void TerrainPrimitiveTest::onRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<PrimaryRenderTargetCreated, IEvent>(e);
     if (!ev) return;
-    m_renderTarget = ev->GetRenderTarget();
-    if ((m_renderer) && (m_renderTarget)) m_renderer->SetRenderTarget(m_renderTarget);
+    m_renderTarget = ev->renderTarget();
+    if ((m_renderer) && (m_renderTarget)) m_renderer->setRenderTarget(m_renderTarget);
 }
 
-void TerrainPrimitiveTest::OnBuildRenderablePrimitiveResponse(const Enigma::Frameworks::IResponsePtr& r)
-{
-    if (!r) return;
-    const auto rsp = std::dynamic_pointer_cast<BuildRenderablePrimitiveResponse, IResponse>(r);
-    if (!rsp) return;
-    if (rsp->GetRequestRuid() == m_ruidBuildRequester)
-    {
-        m_terrain = std::dynamic_pointer_cast<TerrainPrimitive, Primitive>(rsp->GetPrimitive());
-    }
-    else if (auto terrain = std::dynamic_pointer_cast<TerrainPrimitive, Primitive>(rsp->GetPrimitive()))
-    {
-        m_terrain = terrain;
-    }
-}
-
-void TerrainPrimitiveTest::RequestBuildTerrainPrimitive()
+/*void TerrainPrimitiveTest::RequestBuildTerrainPrimitive()
 {
     TerrainGeometryDto terrain_geometry_dto;
     terrain_geometry_dto.Name() = "terrain_geo";
@@ -235,4 +303,4 @@ void TerrainPrimitiveTest::RequestBuildTerrainPawn()
 
     std::vector<GenericDto> dtos = { pawn_dto.ToGenericDto() };
     CommandBus::Post(std::make_shared<BuildSceneGraph>("test_scene", dtos));
-}
+}*/

@@ -1,13 +1,13 @@
-﻿#include "EffectDtoHelper.h"
+﻿#include "EffectTextureMapAssembler.h"
 #include "EffectMaterial.h"
 
 using namespace Enigma::Engine;
 
-EffectTextureMapDtoHelper::EffectTextureMapDtoHelper()
+EffectTextureMapAssembler::EffectTextureMapAssembler()
 {
 }
 
-EffectTextureMapDtoHelper& EffectTextureMapDtoHelper::textureMapping(const TextureId& id, std::optional<unsigned> array_index, const std::string& semantic)
+EffectTextureMapAssembler& EffectTextureMapAssembler::textureMapping(const TextureId& id, std::optional<unsigned> array_index, const std::string& semantic)
 {
     TextureMappingDto tex;
     tex.textureId() = id;
@@ -17,7 +17,7 @@ EffectTextureMapDtoHelper& EffectTextureMapDtoHelper::textureMapping(const Textu
     return *this;
 }
 
-GenericDto EffectTextureMapDtoHelper::toGenericDto()
+GenericDto EffectTextureMapAssembler::toGenericDto()
 {
     return m_dto.toGenericDto();
 }

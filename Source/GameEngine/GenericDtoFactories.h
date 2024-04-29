@@ -39,8 +39,6 @@ namespace Enigma::Engine
         void registerFactory(const Frameworks::ICommandPtr& c);
         void unregisterFactory(const Frameworks::ICommandPtr& c);
         void invokeDtoFactory(const Frameworks::ICommandPtr& c);
-        void registerConverter(const Frameworks::ICommandPtr& c);
-        void unregisterConverter(const Frameworks::ICommandPtr& c);
 
     private:
         using DtoFactoryTable = std::unordered_map<std::string, DtoFactory>;
@@ -49,8 +47,6 @@ namespace Enigma::Engine
         Frameworks::CommandSubscriberPtr m_registerFactory;
         Frameworks::CommandSubscriberPtr m_unregisterFactory;
         Frameworks::CommandSubscriberPtr m_invokeDtoFactory;
-        Frameworks::CommandSubscriberPtr m_registerConverter;
-        Frameworks::CommandSubscriberPtr m_unregisterConverter;
     };
 }
 

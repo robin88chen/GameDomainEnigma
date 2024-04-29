@@ -24,9 +24,9 @@ MeshPrimitiveAssembler& MeshPrimitiveAssembler::effect(const Engine::EffectMater
     return *this;
 }
 
-MeshPrimitiveAssembler& MeshPrimitiveAssembler::textureMap(const Engine::EffectTextureMapDtoHelper& texture_map)
+MeshPrimitiveAssembler& MeshPrimitiveAssembler::textureMap(const Engine::EffectTextureMapAssembler& texture_map)
 {
-    Engine::EffectTextureMapDtoHelper texture_map_dto = texture_map;
+    Engine::EffectTextureMapAssembler texture_map_dto = texture_map;
     m_dto.textureMaps().emplace_back(texture_map_dto.toGenericDto());
     return *this;
 }
@@ -82,9 +82,9 @@ SkinMeshPrimitiveAssembler& SkinMeshPrimitiveAssembler::effect(const Engine::Eff
     return *this;
 }
 
-SkinMeshPrimitiveAssembler& SkinMeshPrimitiveAssembler::textureMap(const Engine::EffectTextureMapDtoHelper& texture_map)
+SkinMeshPrimitiveAssembler& SkinMeshPrimitiveAssembler::textureMap(const Engine::EffectTextureMapAssembler& texture_map)
 {
-    Engine::EffectTextureMapDtoHelper texture_map_dto = texture_map;
+    Engine::EffectTextureMapAssembler texture_map_dto = texture_map;
     m_dto.textureMaps().emplace_back(texture_map_dto.toGenericDto());
     return *this;
 }

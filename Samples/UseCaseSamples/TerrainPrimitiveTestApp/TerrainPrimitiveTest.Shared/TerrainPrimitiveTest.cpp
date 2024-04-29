@@ -13,7 +13,7 @@
 #include "Terrain/TerrainGeometryDto.h"
 #include "Frameworks/CommandBus.h"
 #include "Terrain/TerrainInstallingPolicy.h"
-#include "GameEngine/EffectDtoHelper.h"
+#include "GameEngine/EffectTextureMapAssembler.h"
 #include "Terrain/TerrainPawn.h"
 #include "SceneGraph/SceneGraphCommands.h"
 #include "SceneGraph/SceneGraphInstallingPolicy.h"
@@ -39,6 +39,8 @@
 #include "Controllers/ControllerEvents.h"
 #include "CameraMaker.h"
 #include "TerrainMaker.h"
+#include "GameEngine/TextureDto.h"
+#include "GameEngine/Texture.h"
 
 using namespace Enigma::FileSystem;
 using namespace Enigma::Engine;
@@ -119,7 +121,8 @@ void TerrainPrimitiveTest::installEngine()
     m_sceneGraphFileStoreMapper = std::make_shared<SceneGraphFileStoreMapper>("scene_graph.db.txt@DataPath", "lazy_scene.db.txt@DataPath", std::make_shared<DtoJsonGateway>());
     auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(m_sceneGraphFileStoreMapper);
     auto effect_material_source_policy = std::make_shared<EffectMaterialSourceRepositoryInstallingPolicy>(std::make_shared<EffectMaterialSourceFileStoreMapper>("effect_materials.db.txt@APK_PATH"));
-    auto texture_policy = std::make_shared<TextureRepositoryInstallingPolicy>(std::make_shared<TextureFileStoreMapper>("textures.db.txt@APK_PATH", std::make_shared<DtoJsonGateway>()));
+    m_textureFileStoreMapper = std::make_shared<TextureFileStoreMapper>("textures.db.txt@APK_PATH", std::make_shared<DtoJsonGateway>());
+    auto texture_policy = std::make_shared<TextureRepositoryInstallingPolicy>(m_textureFileStoreMapper);
     auto renderables_policy = std::make_shared<RenderablesInstallingPolicy>();
     auto terrain_policy = std::make_shared<TerrainInstallingPolicy>();
     m_graphicMain->installRenderEngine({ creating_policy, engine_policy, renderer_policy, render_sys_policy, geometry_policy, primitive_policy, animator_policy, scene_graph_policy, effect_material_source_policy, texture_policy, renderables_policy, terrain_policy });
@@ -127,6 +130,7 @@ void TerrainPrimitiveTest::installEngine()
 
 void TerrainPrimitiveTest::shutdownEngine()
 {
+    m_textureFileStoreMapper->removeTexture(m_splatTextureId);
     m_camera = nullptr;
     m_renderer = nullptr;
     m_renderTarget = nullptr;
@@ -186,7 +190,7 @@ void TerrainPrimitiveTest::makeTerrain()
     auto prim_id = PrimitiveId("terrain", TerrainPrimitive::TYPE_RTTI);
     if (!m_primitiveFileStoreMapper->hasPrimitive(prim_id))
     {
-        m_terrain = TerrainMaker::makeTerrainPrimitive(prim_id, geo_id);
+        m_terrain = TerrainMaker::makeTerrainPrimitive(prim_id, geo_id, m_splatTextureId);
     }
     else
     {
@@ -194,9 +198,26 @@ void TerrainPrimitiveTest::makeTerrain()
     }
 }
 
+void TerrainPrimitiveTest::makeSplatTextureDto()
+{
+    Enigma::Engine::TextureDto dto;
+    m_splatTextureId = Enigma::Engine::TextureId("splat");
+    auto asset_filename = m_splatTextureId.name() + ".tex@DataPath";
+    auto image_filename = "splat.png@DataPath";
+    dto.id() = m_splatTextureId;
+    dto.factoryDesc() = Enigma::Engine::FactoryDesc(Enigma::Engine::Texture::TYPE_RTTI.getName()).ClaimAsResourceAsset(m_splatTextureId.name(), asset_filename);
+    dto.format() = Enigma::Graphics::GraphicFormat::FMT_A8R8G8B8;
+    dto.dimension() = Enigma::MathLib::Dimension<unsigned>{ 512, 512 };
+    dto.isCubeTexture() = false;
+    dto.surfaceCount() = 1;
+    dto.filePaths().push_back(image_filename);
+    m_textureFileStoreMapper->putTexture(m_splatTextureId, dto.toGenericDto());
+}
+
 void TerrainPrimitiveTest::onRenderEngineInstalled(const IEventPtr& e)
 {
     makeCamera();
+    makeSplatTextureDto();
     makeTerrain();
 }
 

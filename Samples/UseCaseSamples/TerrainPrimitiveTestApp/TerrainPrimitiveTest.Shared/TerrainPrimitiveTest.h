@@ -24,6 +24,7 @@
 #include "FileStorage/GeometryDataFileStoreMapper.h"
 #include "FileStorage/SceneGraphFileStoreMapper.h"
 #include "FileStorage/PrimitiveFileStoreMapper.h"
+#include "FileStorage/TextureFileStoreMapper.h"
 
 class TerrainPrimitiveTest : public Enigma::Application::AppDelegate
 {
@@ -48,6 +49,7 @@ protected:
 
     void makeCamera();
     void makeTerrain();
+    void makeSplatTextureDto();
 
 protected:
     Enigma::Frameworks::EventSubscriberPtr m_onRenderEngineInstalled;
@@ -57,9 +59,11 @@ protected:
     std::shared_ptr<Enigma::FileStorage::GeometryDataFileStoreMapper> m_geometryDataFileStoreMapper;
     std::shared_ptr<Enigma::FileStorage::SceneGraphFileStoreMapper> m_sceneGraphFileStoreMapper;
     std::shared_ptr<Enigma::FileStorage::PrimitiveFileStoreMapper> m_primitiveFileStoreMapper;
+    std::shared_ptr<Enigma::FileStorage::TextureFileStoreMapper> m_textureFileStoreMapper;
 
     Enigma::Renderer::RendererPtr m_renderer;
     Enigma::Renderer::RenderTargetPtr m_renderTarget;
+    Enigma::Engine::TextureId m_splatTextureId;
     std::shared_ptr<Enigma::Terrain::TerrainPrimitive> m_terrain;
     Enigma::SceneGraph::SpatialId m_cameraId;
     std::shared_ptr<Enigma::SceneGraph::Camera> m_camera;

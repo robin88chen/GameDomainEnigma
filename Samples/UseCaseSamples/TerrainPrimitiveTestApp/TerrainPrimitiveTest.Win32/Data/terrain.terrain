@@ -150,6 +150,15 @@
                                     "Type": "String",
                                     "Value": "TextureLayer3"
                                 }
+                            }, {
+                                "TextureId.Name": {
+                                    "Type": "String",
+                                    "Value": "splat"
+                                },
+                                "Semantic": {
+                                    "Type": "String",
+                                    "Value": "AlphaLayer"
+                                }
                             }]
                     }
                 }]

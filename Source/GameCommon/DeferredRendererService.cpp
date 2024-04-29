@@ -507,10 +507,10 @@ void DeferredRendererService::checkLightVolumeBackfaceCulling(const std::shared_
     }
 }
 
-EffectTextureMapDtoHelper DeferredRendererService::getGBufferTextureSemantics()
+EffectTextureMapAssembler DeferredRendererService::getGBufferTextureSemantics()
 {
     assert(m_configuration);
-    EffectTextureMapDtoHelper gbuffer_textures;
+    EffectTextureMapAssembler gbuffer_textures;
 
     gbuffer_textures.textureMapping(m_configuration->gbufferTextureId(), m_configuration->findRenderTextureUsageIndex(Graphics::RenderTextureUsage::Normal), m_configuration->gbufferNormalSemantic());
     gbuffer_textures.textureMapping(m_configuration->gbufferTextureId(), m_configuration->findRenderTextureUsageIndex(Graphics::RenderTextureUsage::Albedo), m_configuration->gbufferDiffuseSemantic());

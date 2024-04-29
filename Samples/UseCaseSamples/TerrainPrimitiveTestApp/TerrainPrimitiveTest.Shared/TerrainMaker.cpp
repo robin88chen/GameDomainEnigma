@@ -2,7 +2,7 @@
 #include "Terrain/TerrainGeometry.h"
 #include "Terrain/TerrainAssemblers.h"
 #include "Geometries/GeometryDataQueries.h"
-#include "GameEngine/EffectDtoHelper.h"
+#include "GameEngine/EffectTextureMapAssembler.h"
 #include "Primitives/PrimitiveQueries.h"
 #include <memory>
 
@@ -18,13 +18,14 @@ Enigma::Engine::GenericDto TerrainMaker::makeTerrainGeometry(const Enigma::Geome
     return assembler.toGenericDto();
 }
 
-std::shared_ptr<Enigma::Terrain::TerrainPrimitive> TerrainMaker::makeTerrainPrimitive(const Enigma::Primitives::PrimitiveId& id, const Enigma::Geometries::GeometryId& geo_id)
+std::shared_ptr<Enigma::Terrain::TerrainPrimitive> TerrainMaker::makeTerrainPrimitive(const Enigma::Primitives::PrimitiveId& id, const Enigma::Geometries::GeometryId& geo_id, const Enigma::Engine::TextureId& splat_tex_id)
 {
     TerrainPrimitiveAssembler assembler(id);
-    assembler.meshPrimitive().geometryId(geo_id).effect(EffectMaterialId("fx/TerrainMesh")).textureMap(EffectTextureMapDtoHelper().textureMapping(TextureId("image/du011"), std::nullopt, "TextureLayer0")
+    assembler.meshPrimitive().geometryId(geo_id).effect(EffectMaterialId("fx/TerrainMesh")).textureMap(EffectTextureMapAssembler().textureMapping(TextureId("image/du011"), std::nullopt, "TextureLayer0")
         .textureMapping(TextureId("image/one"), std::nullopt, "TextureLayer1")
         .textureMapping(TextureId("image/two"), std::nullopt, "TextureLayer2")
-        .textureMapping(TextureId("image/three"), std::nullopt, "TextureLayer3"));
+        .textureMapping(TextureId("image/three"), std::nullopt, "TextureLayer3")
+        .textureMapping(splat_tex_id, std::nullopt, "AlphaLayer"));
     assembler.asNative(id.name() + ".terrain@DataPath");
     auto prim = std::make_shared<Enigma::Primitives::RequestPrimitiveConstitution>(id, assembler.toGenericDto(), Enigma::Primitives::PersistenceLevel::Store)->dispatch();
     return std::dynamic_pointer_cast<TerrainPrimitive>(prim);

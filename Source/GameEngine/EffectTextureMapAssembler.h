@@ -13,12 +13,12 @@
 
 namespace Enigma::Engine
 {
-    class EffectTextureMapDtoHelper
+    class EffectTextureMapAssembler
     {
     public:
-        EffectTextureMapDtoHelper();
+        EffectTextureMapAssembler();
 
-        EffectTextureMapDtoHelper& textureMapping(const TextureId& id, std::optional<unsigned> array_index, const std::string& semantic);
+        EffectTextureMapAssembler& textureMapping(const TextureId& id, std::optional<unsigned> array_index, const std::string& semantic);
 
         GenericDto toGenericDto();
 

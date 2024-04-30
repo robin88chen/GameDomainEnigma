@@ -66,6 +66,16 @@ namespace Enigma::SceneGraph
     protected:
         SpatialId m_id;
     };
+    class HasSpatial : public Frameworks::Query<bool>
+    {
+    public:
+        HasSpatial(const SpatialId& id) : m_id(id) {}
+
+        const SpatialId& id() const { return m_id; }
+
+    protected:
+        SpatialId m_id;
+    };
     class RequestSpatialCreation : public Frameworks::Query<std::shared_ptr<Spatial>>
     {
     public:

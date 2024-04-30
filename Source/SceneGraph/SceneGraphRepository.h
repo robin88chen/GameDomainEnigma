@@ -76,6 +76,7 @@ namespace Enigma::SceneGraph
         void requestCameraCreation(const Frameworks::IQueryPtr& r);
         void requestCameraConstitution(const Frameworks::IQueryPtr& r);
         void querySpatial(const Frameworks::IQueryPtr& q);
+        void hasSpatial(const Frameworks::IQueryPtr& q);
         void requestSpatialCreation(const Frameworks::IQueryPtr& r);
         void requestSpatialConstitution(const Frameworks::IQueryPtr& r);
         void requestLightCreation(const Frameworks::IQueryPtr& r);
@@ -102,6 +103,7 @@ namespace Enigma::SceneGraph
         Frameworks::QuerySubscriberPtr m_requestCameraCreation;
         Frameworks::QuerySubscriberPtr m_requestCameraConstitution;
         Frameworks::QuerySubscriberPtr m_querySpatial;
+        Frameworks::QuerySubscriberPtr m_hasSpatial;
         Frameworks::QuerySubscriberPtr m_requestSpatialCreation;
         Frameworks::QuerySubscriberPtr m_requestSpatialConstitution;
         Frameworks::QuerySubscriberPtr m_requestLightCreation;

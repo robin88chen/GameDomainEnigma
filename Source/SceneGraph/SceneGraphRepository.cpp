@@ -68,6 +68,8 @@ void SceneGraphRepository::registerHandlers()
     QueryDispatcher::subscribe(typeid(RequestCameraConstitution), m_requestCameraConstitution);
     m_querySpatial = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { querySpatial(q); });
     QueryDispatcher::subscribe(typeid(QuerySpatial), m_querySpatial);
+    m_hasSpatial = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { hasSpatial(q); });
+    QueryDispatcher::subscribe(typeid(HasSpatial), m_hasSpatial);
     m_requestSpatialCreation = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { requestSpatialCreation(q); });
     QueryDispatcher::subscribe(typeid(RequestSpatialCreation), m_requestSpatialCreation);
     m_requestSpatialConstitution = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { requestSpatialConstitution(q); });
@@ -99,6 +101,8 @@ void SceneGraphRepository::unregisterHandlers()
     m_requestCameraConstitution = nullptr;
     QueryDispatcher::unsubscribe(typeid(QuerySpatial), m_querySpatial);
     m_querySpatial = nullptr;
+    QueryDispatcher::unsubscribe(typeid(HasSpatial), m_hasSpatial);
+    m_hasSpatial = nullptr;
     QueryDispatcher::unsubscribe(typeid(RequestSpatialCreation), m_requestSpatialCreation);
     m_requestSpatialCreation = nullptr;
     QueryDispatcher::unsubscribe(typeid(RequestSpatialConstitution), m_requestCameraConstitution);
@@ -349,6 +353,14 @@ void SceneGraphRepository::querySpatial(const Frameworks::IQueryPtr& q)
     const auto query = std::dynamic_pointer_cast<QuerySpatial>(q);
     assert(query);
     query->setResult(querySpatial(query->id()));
+}
+
+void SceneGraphRepository::hasSpatial(const Frameworks::IQueryPtr& q)
+{
+    if (!q) return;
+    const auto query = std::dynamic_pointer_cast<HasSpatial>(q);
+    assert(query);
+    query->setResult(hasSpatial(query->id()));
 }
 
 void SceneGraphRepository::requestSpatialCreation(const Frameworks::IQueryPtr& r)

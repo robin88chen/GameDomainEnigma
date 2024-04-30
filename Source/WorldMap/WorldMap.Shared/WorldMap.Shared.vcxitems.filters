@@ -48,6 +48,15 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\QuadTreeRootDto.h">
       <Filter>QuadTree\Dto</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapRepository.h">
+      <Filter>Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapStoreMapper.h">
+      <Filter>Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\QuadTreeVolume.h">
+      <Filter>QuadTree</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\WorldMapInstallingPolicy.cpp">
@@ -64,6 +73,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\QuadTreeRootDto.cpp">
       <Filter>QuadTree\Dto</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\WorldMapRepository.cpp">
+      <Filter>Repository</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\QuadTreeVolume.cpp">
+      <Filter>QuadTree</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

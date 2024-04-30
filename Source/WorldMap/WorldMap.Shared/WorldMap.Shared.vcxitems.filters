@@ -4,9 +4,6 @@
     <Filter Include="WorldMap">
       <UniqueIdentifier>{8d0835e4-9656-4584-b3d0-260186184aa8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Service">
-      <UniqueIdentifier>{5cb83f02-6ac3-4512-8d89-45bccba6e503}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Installing">
       <UniqueIdentifier>{c3d476fb-a3c9-4392-8960-92a218d681df}</UniqueIdentifier>
     </Filter>
@@ -19,17 +16,14 @@
     <Filter Include="QuadTree">
       <UniqueIdentifier>{15e8e051-bb0d-427d-9ee8-b5d2d4343a73}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Repository">
+      <UniqueIdentifier>{5cb83f02-6ac3-4512-8d89-45bccba6e503}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="QuadTree\Dto">
+      <UniqueIdentifier>{fd872ddc-29e0-4a02-a153-4804a9f4de3e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMap.h">
-      <Filter>WorldMap</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapDto.h">
-      <Filter>WorldMap</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapService.h">
-      <Filter>Service</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapCommands.h">
       <Filter>Commands &amp; Events &amp; Queries</Filter>
     </ClInclude>
@@ -45,34 +39,31 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapErrors.h">
       <Filter>Error Codes</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneQuadTreeRoot.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\QuadTreeRootId.h">
+      <Filter>QuadTree</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\QuadTreeRoot.h">
       <Filter>QuadTree</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\QuadTreeRootDto.h">
-      <Filter>QuadTree</Filter>
+      <Filter>QuadTree\Dto</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\WorldMap.cpp">
-      <Filter>WorldMap</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\WorldMapDto.cpp">
-      <Filter>WorldMap</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\WorldMapService.cpp">
-      <Filter>Service</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\WorldMapInstallingPolicy.cpp">
       <Filter>Installing</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\WorldMapErrors.cpp">
       <Filter>Error Codes</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneQuadTreeRoot.cpp">
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\QuadTreeRootId.cpp">
+      <Filter>QuadTree</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\QuadTreeRoot.cpp">
       <Filter>QuadTree</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\QuadTreeRootDto.cpp">
-      <Filter>QuadTree</Filter>
+      <Filter>QuadTree\Dto</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

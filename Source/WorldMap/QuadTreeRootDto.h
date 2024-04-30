@@ -1,37 +1,34 @@
-﻿/*********************************************************************
+﻿/*****************************************************************
  * \file   QuadTreeRootDto.h
  * \brief
  *
  * \author Lancelot 'Robin' Chen
- * \date   November 2023
- *********************************************************************/
+ * \date   April 2024
+ ******************************************************************/
 #ifndef QUAD_TREE_ROOT_DTO_H
 #define QUAD_TREE_ROOT_DTO_H
 
 #include "GameEngine/GenericDto.h"
-#include "GameEngine/FactoryDesc.h"
+#include "QuadTreeRootId.h"
+#include "SceneGraph/SpatialId.h"
 
 namespace Enigma::WorldMap
 {
     class QuadTreeRootDto
     {
     public:
-        QuadTreeRootDto();
+        QuadTreeRootDto(const Engine::GenericDto& dto);
 
-        [[nodiscard]] const std::string& name() const { return m_name; }
-        [[nodiscard]] std::string& name() { return m_name; }
-        [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
-        [[nodiscard]] Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
-        [[nodiscard]] const Engine::GenericDto& root() const { return m_root; }
-        [[nodiscard]] Engine::GenericDto& root() { return m_root; }
+        [[nodiscard]] const QuadTreeRootId& id() const { return m_id; }
+        QuadTreeRootId& id() { return m_id; }
+        [[nodiscard]] const SceneGraph::SpatialId& rootNodeId() const { return m_rootNodeId; }
+        SceneGraph::SpatialId& rootNodeId() { return m_rootNodeId; }
 
-        static QuadTreeRootDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
 
     protected:
-        std::string m_name;
-        Engine::FactoryDesc m_factoryDesc;
-        Engine::GenericDto m_root;
+        QuadTreeRootId m_id;
+        SceneGraph::SpatialId m_rootNodeId;
     };
 }
 

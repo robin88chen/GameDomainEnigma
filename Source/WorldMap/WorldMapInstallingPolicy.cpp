@@ -4,8 +4,6 @@
 #include "Frameworks/CommandBus.h"
 #include "SceneGraph/SceneGraphCommands.h"
 #include "SceneGraph/SceneGraphRepository.h"
-#include "WorldMap.h"
-#include "WorldMapService.h"
 #include <cassert>
 
 using namespace Enigma::WorldMap;
@@ -17,7 +15,7 @@ error WorldMapInstallingPolicy::install(Frameworks::ServiceManager* service_mana
     auto scene_graph = service_manager->getSystemServiceAs<SceneGraphRepository>();
     //Frameworks::CommandBus::post(std::make_shared<SceneGraph::RegisterSpatialDtoFactory>(WorldMap::TYPE_RTTI.getName(),
       //  [scene_graph](const Engine::GenericDto& o) { return new WorldMap(scene_graph, o); }));
-    service_manager->registerSystemService(std::make_shared<WorldMapService>(service_manager, scene_graph));
+    //service_manager->registerSystemService(std::make_shared<WorldMapService>(service_manager, scene_graph));
     return ErrorCode::ok;
 }
 
@@ -25,6 +23,6 @@ error WorldMapInstallingPolicy::shutdown(Frameworks::ServiceManager* service_man
 {
     assert(service_manager);
     //Frameworks::CommandBus::post(std::make_shared<SceneGraph::UnRegisterSpatialDtoFactory>(WorldMap::TYPE_RTTI.getName()));
-    service_manager->shutdownSystemService(WorldMapService::TYPE_RTTI);
+    //service_manager->shutdownSystemService(WorldMapService::TYPE_RTTI);
     return ErrorCode::ok;
 }

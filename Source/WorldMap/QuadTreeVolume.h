@@ -15,7 +15,7 @@
 
 namespace Enigma::WorldMap
 {
-    class QuadTreeVolume
+    class QuadTreeVolume : public std::enable_shared_from_this<QuadTreeVolume>
     {
     public:
         static constexpr std::size_t maxChildren = 4;
@@ -30,7 +30,9 @@ namespace Enigma::WorldMap
         std::shared_ptr<QuadTreeVolume> findFittingVolume(const Engine::BoundingVolume& bv_in_world);
 
     protected:
-        SceneGraph::SpatialId subVolumeNodeId(unsigned index);
+        SceneGraph::SpatialId subVolumeNodeId(unsigned index) const;
+        bool testBoundingEnvelop(const Engine::BoundingVolume& bv_in_world) const;
+
     protected:
         SceneGraph::SpatialId m_id;
         MathLib::Matrix4 m_worldTransform;

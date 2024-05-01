@@ -37,6 +37,7 @@ namespace Enigma::Engine
 
         virtual const MathLib::Vector3& GetCenterPos() override { return m_sphere.Center(); };
         virtual bool PointInside(const MathLib::Vector3& vecPos) override;
+        virtual FlagBits PointInsideFlags(const MathLib::Vector3& pos) override;
 
         virtual bool isEmpty() const override { return m_sphere.isEmpty(); };
 

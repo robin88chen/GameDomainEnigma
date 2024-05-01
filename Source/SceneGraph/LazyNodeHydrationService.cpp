@@ -95,7 +95,7 @@ void LazyNodeHydrationService::onLazyNodeHydrated(const Frameworks::IEventPtr& e
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<LazyNodeHydrated, IEvent>(e);
     if (!ev) return;
-    if (!ev->id().isValid()) return;
+    if (ev->id().empty()) return;
     m_isCurrentHydrating = false;
     m_hydratingId = SpatialId();
     hydrateNextLazyNode();
@@ -106,7 +106,7 @@ void LazyNodeHydrationService::onLazyNodeHydrationFailed(const Frameworks::IEven
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<LazyNodeHydrationFailed, IEvent>(e);
     if (!ev) return;
-    if (!ev->id().isValid()) return;
+    if (ev->id().empty()) return;
     Platforms::Debug::ErrorPrintf("Lazy Node %s(%s) hydration failed : %s", ev->id().name().c_str(), ev->id().rtti().getName().c_str(), ev->error().message().c_str());
     m_isCurrentHydrating = false;
     m_hydratingId = SpatialId();
@@ -119,7 +119,7 @@ void LazyNodeHydrationService::onVisibilityChanged(const Frameworks::IEventPtr& 
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<VisibilityChanged, IEvent>(e);
     if (!ev) return;
-    if (!ev->id().isValid()) return;
+    if (ev->id().empty()) return;
     if (ev->isVisible())
     {
         m_visibilityTimers.insert_or_assign(ev->id(), m_timer.lock()->GetGameTimer()->getTotalTime());

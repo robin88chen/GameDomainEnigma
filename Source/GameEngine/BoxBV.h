@@ -18,10 +18,6 @@ namespace Enigma::Engine
     class BoxBV : public GenericBV
     {
     public:
-        enum class Axis { x, y, z, count  };
-        using FlagBits = std::bitset<static_cast<size_t>(Axis::count)>;
-
-    public:
         BoxBV(const MathLib::Box3&);
         BoxBV(const BoxBV&) = default;
         BoxBV(BoxBV&&) = default;
@@ -44,12 +40,7 @@ namespace Enigma::Engine
         virtual bool PointInside(const MathLib::Vector3& pos) override;
 
         virtual bool isEmpty() const override { return m_box.isEmpty(); };
-        /** point inside flags
-        @remark BoxBV使用的函式。\n
-        計算點位置是否在三個軸內，0x01, 0x02, 0x04 表示 0,1,2三個軸之內 \n
-        用途是，如果不考慮y方向的位置的話，就將傳回值做 0x05的 and 檢查就可以了
-        */
-        virtual FlagBits PointInsideFlags(const MathLib::Vector3& pos);
+        virtual FlagBits PointInsideFlags(const MathLib::Vector3& pos) override;
 
         MathLib::Box3& GetBox() { return m_box; };
 

@@ -139,6 +139,12 @@ bool BoundingVolume::PointInside(const MathLib::Vector3& pos) const
     return false;
 }
 
+GenericBV::FlagBits BoundingVolume::PointInsideFlags(const MathLib::Vector3& pos) const
+{
+    if (m_bv) return m_bv->PointInsideFlags(pos);
+    return GenericBV::TestedAxis::None;
+}
+
 BoundingVolume::Side BoundingVolume::SideOfPlane(const MathLib::Plane3& plane) const
 {
     if (!m_bv) return Side::Failed;

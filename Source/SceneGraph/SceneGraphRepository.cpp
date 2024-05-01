@@ -20,6 +20,7 @@
 #include "CameraFrustumCommands.h"
 #include "CameraFrustumEvents.h"
 #include "SceneGraphQueries.h"
+#include "SceneGraphDtos.h"
 #include <cassert>
 
 using namespace Enigma::SceneGraph;
@@ -76,6 +77,10 @@ void SceneGraphRepository::registerHandlers()
     QueryDispatcher::subscribe(typeid(RequestSpatialConstitution), m_requestSpatialConstitution);
     m_requestLightCreation = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { requestLightCreation(q); });
     QueryDispatcher::subscribe(typeid(RequestLightCreation), m_requestLightCreation);
+    m_queryWorldTransform = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { queryWorldTransform(q); });
+    QueryDispatcher::subscribe(typeid(QueryWorldTransform), m_queryWorldTransform);
+    m_queryModelBound = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { queryModelBound(q); });
+    QueryDispatcher::subscribe(typeid(QueryModelBound), m_queryModelBound);
 
     m_putCamera = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { putCamera(c); });
     CommandBus::subscribe(typeid(PutCamera), m_putCamera);
@@ -109,6 +114,10 @@ void SceneGraphRepository::unregisterHandlers()
     m_requestSpatialConstitution = nullptr;
     QueryDispatcher::unsubscribe(typeid(RequestLightCreation), m_requestLightCreation);
     m_requestLightCreation = nullptr;
+    QueryDispatcher::unsubscribe(typeid(QueryWorldTransform), m_queryWorldTransform);
+    m_queryWorldTransform = nullptr;
+    QueryDispatcher::unsubscribe(typeid(QueryModelBound), m_queryModelBound);
+    m_queryModelBound = nullptr;
 
     CommandBus::unsubscribe(typeid(PutCamera), m_putCamera);
     m_putCamera = nullptr;
@@ -183,6 +192,33 @@ bool SceneGraphRepository::hasLaziedContent(const SpatialId& id)
     assert(m_storeMapper);
     assert(id.rtti().isDerived(LazyNode::TYPE_RTTI));
     return m_storeMapper->hasLaziedContent(id);
+}
+
+Enigma::MathLib::Matrix4 SceneGraphRepository::queryWorldTransform(const SpatialId& id)
+{
+    if (!hasSpatial(id)) return MathLib::Matrix4::ZERO;
+    std::lock_guard locker{ m_spatialMapLock };
+    auto it = m_spatials.find(id);
+    if (it != m_spatials.end()) return it->second->getWorldTransform();
+    auto dto = m_storeMapper->querySpatial(id);
+    assert(dto.has_value());
+    SpatialDto spatial_dto = SpatialDto(dto.value());
+    return spatial_dto.worldTransform();
+}
+
+Enigma::Engine::BoundingVolume SceneGraphRepository::queryModelBound(const SpatialId& id)
+{
+    if (!hasSpatial(id)) return BoundingVolume{};
+    std::lock_guard locker{ m_spatialMapLock };
+    auto it = m_spatials.find(id);
+    if (it != m_spatials.end()) return it->second->getModelBound();
+    auto dto = m_storeMapper->querySpatial(id);
+    assert(dto.has_value());
+    SpatialDto spatial_dto = SpatialDto(dto.value());
+    BoundingVolumeDto bv_dto = BoundingVolumeDto::fromGenericDto(spatial_dto.modelBound());
+    if (bv_dto.box()) return BoundingVolume{ bv_dto.box().value() };
+    if (bv_dto.sphere()) return BoundingVolume{ bv_dto.sphere().value() };
+    return BoundingVolume{};
 }
 
 void SceneGraphRepository::queryCamera(const IQueryPtr& q)
@@ -361,6 +397,22 @@ void SceneGraphRepository::hasSpatial(const Frameworks::IQueryPtr& q)
     const auto query = std::dynamic_pointer_cast<HasSpatial>(q);
     assert(query);
     query->setResult(hasSpatial(query->id()));
+}
+
+void SceneGraphRepository::queryWorldTransform(const Frameworks::IQueryPtr& q)
+{
+    if (!q) return;
+    const auto query = std::dynamic_pointer_cast<QueryWorldTransform>(q);
+    assert(query);
+    query->setResult(queryWorldTransform(query->id()));
+}
+
+void SceneGraphRepository::queryModelBound(const Frameworks::IQueryPtr& q)
+{
+    if (!q) return;
+    const auto query = std::dynamic_pointer_cast<QueryModelBound>(q);
+    assert(query);
+    query->setResult(queryModelBound(query->id()));
 }
 
 void SceneGraphRepository::requestSpatialCreation(const Frameworks::IQueryPtr& r)

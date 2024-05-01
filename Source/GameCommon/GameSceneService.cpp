@@ -87,7 +87,7 @@ ServiceResult GameSceneService::onTerm()
 void GameSceneService::createNodalSceneRoot(const SceneGraph::SpatialId& scene_root_id)
 {
     assert(!m_sceneGraphRepository.expired());
-    assert(scene_root_id.isValid());
+    assert(!scene_root_id.empty());
     if (m_sceneGraph == nullptr)
     {
         m_sceneGraph = std::make_unique<NodalSceneGraph>(m_sceneGraphRepository.lock());
@@ -114,7 +114,7 @@ void GameSceneService::createNodalSceneRoot(const SceneGraph::SpatialId& scene_r
 void GameSceneService::createPortalSceneRoot(const SceneGraph::SpatialId& scene_root_id)
 {
     assert(!m_sceneGraphRepository.expired());
-    assert(scene_root_id.isValid());
+    assert(!scene_root_id.empty());
     if (m_sceneGraph == nullptr)
     {
         m_sceneGraph = std::make_unique<PortalSceneGraph>(m_sceneGraphRepository.lock());
@@ -182,7 +182,7 @@ void GameSceneService::createSceneRoot(const Frameworks::ICommandPtr& c)
     if (!c) return;
     if (const auto cmd = std::dynamic_pointer_cast<CreateNodalSceneRoot, ICommand>(c))
     {
-        if (!cmd->sceneRootId().isValid())
+        if (cmd->sceneRootId().empty())
         {
             EventPublisher::post(std::make_shared<CreateNodalSceneRootFailed>(cmd->sceneRootId(), ErrorCode::invalidSceneRootId));
             return;
@@ -196,7 +196,7 @@ void GameSceneService::createSceneRoot(const Frameworks::ICommandPtr& c)
     }
     else if (const auto cmd = std::dynamic_pointer_cast<CreatePortalSceneRoot, ICommand>(c))
     {
-        if (!cmd->portalManagementNodeId().isValid())
+        if (cmd->portalManagementNodeId().empty())
         {
             EventPublisher::post(std::make_shared<CreatePortalSceneRootFailed>(cmd->portalManagementNodeId(), ErrorCode::invalidSceneRootId));
             return;

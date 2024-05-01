@@ -17,7 +17,7 @@ FindSpatialById::~FindSpatialById()
 SceneTraveler::TravelResult FindSpatialById::travelTo(const SpatialPtr& spatial)
 {
     if (!spatial) return SceneTraveler::TravelResult::InterruptError;
-    if (!m_targetSpatialId.isValid()) return SceneTraveler::TravelResult::InterruptError;
+    if (m_targetSpatialId.empty()) return SceneTraveler::TravelResult::InterruptError;
     if (spatial->id() == m_targetSpatialId)
     {
         m_foundSpatial = spatial;

@@ -76,6 +76,26 @@ namespace Enigma::SceneGraph
     protected:
         SpatialId m_id;
     };
+    class QueryWorldTransform : public Frameworks::Query<MathLib::Matrix4>
+    {
+    public:
+        QueryWorldTransform(const SpatialId& id) : m_id(id) {}
+
+        const SpatialId& id() const { return m_id; }
+
+    protected:
+        SpatialId m_id;
+    };
+    class QueryModelBound : public Frameworks::Query<Engine::BoundingVolume>
+    {
+    public:
+        QueryModelBound(const SpatialId& id) : m_id(id) {}
+
+        const SpatialId& id() const { return m_id; }
+
+    protected:
+        SpatialId m_id;
+    };
     class RequestSpatialCreation : public Frameworks::Query<std::shared_ptr<Spatial>>
     {
     public:

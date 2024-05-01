@@ -18,17 +18,23 @@ namespace Enigma::WorldMap
     class QuadTreeVolume
     {
     public:
+        static constexpr std::size_t maxChildren = 4;
+
+    public:
         QuadTreeVolume(const SceneGraph::SpatialId& id);
 
         const SceneGraph::SpatialId& id() const { return m_id; }
+        const std::array<std::shared_ptr<QuadTreeVolume>, maxChildren>& children() const { return m_children; }
+
+        bool isWorldPositionInside(const MathLib::Vector3& worldPosition) const;
         std::shared_ptr<QuadTreeVolume> findFittingVolume(const Engine::BoundingVolume& bv_in_world);
 
     protected:
         SceneGraph::SpatialId subVolumeNodeId(unsigned index);
     protected:
-        static constexpr std::size_t maxChildren = 4;
         SceneGraph::SpatialId m_id;
-        std::shared_ptr<SceneGraph::Node> m_node;
+        MathLib::Matrix4 m_worldTransform;
+        Engine::BoundingVolume m_modelBounding;
         std::array<std::shared_ptr<QuadTreeVolume>, maxChildren> m_children;
     };
 }

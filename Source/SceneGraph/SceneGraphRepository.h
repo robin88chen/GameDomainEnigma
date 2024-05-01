@@ -14,6 +14,8 @@
 #include "Frameworks/QuerySubscriber.h"
 #include "SpatialId.h"
 #include "SceneGraphPersistenceLevel.h"
+#include "MathLib/Matrix4.h"
+#include "GameEngine/BoundingVolume.h"
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -57,6 +59,8 @@ namespace Enigma::SceneGraph
         std::shared_ptr<Spatial> querySpatial(const SpatialId& id);
         bool hasLaziedContent(const SpatialId& id);
         void hydrateLazyNode(const SpatialId& id);
+        MathLib::Matrix4 queryWorldTransform(const SpatialId& id);
+        Engine::BoundingVolume queryModelBound(const SpatialId& id);
 
         /** put entities */
         void putCamera(const std::shared_ptr<Camera>& camera);
@@ -80,6 +84,8 @@ namespace Enigma::SceneGraph
         void requestSpatialCreation(const Frameworks::IQueryPtr& r);
         void requestSpatialConstitution(const Frameworks::IQueryPtr& r);
         void requestLightCreation(const Frameworks::IQueryPtr& r);
+        void queryWorldTransform(const Frameworks::IQueryPtr& q);
+        void queryModelBound(const Frameworks::IQueryPtr& q);
 
         void putCamera(const Frameworks::ICommandPtr& c);
         void removeCamera(const Frameworks::ICommandPtr& c);
@@ -107,6 +113,8 @@ namespace Enigma::SceneGraph
         Frameworks::QuerySubscriberPtr m_requestSpatialCreation;
         Frameworks::QuerySubscriberPtr m_requestSpatialConstitution;
         Frameworks::QuerySubscriberPtr m_requestLightCreation;
+        Frameworks::QuerySubscriberPtr m_queryWorldTransform;
+        Frameworks::QuerySubscriberPtr m_queryModelBound;
 
         Frameworks::CommandSubscriberPtr m_putCamera;
         Frameworks::CommandSubscriberPtr m_removeCamera;
@@ -114,7 +122,6 @@ namespace Enigma::SceneGraph
         Frameworks::CommandSubscriberPtr m_removeSpatial;
         Frameworks::CommandSubscriberPtr m_putLaziedContent;
         Frameworks::CommandSubscriberPtr m_removeLaziedContent;
-
     };
 }
 

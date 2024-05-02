@@ -7,6 +7,7 @@
 #include "Portal.h"
 #include "PortalZoneNode.h"
 #include "PortalManagementNode.h"
+#include "VisibilityManagedNode.h"
 
 using namespace Enigma::SceneGraph;
 
@@ -255,6 +256,20 @@ NodeAssembler& NodeAssembler::child(const SpatialId& child_id, const Engine::Gen
     return *this;
 }
 
+NodeAssembler& NodeAssembler::child(const SpatialId& child_id, const SpatialAssembler* child)
+{
+    m_dto.children().emplace_back(child_id);
+    m_children.push_back(const_cast<SpatialAssembler*>(child));
+    return *this;
+}
+
+NodeAssembler& NodeAssembler::child(const SpatialId& child_id, const NodeAssembler* child)
+{
+    m_dto.children().emplace_back(child_id);
+    m_childNodes.push_back(const_cast<NodeAssembler*>(child));
+    return *this;
+}
+
 NodeAssembler& NodeAssembler::asNative(const std::string& file_at_path)
 {
     m_dto.factoryDesc().ClaimAsNative(file_at_path);
@@ -269,6 +284,29 @@ NodeDto NodeAssembler::toNodeDto() const
     node_dto.factoryDesc() = m_dto.factoryDesc();
     node_dto.children() = m_dto.children();
     return node_dto;
+}
+
+void NodeAssembler::updateLocationBounding()
+{
+    if (m_children.empty() && m_childNodes.empty()) return;
+    if (!m_childNodes.empty())
+    {
+        for (const auto& child : m_childNodes)
+        {
+            child->spatial().worldTransform(m_dto.worldTransform() * child->spatial().localTransform());
+            child->updateLocationBounding();
+        }
+    }
+    if (!m_children.empty())
+    {
+        Engine::BoundingVolume model_bound = m_spatialAssembler.modelBound();
+        for (const auto& child : m_children)
+        {
+            child->worldTransform(m_dto.worldTransform() * child->localTransform());
+            model_bound.Merge(child->localTransform(), child->modelBound());
+        }
+        m_spatialAssembler.modelBound(model_bound);
+    }
 }
 
 Enigma::Engine::GenericDto NodeAssembler::toGenericDto() const
@@ -510,4 +548,57 @@ PortalManagementNodeDto PortalManagementNodeAssembler::toPortalManagementNodeDto
 Enigma::Engine::GenericDto PortalManagementNodeAssembler::toGenericDto() const
 {
     return toPortalManagementNodeDto().toGenericDto();
+}
+
+VisibilityManagedNodeAssembler::VisibilityManagedNodeAssembler(const SpatialId& id) : m_lazyNodeAssembler(id)
+{
+    m_id = id;
+    m_dto.id() = id;
+    m_dto.factoryDesc() = Engine::FactoryDesc(VisibilityManagedNode::TYPE_RTTI.getName());
+    m_lazyNodeAssembler.factory(m_dto.factoryDesc());
+}
+
+LazyNodeAssembler& VisibilityManagedNodeAssembler::lazyNode()
+{
+    return m_lazyNodeAssembler;
+}
+
+VisibilityManagedNodeAssembler& VisibilityManagedNodeAssembler::factory(const Engine::FactoryDesc& factory)
+{
+    m_dto.factoryDesc() = factory;
+    m_lazyNodeAssembler.factory(factory);
+    return *this;
+}
+
+VisibilityManagedNodeAssembler& VisibilityManagedNodeAssembler::asDeferred(const std::string& file_name, const std::string& path_id)
+{
+    m_dto.factoryDesc().ClaimAsDeferred(file_name, path_id);
+    m_lazyNodeAssembler.factory(m_dto.factoryDesc());
+    return *this;
+}
+
+VisibilityManagedNodeDto VisibilityManagedNodeAssembler::toHydratedDto() const
+{
+    VisibilityManagedNodeDto visi_node_dto(m_lazyNodeAssembler.toHydratedDto());
+    visi_node_dto.id() = m_dto.id();
+    visi_node_dto.factoryDesc() = m_dto.factoryDesc();
+    return visi_node_dto;
+}
+
+Enigma::Engine::GenericDto VisibilityManagedNodeAssembler::toHydratedGenericDto() const
+{
+    return toHydratedDto().toGenericDto();
+}
+
+VisibilityManagedNodeDto VisibilityManagedNodeAssembler::toDeHydratedDto() const
+{
+    VisibilityManagedNodeDto visi_node_dto(m_lazyNodeAssembler.toDeHydratedDto());
+    visi_node_dto.id() = m_dto.id();
+    visi_node_dto.factoryDesc() = m_dto.factoryDesc();
+    return visi_node_dto;
+}
+
+Enigma::Engine::GenericDto VisibilityManagedNodeAssembler::toDeHydratedGenericDto() const
+{
+    return toDeHydratedDto().toGenericDto();
 }

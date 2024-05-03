@@ -50,6 +50,7 @@ protected:
 private:
     void makeOneLevelQuad();
     void testOneLevelQuad();
+    void makeThreeLevelTree();
     void makeCamera();
     void makeModel();
 
@@ -61,6 +62,9 @@ protected:
     Enigma::Frameworks::EventSubscriberPtr m_onRenderEngineInstalled;
     std::shared_ptr<Enigma::FileStorage::SceneGraphFileStoreMapper> m_sceneGraphFileStoreMapper;
     Enigma::SceneGraph::SpatialId m_rootQuadId;
+    Enigma::SceneGraph::SpatialId m_level1QuadId1;
+    Enigma::SceneGraph::SpatialId m_level1QuadId2;
+    Enigma::SceneGraph::SpatialId m_level2QuadId1;
 
     std::unique_ptr<Enigma::SceneGraph::SceneGraph> m_sceneGraph;
     Enigma::Renderer::RendererPtr m_renderer;

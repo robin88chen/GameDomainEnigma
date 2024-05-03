@@ -290,24 +290,26 @@ NodeDto NodeAssembler::toNodeDto() const
 void NodeAssembler::consistChildrenLocationBounding()
 {
     if (m_children.empty() && m_childNodes.empty()) return;
+    Engine::BoundingVolume model_bound = m_spatialAssembler.modelBound();
     if (!m_childNodes.empty())
     {
         for (const auto& child : m_childNodes)
         {
-            child->spatial().worldTransform(m_dto.worldTransform() * child->spatial().localTransform());
+            MathLib::Matrix4 mx = m_spatialAssembler.worldTransform() * child->spatial().localTransform();
+            child->spatial().worldTransform(m_spatialAssembler.worldTransform() * child->spatial().localTransform());
             child->consistChildrenLocationBounding();
+            model_bound.Merge(child->spatial().localTransform(), child->spatial().modelBound());
         }
     }
     if (!m_children.empty())
     {
-        Engine::BoundingVolume model_bound = m_spatialAssembler.modelBound();
         for (const auto& child : m_children)
         {
-            child->worldTransform(m_dto.worldTransform() * child->localTransform());
+            child->worldTransform(m_spatialAssembler.worldTransform() * child->localTransform());
             model_bound.Merge(child->localTransform(), child->modelBound());
         }
-        m_spatialAssembler.modelBound(model_bound);
     }
+    m_spatialAssembler.modelBound(model_bound);
 }
 
 Enigma::Engine::GenericDto NodeAssembler::toGenericDto() const

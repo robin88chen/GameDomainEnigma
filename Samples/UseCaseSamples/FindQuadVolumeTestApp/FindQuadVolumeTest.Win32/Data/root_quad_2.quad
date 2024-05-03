@@ -1,7 +1,7 @@
 [{
         "LocalTransform": {
             "Type": "Matrix4",
-            "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+            "Value": [1.0, 0.0, 0.0, 4.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 4.0, 0.0, 0.0, 0.0, 1.0]
         },
         "Rtti": {
             "Type": "FactoryDesc",
@@ -10,7 +10,7 @@
                 "ResourceName": "",
                 "ResourceFilename": "",
                 "RttiName": "En.SceneGraph.VisibilityManagedNode",
-                "PrefabFilename": "root_quad.quad@DataPath"
+                "PrefabFilename": "root_quad_2.quad@DataPath"
             }
         },
         "ModelBound": {
@@ -18,7 +18,7 @@
             "Value": {
                 "BoxBV": {
                     "Type": "Box3",
-                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 8.0, 4.0, 8.0]
+                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 4.0, 4.0, 4.0]
                 }
             }
         },
@@ -32,18 +32,18 @@
         },
         "Id": {
             "Type": "StringArray",
-            "Value": ["root_quad", "En.SceneGraph.VisibilityManagedNode"]
+            "Value": ["root_quad_2", "En.SceneGraph.VisibilityManagedNode"]
         },
         "WorldTransform": {
             "Type": "Matrix4",
-            "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+            "Value": [1.0, 0.0, 0.0, 8.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 8.0, 0.0, 0.0, 0.0, 1.0]
         },
         "WorldBound": {
             "Type": "DataObject",
             "Value": {
                 "BoxBV": {
                     "Type": "Box3",
-                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 8.0, 4.0, 8.0]
+                    "Value": [8.0, 0.0, 8.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 4.0, 4.0, 4.0]
                 }
             }
         },
@@ -64,12 +64,7 @@
             "Value": [{
                     "Id": {
                         "Type": "StringArray",
-                        "Value": ["root_quad_1", "En.SceneGraph.VisibilityManagedNode"]
-                    }
-                }, {
-                    "Id": {
-                        "Type": "StringArray",
-                        "Value": ["root_quad_2", "En.SceneGraph.VisibilityManagedNode"]
+                        "Value": ["root_quad_2_1", "En.SceneGraph.VisibilityManagedNode"]
                     }
                 }]
         }

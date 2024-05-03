@@ -69,6 +69,7 @@ namespace Enigma::SceneGraph
 
         const Engine::BoundingVolume& modelBound() const { return m_modelBound; }
         const MathLib::Matrix4& localTransform() const { return m_dto.localTransform(); }
+        const MathLib::Matrix4& worldTransform() const { return m_dto.worldTransform(); }
 
         Engine::GenericDto toGenericDto();
         Engine::GenericDto toGenericDto() const;

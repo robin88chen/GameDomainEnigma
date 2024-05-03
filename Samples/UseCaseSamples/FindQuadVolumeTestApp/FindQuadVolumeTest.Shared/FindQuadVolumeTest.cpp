@@ -158,6 +158,15 @@ void FindQuadVolumeTest::makeOneLevelQuad()
     SceneGraphMaker::makeOneLevelQuadNode(m_rootQuadId, m_sceneGraphFileStoreMapper);
 }
 
+void FindQuadVolumeTest::makeThreeLevelTree()
+{
+    m_rootQuadId = SpatialId("root_quad", VisibilityManagedNode::TYPE_RTTI);
+    m_level1QuadId1 = SpatialId("root_quad_1", VisibilityManagedNode::TYPE_RTTI);
+    m_level1QuadId2 = SpatialId("root_quad_2", VisibilityManagedNode::TYPE_RTTI);
+    m_level2QuadId1 = SpatialId("root_quad_2_1", VisibilityManagedNode::TYPE_RTTI);
+    SceneGraphMaker::makeThreeLevelQuadTree(m_rootQuadId, m_level1QuadId1, m_level1QuadId2, m_level2QuadId1, m_sceneGraphFileStoreMapper);
+}
+
 void FindQuadVolumeTest::testOneLevelQuad()
 {
     auto quad_tree_id = QuadTreeRootId("quad_tree_root");
@@ -284,6 +293,7 @@ void FindQuadVolumeTest::onRenderEngineInstalled(const Enigma::Frameworks::IEven
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<RenderEngineInstalled>(e);
     if (!ev) return;
-    makeOneLevelQuad();
-    testOneLevelQuad();
+    //makeOneLevelQuad();
+    //testOneLevelQuad();
+    makeThreeLevelTree();
 }

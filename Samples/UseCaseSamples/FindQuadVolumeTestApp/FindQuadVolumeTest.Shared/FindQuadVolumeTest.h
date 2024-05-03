@@ -24,6 +24,7 @@
 #include "SceneGraph/Node.h"
 #include "SceneGraph/Pawn.h"
 #include "SceneGraph/NodalSceneGraph.h"
+#include "FileStorage/SceneGraphFileStoreMapper.h"
 
 class FindQuadVolumeTest : public Enigma::Application::AppDelegate
 {
@@ -44,8 +45,11 @@ public:
 protected:
     void onRendererCreated(const Enigma::Frameworks::IEventPtr& e);
     void onRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e);
+    void onRenderEngineInstalled(const Enigma::Frameworks::IEventPtr& e);
 
 private:
+    void makeOneLevelQuad();
+    void testOneLevelQuad();
     void makeCamera();
     void makeModel();
 
@@ -54,6 +58,9 @@ private:
 protected:
     Enigma::Frameworks::EventSubscriberPtr m_onRendererCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onRenderTargetCreated;
+    Enigma::Frameworks::EventSubscriberPtr m_onRenderEngineInstalled;
+    std::shared_ptr<Enigma::FileStorage::SceneGraphFileStoreMapper> m_sceneGraphFileStoreMapper;
+    Enigma::SceneGraph::SpatialId m_rootQuadId;
 
     std::unique_ptr<Enigma::SceneGraph::SceneGraph> m_sceneGraph;
     Enigma::Renderer::RendererPtr m_renderer;

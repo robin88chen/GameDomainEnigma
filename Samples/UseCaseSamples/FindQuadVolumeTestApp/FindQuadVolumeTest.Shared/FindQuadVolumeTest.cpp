@@ -33,6 +33,12 @@
 #include "SceneGraph/SceneGraphQueries.h"
 #include "SceneGraph/SceneGraphPersistenceLevel.h"
 #include "SceneGraph/SceneGraphRepository.h"
+#include "Controllers/ControllerEvents.h"
+#include "SceneGraph/VisibilityManagedNode.h"
+#include "WorldMap/QuadTreeRoot.h"
+#include "WorldMap/QuadTreeVolume.h"
+#include "WorldMap/QuadTreeRootDto.h"
+#include "SceneGraphMaker.h"
 
 std::string PrimaryTargetName = "primary_target";
 std::string DefaultRendererName = "default_renderer";
@@ -51,6 +57,7 @@ using namespace Enigma::Gateways;
 using namespace Enigma::Geometries;
 using namespace Enigma::Primitives;
 using namespace Enigma::SceneGraph;
+using namespace Enigma::WorldMap;
 
 FindQuadVolumeTest::FindQuadVolumeTest(const std::string app_name) : AppDelegate(app_name)
 {
@@ -92,8 +99,10 @@ void FindQuadVolumeTest::installEngine()
 {
     m_onRendererCreated = std::make_shared<EventSubscriber>([=](auto e) { this->onRendererCreated(e); });
     m_onRenderTargetCreated = std::make_shared<EventSubscriber>([=](auto e) { this->onRenderTargetCreated(e); });
+    m_onRenderEngineInstalled = std::make_shared<EventSubscriber>([=](auto e) { this->onRenderEngineInstalled(e); });
     EventPublisher::subscribe(typeid(RendererCreated), m_onRendererCreated);
     EventPublisher::subscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
+    EventPublisher::subscribe(typeid(RenderEngineInstalled), m_onRenderEngineInstalled);
 
     assert(m_graphicMain);
 
@@ -104,7 +113,8 @@ void FindQuadVolumeTest::installEngine()
     auto geometry_policy = std::make_shared<GeometryInstallingPolicy>(std::make_shared<GeometryDataFileStoreMapper>("geometries.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
     auto primitive_policy = std::make_shared<PrimitiveRepositoryInstallingPolicy>(std::make_shared<PrimitiveFileStoreMapper>("primitives.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
     auto animator_policy = std::make_shared<AnimatorInstallingPolicy>(std::make_shared<AnimatorFileStoreMapper>("animators.db.txt@DataPath", std::make_shared<DtoJsonGateway>()), std::make_shared<AnimationAssetFileStoreMapper>("animation_assets.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
-    auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(std::make_shared<SceneGraphFileStoreMapper>("scene_graph.db.txt@DataPath", "lazy_scene.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
+    m_sceneGraphFileStoreMapper = std::make_shared<SceneGraphFileStoreMapper>("scene_graph.db.txt@DataPath", "lazy_scene.db.txt@DataPath", std::make_shared<DtoJsonGateway>());
+    auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(m_sceneGraphFileStoreMapper);
     auto effect_material_source_policy = std::make_shared<EffectMaterialSourceRepositoryInstallingPolicy>(std::make_shared<EffectMaterialSourceFileStoreMapper>("effect_materials.db.txt@APK_PATH"));
     auto texture_policy = std::make_shared<TextureRepositoryInstallingPolicy>(std::make_shared<TextureFileStoreMapper>("textures.db.txt@APK_PATH", std::make_shared<DtoJsonGateway>()));
     auto renderables_policy = std::make_shared<RenderablesInstallingPolicy>();
@@ -139,6 +149,42 @@ void FindQuadVolumeTest::frameUpdate()
 {
     AppDelegate::frameUpdate();
     prepareRenderScene();
+}
+
+void FindQuadVolumeTest::makeOneLevelQuad()
+{
+    assert(m_sceneGraphFileStoreMapper);
+    m_rootQuadId = SpatialId("root_quad", VisibilityManagedNode::TYPE_RTTI);
+    SceneGraphMaker::makeOneLevelQuadNode(m_rootQuadId, m_sceneGraphFileStoreMapper);
+}
+
+void FindQuadVolumeTest::testOneLevelQuad()
+{
+    auto quad_tree_id = QuadTreeRootId("quad_tree_root");
+    QuadTreeRootDto dto;
+    dto.id() = quad_tree_id;
+    dto.rootNodeId() = m_rootQuadId;
+    auto quad_tree_root = std::make_shared<QuadTreeRoot>(quad_tree_id, dto.toGenericDto());
+    BoundingVolume bv_at_origin = BoundingVolume(Box3::UNIT_BOX);
+    auto fitted = quad_tree_root->findFittingNode(bv_at_origin);
+    assert(fitted.has_value() && fitted.value() == m_rootQuadId);
+    BoundingVolume bv_at_x1 = bv_at_origin;
+    bv_at_x1.Center() = Vector3(4.0f, 0.0f, 0.0f);
+    fitted = quad_tree_root->findFittingNode(bv_at_x1);
+    assert(fitted.has_value() && fitted.value() == m_rootQuadId);
+    Box3 unit_box = Box3::UNIT_BOX;
+    Box3 box_scale_ten = unit_box;
+    box_scale_ten.Extent(0) = 10.0f;
+    box_scale_ten.Extent(1) = 10.0f;
+    box_scale_ten.Extent(2) = 10.0f;
+    BoundingVolume bv_scale_ten = BoundingVolume(box_scale_ten);
+    auto un_fitted = quad_tree_root->findFittingNode(bv_scale_ten);
+    assert(!un_fitted.has_value());
+    Box3 box_at_z10 = unit_box;
+    box_at_z10.Center().z() = 10.0f;
+    BoundingVolume bv_at_z10 = BoundingVolume(box_at_z10);
+    un_fitted = quad_tree_root->findFittingNode(bv_at_z10);
+    assert(!un_fitted.has_value());
 }
 
 void FindQuadVolumeTest::makeCamera()
@@ -231,4 +277,13 @@ void FindQuadVolumeTest::onRenderTargetCreated(const IEventPtr& e)
     if (!ev) return;
     m_renderTarget = ev->renderTarget();
     if ((m_renderer) && (m_renderTarget)) m_renderer->setRenderTarget(m_renderTarget);
+}
+
+void FindQuadVolumeTest::onRenderEngineInstalled(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<RenderEngineInstalled>(e);
+    if (!ev) return;
+    makeOneLevelQuad();
+    testOneLevelQuad();
 }

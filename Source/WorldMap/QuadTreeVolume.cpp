@@ -26,7 +26,7 @@ bool QuadTreeVolume::isWorldPositionInside(const MathLib::Vector3& worldPosition
 {
     if (m_id.empty()) return false;
     auto local_position = m_worldTransform.Inverse() * worldPosition;
-    return (m_modelBounding.PointInsideFlags(local_position) & static_cast<GenericBV::FlagBits>(GenericBV::TestedAxis::XZ)).all();
+    return (m_modelBounding.PointInsideFlags(local_position) & static_cast<GenericBV::FlagBits>(GenericBV::TestedAxis::XZ)) == GenericBV::TestedAxis::XZ;
 }
 
 std::shared_ptr<QuadTreeVolume> QuadTreeVolume::findFittingVolume(const BoundingVolume& bv_in_world)

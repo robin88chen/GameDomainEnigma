@@ -118,7 +118,7 @@ namespace Enigma::SceneGraph
         NodeAssembler& child(const SpatialId& child_id, const NodeAssembler* child);
         NodeAssembler& asNative(const std::string& file_at_path);
 
-        void updateLocationBounding();
+        void consistChildrenLocationBounding();
 
         Engine::GenericDto toGenericDto() const;
         NodeDto toNodeDto() const;

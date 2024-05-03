@@ -17,6 +17,7 @@ namespace Enigma::WorldMap
     class QuadTreeRootDto
     {
     public:
+        QuadTreeRootDto() = default;
         QuadTreeRootDto(const Engine::GenericDto& dto);
 
         [[nodiscard]] const QuadTreeRootId& id() const { return m_id; }

@@ -279,6 +279,7 @@ NodeAssembler& NodeAssembler::asNative(const std::string& file_at_path)
 
 NodeDto NodeAssembler::toNodeDto() const
 {
+    const_cast<NodeAssembler*>(this)->consistChildrenLocationBounding();
     NodeDto node_dto(m_spatialAssembler.toGenericDto());
     node_dto.id() = m_dto.id();
     node_dto.factoryDesc() = m_dto.factoryDesc();
@@ -286,7 +287,7 @@ NodeDto NodeAssembler::toNodeDto() const
     return node_dto;
 }
 
-void NodeAssembler::updateLocationBounding()
+void NodeAssembler::consistChildrenLocationBounding()
 {
     if (m_children.empty() && m_childNodes.empty()) return;
     if (!m_childNodes.empty())
@@ -294,7 +295,7 @@ void NodeAssembler::updateLocationBounding()
         for (const auto& child : m_childNodes)
         {
             child->spatial().worldTransform(m_dto.worldTransform() * child->spatial().localTransform());
-            child->updateLocationBounding();
+            child->consistChildrenLocationBounding();
         }
     }
     if (!m_children.empty())

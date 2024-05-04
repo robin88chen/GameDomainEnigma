@@ -4,11 +4,8 @@
 #include "FileSystem/AndroidMountPath.h"
 #include "Platforms/AndroidBridge.h"
 #include "Frameworks/EventPublisher.h"
-#include "Renderer/RendererEvents.h"
 #include "Controllers/GraphicMain.h"
-#include "Frameworks/CommandBus.h"
 #include "SceneGraph/SceneGraphEvents.h"
-#include "Animators/AnimatorCommands.h"
 #include "SceneGraph/Culler.h"
 #include "Platforms/MemoryMacro.h"
 #include "Gateways/DtoJsonGateway.h"
@@ -61,8 +58,6 @@ using namespace Enigma::WorldMap;
 
 FindQuadVolumeTest::FindQuadVolumeTest(const std::string app_name) : AppDelegate(app_name)
 {
-    m_isPrefabBuilt = false;
-    m_culler = nullptr;
 }
 
 FindQuadVolumeTest::~FindQuadVolumeTest()
@@ -97,11 +92,7 @@ void FindQuadVolumeTest::initializeMountPaths()
 
 void FindQuadVolumeTest::installEngine()
 {
-    m_onRendererCreated = std::make_shared<EventSubscriber>([=](auto e) { this->onRendererCreated(e); });
-    m_onRenderTargetCreated = std::make_shared<EventSubscriber>([=](auto e) { this->onRenderTargetCreated(e); });
     m_onRenderEngineInstalled = std::make_shared<EventSubscriber>([=](auto e) { this->onRenderEngineInstalled(e); });
-    EventPublisher::subscribe(typeid(RendererCreated), m_onRendererCreated);
-    EventPublisher::subscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
     EventPublisher::subscribe(typeid(RenderEngineInstalled), m_onRenderEngineInstalled);
 
     assert(m_graphicMain);
@@ -119,28 +110,12 @@ void FindQuadVolumeTest::installEngine()
     auto texture_policy = std::make_shared<TextureRepositoryInstallingPolicy>(std::make_shared<TextureFileStoreMapper>("textures.db.txt@APK_PATH", std::make_shared<DtoJsonGateway>()));
     auto renderables_policy = std::make_shared<RenderablesInstallingPolicy>();
     m_graphicMain->installRenderEngine({ creating_policy, engine_policy, renderer_policy, render_sys_policy, geometry_policy, primitive_policy, animator_policy, scene_graph_policy, effect_material_source_policy, texture_policy, renderables_policy });
-
-    m_sceneGraph = std::make_unique<NodalSceneGraph>(m_graphicMain->getSystemServiceAs<SceneGraphRepository>());
-    makeCamera();
-    makeModel();
 }
 
 void FindQuadVolumeTest::shutdownEngine()
 {
-    m_pawn = nullptr;
-    m_sceneGraph->destroyRoot();
-    m_sceneGraph = nullptr;
-    //m_sceneRoot = nullptr;
-    m_model = nullptr;
-    m_renderer = nullptr;
-    m_renderTarget = nullptr;
-    m_camera = nullptr;
-    SAFE_DELETE(m_culler);
-
-    EventPublisher::unsubscribe(typeid(RendererCreated), m_onRendererCreated);
-    EventPublisher::unsubscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
-    m_onRendererCreated = nullptr;
-    m_onRenderTargetCreated = nullptr;
+    EventPublisher::unsubscribe(typeid(RenderEngineInstalled), m_onRenderEngineInstalled);
+    m_onRenderEngineInstalled = nullptr;
 
     m_graphicMain->shutdownRenderEngine();
 }
@@ -148,7 +123,6 @@ void FindQuadVolumeTest::shutdownEngine()
 void FindQuadVolumeTest::frameUpdate()
 {
     AppDelegate::frameUpdate();
-    prepareRenderScene();
 }
 
 void FindQuadVolumeTest::makeOneLevelQuad()
@@ -177,9 +151,10 @@ void FindQuadVolumeTest::testOneLevelQuad()
     BoundingVolume bv_at_origin = BoundingVolume(Box3::UNIT_BOX);
     auto fitted = quad_tree_root->findFittingNode(bv_at_origin);
     assert(fitted.has_value() && fitted.value() == m_rootQuadId);
-    BoundingVolume bv_at_x1 = bv_at_origin;
-    bv_at_x1.Center() = Vector3(4.0f, 0.0f, 0.0f);
-    fitted = quad_tree_root->findFittingNode(bv_at_x1);
+    Box3 box_at_x4 = Box3::UNIT_BOX;
+    box_at_x4.Center().x() = 4.0f;
+    BoundingVolume bv_at_x4 = BoundingVolume(box_at_x4);
+    fitted = quad_tree_root->findFittingNode(bv_at_x4);
     assert(fitted.has_value() && fitted.value() == m_rootQuadId);
     Box3 unit_box = Box3::UNIT_BOX;
     Box3 box_scale_ten = unit_box;
@@ -196,96 +171,48 @@ void FindQuadVolumeTest::testOneLevelQuad()
     assert(!un_fitted.has_value());
 }
 
-void FindQuadVolumeTest::makeCamera()
+void FindQuadVolumeTest::testThreeLevelTree()
 {
-    /*m_cameraId = SpatialId("camera", Camera::TYPE_RTTI);
-    if (const auto camera = Camera::queryCamera(m_cameraId))
-    {
-        m_camera = camera;
-        if ((m_camera) && (m_renderer)) m_renderer->setAssociatedCamera(m_camera);
-        m_culler = menew Culler(m_camera);
-    }
-    else
-    {
-        m_camera = CameraMaker::makeCamera(m_cameraId);
-        m_culler = menew Culler(m_camera);
-    }*/
-}
-
-void FindQuadVolumeTest::makeModel()
-{
-    /*std::vector<std::string> meshNodeNames = { "bone_root", "bone_one" };
-    auto cubeId = GeometryId("test_geometry");
-    auto meshId = PrimitiveId("test_mesh", MeshPrimitive::TYPE_RTTI);
-    auto modelId = PrimitiveId("test_model", ModelPrimitive::TYPE_RTTI);
-    auto animationId = AnimationAssetId("test_animation");
-    auto animatorId = AnimatorId("test_animator", ModelPrimitiveAnimator::TYPE_RTTI);
-    auto pawn_id = SpatialId("pawn", Pawn::TYPE_RTTI);
-    auto stillpawn_id = SpatialId("still_pawn", Pawn::TYPE_RTTI);
-    auto animation = SkinAnimationMaker::makeSkinMeshAnimationAsset(animationId, meshNodeNames);
-    auto animator = SkinAnimationMaker::makeModelAnimator(animatorId, animationId, modelId.origin(), meshId, meshNodeNames);
-    auto cube = CubeGeometryMaker::makeCube(cubeId);
-    auto mesh = SkinMeshModelMaker::makeCubeMeshPrimitive(meshId, cubeId);
-    m_model = SkinMeshModelMaker::makeModelPrimitive(modelId, meshId, animatorId, meshNodeNames);
-    m_rootId = SpatialId("root", Node::TYPE_RTTI);
-    m_sceneGraph->createRoot(m_rootId);
-    //m_sceneRoot = Node::queryNode(m_rootId);
-    //if (!m_sceneRoot)
-    if (!m_sceneGraph->root())
-    {
-        auto scene_dto = SceneGraphMaker::makeSceneGraph(m_rootId, modelId, pawn_id, stillpawn_id);
-        std::make_shared<RequestSpatialConstitution>(m_rootId, scene_dto, PersistenceLevel::Store)->dispatch();
-        m_sceneGraph->createRoot(m_rootId);
-    }
-    auto pawn = Pawn::queryPawn(pawn_id);
-    if (!pawn) return;
-    animatorId = pawn->getPrimitive()->animatorId();
-    if (const auto animator = std::dynamic_pointer_cast<ModelPrimitiveAnimator>(Animator::queryAnimator(animatorId)))
-    {
-        animator->playAnimation(Enigma::Renderables::AnimationClip{ 0.0f, 2.5f, Enigma::Renderables::AnimationClip::WarpMode::Loop, 0 });
-    }
-    CommandBus::post(std::make_shared<AddListeningAnimator>(animatorId));*/
-}
-
-void FindQuadVolumeTest::prepareRenderScene()
-{
-    if ((m_sceneGraph) && (m_culler))
-    {
-        m_culler->ComputeVisibleSet(m_sceneGraph->root());
-    }
-    if ((m_renderer) && (m_culler))
-    {
-        m_renderer->prepareScene(m_culler->getVisibleSet());
-    }
+    auto quad_tree_id = QuadTreeRootId("quad_tree_root");
+    QuadTreeRootDto dto;
+    dto.id() = quad_tree_id;
+    dto.rootNodeId() = m_rootQuadId;
+    auto quad_tree_root = std::make_shared<QuadTreeRoot>(quad_tree_id, dto.toGenericDto());
+    BoundingVolume bv_at_origin = BoundingVolume(Box3::UNIT_BOX);
+    auto fitted = quad_tree_root->findFittingNode(bv_at_origin);
+    assert(fitted.has_value() && fitted.value() == m_rootQuadId);
+    Box3 box_at_x4z2 = Box3::UNIT_BOX;
+    box_at_x4z2.Center().x() = 4.0f;
+    box_at_x4z2.Center().z() = 2.0f;
+    BoundingVolume bv_at_x4z2 = BoundingVolume(box_at_x4z2);
+    fitted = quad_tree_root->findFittingNode(bv_at_x4z2);
+    assert(fitted.has_value() && fitted.value() == m_level1QuadId2);
+    Box3 box_at_x2z2 = Box3::UNIT_BOX;
+    box_at_x2z2.Center().x() = 2.0f;
+    box_at_x2z2.Center().z() = 2.0f;
+    BoundingVolume bv_at_x2z2 = BoundingVolume(box_at_x2z2);
+    fitted = quad_tree_root->findFittingNode(bv_at_x2z2);
+    assert(fitted.has_value() && fitted.value() == m_level2QuadId1);
+    Box3 box_at_x4 = Box3::UNIT_BOX;
+    box_at_x4.Center().x() = 4.0f;
+    BoundingVolume bv_at_x4 = BoundingVolume(box_at_x4);
+    fitted = quad_tree_root->findFittingNode(bv_at_x4);
+    assert(fitted.has_value() && fitted.value() == m_rootQuadId);
+    Box3 box_at_x2z2_scale3 = box_at_x2z2;
+    box_at_x2z2_scale3.Extent(0) = 3.0f;
+    BoundingVolume bv_at_x2z2_scale3 = BoundingVolume(box_at_x2z2_scale3);
+    fitted = quad_tree_root->findFittingNode(bv_at_x2z2_scale3);
+    assert(fitted.has_value() && fitted.value() == m_rootQuadId);
+    Box3 box_at_x3z3_scale3 = box_at_x2z2_scale3;
+    box_at_x3z3_scale3.Center().x() = 3.0f;
+    box_at_x3z3_scale3.Center().z() = 3.0f;
+    BoundingVolume bv_at_x3z3_scale3 = BoundingVolume(box_at_x3z3_scale3);
+    fitted = quad_tree_root->findFittingNode(bv_at_x3z3_scale3);
+    assert(fitted.has_value() && fitted.value() == m_level1QuadId2);
 }
 
 void FindQuadVolumeTest::renderFrame()
 {
-    if (!m_renderer) return;
-    m_renderer->beginScene();
-    m_renderer->clearRenderTarget();
-    m_renderer->drawScene();
-    m_renderer->endScene();
-    m_renderer->flip();
-}
-
-void FindQuadVolumeTest::onRendererCreated(const IEventPtr& e)
-{
-    if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<RendererCreated, IEvent>(e);
-    if (!ev) return;
-    m_renderer = std::dynamic_pointer_cast<Renderer, IRenderer>(ev->renderer());
-    m_renderer->setAssociatedCamera(m_camera);
-    if ((m_renderer) && (m_renderTarget)) m_renderer->setRenderTarget(m_renderTarget);
-}
-
-void FindQuadVolumeTest::onRenderTargetCreated(const IEventPtr& e)
-{
-    if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<PrimaryRenderTargetCreated, IEvent>(e);
-    if (!ev) return;
-    m_renderTarget = ev->renderTarget();
-    if ((m_renderer) && (m_renderTarget)) m_renderer->setRenderTarget(m_renderTarget);
 }
 
 void FindQuadVolumeTest::onRenderEngineInstalled(const Enigma::Frameworks::IEventPtr& e)
@@ -293,7 +220,8 @@ void FindQuadVolumeTest::onRenderEngineInstalled(const Enigma::Frameworks::IEven
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<RenderEngineInstalled>(e);
     if (!ev) return;
-    //makeOneLevelQuad();
-    //testOneLevelQuad();
+    makeOneLevelQuad();
+    testOneLevelQuad();
     makeThreeLevelTree();
+    testThreeLevelTree();
 }

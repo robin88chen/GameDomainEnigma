@@ -67,11 +67,10 @@ namespace Enigma::SceneGraph
         SpatialAssembler& spatialFlags(Spatial::SpatialFlags spatial_flags);
         SpatialAssembler& graphDepth(unsigned graph_depth);
 
-        const Engine::BoundingVolume& modelBound() const { return m_modelBound; }
-        const MathLib::Matrix4& localTransform() const { return m_dto.localTransform(); }
-        const MathLib::Matrix4& worldTransform() const { return m_dto.worldTransform(); }
+        Engine::BoundingVolume modelBound() const { return m_modelBound; }
+        MathLib::Matrix4 localTransform() const { return m_dto.localTransform(); }
+        MathLib::Matrix4 worldTransform() const { return m_dto.worldTransform(); }
 
-        Engine::GenericDto toGenericDto();
         Engine::GenericDto toGenericDto() const;
 
     private:
@@ -172,8 +171,8 @@ namespace Enigma::SceneGraph
         PortalAssembler& isOpen(bool is_open);
         PortalAssembler& asNative(const std::string& file_at_path);
 
-        Engine::GenericDto toGenericDto();
-        PortalDto toPortalDto();
+        Engine::GenericDto toGenericDto() const;
+        PortalDto toPortalDto() const;
         std::shared_ptr<Portal> constitute(PersistenceLevel persistence_level);
 
     private:

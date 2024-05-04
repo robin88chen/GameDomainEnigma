@@ -162,11 +162,6 @@ SpatialAssembler& SpatialAssembler::spatialFlags(Spatial::SpatialFlags spatial_f
     return *this;
 }
 
-Enigma::Engine::GenericDto SpatialAssembler::toGenericDto()
-{
-    return m_dto.toGenericDto();
-}
-
 Enigma::Engine::GenericDto SpatialAssembler::toGenericDto() const
 {
     return m_dto.toGenericDto();
@@ -295,7 +290,6 @@ void NodeAssembler::consistChildrenLocationBounding()
     {
         for (const auto& child : m_childNodes)
         {
-            MathLib::Matrix4 mx = m_spatialAssembler.worldTransform() * child->spatial().localTransform();
             child->spatial().worldTransform(m_spatialAssembler.worldTransform() * child->spatial().localTransform());
             child->consistChildrenLocationBounding();
             model_bound.Merge(child->spatial().localTransform(), child->spatial().modelBound());
@@ -425,7 +419,7 @@ PortalAssembler& PortalAssembler::asNative(const std::string& file_at_path)
     return *this;
 }
 
-PortalDto PortalAssembler::toPortalDto()
+PortalDto PortalAssembler::toPortalDto() const
 {
     PortalDto portal_dto(m_spatialAssembler.toGenericDto());
     portal_dto.id() = m_dto.id();
@@ -435,7 +429,7 @@ PortalDto PortalAssembler::toPortalDto()
     return portal_dto;
 }
 
-Enigma::Engine::GenericDto PortalAssembler::toGenericDto()
+Enigma::Engine::GenericDto PortalAssembler::toGenericDto() const
 {
     return toPortalDto().toGenericDto();
 }

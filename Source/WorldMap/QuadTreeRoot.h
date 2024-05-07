@@ -17,6 +17,7 @@
 
 namespace Enigma::WorldMap
 {
+    class QuadTreeVolume;
     class QuadTreeRoot
     {
     public:
@@ -27,6 +28,10 @@ namespace Enigma::WorldMap
         const SceneGraph::SpatialId& rootNodeId() const { return m_rootNodeId; }
 
         std::optional<SceneGraph::SpatialId> findFittingNode(const Engine::BoundingVolume& bv_in_world) const;
+        void createFittingNode(const Engine::BoundingVolume& bv_in_world, unsigned max_depth);
+
+    protected:
+        void createTreeNode(const std::shared_ptr<QuadTreeVolume>& volume);
 
     protected:
         QuadTreeRootId m_id;

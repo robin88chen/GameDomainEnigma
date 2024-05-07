@@ -10,6 +10,7 @@
 
 #include "Frameworks/Event.h"
 #include "SceneGraph/Node.h"
+#include "QuadTreeRootId.h"
 #include <system_error>
 
 namespace Enigma::WorldMap
@@ -63,22 +64,25 @@ namespace Enigma::WorldMap
         std::string m_name;
         std::error_code m_error;
     };
-    class FittingNodeCreated : public Frameworks::IResponseEvent
+    class FittingNodeCreated : public Frameworks::IEvent
     {
     public:
-        FittingNodeCreated(const Frameworks::Ruid& ruid, const std::shared_ptr<SceneGraph::Node>& node) : IResponseEvent(ruid), m_node(node) {}
+        FittingNodeCreated(const QuadTreeRootId& tree_root_id) : m_quadRootId(tree_root_id) {}
 
-        const std::shared_ptr<SceneGraph::Node>& getNode() const { return m_node; }
+        const QuadTreeRootId& quadRootId() const { return m_quadRootId; }
+
     protected:
-        std::shared_ptr<SceneGraph::Node> m_node;
+        QuadTreeRootId m_quadRootId;
     };
-    class CreateFittingNodeFailed : public Frameworks::IResponseEvent
+    class FittingNodeCreationFailed : public Frameworks::IEvent
     {
     public:
-        CreateFittingNodeFailed(const Frameworks::Ruid& ruid, std::error_code err) : IResponseEvent(ruid), m_error(err) {}
+        FittingNodeCreationFailed(const QuadTreeRootId& tree_root_id, std::error_code err) : m_quadRootId(tree_root_id), m_error(err) {}
 
-        std::error_code getError() const { return m_error; }
+        const QuadTreeRootId& quadRootId() const { return m_quadRootId; }
+        std::error_code error() const { return m_error; }
     protected:
+        QuadTreeRootId m_quadRootId;
         std::error_code m_error;
     };
 }

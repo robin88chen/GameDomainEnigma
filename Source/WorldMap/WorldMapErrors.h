@@ -24,6 +24,7 @@ namespace Enigma::WorldMap
         invalidBoundingBox,
         nullQuadNode,
         emptyQuadGraph,
+        emptyQuadVolumeList,
     };
     class ErrorCategory : public std::error_category
     {

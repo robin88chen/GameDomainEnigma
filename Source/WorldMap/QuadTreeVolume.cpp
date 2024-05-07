@@ -7,6 +7,8 @@ using namespace Enigma::SceneGraph;
 using namespace Enigma::Engine;
 using namespace Enigma::MathLib;
 
+unsigned constexpr maxDepth = 4;
+
 QuadTreeVolume::QuadTreeVolume(const SpatialId& id)
 {
     m_id = id;
@@ -19,6 +21,31 @@ QuadTreeVolume::QuadTreeVolume(const SpatialId& id)
             auto sub_volume_node_id = subVolumeNodeId(i);
             if (auto has_node = std::make_shared<HasSpatial>(sub_volume_node_id)->dispatch()) m_children[i] = std::make_shared<QuadTreeVolume>(sub_volume_node_id);
         }
+    }
+}
+
+QuadTreeVolume::QuadTreeVolume(const SpatialId& id, const std::optional<SceneGraph::SpatialId>& parent_id, const Matrix4& worldTransform, const BoundingVolume& modelBounding)
+    : m_id(id), m_parentId(parent_id), m_worldTransform(worldTransform), m_modelBounding(modelBounding)
+{
+}
+
+void QuadTreeVolume::constituteFullQuadTree(unsigned depth)
+{
+    assert(depth <= maxDepth);
+    if (m_id.empty()) return;
+    if (depth == 0) return;
+    if (!m_modelBounding.BoundingBox3()) return;
+    Box3 model_box = m_modelBounding.BoundingBox3().value();
+
+    constexpr std::array<float, maxChildren> child_offset_x = { -0.5f, -0.5f, 0.5f, 0.5f };
+    constexpr std::array<float, maxChildren> child_offset_z = { -0.5f, 0.5f, -0.5f, 0.5f };
+    Box3 child_box = Box3(Vector3::ZERO, model_box.Axis(0), model_box.Axis(1), model_box.Axis(2), model_box.Extent(0) * 0.5f, model_box.Extent(1), model_box.Extent(2) * 0.5f);
+    for (unsigned i = 0; i < maxChildren; i++)
+    {
+        Vector3 child_center_in_parent = model_box.Axis(0) * child_offset_x[i] * model_box.Extent(0) + model_box.Axis(2) * child_offset_z[i] * model_box.Extent(2);
+        Matrix4 child_transform = m_worldTransform * Matrix4::MakeTranslateTransform(child_center_in_parent);
+        m_children[i] = std::make_shared<QuadTreeVolume>(subVolumeNodeId(i), m_id, child_transform, BoundingVolume{ child_box });
+        m_children[i]->constituteFullQuadTree(depth - 1);
     }
 }
 
@@ -41,6 +68,13 @@ std::shared_ptr<QuadTreeVolume> QuadTreeVolume::findFittingVolume(const Bounding
     }
     // 下層找不到適合size的volume，回傳自己
     return shared_from_this();
+}
+
+std::list<std::shared_ptr<QuadTreeVolume>> QuadTreeVolume::collectFitVolumes(const Engine::BoundingVolume& bv_in_world)
+{
+    std::list<std::shared_ptr<QuadTreeVolume>> result;
+    collectFitVolumes(bv_in_world, result);
+    return result;
 }
 
 SpatialId QuadTreeVolume::subVolumeNodeId(unsigned index) const
@@ -69,3 +103,15 @@ bool QuadTreeVolume::testBoundingEnvelop(const Engine::BoundingVolume& bv_in_wor
     return false;
 }
 
+void QuadTreeVolume::collectFitVolumes(const Engine::BoundingVolume& bv_in_world, std::list<std::shared_ptr<QuadTreeVolume>>& result)
+{
+    if (m_id.empty()) return;
+    if (!isWorldPositionInside(bv_in_world.Center())) return;
+    if (!testBoundingEnvelop(bv_in_world)) return;
+    result.push_back(shared_from_this());
+    for (const auto& child_volume : m_children)
+    {
+        if (!child_volume) continue;
+        child_volume->collectFitVolumes(bv_in_world, result);
+    }
+}

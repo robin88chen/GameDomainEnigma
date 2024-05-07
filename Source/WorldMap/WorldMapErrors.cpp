@@ -13,10 +13,11 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::nullPortalManager: return "Null PortalManager";
     case ErrorCode::emptyQuadRoot: return "QuadRoot is empty";
     case ErrorCode::outOfBounds: return "Out of Bounds";
-    case ErrorCode::outOfQuadTreeDepth: return "Out of QuadTree Depth";
+    case ErrorCode::outOfQuadTreeDepth: return "Out of Quad Tree Depth";
     case ErrorCode::invalidBoundingBox: return "Invalid Bounding Box";
-    case ErrorCode::nullQuadNode: return "Null QuadNode";
-    case ErrorCode::emptyQuadGraph: return "Empty QuadGraph";
+    case ErrorCode::nullQuadNode: return "Null Quad Node";
+    case ErrorCode::emptyQuadGraph: return "Empty Quad Graph";
+    case ErrorCode::emptyQuadVolumeList: return "Empty Quad Volume List";
     }
     return "Unknown";
 }

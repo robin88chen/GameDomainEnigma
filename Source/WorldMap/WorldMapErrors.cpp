@@ -18,6 +18,9 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::nullQuadNode: return "Null Quad Node";
     case ErrorCode::emptyQuadGraph: return "Empty Quad Graph";
     case ErrorCode::emptyQuadVolumeList: return "Empty Quad Volume List";
+    case ErrorCode::parentQuadNodeNotFound: return "Parent Quad Node Not Found";
+    case ErrorCode::parentQuadNodeHydrationFailed: return "Parent Quad Node Hydration Failed";
+    case ErrorCode::childQuadNodeConstitutionFailed: return "Child Quad Node Constitution Failed";
     }
     return "Unknown";
 }

@@ -25,6 +25,9 @@ namespace Enigma::WorldMap
         nullQuadNode,
         emptyQuadGraph,
         emptyQuadVolumeList,
+        parentQuadNodeNotFound,
+        parentQuadNodeHydrationFailed,
+        childQuadNodeConstitutionFailed,
     };
     class ErrorCategory : public std::error_category
     {

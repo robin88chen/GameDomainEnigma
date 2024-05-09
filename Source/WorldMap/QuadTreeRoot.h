@@ -11,9 +11,9 @@
 #include "QuadTreeRootId.h"
 #include "GameEngine/GenericDto.h"
 #include "SceneGraph/SpatialId.h"
-#include "SceneGraph/Node.h"
 #include "SceneGraph/LazyNode.h"
 #include "GameEngine/BoundingVolume.h"
+#include "SceneGraph/SceneGraphRepository.h"
 
 namespace Enigma::WorldMap
 {
@@ -28,10 +28,14 @@ namespace Enigma::WorldMap
         const SceneGraph::SpatialId& rootNodeId() const { return m_rootNodeId; }
 
         std::optional<SceneGraph::SpatialId> findFittingNode(const Engine::BoundingVolume& bv_in_world) const;
-        void createFittingNode(const Engine::BoundingVolume& bv_in_world, unsigned max_depth);
+        //! design note: Since multiple nodes need to be created and hydration needs to be done, so directly reference the repository and no need to modify the hydration request or command.
+        //! design note: If the creation of fitting nodes go to more complex, it will move to other classes to handle some day.
+        void createFittingNodes(const std::shared_ptr<SceneGraph::SceneGraphRepository>& repository, const Engine::BoundingVolume& bv_in_world, unsigned max_depth);
 
     protected:
-        void createTreeNode(const std::shared_ptr<QuadTreeVolume>& volume);
+        std::error_code createTreeNode(const std::shared_ptr<SceneGraph::SceneGraphRepository>& repository, const std::shared_ptr<QuadTreeVolume>& volume);
+        Engine::GenericDto assembleChildTreeNode(const SceneGraph::SpatialId& parent_id, const Engine::FactoryDesc& parent_desc, const SceneGraph::SpatialId& id, const MathLib::Matrix4& local_transform, const Engine::BoundingVolume& model_bound);
+        std::string replaceToChildFilename(const std::string& parent_filename, const SceneGraph::SpatialId& parent_id, const SceneGraph::SpatialId& id);
 
     protected:
         QuadTreeRootId m_id;

@@ -34,8 +34,8 @@ namespace Enigma::WorldMap
 
     protected:
         std::error_code createTreeNode(const std::shared_ptr<SceneGraph::SceneGraphRepository>& repository, const std::shared_ptr<QuadTreeVolume>& volume);
-        Engine::GenericDto assembleChildTreeNode(const SceneGraph::SpatialId& parent_id, const Engine::FactoryDesc& parent_desc, const SceneGraph::SpatialId& id, const MathLib::Matrix4& local_transform, const Engine::BoundingVolume& model_bound);
-        std::string replaceToChildFilename(const std::string& parent_filename, const SceneGraph::SpatialId& parent_id, const SceneGraph::SpatialId& id);
+        Engine::GenericDto assembleChildTreeNode(const SceneGraph::SpatialId& parent_id, const Engine::FactoryDesc& parent_desc, const SceneGraph::SpatialId& id, const MathLib::Matrix4& local_transform, const MathLib::Matrix4& world_transform, const Engine::BoundingVolume& model_bound);
+        std::string replaceToChildFilename(const std::string& parent_filename, const std::string& path_id, const SceneGraph::SpatialId& parent_id, const SceneGraph::SpatialId& id);
 
     protected:
         QuadTreeRootId m_id;

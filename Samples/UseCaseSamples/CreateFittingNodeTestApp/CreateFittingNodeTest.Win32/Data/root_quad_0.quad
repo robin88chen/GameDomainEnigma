@@ -1,0 +1,75 @@
+[{
+        "LocalTransform": {
+            "Type": "Matrix4",
+            "Value": [1.0, 0.0, 0.0, -4.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, -4.0, 0.0, 0.0, 0.0, 1.0]
+        },
+        "Rtti": {
+            "Type": "FactoryDesc",
+            "Value": {
+                "InstanceType": 2,
+                "ResourceName": "",
+                "ResourceFilename": "",
+                "RttiName": "En.SceneGraph.VisibilityManagedNode",
+                "PrefabFilename": "root_quad_0.quad@DataPath"
+            }
+        },
+        "ModelBound": {
+            "Type": "DataObject",
+            "Value": {
+                "BoxBV": {
+                    "Type": "Box3",
+                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 4.0, 8.0, 4.0]
+                }
+            }
+        },
+        "TopLevel": {
+            "Type": "Boolean",
+            "Value": false
+        },
+        "GraphDepth": {
+            "Type": "Uint32",
+            "Value": 0
+        },
+        "Id": {
+            "Type": "StringArray",
+            "Value": ["root_quad_0", "En.SceneGraph.VisibilityManagedNode"]
+        },
+        "ParentName": {
+            "Type": "String",
+            "Value": "root_quad"
+        },
+        "WorldTransform": {
+            "Type": "Matrix4",
+            "Value": [1.0, 0.0, 0.0, -4.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, -4.0, 0.0, 0.0, 0.0, 1.0]
+        },
+        "WorldBound": {
+            "Type": "DataObject",
+            "Value": {
+                "BoxBV": {
+                    "Type": "Box3",
+                    "Value": [-4.0, 0.0, -4.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 4.0, 8.0, 4.0]
+                }
+            }
+        },
+        "CullingMode": {
+            "Type": "Uint32",
+            "Value": 0
+        },
+        "SpatialFlag": {
+            "Type": "Uint32",
+            "Value": 4
+        },
+        "NotifyFlag": {
+            "Type": "Uint32",
+            "Value": 31
+        },
+        "Children": {
+            "Type": "DataObjectArray",
+            "Value": [{
+                    "Id": {
+                        "Type": "StringArray",
+                        "Value": ["root_quad_0_0", "En.SceneGraph.VisibilityManagedNode"]
+                    }
+                }]
+        }
+    }]

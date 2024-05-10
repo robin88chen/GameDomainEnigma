@@ -74,11 +74,12 @@ std::error_code QuadTreeRoot::createTreeNode(const std::shared_ptr<SceneGraph::S
     if (!parent_node) return ErrorCode::parentQuadNodeNotFound;
     if (!parent_node->lazyStatus().isReady())
     {
+        parent_node->lazyStatus().changeStatus(LazyStatus::Status::InQueue);
         repository->hydrateLazyNode(parent_node->id());
         if (!parent_node->lazyStatus().isReady()) return ErrorCode::parentQuadNodeHydrationFailed;
     }
     MathLib::Matrix4 local_transform = volume->worldTransform() * parent_node->getWorldTransform().Inverse();
-    Engine::GenericDto child_dto = assembleChildTreeNode(volume->parentId().value(), parent_node->factoryDesc(), volume->id(), local_transform, volume->modelBounding());
+    Engine::GenericDto child_dto = assembleChildTreeNode(volume->parentId().value(), parent_node->factoryDesc(), volume->id(), local_transform, volume->worldTransform(), volume->modelBounding());
     std::shared_ptr<LazyNode> child_node = std::dynamic_pointer_cast<LazyNode>(repository->factory()->constituteSpatial(volume->id(), child_dto, true));
     if (!child_node) return ErrorCode::childQuadNodeConstitutionFailed;
     std::error_code er = child_node->hydrate(child_dto);
@@ -92,18 +93,24 @@ std::error_code QuadTreeRoot::createTreeNode(const std::shared_ptr<SceneGraph::S
     return ErrorCode::ok;
 }
 
-Enigma::Engine::GenericDto QuadTreeRoot::assembleChildTreeNode(const SceneGraph::SpatialId& parent_id, const Engine::FactoryDesc& parent_desc, const SceneGraph::SpatialId& id, const MathLib::Matrix4& local_transform, const Engine::BoundingVolume& model_bound)
+Enigma::Engine::GenericDto QuadTreeRoot::assembleChildTreeNode(const SceneGraph::SpatialId& parent_id, const Engine::FactoryDesc& parent_desc, const SceneGraph::SpatialId& id, const MathLib::Matrix4& local_transform, const MathLib::Matrix4& world_transform, const Engine::BoundingVolume& model_bound)
 {
-    auto child_filename = replaceToChildFilename(parent_desc.GetDeferredFilename(), parent_id, id);
+    auto child_filename = replaceToChildFilename(parent_desc.GetDeferredFilename(), parent_desc.PathId(), parent_id, id);
     VisibilityManagedNodeAssembler assembler(id);
-    assembler.lazyNode().node().spatial().localTransform(local_transform).modelBound(model_bound).factory(Engine::FactoryDesc(VisibilityManagedNode::TYPE_RTTI).ClaimAsDeferred(child_filename));
+    assembler.lazyNode().node().spatial().localTransform(local_transform).modelBound(model_bound).worldTransform(world_transform);
+    assembler.asDeferred(child_filename, parent_desc.PathId());
     return assembler.toHydratedGenericDto();
 }
 
-std::string QuadTreeRoot::replaceToChildFilename(const std::string& parent_filename, const SceneGraph::SpatialId& parent_id, const SceneGraph::SpatialId& id)
+std::string QuadTreeRoot::replaceToChildFilename(const std::string& parent_filename, const std::string& path_id, const SceneGraph::SpatialId& parent_id, const SceneGraph::SpatialId& id)
 {
     std::string child_filename = parent_filename;
-    size_t pos = child_filename.find(parent_id.name());
+    auto pos = child_filename.find_last_of('@');
+    if (pos != std::string::npos)
+    {
+        child_filename = child_filename.substr(0, pos);
+    }
+    pos = child_filename.find(parent_id.name());
     assert(pos != std::string::npos);
     child_filename.replace(pos, parent_id.name().length(), id.name());
     return child_filename;

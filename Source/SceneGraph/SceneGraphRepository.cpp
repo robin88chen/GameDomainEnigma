@@ -184,7 +184,10 @@ std::shared_ptr<Spatial> SceneGraphRepository::querySpatial(const SpatialId& id)
     if (it != m_spatials.end()) return it->second;
     auto dto = m_storeMapper->querySpatial(id);
     assert(dto.has_value());
-    return m_factory->constituteSpatial(id, dto.value(), true);
+    auto spatial = m_factory->constituteSpatial(id, dto.value(), true);
+    assert(spatial);
+    m_spatials.insert_or_assign(id, spatial);
+    return spatial;
 }
 
 bool SceneGraphRepository::hasLaziedContent(const SpatialId& id)

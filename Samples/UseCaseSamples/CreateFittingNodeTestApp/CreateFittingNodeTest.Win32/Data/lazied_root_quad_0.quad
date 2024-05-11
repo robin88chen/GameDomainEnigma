@@ -65,6 +65,11 @@
         },
         "Children": {
             "Type": "DataObjectArray",
-            "Value": []
+            "Value": [{
+                    "Id": {
+                        "Type": "StringArray",
+                        "Value": ["root_quad_0_0", "En.SceneGraph.VisibilityManagedNode"]
+                    }
+                }]
         }
     }]

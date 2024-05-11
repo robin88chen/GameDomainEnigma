@@ -9,10 +9,11 @@
 
 using namespace Enigma::FileStorage;
 
-SceneGraphFileStoreMapper::SpatialFileMap::SpatialFileMap(const std::string& filename, const std::shared_ptr<Gateways::IDtoGateway>& gateway)
+SceneGraphFileStoreMapper::SpatialFileMap::SpatialFileMap(const std::string& filename, const std::string& asset_prefix, const std::shared_ptr<Gateways::IDtoGateway>& gateway)
 {
     m_gateway = gateway;
     m_filename = filename;
+    m_assetPrefix = asset_prefix;
 }
 
 SceneGraphFileStoreMapper::SpatialFileMap::~SpatialFileMap()
@@ -121,9 +122,28 @@ std::error_code SceneGraphFileStoreMapper::SpatialFileMap::serializeMapperFile()
 
 std::string SceneGraphFileStoreMapper::SpatialFileMap::extractFilename(const SceneGraph::SpatialId& id, const Engine::FactoryDesc& factory_desc)
 {
-    if (!factory_desc.GetDeferredFilename().empty()) return factory_desc.GetDeferredFilename();
-    if (!factory_desc.GetResourceFilename().empty()) return factory_desc.GetResourceFilename();
-    return id.name() + "." + factory_desc.GetRttiName() + ".json";
+    if (m_assetPrefix.empty())
+    {
+        if (!factory_desc.GetDeferredFilename().empty()) return factory_desc.GetDeferredFilename();
+        if (!factory_desc.GetResourceFilename().empty()) return factory_desc.GetResourceFilename();
+        return id.name() + "." + factory_desc.GetRttiName() + ".json";
+    }
+    std::string filename;
+    if (!factory_desc.GetDeferredFilename().empty())
+    {
+        filename = factory_desc.GetDeferredFilename();
+    }
+    else if (!factory_desc.GetResourceFilename().empty())
+    {
+        filename = factory_desc.GetResourceFilename();
+    }
+    else
+    {
+        filename = id.name() + "." + factory_desc.GetRttiName() + ".json";
+    }
+    auto pos = filename.find_last_of('/');
+    if (pos == std::string::npos) return m_assetPrefix + filename;
+    return filename.insert(pos, m_assetPrefix);
 }
 
 std::error_code SceneGraphFileStoreMapper::SpatialFileMap::serializeDataTransferObjects(const std::string& filename, const Engine::GenericDto& dto)
@@ -138,7 +158,7 @@ std::error_code SceneGraphFileStoreMapper::SpatialFileMap::serializeDataTransfer
     return FileSystem::ErrorCode::ok;
 }
 
-SceneGraphFileStoreMapper::SceneGraphFileStoreMapper(const std::string& mapper_filename, const std::string& lazied_mapper_filename, const std::shared_ptr<Gateways::IDtoGateway>& gateway) : SceneGraph::SceneGraphStoreMapper(), m_spatialMap(mapper_filename, gateway), m_laziedMap(lazied_mapper_filename, gateway)
+SceneGraphFileStoreMapper::SceneGraphFileStoreMapper(const std::string& mapper_filename, const std::string& lazied_mapper_filename, const std::string& lazied_prefix, const std::shared_ptr<Gateways::IDtoGateway>& gateway) : SceneGraph::SceneGraphStoreMapper(), m_spatialMap(mapper_filename, "", gateway), m_laziedMap(lazied_mapper_filename, lazied_prefix, gateway)
 {
     m_hasConnected = false;
 }

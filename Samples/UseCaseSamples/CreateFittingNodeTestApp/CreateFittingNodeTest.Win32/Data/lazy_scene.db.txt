@@ -1,6 +1,6 @@
-root_quad_0_0,En.SceneGraph.VisibilityManagedNode,root_quad_0_0.quad@DataPath
-root_quad,En.SceneGraph.VisibilityManagedNode,root_quad.quad@DataPath
-root_quad_0_0_0_2,En.SceneGraph.VisibilityManagedNode,root_quad_0_0_0_2.quad@DataPath
-root_quad_3,En.SceneGraph.VisibilityManagedNode,root_quad_3.quad@DataPath
-root_quad_0_0_0,En.SceneGraph.VisibilityManagedNode,root_quad_0_0_0.quad@DataPath
-root_quad_0,En.SceneGraph.VisibilityManagedNode,root_quad_0.quad@DataPath
+root_quad_0_0,En.SceneGraph.VisibilityManagedNode,lazied_root_quad_0_0.quad@DataPath
+root_quad,En.SceneGraph.VisibilityManagedNode,lazied_root_quad.quad@DataPath
+root_quad_0_0_0_2,En.SceneGraph.VisibilityManagedNode,lazied_root_quad_0_0_0_2.quad@DataPath
+root_quad_3,En.SceneGraph.VisibilityManagedNode,lazied_root_quad_3.quad@DataPath
+root_quad_0_0_0,En.SceneGraph.VisibilityManagedNode,lazied_root_quad_0_0_0.quad@DataPath
+root_quad_0,En.SceneGraph.VisibilityManagedNode,lazied_root_quad_0.quad@DataPath

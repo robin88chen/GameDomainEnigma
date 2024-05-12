@@ -27,6 +27,8 @@ namespace Enigma::WorldMap
         const QuadTreeRootId& id() const { return m_id; }
         const SceneGraph::SpatialId& rootNodeId() const { return m_rootNodeId; }
 
+        static std::shared_ptr<QuadTreeRoot> queryQuadTreeRoot(const QuadTreeRootId& id);
+
         std::optional<SceneGraph::SpatialId> findFittingNode(const Engine::BoundingVolume& bv_in_world) const;
         //! design note: Since multiple nodes need to be created and hydration needs to be done, so directly reference the repository and no need to modify the hydration request or command.
         //! design note: If the creation of fitting nodes go to more complex, it will move to other classes to handle some day.

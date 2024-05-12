@@ -3,12 +3,12 @@
 #include "QuadTreeVolume.h"
 #include "WorldMapErrors.h"
 #include "WorldMapEvents.h"
+#include "WorldMapQueries.h"
 #include "Frameworks/EventPublisher.h"
 #include "SceneGraph/SceneGraphAssemblers.h"
 #include "SceneGraph/SceneGraphFactory.h"
-#include <cassert>
-
 #include "SceneGraph/VisibilityManagedNode.h"
+#include <cassert>
 
 using namespace Enigma::WorldMap;
 using namespace Enigma::SceneGraph;
@@ -27,6 +27,11 @@ QuadTreeRoot::QuadTreeRoot(const QuadTreeRootId& id, const Engine::GenericDto& o
     {
         m_root = std::dynamic_pointer_cast<LazyNode>(Node::queryNode(m_rootNodeId));
     }
+}
+
+std::shared_ptr<QuadTreeRoot> QuadTreeRoot::queryQuadTreeRoot(const QuadTreeRootId& id)
+{
+    return std::make_shared<QueryQuadTreeRoot>(id)->dispatch();
 }
 
 std::optional<SpatialId> QuadTreeRoot::findFittingNode(const Engine::BoundingVolume& bv_in_world) const

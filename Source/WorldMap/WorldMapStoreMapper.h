@@ -10,6 +10,8 @@
 
 #include "QuadTreeRootId.h"
 #include "QuadTreeRoot.h"
+#include "WorldMapId.h"
+#include "WorldMap.h"
 #include <system_error>
 
 namespace Enigma::WorldMap
@@ -26,6 +28,11 @@ namespace Enigma::WorldMap
         virtual std::optional<Engine::GenericDto> queryQuadTreeRoot(const QuadTreeRootId& id) = 0;
         virtual std::error_code removeQuadTreeRoot(const QuadTreeRootId& id) = 0;
         virtual std::error_code putQuadTreeRoot(const QuadTreeRootId& id, const Engine::GenericDto& dto) = 0;
+
+        virtual bool hasWorldMap(const WorldMapId& id) = 0;
+        virtual std::optional<Engine::GenericDto> queryWorldMap(const WorldMapId& id) = 0;
+        virtual std::error_code removeWorldMap(const WorldMapId& id) = 0;
+        virtual std::error_code putWorldMap(const WorldMapId& id, const Engine::GenericDto& dto) = 0;
     };
 }
 

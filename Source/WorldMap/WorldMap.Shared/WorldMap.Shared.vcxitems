@@ -18,9 +18,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\QuadTreeRootDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\QuadTreeRootId.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\QuadTreeVolume.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMap.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapCommands.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapErrors.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapEvents.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapId.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapInstallingPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapQueries.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapRepository.h" />
@@ -31,6 +34,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\QuadTreeRootDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\QuadTreeRootId.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\QuadTreeVolume.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\WorldMap.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\WorldMapDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\WorldMapErrors.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\WorldMapInstallingPolicy.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\WorldMapRepository.cpp" />

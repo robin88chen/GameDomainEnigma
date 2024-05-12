@@ -11,11 +11,12 @@
 #include "Frameworks/Query.h"
 #include "GameEngine/BoundingVolume.h"
 #include "SceneGraph/Node.h"
-#include "MathLib/Vector3.h"
+#include "QuadTreeRootId.h"
 #include <memory>
 
 namespace Enigma::WorldMap
 {
+    class QuadTreeRoot;
     class QueryFittingNode : public Frameworks::Query<std::shared_ptr<SceneGraph::Node>>
     {
     public:
@@ -25,6 +26,16 @@ namespace Enigma::WorldMap
 
     private:
         Engine::BoundingVolume m_bv;
+    };
+    class QueryQuadTreeRoot : public Frameworks::Query<std::shared_ptr<QuadTreeRoot>>
+    {
+    public:
+        QueryQuadTreeRoot(const QuadTreeRootId& id) : m_id(id) {}
+
+        const QuadTreeRootId& id() const { return m_id; }
+
+    protected:
+        QuadTreeRootId m_id;
     };
 }
 

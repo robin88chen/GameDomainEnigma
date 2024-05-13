@@ -12,6 +12,7 @@
 #include "WorldMapId.h"
 #include "Frameworks/SystemService.h"
 #include "Frameworks/QuerySubscriber.h"
+#include "WorldMapPersistenceLevel.h"
 #include <memory>
 #include <unordered_map>
 #include <mutex>
@@ -38,9 +39,13 @@ namespace Enigma::WorldMap
 
         bool hasQuadTreeRoot(const QuadTreeRootId& id);
         std::shared_ptr<QuadTreeRoot> queryQuadTreeRoot(const QuadTreeRootId& id);
+        void putQuadTreeRoot(const QuadTreeRootId& id, const std::shared_ptr<QuadTreeRoot>& quad_tree_root, PersistenceLevel persistence_level);
+        void removeQuadTreeRoot(const QuadTreeRootId& id);
 
         bool hasWorldMap(const WorldMapId& id);
         std::shared_ptr<WorldMap> queryWorldMap(const WorldMapId& id);
+        void putWorldMap(const WorldMapId& id, const std::shared_ptr<WorldMap>& world_map, PersistenceLevel persistence_level);
+        void removeWorldMap(const WorldMapId& id);
 
     protected:
         void queryQuadTreeRoot(const Frameworks::IQueryPtr q);

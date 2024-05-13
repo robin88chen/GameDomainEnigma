@@ -20,9 +20,12 @@ namespace Enigma::WorldMap
     class QuadTreeVolume;
     class QuadTreeRoot
     {
+        DECLARE_EN_RTTI_NON_BASE;
     public:
         QuadTreeRoot(const QuadTreeRootId& id);
         QuadTreeRoot(const QuadTreeRootId& id, const Engine::GenericDto& o);
+
+        Engine::GenericDto serializeDto() const;
 
         const QuadTreeRootId& id() const { return m_id; }
         const SceneGraph::SpatialId& rootNodeId() const { return m_rootNodeId; }

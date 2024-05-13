@@ -11,57 +11,98 @@
 #include "Frameworks/Event.h"
 #include "SceneGraph/Node.h"
 #include "QuadTreeRootId.h"
+#include "WorldMapId.h"
 #include <system_error>
 
 namespace Enigma::WorldMap
 {
     class WorldMap;
-    class WorldMapCreated : public Frameworks::IEvent
+    class WorldMapPut : public Frameworks::IEvent
     {
     public:
-        WorldMapCreated(const std::string& name, std::shared_ptr<WorldMap> world) : m_name(name), m_world(world) {}
+        WorldMapPut(const WorldMapId& id) : m_id(id) {}
 
-        const std::string& name() const { return m_name; }
-        const std::shared_ptr<WorldMap>& world() const { return m_world; }
+        const WorldMapId& id() const { return m_id; }
 
     protected:
-        std::string m_name;
-        std::shared_ptr<WorldMap> m_world;
+        WorldMapId m_id;
     };
-    class CreateWorldMapFailed : public Frameworks::IEvent
+    class PutWorldMapFailed : public Frameworks::IEvent
     {
     public:
-        CreateWorldMapFailed(const std::string& name, std::error_code err) : m_name(name), m_error(err) {}
+        PutWorldMapFailed(const WorldMapId& id, std::error_code err) : m_id(id), m_error(err) {}
 
-        const std::string& name() const { return m_name; }
+        const WorldMapId& id() const { return m_id; }
         std::error_code error() const { return m_error; }
 
     protected:
-        std::string m_name;
+        WorldMapId m_id;
         std::error_code m_error;
     };
-    class WorldMapDeserialized : public Frameworks::IEvent
+    class WorldMapRemoved : public Frameworks::IEvent
     {
     public:
-        WorldMapDeserialized(const std::string& name, std::shared_ptr<WorldMap> world) : m_name(name), m_world(world) {}
+        WorldMapRemoved(const WorldMapId& id) : m_id(id) {}
 
-        const std::string& name() const { return m_name; }
-        const std::shared_ptr<WorldMap>& world() const { return m_world; }
+        const WorldMapId& id() const { return m_id; }
 
     protected:
-        std::string m_name;
-        std::shared_ptr<WorldMap> m_world;
+        WorldMapId m_id;
     };
-    class DeserializeWorldMapFailed : public Frameworks::IEvent
+    class RemoveWorldMapFailed : public Frameworks::IEvent
     {
     public:
-        DeserializeWorldMapFailed(const std::string& name, std::error_code err) : m_name(name), m_error(err) {}
+        RemoveWorldMapFailed(const WorldMapId& id, std::error_code err) : m_id(id), m_error(err) {}
 
-        const std::string& name() const { return m_name; }
+        const WorldMapId& id() const { return m_id; }
         std::error_code error() const { return m_error; }
 
     protected:
-        std::string m_name;
+        WorldMapId m_id;
+        std::error_code m_error;
+    };
+    class QuadTreeRootPut : public Frameworks::IEvent
+    {
+    public:
+        QuadTreeRootPut(const QuadTreeRootId& id) : m_id(id) {}
+
+        const QuadTreeRootId& id() const { return m_id; }
+
+    protected:
+        QuadTreeRootId m_id;
+    };
+    class PutQuadTreeRootFailed : public Frameworks::IEvent
+    {
+    public:
+        PutQuadTreeRootFailed(const QuadTreeRootId& id, std::error_code err) : m_id(id), m_error(err) {}
+
+        const QuadTreeRootId& id() const { return m_id; }
+        std::error_code error() const { return m_error; }
+
+    protected:
+        QuadTreeRootId m_id;
+        std::error_code m_error;
+    };
+    class QuadTreeRootRemoved : public Frameworks::IEvent
+    {
+    public:
+        QuadTreeRootRemoved(const QuadTreeRootId& id) : m_id(id) {}
+
+        const QuadTreeRootId& id() const { return m_id; }
+
+    protected:
+        QuadTreeRootId m_id;
+    };
+    class RemoveQuadTreeRootFailed : public Frameworks::IEvent
+    {
+    public:
+        RemoveQuadTreeRootFailed(const QuadTreeRootId& id, std::error_code err) : m_id(id), m_error(err) {}
+
+        const QuadTreeRootId& id() const { return m_id; }
+        std::error_code error() const { return m_error; }
+
+    protected:
+        QuadTreeRootId m_id;
         std::error_code m_error;
     };
     class FittingNodeCreated : public Frameworks::IEvent

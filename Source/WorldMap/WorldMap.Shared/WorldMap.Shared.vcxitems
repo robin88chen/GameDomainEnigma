@@ -25,6 +25,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapId.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapInstallingPolicy.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapPersistenceLevel.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapQueries.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapRepository.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapStoreMapper.h" />

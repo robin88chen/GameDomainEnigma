@@ -66,6 +66,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapDto.h">
       <Filter>WorldMap</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapPersistenceLevel.h">
+      <Filter>Repository</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\WorldMapInstallingPolicy.cpp">

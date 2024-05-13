@@ -14,6 +14,8 @@ using namespace Enigma::WorldMap;
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Frameworks;
 
+DEFINE_RTTI_OF_BASE(WorldMap, QuadTreeRoot);
+
 QuadTreeRoot::QuadTreeRoot(const QuadTreeRootId& id) : m_id(id)
 {
 }
@@ -27,6 +29,14 @@ QuadTreeRoot::QuadTreeRoot(const QuadTreeRootId& id, const Engine::GenericDto& o
     {
         m_root = std::dynamic_pointer_cast<LazyNode>(Node::queryNode(m_rootNodeId));
     }
+}
+
+Enigma::Engine::GenericDto QuadTreeRoot::serializeDto() const
+{
+    QuadTreeRootDto dto;
+    dto.id(m_id);
+    dto.rootNodeId(m_rootNodeId);
+    return dto.toGenericDto();
 }
 
 std::shared_ptr<QuadTreeRoot> QuadTreeRoot::queryQuadTreeRoot(const QuadTreeRootId& id)

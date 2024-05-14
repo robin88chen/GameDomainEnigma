@@ -86,7 +86,7 @@ void GameLightService::createAmbientLight(const SpatialId& parent_id, const Spat
     LightInfo info(LightInfo::LightType::Ambient);
     info.setLightColor(colorLight);
     auto light = std::make_shared<RequestLightCreation>(light_id, info, PersistenceLevel::Repository)->dispatch();
-    if (parent_id.isValid())
+    if (!parent_id.empty())
     {
         m_pendingLightIds.insert(light_id);
         CommandBus::post(std::make_shared<AttachNodeChild>(parent_id, light, MathLib::Matrix4::IDENTITY));
@@ -100,7 +100,7 @@ void GameLightService::createSunLight(const SpatialId& parent_id, const SpatialI
     info.setLightColor(colorLight);
     info.setLightDirection(dirLight);
     auto light = std::make_shared<RequestLightCreation>(light_id, info, PersistenceLevel::Repository)->dispatch();
-    if (parent_id.isValid())
+    if (!parent_id.empty())
     {
         m_pendingLightIds.insert(light_id);
         CommandBus::post(std::make_shared<AttachNodeChild>(parent_id, light, MathLib::Matrix4::IDENTITY));
@@ -115,7 +115,7 @@ void GameLightService::createPointLight(const SpatialId& parent_id, const MathLi
     info.setLightPosition(vecPos);
     info.setLightRange(range);
     auto light = std::make_shared<RequestLightCreation>(light_id, info, PersistenceLevel::Repository)->dispatch();
-    if (parent_id.isValid())
+    if (!parent_id.empty())
     {
         m_pendingLightIds.insert(light_id);
         CommandBus::post(std::make_shared<AttachNodeChild>(parent_id, light, mxLocal));

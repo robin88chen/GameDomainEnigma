@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   WorldMapInstallingPolicy.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   July 2023
  *********************************************************************/
@@ -14,14 +14,18 @@
 namespace Enigma::WorldMap
 {
     using error = std::error_code;
+    class WorldMapStoreMapper;
 
     class WorldMapInstallingPolicy : public Engine::InstallingPolicy
     {
     public:
-        WorldMapInstallingPolicy() = default;
+        WorldMapInstallingPolicy(const std::shared_ptr<WorldMapStoreMapper>& store_mapper) : m_storeMapper(store_mapper) {}
 
         virtual error install(Frameworks::ServiceManager* service_manager) override;
         virtual error shutdown(Frameworks::ServiceManager* service_manager) override;
+
+    protected:
+        std::shared_ptr<WorldMapStoreMapper> m_storeMapper;
     };
 }
 

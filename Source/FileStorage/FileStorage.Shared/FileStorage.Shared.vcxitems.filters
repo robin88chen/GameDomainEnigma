@@ -22,6 +22,9 @@
     <Filter Include="AnimationAssetStoreMapper">
       <UniqueIdentifier>{759374ca-d249-44c1-bd56-773c0c2221e5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="WorldMapStoreMapper">
+      <UniqueIdentifier>{dcf99dae-7c62-4ecd-8213-743ce5710885}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphFileStoreMapper.h">
@@ -45,6 +48,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetFileStoreMapper.h">
       <Filter>AnimationAssetStoreMapper</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapFileStoreMapper.h">
+      <Filter>WorldMapStoreMapper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphFileStoreMapper.cpp">
@@ -67,6 +73,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetFileStoreMapper.cpp">
       <Filter>AnimationAssetStoreMapper</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\WorldMapFileStoreMapper.cpp">
+      <Filter>WorldMapStoreMapper</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

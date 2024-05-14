@@ -77,7 +77,7 @@ std::shared_ptr<PortalZoneNode> Portal::getAdjacentZone()
     if ((m_adjacentPortalZone.expired()) || (m_adjacentPortalZone.lock()->id() != m_adjacentZoneId))
     {
         m_zoneLoadStatus = ZoneLoadStatus::None;
-        if (m_adjacentZoneId.isValid())
+        if (!m_adjacentZoneId.empty())
         {
             m_adjacentPortalZone = std::dynamic_pointer_cast<PortalZoneNode>(Node::queryNode(m_adjacentZoneId));
             if (!m_adjacentPortalZone.expired()) m_zoneLoadStatus = ZoneLoadStatus::Done;

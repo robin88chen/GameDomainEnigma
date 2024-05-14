@@ -73,21 +73,40 @@ bool SphereBV::PointInside(const MathLib::Vector3& vecPos)
     return true;
 }
 
-void SphereBV::ComputeFromData(const MathLib::Vector3* pos, unsigned quantity, [[maybe_unused]]bool axis_align)
+GenericBV::FlagBits SphereBV::PointInsideFlags(const MathLib::Vector3& pos)
+{
+    if (PointInside(pos)) return TestedAxis::XYZ;
+    MathLib::Vector3 vecDiff = pos - m_sphere.Center();
+    if (vecDiff.x() * vecDiff.x() + vecDiff.y() * vecDiff.y() < m_sphere.Radius() * m_sphere.Radius())
+    {
+        return TestedAxis::XY;
+    }
+    if (vecDiff.x() * vecDiff.x() + vecDiff.z() * vecDiff.z() < m_sphere.Radius() * m_sphere.Radius())
+    {
+        return TestedAxis::XZ;
+    }
+    if (vecDiff.y() * vecDiff.y() + vecDiff.z() * vecDiff.z() < m_sphere.Radius() * m_sphere.Radius())
+    {
+        return TestedAxis::YZ;
+    }
+    return TestedAxis::None;
+}
+
+void SphereBV::ComputeFromData(const MathLib::Vector3* pos, unsigned quantity, [[maybe_unused]] bool axis_align)
 {
     assert(pos);
     assert(quantity > 0);
     m_sphere = MathLib::ContainmentSphere3::ComputeAverageSphere(pos, quantity);
 }
 
-void SphereBV::ComputeFromData(const MathLib::Vector4* pos, unsigned quantity, [[maybe_unused]]bool axis_align)
+void SphereBV::ComputeFromData(const MathLib::Vector4* pos, unsigned quantity, [[maybe_unused]] bool axis_align)
 {
     assert(pos);
     assert(quantity > 0);
     m_sphere = MathLib::ContainmentSphere3::ComputeAverageSphere(pos, quantity);
 }
 
-void SphereBV::ComputeFromData(const float* vert, unsigned pitch, unsigned quantity, [[maybe_unused]]bool axis_align)
+void SphereBV::ComputeFromData(const float* vert, unsigned pitch, unsigned quantity, [[maybe_unused]] bool axis_align)
 {
     assert(vert);
     assert(quantity > 0);

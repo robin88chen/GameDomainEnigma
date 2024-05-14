@@ -1,101 +1,58 @@
 ﻿#include "WorldMap.h"
-#include "SceneGraph/PortalZoneNode.h"
+#include "QuadTreeRoot.h"
 #include "WorldMapDto.h"
-#include "SceneQuadTreeRoot.h"
-#include "SceneGraph/VisibilityManagedNode.h"
-#include "SceneGraph/EnumNonDerivedSpatials.h"
-#include "Frameworks/LazyStatus.h"
-#include "Frameworks/CommandBus.h"
-#include "Platforms/PlatformLayer.h"
-#include <cassert>
 
 using namespace Enigma::WorldMap;
-using namespace Enigma::SceneGraph;
-using namespace Enigma::MathLib;
 using namespace Enigma::Engine;
-using namespace Enigma::Terrain;
-using namespace Enigma::Frameworks;
 
 DEFINE_RTTI_OF_BASE(WorldMap, WorldMap);
 
-std::string QUADROOT_POSTFIX = "_qroot";
-std::string WOLRD_PORTAL_ROOT_GRAPH = "portal_root_graph";
-
-WorldMap::WorldMap(const std::string& name, const Engine::FactoryDesc& factory_desc, const std::shared_ptr<PortalZoneNode>& root) : m_factory_desc(factory_desc)
+WorldMap::WorldMap(const WorldMapId& id)
 {
-    m_name = name;
-    m_root = root;
+    m_id = id;
 }
 
-WorldMap::WorldMap(const std::shared_ptr<SceneGraph::SceneGraphRepository>& repository, const Engine::GenericDto& o) : m_factory_desc(o.getRtti())
+WorldMap::WorldMap(const WorldMapId& id, const std::vector<QuadTreeRootId>& quad_roots)
 {
-    WorldMapDto world = WorldMapDto::fromGenericDto(o);
-    m_name = world.name();
-    for (auto& quad : world.quadTreeRoots())
-    {
-        auto quad_root = std::make_shared<SceneQuadTreeRoot>(repository, quad);
-        m_listQuadRoot.push_back(quad_root);
-    }
-    //m_root = std::dynamic_pointer_cast<PortalZoneNode>(repository->createNode(world.portalRoot()));
-    //assert(!m_root.expired());
+    m_id = id;
+    m_quadRootIds = quad_roots;
+    if (!m_quadRootIds.empty()) m_quadRoots.resize(m_quadRootIds.size());
+}
+
+WorldMap::WorldMap(const WorldMapId& id, const Engine::GenericDto& dto)
+{
+    m_id = id;
+    WorldMapDto worldMapDto{ dto };
+    assert(worldMapDto.id() == id);
+    m_quadRootIds = worldMapDto.quadRootIds();
+    if (!m_quadRootIds.empty()) m_quadRoots.resize(m_quadRootIds.size());
 }
 
 WorldMap::~WorldMap()
 {
-    m_listQuadRoot.clear();
 }
 
-GenericDto WorldMap::serializeDto()
+GenericDto WorldMap::serializeDto() const
 {
-    WorldMapDto world_dto;
-    world_dto.factoryDesc() = m_factory_desc;
-    world_dto.name() = m_name;
-    for (auto& root : m_listQuadRoot)
+    WorldMapDto worldMapDto;
+    worldMapDto.id(m_id);
+    worldMapDto.quadRootIds(m_quadRootIds);
+    return worldMapDto.toGenericDto();
+}
+
+std::shared_ptr<Enigma::SceneGraph::LazyNode> WorldMap::findFittingNode(const Engine::BoundingVolume& bv_in_world)
+{
+    if (m_quadRootIds.empty()) return nullptr;
+    if (m_quadRootIds.size() != m_quadRoots.size()) return nullptr;
+    for (size_t i = 0; i < m_quadRootIds.size(); ++i)
     {
-        if (!root) continue;
-        world_dto.quadTreeRoots().emplace_back(root->serializeDto());
+        if ((m_quadRoots[i].expired()) || (m_quadRoots[i].lock()->id() != m_quadRootIds[i]))
+        {
+            m_quadRoots[i] = QuadTreeRoot::queryQuadTreeRoot(m_quadRootIds[i]);
+        }
+        if (m_quadRoots[i].expired()) continue;
+        auto node_id = m_quadRoots[i].lock()->findFittingNode(bv_in_world);
+        if (node_id) return std::dynamic_pointer_cast<SceneGraph::LazyNode>(SceneGraph::Node::queryNode(node_id.value()));
     }
-    if (!m_root.expired()) world_dto.portalRoot() = m_root.lock()->serializeAsLaziness();
-    return world_dto.toGenericDto();
-}
-
-std::vector<GenericDtoCollection> WorldMap::serializeSceneGraphs()
-{
-    assert(!m_root.expired());
-    std::vector<Engine::GenericDtoCollection> collections;
-    collections.emplace_back(m_root.lock()->serializeFlattenedTree());
-    if (m_listQuadRoot.empty()) return collections;
-    for (auto& root : m_listQuadRoot)
-    {
-        if (!root) continue;
-        auto root_collection = root->serializeTreeGraphs();
-        collections.insert(collections.end(), root_collection.begin(), root_collection.end());
-    }
-    return collections;
-}
-
-void WorldMap::attachTerrain(const std::shared_ptr<SceneGraph::SceneGraphRepository>& repository, const std::shared_ptr<Terrain::TerrainPawn>& terrain, const MathLib::Matrix4& local_transform)
-{
-    assert(!m_root.expired());
-    assert(terrain);
-    assert(repository);
-    std::string node_name = terrain->id().name() + QUADROOT_POSTFIX; // +NODE_FILE_EXT;
-    FactoryDesc quad_root_desc = FactoryDesc(VisibilityManagedNode::TYPE_RTTI.getName());
-    quad_root_desc.ClaimAsInstanced(node_name + ".node").PathId(m_factory_desc.PathId());
-    //auto quadRootNode = std::dynamic_pointer_cast<VisibilityManagedNode, Node>(repository->createNode(node_name, quad_root_desc));
-    //quadRootNode->attachChild(terrain, Matrix4::IDENTITY);
-    //m_root.lock()->attachChild(quadRootNode, local_transform);
-    //auto treeRoot = std::make_shared<SceneQuadTreeRoot>(node_name, quadRootNode);
-    //m_listQuadRoot.push_back(treeRoot);
-}
-
-std::shared_ptr<Node> WorldMap::queryFittingNode(const Engine::BoundingVolume& bv_in_world) const
-{
-    if (m_listQuadRoot.empty()) return m_root.lock();
-    for (auto root : m_listQuadRoot)
-    {
-        if (!root) continue;
-        if (auto node = root->queryFittingNode(bv_in_world)) return node;
-    }
-    return m_root.lock();
+    return nullptr;
 }

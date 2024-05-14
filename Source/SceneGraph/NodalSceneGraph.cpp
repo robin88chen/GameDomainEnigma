@@ -20,7 +20,7 @@ NodalSceneGraph::~NodalSceneGraph()
 error NodalSceneGraph::createRoot(const SpatialId& scene_root_id)
 {
     assert(!m_sceneGraphRepository.expired());
-    assert(scene_root_id.isValid());
+    assert(!scene_root_id.empty());
     m_root = Node::queryNode(scene_root_id);
     if (!m_root) return ErrorCode::sceneRepositoryFailed;
     m_sceneGraphRepository.lock()->putSpatial(m_root, PersistenceLevel::Repository);

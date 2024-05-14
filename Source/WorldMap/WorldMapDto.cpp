@@ -2,33 +2,40 @@
 #include "WorldMap.h"
 
 using namespace Enigma::WorldMap;
-using namespace Enigma::Engine;
 
-static std::string TOKEN_NAME = "Name";
-static std::string TOKEN_QUAD_TREE_ROOTS = "QuadTreeRoots";
-static std::string TOKEN_PORTAL_ROOT = "PortalRoot";
+static std::string TOKEN_ID = "ID";
+static std::string TOKEN_QUAD_ROOT_IDS = "QuadRootIds";
 
-WorldMapDto::WorldMapDto() : m_factory_desc(WorldMap::TYPE_RTTI.getName())
+WorldMapDto::WorldMapDto() : m_factoryDesc(WorldMap::TYPE_RTTI)
 {
 }
 
-WorldMapDto WorldMapDto::fromGenericDto(const Engine::GenericDto& dto)
+WorldMapDto::WorldMapDto(const Engine::GenericDto& dto) : m_factoryDesc(WorldMap::TYPE_RTTI)
 {
-    WorldMapDto world_map_dto;
-    world_map_dto.factoryDesc() = dto.getRtti();
-    if (auto v = dto.tryGetValue<std::string>(TOKEN_NAME)) world_map_dto.name() = v.value();
-    if (auto v = dto.tryGetValue<Engine::GenericDtoCollection>(TOKEN_QUAD_TREE_ROOTS)) world_map_dto.quadTreeRoots() = v.value();
-    if (auto v = dto.tryGetValue<Engine::GenericDto>(TOKEN_PORTAL_ROOT)) world_map_dto.portalRoot() = v.value();
-    return world_map_dto;
+    factoryDesc(dto.getRtti());
+    if (auto v = dto.tryGetValue<std::string>(TOKEN_ID)) id(v.value());
+    if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_QUAD_ROOT_IDS))
+    {
+        std::vector<QuadTreeRootId> ids;
+        for (const auto& id : v.value())
+        {
+            ids.emplace_back(id);
+        }
+        quadRootIds(ids);
+    }
 }
 
 Enigma::Engine::GenericDto WorldMapDto::toGenericDto() const
 {
-    GenericDto dto;
-    dto.asTopLevel(true);
-    dto.addRtti(m_factory_desc);
-    dto.addOrUpdate(TOKEN_NAME, m_name);
-    dto.addOrUpdate(TOKEN_QUAD_TREE_ROOTS, m_quadTreeRoots);
-    dto.addOrUpdate(TOKEN_PORTAL_ROOT, m_portalRoot);
+    Engine::GenericDto dto;
+    dto.addRtti(factoryDesc());
+    dto.addOrUpdate(TOKEN_ID, id());
+    std::vector<std::string> ids;
+    for (const auto& id : quadRootIds())
+    {
+        ids.emplace_back(id.name());
+    }
+    dto.addOrUpdate(TOKEN_QUAD_ROOT_IDS, ids);
     return dto;
 }
+

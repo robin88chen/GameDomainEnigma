@@ -1,0 +1,5 @@
+root_quad_1,En.SceneGraph.VisibilityManagedNode,root_quad_1.quad@DataPath
+root_quad,En.SceneGraph.VisibilityManagedNode,root_quad.quad@DataPath
+root_quad,En.SceneGraph.Node,root_quad.quad@DataPath
+root_quad_2,En.SceneGraph.VisibilityManagedNode,root_quad_2.quad@DataPath
+root_quad_2_1,En.SceneGraph.VisibilityManagedNode,root_quad_2_1.quad@DataPath

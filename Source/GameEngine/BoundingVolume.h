@@ -13,12 +13,12 @@
 #include "MathLib/Matrix4.h"
 #include "MathLib/Sphere3.h"
 #include "MathLib/Plane3.h"
+#include "GenericBV.h"
 #include <optional>
 #include <memory>
 
 namespace Enigma::Engine
 {
-    class GenericBV;
     class BoundingVolume
     {
     public:
@@ -54,6 +54,7 @@ namespace Enigma::Engine
         std::optional<MathLib::Sphere3> BoundingSphere3() const;
 
         bool PointInside(const MathLib::Vector3& pos) const;
+        GenericBV::FlagBits PointInsideFlags(const MathLib::Vector3& pos) const;
         Side SideOfPlane(const MathLib::Plane3& plane) const;
 
     private:

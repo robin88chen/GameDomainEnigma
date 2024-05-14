@@ -29,7 +29,7 @@ namespace Enigma::SceneGraph
         bool operator==(const SpatialId& other) const { return m_name == other.m_name && m_rtti == other.m_rtti; }
         bool operator!=(const SpatialId& other) const { return m_name != other.m_name || m_rtti != other.m_rtti; }
 
-        bool isValid() const { return m_rtti != nullptr; }
+        bool empty() const { return m_rtti == nullptr; }
         std::vector<std::string> tokens() const;
         const std::string& name() const { return m_name; }
         const Frameworks::Rtti& rtti() const { return *m_rtti; }

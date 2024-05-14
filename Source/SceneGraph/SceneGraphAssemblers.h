@@ -21,6 +21,7 @@ namespace Enigma::SceneGraph
     class Camera;
     class Pawn;
     class PortalManagementNode;
+    class VisibilityManagedNode;
     class CameraAssembler
     {
     public:
@@ -66,7 +67,10 @@ namespace Enigma::SceneGraph
         SpatialAssembler& spatialFlags(Spatial::SpatialFlags spatial_flags);
         SpatialAssembler& graphDepth(unsigned graph_depth);
 
-        Engine::GenericDto toGenericDto();
+        Engine::BoundingVolume modelBound() const { return m_modelBound; }
+        MathLib::Matrix4 localTransform() const { return m_dto.localTransform(); }
+        MathLib::Matrix4 worldTransform() const { return m_dto.worldTransform(); }
+
         Engine::GenericDto toGenericDto() const;
 
     private:
@@ -110,7 +114,11 @@ namespace Enigma::SceneGraph
         NodeAssembler& factory(const Engine::FactoryDesc& factory);
         NodeAssembler& child(const SpatialId& child_id);
         NodeAssembler& child(const SpatialId& child_id, const Engine::GenericDto& child_dto);
+        NodeAssembler& child(const SpatialId& child_id, const SpatialAssembler* child);
+        NodeAssembler& child(const SpatialId& child_id, const NodeAssembler* child);
         NodeAssembler& asNative(const std::string& file_at_path);
+
+        void consistChildrenLocationBounding();
 
         Engine::GenericDto toGenericDto() const;
         NodeDto toNodeDto() const;
@@ -120,6 +128,8 @@ namespace Enigma::SceneGraph
         SpatialId m_id;
         SpatialAssembler m_spatialAssembler;
         NodeDto m_dto;
+        std::vector<SpatialAssembler*> m_children;
+        std::vector<NodeAssembler*> m_childNodes;
     };
 
     class LazyNodeAssembler
@@ -161,8 +171,8 @@ namespace Enigma::SceneGraph
         PortalAssembler& isOpen(bool is_open);
         PortalAssembler& asNative(const std::string& file_at_path);
 
-        Engine::GenericDto toGenericDto();
-        PortalDto toPortalDto();
+        Engine::GenericDto toGenericDto() const;
+        PortalDto toPortalDto() const;
         std::shared_ptr<Portal> constitute(PersistenceLevel persistence_level);
 
     private:
@@ -218,6 +228,31 @@ namespace Enigma::SceneGraph
         SpatialId m_id;
         NodeAssembler m_nodeAssembler;
         PortalManagementNodeDto m_dto;
+    };
+
+    class VisibilityManagedNodeAssembler
+    {
+    public:
+        VisibilityManagedNodeAssembler(const SpatialId& id);
+
+        const SpatialId& id() const { return m_id; }
+
+        LazyNodeAssembler& lazyNode();
+
+        VisibilityManagedNodeAssembler& factory(const Engine::FactoryDesc& factory);
+        VisibilityManagedNodeAssembler& asDeferred(const std::string& file_name, const std::string& path_id);
+
+        Engine::GenericDto toHydratedGenericDto() const;
+        VisibilityManagedNodeDto toHydratedDto() const;
+        std::shared_ptr<VisibilityManagedNode> constituteHydrated(PersistenceLevel persistence_level);
+        Engine::GenericDto toDeHydratedGenericDto() const;
+        VisibilityManagedNodeDto toDeHydratedDto() const;
+        std::shared_ptr<VisibilityManagedNode> constituteDeHydrated(PersistenceLevel persistence_level);
+
+    private:
+        SpatialId m_id;
+        LazyNodeAssembler m_lazyNodeAssembler;
+        VisibilityManagedNodeDto m_dto;
     };
 }
 

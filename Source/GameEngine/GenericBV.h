@@ -12,12 +12,28 @@
 #include "MathLib/Plane3.h"
 #include "MathLib/Vector3.h"
 #include <memory>
+#include <bitset>
 
 namespace Enigma::Engine
 {
     /** Bounding Volume abstract object */
     class GenericBV
     {
+    public:
+        enum class Axis { x, y, z, count };
+        enum TestedAxis
+        {
+            None = 0x0,
+            X = 0x01,
+            Y = 0x02,
+            XY = 0x03,
+            Z = 0x04,
+            XZ = 0x05,
+            YZ = 0x06,
+            XYZ = 0x07
+        };
+        using FlagBits = std::bitset<static_cast<size_t>(Axis::count)>;
+
     public:
         GenericBV();
         GenericBV(const GenericBV&) = default;
@@ -62,6 +78,12 @@ namespace Enigma::Engine
 
         /** is inside */
         virtual bool PointInside(const MathLib::Vector3& pos) = 0;
+        /** point inside flags
+        @remark BoxBV使用的函式。\n
+        計算點位置是否在三個軸內，0x01, 0x02, 0x04 表示 0,1,2三個軸之內 \n
+        用途是，如果不考慮y方向的位置的話，就將傳回值做 0x05的 and 檢查就可以了
+        */
+        virtual FlagBits PointInsideFlags(const MathLib::Vector3& pos) = 0;
 
         virtual bool isEmpty() const = 0;
     };

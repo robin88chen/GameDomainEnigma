@@ -8,6 +8,7 @@
 #ifndef FACTORY_DESC_H
 #define FACTORY_DESC_H
 
+#include "Frameworks/Rtti.h"
 #include <string>
 
 namespace Enigma::Engine
@@ -25,7 +26,8 @@ namespace Enigma::Engine
             ResourceAsset, ///< Raw Data Resource
         };
     public:
-        FactoryDesc(const std::string& rtti_name) : m_type(InstanceType::Native), m_rttiName(rtti_name) {};
+        FactoryDesc(const std::string& rtti_name) : m_type(InstanceType::Native), m_rttiName(rtti_name) {}
+        FactoryDesc(const Frameworks::Rtti& rtti) : m_type(InstanceType::Native), m_rttiName(rtti.getName()) {}
         FactoryDesc(const FactoryDesc& desc) = default;
         FactoryDesc(FactoryDesc&& desc) = default;
         ~FactoryDesc() = default;

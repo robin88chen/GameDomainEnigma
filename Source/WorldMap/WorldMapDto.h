@@ -3,11 +3,16 @@
  * \brief
  *
  * \author Lancelot 'Robin' Chen
- * \date   July 2023
+ * \date   May 2024
  *********************************************************************/
 #ifndef WORLD_MAP_DTO_H
 #define WORLD_MAP_DTO_H
-#include "SceneGraph/PortalDtos.h"
+
+#include "GameEngine/GenericDto.h"
+#include "GameEngine/FactoryDesc.h"
+#include "WorldMapId.h"
+#include "QuadTreeRootId.h"
+#include <vector>
 
 namespace Enigma::WorldMap
 {
@@ -15,24 +20,21 @@ namespace Enigma::WorldMap
     {
     public:
         WorldMapDto();
+        WorldMapDto(const Engine::GenericDto& dto);
 
-        [[nodiscard]] const std::string& name() const { return m_name; }
-        [[nodiscard]] std::string& name() { return m_name; }
-        [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factory_desc; }
-        [[nodiscard]] Engine::FactoryDesc& factoryDesc() { return m_factory_desc; }
-        [[nodiscard]] const Engine::GenericDtoCollection& quadTreeRoots() const { return m_quadTreeRoots; }
-        [[nodiscard]] Engine::GenericDtoCollection& quadTreeRoots() { return m_quadTreeRoots; }
-        [[nodiscard]] const Engine::GenericDto& portalRoot() const { return m_portalRoot; }
-        [[nodiscard]] Engine::GenericDto& portalRoot() { return m_portalRoot; }
+        [[nodiscard]] const WorldMapId& id() const { return m_id; }
+        void id(const WorldMapId& id) { m_id = id; }
+        [[nodiscard]] const std::vector<QuadTreeRootId>& quadRootIds() const { return m_quadRootIds; }
+        void quadRootIds(const std::vector<QuadTreeRootId>& ids) { m_quadRootIds = ids; }
+        [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
+        void factoryDesc(const Engine::FactoryDesc& desc) { m_factoryDesc = desc; }
 
-        static WorldMapDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
 
     protected:
-        std::string m_name;
-        Engine::FactoryDesc m_factory_desc;
-        Engine::GenericDtoCollection m_quadTreeRoots;
-        Engine::GenericDto m_portalRoot;
+        WorldMapId m_id;
+        std::vector<QuadTreeRootId> m_quadRootIds;
+        Engine::FactoryDesc m_factoryDesc;
     };
 }
 

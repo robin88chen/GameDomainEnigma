@@ -21,6 +21,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveFileStoreMapper.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphFileStoreMapper.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureFileStoreMapper.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\WorldMapFileStoreMapper.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetFileStoreMapper.cpp" />
@@ -30,5 +31,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PrimitiveFileStoreMapper.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphFileStoreMapper.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureFileStoreMapper.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\WorldMapFileStoreMapper.cpp" />
   </ItemGroup>
 </Project>

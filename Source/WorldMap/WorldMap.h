@@ -1,51 +1,45 @@
 ﻿/*********************************************************************
  * \file   WorldMap.h
- * \brief (2023.11.21) WorldMap contains a portal zone node as root, and a list of quad tree roots
+ * \brief
  *
  * \author Lancelot 'Robin' Chen
- * \date   July 2023
+ * \date   May 2024
  *********************************************************************/
 #ifndef WORLD_MAP_H
 #define WORLD_MAP_H
 
-#include "SceneGraph/PortalManagementNode.h"
-#include "SceneGraph/PortalZoneNode.h"
-#include "SceneGraph/SceneGraphRepository.h"
+#include "WorldMapId.h"
+#include "QuadTreeRootId.h"
 #include "GameEngine/GenericDto.h"
-#include "Terrain/TerrainPawn.h"
-#include <string>
+#include "SceneGraph/LazyNode.h"
+#include <vector>
 
 namespace Enigma::WorldMap
 {
-    class SceneQuadTreeRoot;
+    class QuadTreeRoot;
     class WorldMap
     {
         DECLARE_EN_RTTI_NON_BASE;
     public:
-        WorldMap(const std::string& name, const Engine::FactoryDesc& factory_desc, const std::shared_ptr<SceneGraph::PortalZoneNode>& root);
-        WorldMap(const std::shared_ptr<SceneGraph::SceneGraphRepository>& repository, const Engine::GenericDto& o);
-        WorldMap(const WorldMap& other) = delete;
-        WorldMap(WorldMap&& other) = delete;
-        WorldMap& operator=(const WorldMap& other) = delete;
-        WorldMap& operator=(WorldMap&& other) = delete;
+        WorldMap(const WorldMapId& id);
+        WorldMap(const WorldMapId& id, const std::vector<QuadTreeRootId>& quad_roots);
+        WorldMap(const WorldMapId& id, const Engine::GenericDto& dto);
         ~WorldMap();
+        WorldMap(const WorldMap&) = delete;
+        WorldMap(WorldMap&&) = delete;
+        WorldMap& operator=(const WorldMap&) = delete;
+        WorldMap& operator=(WorldMap&&) = delete;
 
-        const std::string& getName() const { return m_name; };
+        const WorldMapId& id() const { return m_id; }
 
-        Engine::GenericDto serializeDto();
-        std::vector<Engine::GenericDtoCollection> serializeSceneGraphs();
+        Engine::GenericDto serializeDto() const;
 
-        std::shared_ptr<SceneGraph::PortalZoneNode> getRoot() const { return m_root.lock(); };
-
-        void attachTerrain(const std::shared_ptr<SceneGraph::SceneGraphRepository>& repository, const std::shared_ptr<Terrain::TerrainPawn>& terrain, const MathLib::Matrix4& local_transform);
-        std::shared_ptr<SceneGraph::Node> queryFittingNode(const Engine::BoundingVolume& bv_in_world) const;
+        std::shared_ptr<SceneGraph::LazyNode> findFittingNode(const Engine::BoundingVolume& bv_in_world);
 
     protected:
-        Engine::FactoryDesc m_factory_desc;
-        std::string m_name;
-        std::weak_ptr<SceneGraph::PortalZoneNode> m_root;
-        typedef std::list<std::shared_ptr<SceneQuadTreeRoot>> QuadRootList;
-        QuadRootList m_listQuadRoot;
+        WorldMapId m_id;
+        std::vector<QuadTreeRootId> m_quadRootIds;
+        std::vector<std::weak_ptr<QuadTreeRoot>> m_quadRoots;
     };
 }
 

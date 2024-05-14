@@ -2,6 +2,7 @@
 #include "WorldMapStoreMapper.h"
 #include "WorldMapQueries.h"
 #include "QuadTreeRoot.h"
+#include "WorldMapErrors.h"
 #include "WorldMapEvents.h"
 #include "Frameworks/QueryDispatcher.h"
 #include "Frameworks/EventPublisher.h"
@@ -24,6 +25,22 @@ ServiceResult WorldMapRepository::onInit()
 {
     m_queryQuadTreeRoot = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { queryQuadTreeRoot(q); });
     QueryDispatcher::subscribe(typeid(QueryQuadTreeRoot), m_queryQuadTreeRoot);
+    m_hasQuadTreeRoot = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { hasQuadTreeRoot(q); });
+    QueryDispatcher::subscribe(typeid(HasQuadTreeRoot), m_hasQuadTreeRoot);
+    m_requestQuadTreeRootCreation = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { requestQuadTreeRootCreation(q); });
+    QueryDispatcher::subscribe(typeid(RequestQuadTreeRootCreation), m_requestQuadTreeRootCreation);
+    m_requestQuadTreeRootConstitution = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { requestQuadTreeRootConstitution(q); });
+    QueryDispatcher::subscribe(typeid(RequestQuadTreeRootConstitution), m_requestQuadTreeRootConstitution);
+
+    m_queryWorldMap = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { queryWorldMap(q); });
+    QueryDispatcher::subscribe(typeid(QueryWorldMap), m_queryWorldMap);
+    m_hasWorldMap = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { hasWorldMap(q); });
+    QueryDispatcher::subscribe(typeid(HasWorldMap), m_hasWorldMap);
+    m_requestQuadTreeRootCreation = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { requestWorldMapCreation(q); });
+    QueryDispatcher::subscribe(typeid(RequestWorldMapCreation), m_requestWorldMapCreation);
+    m_requestQuadTreeRootConstitution = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { requestWorldMapConstitution(q); });
+    QueryDispatcher::subscribe(typeid(RequestWorldMapConstitution), m_requestWorldMapConstitution);
+
     return ServiceResult::Complete;
 }
 
@@ -31,6 +48,22 @@ ServiceResult WorldMapRepository::onTerm()
 {
     QueryDispatcher::unsubscribe(typeid(QueryQuadTreeRoot), m_queryQuadTreeRoot);
     m_queryQuadTreeRoot = nullptr;
+    QueryDispatcher::unsubscribe(typeid(HasQuadTreeRoot), m_hasQuadTreeRoot);
+    m_hasQuadTreeRoot = nullptr;
+    QueryDispatcher::unsubscribe(typeid(RequestQuadTreeRootCreation), m_requestQuadTreeRootCreation);
+    m_requestQuadTreeRootCreation = nullptr;
+    QueryDispatcher::unsubscribe(typeid(RequestQuadTreeRootConstitution), m_requestQuadTreeRootConstitution);
+    m_requestQuadTreeRootConstitution = nullptr;
+
+    QueryDispatcher::unsubscribe(typeid(QueryWorldMap), m_queryWorldMap);
+    m_queryWorldMap = nullptr;
+    QueryDispatcher::unsubscribe(typeid(HasWorldMap), m_hasWorldMap);
+    m_hasWorldMap = nullptr;
+    QueryDispatcher::unsubscribe(typeid(RequestWorldMapCreation), m_requestWorldMapCreation);
+    m_requestWorldMapCreation = nullptr;
+    QueryDispatcher::unsubscribe(typeid(RequestWorldMapConstitution), m_requestWorldMapConstitution);
+    m_requestWorldMapConstitution = nullptr;
+
     return ServiceResult::Complete;
 }
 
@@ -166,3 +199,80 @@ void WorldMapRepository::queryQuadTreeRoot(const Frameworks::IQueryPtr q)
     query->setResult(quadTreeRoot);
 }
 
+void WorldMapRepository::hasQuadTreeRoot(const Frameworks::IQueryPtr q)
+{
+    auto query = std::dynamic_pointer_cast<HasQuadTreeRoot>(q);
+    assert(query);
+    query->setResult(hasQuadTreeRoot(query->id()));
+}
+
+void WorldMapRepository::requestQuadTreeRootCreation(const Frameworks::IQueryPtr q)
+{
+    auto request = std::dynamic_pointer_cast<RequestQuadTreeRootCreation>(q);
+    assert(request);
+    if (hasQuadTreeRoot(request->id()))
+    {
+        EventPublisher::post(std::make_shared<QuadTreeRootCreationFailed>(request->id(), ErrorCode::quadRootAlreadyExists));
+        return;
+    }
+    auto quadTreeRoot = std::make_shared<QuadTreeRoot>(request->id());
+    putQuadTreeRoot(request->id(), quadTreeRoot, request->persistenceLevel());
+    request->setResult(quadTreeRoot);
+}
+
+void WorldMapRepository::requestQuadTreeRootConstitution(const Frameworks::IQueryPtr q)
+{
+    auto request = std::dynamic_pointer_cast<RequestQuadTreeRootConstitution>(q);
+    assert(request);
+    if (hasQuadTreeRoot(request->id()))
+    {
+        EventPublisher::post(std::make_shared<QuadTreeRootConstitutionFailed>(request->id(), ErrorCode::quadRootAlreadyExists));
+        return;
+    }
+    auto quadTreeRoot = std::make_shared<QuadTreeRoot>(request->id(), request->dto());
+    putQuadTreeRoot(request->id(), quadTreeRoot, request->persistenceLevel());
+    request->setResult(quadTreeRoot);
+}
+
+void WorldMapRepository::queryWorldMap(const Frameworks::IQueryPtr q)
+{
+    auto query = std::dynamic_pointer_cast<QueryWorldMap>(q);
+    assert(query);
+    auto worldMap = queryWorldMap(query->id());
+    query->setResult(worldMap);
+}
+
+void WorldMapRepository::hasWorldMap(const Frameworks::IQueryPtr q)
+{
+    auto query = std::dynamic_pointer_cast<HasWorldMap>(q);
+    assert(query);
+    query->setResult(hasWorldMap(query->id()));
+}
+
+void WorldMapRepository::requestWorldMapCreation(const Frameworks::IQueryPtr q)
+{
+    auto request = std::dynamic_pointer_cast<RequestWorldMapCreation>(q);
+    assert(request);
+    if (hasWorldMap(request->id()))
+    {
+        EventPublisher::post(std::make_shared<WorldMapCreationFailed>(request->id(), ErrorCode::worldMapAlreadyExists));
+        return;
+    }
+    auto worldMap = std::make_shared<WorldMap>(request->id());
+    putWorldMap(request->id(), worldMap, request->persistenceLevel());
+    request->setResult(worldMap);
+}
+
+void WorldMapRepository::requestWorldMapConstitution(const Frameworks::IQueryPtr q)
+{
+    auto request = std::dynamic_pointer_cast<RequestWorldMapConstitution>(q);
+    assert(request);
+    if (hasWorldMap(request->id()))
+    {
+        EventPublisher::post(std::make_shared<WorldMapConstitutionFailed>(request->id(), ErrorCode::worldMapAlreadyExists));
+        return;
+    }
+    auto worldMap = std::make_shared<WorldMap>(request->id(), request->dto());
+    putWorldMap(request->id(), worldMap, request->persistenceLevel());
+    request->setResult(worldMap);
+}

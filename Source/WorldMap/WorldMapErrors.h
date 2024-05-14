@@ -15,19 +15,14 @@ namespace Enigma::WorldMap
     enum class ErrorCode
     {
         ok = 0,
-        nullSceneGraphRepository,
-        nullPortalManager,
 
-        emptyQuadRoot = 101,
-        outOfBounds,
-        outOfQuadTreeDepth,
-        invalidBoundingBox,
-        nullQuadNode,
-        emptyQuadGraph,
-        emptyQuadVolumeList,
+        emptyQuadVolumeList = 101,
         parentQuadNodeNotFound,
         parentQuadNodeHydrationFailed,
         childQuadNodeConstitutionFailed,
+
+        quadRootAlreadyExists = 201,
+        worldMapAlreadyExists,
     };
     class ErrorCategory : public std::error_category
     {

@@ -9,18 +9,12 @@ std::string ErrorCategory::message(int err) const
     switch (static_cast<ErrorCode>(err))
     {
     case ErrorCode::ok: return "OK";
-    case ErrorCode::nullSceneGraphRepository: return "Null SceneGraphRepository";
-    case ErrorCode::nullPortalManager: return "Null PortalManager";
-    case ErrorCode::emptyQuadRoot: return "QuadRoot is empty";
-    case ErrorCode::outOfBounds: return "Out of Bounds";
-    case ErrorCode::outOfQuadTreeDepth: return "Out of Quad Tree Depth";
-    case ErrorCode::invalidBoundingBox: return "Invalid Bounding Box";
-    case ErrorCode::nullQuadNode: return "Null Quad Node";
-    case ErrorCode::emptyQuadGraph: return "Empty Quad Graph";
     case ErrorCode::emptyQuadVolumeList: return "Empty Quad Volume List";
     case ErrorCode::parentQuadNodeNotFound: return "Parent Quad Node Not Found";
     case ErrorCode::parentQuadNodeHydrationFailed: return "Parent Quad Node Hydration Failed";
     case ErrorCode::childQuadNodeConstitutionFailed: return "Child Quad Node Constitution Failed";
+    case ErrorCode::quadRootAlreadyExists: return "QuadRoot Already Exists";
+    case ErrorCode::worldMapAlreadyExists: return "WorldMap Already Exists";
     }
     return "Unknown";
 }

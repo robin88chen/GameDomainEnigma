@@ -17,6 +17,51 @@
 namespace Enigma::WorldMap
 {
     class WorldMap;
+    //-------------- world map repository operations --------------
+    class WorldMapCreated : public Frameworks::IEvent
+    {
+    public:
+        WorldMapCreated(const WorldMapId& id) : m_id(id) {}
+
+        const WorldMapId& id() const { return m_id; }
+
+    protected:
+        WorldMapId m_id;
+    };
+    class WorldMapCreationFailed : public Frameworks::IEvent
+    {
+    public:
+        WorldMapCreationFailed(const WorldMapId& id, std::error_code err) : m_id(id), m_error(err) {}
+
+        const WorldMapId& id() const { return m_id; }
+        std::error_code error() const { return m_error; }
+
+    protected:
+        WorldMapId m_id;
+        std::error_code m_error;
+    };
+    class WorldMapConstituted : public Frameworks::IEvent
+    {
+    public:
+        WorldMapConstituted(const WorldMapId& id) : m_id(id) {}
+
+        const WorldMapId& id() const { return m_id; }
+
+    protected:
+        WorldMapId m_id;
+    };
+    class WorldMapConstitutionFailed : public Frameworks::IEvent
+    {
+    public:
+        WorldMapConstitutionFailed(const WorldMapId& id, std::error_code err) : m_id(id), m_error(err) {}
+
+        const WorldMapId& id() const { return m_id; }
+        std::error_code error() const { return m_error; }
+
+    protected:
+        WorldMapId m_id;
+        std::error_code m_error;
+    };
     class WorldMapPut : public Frameworks::IEvent
     {
     public:
@@ -59,6 +104,51 @@ namespace Enigma::WorldMap
 
     protected:
         WorldMapId m_id;
+        std::error_code m_error;
+    };
+    //-------------- quad tree root repository operations --------------
+    class QuadTreeRootCreated : public Frameworks::IEvent
+    {
+    public:
+        QuadTreeRootCreated(const QuadTreeRootId& id) : m_id(id) {}
+
+        const QuadTreeRootId& id() const { return m_id; }
+
+    protected:
+        QuadTreeRootId m_id;
+    };
+    class QuadTreeRootCreationFailed : public Frameworks::IEvent
+    {
+    public:
+        QuadTreeRootCreationFailed(const QuadTreeRootId& id, std::error_code err) : m_id(id), m_error(err) {}
+
+        const QuadTreeRootId& id() const { return m_id; }
+        std::error_code error() const { return m_error; }
+
+    protected:
+        QuadTreeRootId m_id;
+        std::error_code m_error;
+    };
+    class QuadTreeRootConstituted : public Frameworks::IEvent
+    {
+    public:
+        QuadTreeRootConstituted(const QuadTreeRootId& id) : m_id(id) {}
+
+        const QuadTreeRootId& id() const { return m_id; }
+
+    protected:
+        QuadTreeRootId m_id;
+    };
+    class QuadTreeRootConstitutionFailed : public Frameworks::IEvent
+    {
+    public:
+        QuadTreeRootConstitutionFailed(const QuadTreeRootId& id, std::error_code err) : m_id(id), m_error(err) {}
+
+        const QuadTreeRootId& id() const { return m_id; }
+        std::error_code error() const { return m_error; }
+
+    protected:
+        QuadTreeRootId m_id;
         std::error_code m_error;
     };
     class QuadTreeRootPut : public Frameworks::IEvent
@@ -105,6 +195,7 @@ namespace Enigma::WorldMap
         QuadTreeRootId m_id;
         std::error_code m_error;
     };
+    //-------------- fitting node operations --------------
     class FittingNodeCreated : public Frameworks::IEvent
     {
     public:

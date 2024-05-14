@@ -49,9 +49,23 @@ namespace Enigma::WorldMap
 
     protected:
         void queryQuadTreeRoot(const Frameworks::IQueryPtr q);
+        void hasQuadTreeRoot(const Frameworks::IQueryPtr q);
+        void requestQuadTreeRootCreation(const Frameworks::IQueryPtr q);
+        void requestQuadTreeRootConstitution(const Frameworks::IQueryPtr q);
+        void queryWorldMap(const Frameworks::IQueryPtr q);
+        void hasWorldMap(const Frameworks::IQueryPtr q);
+        void requestWorldMapCreation(const Frameworks::IQueryPtr q);
+        void requestWorldMapConstitution(const Frameworks::IQueryPtr q);
 
     protected:
         Frameworks::QuerySubscriberPtr m_queryQuadTreeRoot;
+        Frameworks::QuerySubscriberPtr m_hasQuadTreeRoot;
+        Frameworks::QuerySubscriberPtr m_requestQuadTreeRootCreation;
+        Frameworks::QuerySubscriberPtr m_requestQuadTreeRootConstitution;
+        Frameworks::QuerySubscriberPtr m_queryWorldMap;
+        Frameworks::QuerySubscriberPtr m_hasWorldMap;
+        Frameworks::QuerySubscriberPtr m_requestWorldMapCreation;
+        Frameworks::QuerySubscriberPtr m_requestWorldMapConstitution;
 
         std::shared_ptr<WorldMapStoreMapper> m_storeMapper;
         std::unordered_map<QuadTreeRootId, std::shared_ptr<QuadTreeRoot>, QuadTreeRootId::hash> m_quadTreeRoots;

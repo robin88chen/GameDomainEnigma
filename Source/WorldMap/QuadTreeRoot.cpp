@@ -99,11 +99,11 @@ std::error_code QuadTreeRoot::createTreeNode(const std::shared_ptr<SceneGraph::S
     if (!child_node) return ErrorCode::childQuadNodeConstitutionFailed;
     std::error_code er = child_node->hydrate(child_dto);
     if (er) return er;
-    repository->putSpatial(child_node, PersistenceLevel::Store);
+    repository->putSpatial(child_node, SceneGraph::PersistenceLevel::Store);
     repository->putLaziedContent(child_node);
     er = parent_node->attachChild(child_node, local_transform);
     if (er) return er;
-    repository->putSpatial(parent_node, PersistenceLevel::Store);
+    repository->putSpatial(parent_node, SceneGraph::PersistenceLevel::Store);
     repository->putLaziedContent(parent_node);
     return ErrorCode::ok;
 }

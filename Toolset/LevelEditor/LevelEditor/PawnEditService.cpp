@@ -47,10 +47,10 @@ ServiceResult PawnEditService::onInit()
     EventPublisher::subscribe(typeid(PawnPrefabLoaded), m_onPrefabLoaded);
     m_onLoadPrefabFailed = std::make_shared<EventSubscriber>([=](auto e) { onLoadPrefabFailed(e); });
     EventPublisher::subscribe(typeid(LoadPawnPrefabFailed), m_onLoadPrefabFailed);
-    m_onFittingNodeCreated = std::make_shared<EventSubscriber>([=](auto e) { onFittingNodeCreated(e); });
-    EventPublisher::subscribe(typeid(FittingNodeCreated), m_onFittingNodeCreated);
-    m_onCreateFittingNodeFailed = std::make_shared<EventSubscriber>([=](auto e) { onCreateFittingNodeFailed(e); });
-    EventPublisher::subscribe(typeid(CreateFittingNodeFailed), m_onCreateFittingNodeFailed);
+    //m_onFittingNodeCreated = std::make_shared<EventSubscriber>([=](auto e) { onFittingNodeCreated(e); });
+    //EventPublisher::subscribe(typeid(FittingNodeCreated), m_onFittingNodeCreated);
+    //m_onCreateFittingNodeFailed = std::make_shared<EventSubscriber>([=](auto e) { onCreateFittingNodeFailed(e); });
+    //EventPublisher::subscribe(typeid(CreateFittingNodeFailed), m_onCreateFittingNodeFailed);
 
     m_pawnLoader = new PawnLoader();
 
@@ -70,10 +70,10 @@ ServiceResult PawnEditService::onTerm()
     m_onPrefabLoaded = nullptr;
     EventPublisher::unsubscribe(typeid(LoadPawnPrefabFailed), m_onLoadPrefabFailed);
     m_onLoadPrefabFailed = nullptr;
-    EventPublisher::unsubscribe(typeid(FittingNodeCreated), m_onFittingNodeCreated);
-    m_onFittingNodeCreated = nullptr;
-    EventPublisher::unsubscribe(typeid(CreateFittingNodeFailed), m_onCreateFittingNodeFailed);
-    m_onCreateFittingNodeFailed = nullptr;
+    //EventPublisher::unsubscribe(typeid(FittingNodeCreated), m_onFittingNodeCreated);
+    //m_onFittingNodeCreated = nullptr;
+    //EventPublisher::unsubscribe(typeid(CreateFittingNodeFailed), m_onCreateFittingNodeFailed);
+    //m_onCreateFittingNodeFailed = nullptr;
 
     SAFE_DELETE(m_pawnLoader);
 
@@ -135,7 +135,7 @@ void PawnEditService::onLoadPrefabFailed(const IEventPtr& e)
     failPutCandidatePawn(ev->GetError());
 }
 
-void PawnEditService::onFittingNodeCreated(const IEventPtr& e)
+/*void PawnEditService::onFittingNodeCreated(const IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<FittingNodeCreated>(e);
@@ -159,7 +159,7 @@ void PawnEditService::onCreateFittingNodeFailed(const IEventPtr& e)
     if (!ev) return;
     if (ev->getRequestRuid() != m_creatNodeRuid) return;
     failPutCandidatePawn(ev->getError());
-}
+}*/
 
 bool PawnEditService::tryPutPawnAt(const std::shared_ptr<Pawn>& pawn, const Vector3& position)
 {
@@ -170,7 +170,7 @@ bool PawnEditService::tryPutPawnAt(const std::shared_ptr<Pawn>& pawn, const Vect
     if (query->getResult() == nullptr) return false;
     auto node = query->getResult();
     auto inv_node_transform = node->getWorldTransform().Inverse();
-    CommandBus::post(std::make_shared<AttachNodeChild>(node->getSpatialName(), pawn, inv_node_transform * world_transform));
+    //CommandBus::post(std::make_shared<AttachNodeChild>(node->getSpatialName(), pawn, inv_node_transform * world_transform));
     return true;
 }
 
@@ -185,7 +185,7 @@ void PawnEditService::createFittingNodeForPawn(const std::shared_ptr<Pawn>& pawn
 
 void PawnEditService::completePutCandidatePawn()
 {
-    CommandBus::post(std::make_shared<OutputMessage>(string_format("Pawn %s put at (%f, %f, %f)", m_currentLoadingPawn->m_name.c_str(), m_currentLoadingPawn->m_position.X(), m_currentLoadingPawn->m_position.Y(), m_currentLoadingPawn->m_position.Z())));
+    CommandBus::post(std::make_shared<OutputMessage>(string_format("Pawn %s put at (%f, %f, %f)", m_currentLoadingPawn->m_name.c_str(), m_currentLoadingPawn->m_position.x(), m_currentLoadingPawn->m_position.y(), m_currentLoadingPawn->m_position.z())));
     m_currentLoadingPawn = std::nullopt;
     m_loadedPawn = nullptr;
 }

@@ -15,6 +15,11 @@
 #include "InputHandlers/InputHandlerService.h"
 #include "Frameworks/EventSubscriber.h"
 #include "ShadowMap/ShadowMapService.h"
+#include "FileStorage/GeometryDataFileStoreMapper.h"
+#include "FileStorage/AnimationAssetFileStoreMapper.h"
+#include "FileStorage/AnimatorFileStoreMapper.h"
+#include "FileStorage/SceneGraphFileStoreMapper.h"
+#include "FileStorage/WorldMapFileStoreMapper.h"
 
 namespace LevelEditor
 {
@@ -45,11 +50,11 @@ namespace LevelEditor
 
     protected:
         void onSceneGraphChanged(const Enigma::Frameworks::IEventPtr& e);
-        void onSceneRootCreated(const Enigma::Frameworks::IEventPtr& e);
-        void onWorldMapCreated(const Enigma::Frameworks::IEventPtr& e);
-        void onCreateWorldFailed(const Enigma::Frameworks::IEventPtr& e);
-        void onWorldMapDeserialized(const Enigma::Frameworks::IEventPtr& e);
-        void onDeserializeWorldMapFailed(const Enigma::Frameworks::IEventPtr& e);
+        //void onSceneRootCreated(const Enigma::Frameworks::IEventPtr& e);
+        //void onWorldMapCreated(const Enigma::Frameworks::IEventPtr& e);
+        //void onCreateWorldFailed(const Enigma::Frameworks::IEventPtr& e);
+        //void onWorldMapDeserialized(const Enigma::Frameworks::IEventPtr& e);
+        //void onDeserializeWorldMapFailed(const Enigma::Frameworks::IEventPtr& e);
 
     protected:
         HWND m_hwnd;
@@ -60,6 +65,11 @@ namespace LevelEditor
         std::unique_ptr<AppConfiguration> m_appConfig;
 
         Enigma::Controllers::GraphicMain* m_graphicMain;
+        std::shared_ptr<Enigma::FileStorage::GeometryDataFileStoreMapper> m_geometryDataFileStoreMapper;
+        std::shared_ptr<Enigma::FileStorage::AnimationAssetFileStoreMapper> m_animationAssetFileStoreMapper;
+        std::shared_ptr<Enigma::FileStorage::AnimatorFileStoreMapper> m_animatorFileStoreMapper;
+        std::shared_ptr<Enigma::FileStorage::SceneGraphFileStoreMapper> m_sceneGraphFileStoreMapper;
+        std::shared_ptr<Enigma::FileStorage::WorldMapFileStoreMapper> m_worldMapFileStoreMapper;
         std::weak_ptr<Enigma::InputHandlers::InputHandlerService> m_inputHandler;
         std::weak_ptr<Enigma::GameCommon::SceneRendererService> m_sceneRenderer;
         std::weak_ptr<Enigma::ShadowMap::ShadowMapService> m_shadowMapService;
@@ -67,11 +77,11 @@ namespace LevelEditor
         std::weak_ptr<Enigma::SceneGraph::Node> m_sceneRoot;
 
         Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphChanged;
-        Enigma::Frameworks::EventSubscriberPtr m_onSceneRootCreated;
-        Enigma::Frameworks::EventSubscriberPtr m_onWorldMapCreated;
-        Enigma::Frameworks::EventSubscriberPtr m_onCreateWorldFailed;
-        Enigma::Frameworks::EventSubscriberPtr m_onWorldMapDeserialized;
-        Enigma::Frameworks::EventSubscriberPtr m_onDeserializeWorldMapFailed;
+        //Enigma::Frameworks::EventSubscriberPtr m_onSceneRootCreated;
+        //Enigma::Frameworks::EventSubscriberPtr m_onWorldMapCreated;
+        //Enigma::Frameworks::EventSubscriberPtr m_onCreateWorldFailed;
+        //Enigma::Frameworks::EventSubscriberPtr m_onWorldMapDeserialized;
+        //Enigma::Frameworks::EventSubscriberPtr m_onDeserializeWorldMapFailed;
     };
 }
 

@@ -186,12 +186,12 @@ void TerrainToolPanel::refreshTextureLayerButtons(const Enigma::Engine::EffectTe
 {
     for (unsigned int i = 0; i < TerrainEditService::LayerSemantics.size(); i++)
     {
-        auto semantic_tex = texture_map.FindSemanticTexture(TerrainEditService::LayerSemantics[i]);
+        auto semantic_tex = texture_map.findSemanticTexture(TerrainEditService::LayerSemantics[i]);
         if (!semantic_tex) continue;
         auto tex = std::get<std::shared_ptr<Enigma::Engine::Texture>>(*semantic_tex);
         if (!tex) continue;
         Enigma::FileSystem::Filename filename(tex->factoryDesc().GetResourceFilename());
-        std::string filepath = Enigma::FileSystem::FileSystem::Instance()->GetStdioFullPath(filename.GetSubPathFileName(), filename.GetMountPathID());
+        std::string filepath = Enigma::FileSystem::FileSystem::instance()->getStdioFullPath(filename.getSubPathFileName(), filename.getMountPathId());
         pasteTextureImageToButton(filepath, m_textureLayerButtons[i], 64);
         m_textureLayerButtons[i]->focus();
     }
@@ -204,8 +204,8 @@ void TerrainToolPanel::onPickedSpatialChanged(const Enigma::Frameworks::IEventPt
     if (!ev) return;
     auto terrain = std::dynamic_pointer_cast<Enigma::Terrain::TerrainPawn>(ev->spatial());
     if (!terrain) return;
-    auto terrain_prim = std::dynamic_pointer_cast<Enigma::Terrain::TerrainPrimitive>(terrain->GetPrimitive());
+    auto terrain_prim = std::dynamic_pointer_cast<Enigma::Terrain::TerrainPrimitive>(terrain->getPrimitive());
     if (!terrain_prim) return;
-    setTerrainName(terrain->getSpatialName());
-    refreshTextureLayerButtons(terrain_prim->GetTextureMap(0));
+    setTerrainName(terrain->id().name());
+    refreshTextureLayerButtons(terrain_prim->getTextureMap(0));
 }

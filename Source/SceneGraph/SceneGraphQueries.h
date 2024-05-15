@@ -9,8 +9,9 @@
 #define SCENE_GRAPH_QUERIES_H
 
 #include "Frameworks/Query.h"
-#include "SceneGraphPersistenceLevel.h"
+#include "GameEngine/BoundingVolume.h"
 #include "LightInfo.h"
+#include "SceneGraphPersistenceLevel.h"
 #include "SpatialRenderState.h"
 
 namespace Enigma::SceneGraph
@@ -18,7 +19,7 @@ namespace Enigma::SceneGraph
     class Camera;
     class Node;
     class Pawn;
-    class SceneQuadTreeRoot;
+    class Spatial;
     class Light;
     class QueryCamera : public Frameworks::Query<std::shared_ptr<Camera>>
     {

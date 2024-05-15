@@ -24,12 +24,12 @@ void LevelEditor::pasteTextureImageToButton(const std::string& filepath, nana::b
 
 std::string LevelEditor::filePathCombinePathID(const std::filesystem::path& path, const std::string& path_id)
 {
-    std::list<FileSystem::IMountPathPtr> mount_paths = FileSystem::FileSystem::Instance()->GetMountPathsWithPathID(path_id);
+    std::list<FileSystem::IMountPathPtr> mount_paths = FileSystem::FileSystem::instance()->getMountPathsWithPathId(path_id);
     if (mount_paths.empty()) return path.filename().string();
     std::filesystem::path parent_path = path.parent_path().parent_path(); // 暫時只往上一層尋找
     for (auto mp : mount_paths)
     {
-        if (mp->EqualMountPath(parent_path))
+        if (mp->equalMountPath(parent_path))
         {
             return (--(--path.end()))->string() + "/" + path.filename().string(); // +"@" + mp->GetPathID();
         }

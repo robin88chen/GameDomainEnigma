@@ -34,7 +34,7 @@ namespace LevelEditor
 
     protected:
         void onGameCameraCreated(const Enigma::Frameworks::IEventPtr& e);
-        void onSceneRootCreated(const Enigma::Frameworks::IEventPtr& e);
+        //void onSceneRootCreated(const Enigma::Frameworks::IEventPtr& e);
         void onTargetViewportChanged(const Enigma::Frameworks::IEventPtr& e);
         void onMouseMoved(const Enigma::Frameworks::IEventPtr& e);
         void onMouseLeftButtonDown(const Enigma::Frameworks::IEventPtr& e);
@@ -47,7 +47,7 @@ namespace LevelEditor
 
     protected:
         Enigma::Frameworks::EventSubscriberPtr m_onGameCameraCreated;
-        Enigma::Frameworks::EventSubscriberPtr m_onSceneRootCreated;
+        //Enigma::Frameworks::EventSubscriberPtr m_onSceneRootCreated;
         Enigma::Frameworks::EventSubscriberPtr m_onTargetViewportChanged;
         Enigma::Frameworks::EventSubscriberPtr m_onMouseMoved;
         Enigma::Frameworks::EventSubscriberPtr m_onMouseLeftButtonDown;

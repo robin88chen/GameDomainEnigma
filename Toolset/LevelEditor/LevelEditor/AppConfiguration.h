@@ -8,6 +8,7 @@
 #ifndef APP_CONFIGURATION_H
 #define APP_CONFIGURATION_H
 
+#include "SceneGraph/SceneGraph.h"
 #include "GameEngine/GenericDto.h"
 
 namespace LevelEditor
@@ -30,7 +31,7 @@ namespace LevelEditor
         std::string worldMapPathId() const;
 
         Enigma::Engine::GenericDto cameraDto() const;
-        std::string cameraName() const;
+        Enigma::SceneGraph::SpatialId cameraId() const;
         std::string frustumName() const;
 
     private:

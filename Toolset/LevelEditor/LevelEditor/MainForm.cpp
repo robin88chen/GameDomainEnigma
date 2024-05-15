@@ -19,7 +19,6 @@
 #include "TerrainEditService.h"
 #include "TerrainEditConsole.h"
 #include "EditorSceneConsole.h"
-#include "WorldMap/WorldMapService.h"
 #include "Gateways/DtoJsonGateway.h"
 #include "LevelEditorEvents.h"
 #include "nana/gui/filebox.hpp"
@@ -106,7 +105,7 @@ void MainForm::initializeGraphics()
     m_timer->elapse([this] { m_appDelegate->onTimerElapsed(); });
     m_timer->start();
     events().destroy([this] { this->finalizeGraphics(); });
-    auto srv_mngr = Enigma::Controllers::GraphicMain::Instance()->getServiceManager();
+    auto srv_mngr = Enigma::Controllers::GraphicMain::instance()->getServiceManager();
     auto world_edit = std::dynamic_pointer_cast<WorldEditService>(srv_mngr->getSystemService(WorldEditService::TYPE_RTTI));
     srv_mngr->registerSystemService(std::make_shared<WorldEditConsole>(srv_mngr, world_edit));
     srv_mngr->registerSystemService(std::make_shared<TerrainEditConsole>(srv_mngr));
@@ -120,7 +119,7 @@ void MainForm::initializeGraphics()
 
 void MainForm::finalizeGraphics()
 {
-    auto srv_mngr = Enigma::Controllers::GraphicMain::Instance()->getServiceManager();
+    auto srv_mngr = Enigma::Controllers::GraphicMain::instance()->getServiceManager();
     srv_mngr->unregisterSystemService(WorldEditConsole::TYPE_RTTI);
     srv_mngr->unregisterSystemService(TerrainEditConsole::TYPE_RTTI);
     srv_mngr->unregisterSystemService(EditorSceneConsole::TYPE_RTTI);
@@ -235,8 +234,8 @@ void MainForm::onCreateWorldMapCommand(const nana::menu::item_proxy& menu_item)
 
 void MainForm::onLoadWorldCommand(const nana::menu::item_proxy& menu_item)
 {
-    auto srv_mngr = Enigma::Controllers::GraphicMain::Instance()->getServiceManager();
-    auto world = srv_mngr->getSystemServiceAs<WorldMapService>();
+    auto srv_mngr = Enigma::Controllers::GraphicMain::instance()->getServiceManager();
+    /*auto world = srv_mngr->getSystemServiceAs<WorldMapService>();
 
     nana::filebox fb(handle(), true);
     fb.add_filter({ {"World File(*.wld)", "*.wld"} }).title("Load World");
@@ -246,7 +245,7 @@ void MainForm::onLoadWorldCommand(const nana::menu::item_proxy& menu_item)
         {
             m_worldConsole.lock()->loadWorldMap(paths[0], m_appDelegate->appConfig()->portalManagementName());
         }
-    }
+    }*/
 }
 
 void MainForm::onSaveWorldCommand(const nana::menu::item_proxy& menu_item)
@@ -290,7 +289,7 @@ void MainForm::onAddCandidatePawn(const nana::toolbar::item_proxy& drop_down_ite
     if (auto paths = fb.show(); !paths.empty())
     {
         Filename filename_obj(paths[0].string());
-        std::string pawn_name = filename_obj.GetBaseFileName();
+        std::string pawn_name = filename_obj.getBaseFileName();
         Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Add Candidate Pawn " + pawn_name + " File " + paths[0].string() + "..."));
         if (!m_pawnConsole.expired())
         {
@@ -309,7 +308,7 @@ void MainForm::onGodModeChanged(bool enabled)
 
 void MainForm::onCameraFrustumCommand(const nana::menu::item_proxy& menu_item)
 {
-    nana::API::modal_window(FrustumInfoDialog(*this, m_appDelegate->appConfig()->cameraName()));
+    nana::API::modal_window(FrustumInfoDialog(*this, m_appDelegate->appConfig()->cameraId()));
 }
 
 void MainForm::onToolBarSelected(const nana::arg_toolbar& arg)

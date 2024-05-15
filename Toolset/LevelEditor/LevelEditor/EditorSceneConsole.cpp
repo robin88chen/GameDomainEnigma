@@ -32,8 +32,8 @@ Enigma::Frameworks::ServiceResult EditorSceneConsole::onInit()
 {
     m_onGameCameraCreated = std::make_shared<EventSubscriber>([=](auto e) { onGameCameraCreated(e); });
     EventPublisher::subscribe(typeid(GameCameraCreated), m_onGameCameraCreated);
-    m_onSceneRootCreated = std::make_shared<EventSubscriber>([=](auto e) { onSceneRootCreated(e); });
-    EventPublisher::subscribe(typeid(SceneRootCreated), m_onSceneRootCreated);
+    //m_onSceneRootCreated = std::make_shared<EventSubscriber>([=](auto e) { onSceneRootCreated(e); });
+    //EventPublisher::subscribe(typeid(SceneRootCreated), m_onSceneRootCreated);
     m_onTargetViewportChanged = std::make_shared<EventSubscriber>([=](auto e) { onTargetViewportChanged(e); });
     EventPublisher::subscribe(typeid(TargetViewPortChanged), m_onTargetViewportChanged);
     m_onMouseMoved = std::make_shared<EventSubscriber>([=](auto e) { onMouseMoved(e); });
@@ -54,8 +54,8 @@ Enigma::Frameworks::ServiceResult EditorSceneConsole::onTerm()
 {
     EventPublisher::unsubscribe(typeid(GameCameraCreated), m_onGameCameraCreated);
     m_onGameCameraCreated = nullptr;
-    EventPublisher::unsubscribe(typeid(SceneRootCreated), m_onSceneRootCreated);
-    m_onSceneRootCreated = nullptr;
+    //EventPublisher::unsubscribe(typeid(SceneRootCreated), m_onSceneRootCreated);
+    //m_onSceneRootCreated = nullptr;
     EventPublisher::unsubscribe(typeid(TargetViewPortChanged), m_onTargetViewportChanged);
     m_onTargetViewportChanged = nullptr;
     EventPublisher::unsubscribe(typeid(MouseMoved), m_onMouseMoved);
@@ -80,19 +80,19 @@ void EditorSceneConsole::onGameCameraCreated(const Enigma::Frameworks::IEventPtr
     m_camera = ev->GetCamera();
 }
 
-void EditorSceneConsole::onSceneRootCreated(const Enigma::Frameworks::IEventPtr& e)
+/*void EditorSceneConsole::onSceneRootCreated(const Enigma::Frameworks::IEventPtr& e)
 {
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<Enigma::GameCommon::SceneRootCreated, IEvent>(e);
     if (!ev) return;
     m_sceneRoot = ev->GetSceneRoot();
-}
+}*/
 void EditorSceneConsole::onTargetViewportChanged(const Enigma::Frameworks::IEventPtr& e)
 {
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<Enigma::Renderer::TargetViewPortChanged, IEvent>(e);
     if (!ev) return;
-    m_targetViewport = ev->GetViewPort();
+    m_targetViewport = ev->viewPort();
 }
 
 void EditorSceneConsole::onMouseMoved(const Enigma::Frameworks::IEventPtr& e)

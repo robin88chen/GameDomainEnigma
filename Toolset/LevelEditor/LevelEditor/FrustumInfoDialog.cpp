@@ -1,7 +1,6 @@
 ﻿#include "FrustumInfoDialog.h"
 #include "SceneGraph/SceneGraphQueries.h"
 #include "SceneGraph/Frustum.h"
-#include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/MemoryMacro.h"
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/QueryDispatcher.h"
@@ -10,7 +9,7 @@
 
 using namespace LevelEditor;
 
-FrustumInfoDialog::FrustumInfoDialog(nana::window owner, const std::string& camera_name) : form(owner, nana::API::make_center(owner, 280, 200), nana::appear::decorate<>{})
+FrustumInfoDialog::FrustumInfoDialog(nana::window owner, const Enigma::SceneGraph::SpatialId& camera_id) : form(owner, nana::API::make_center(owner, 280, 200), nana::appear::decorate<>{})
 {
     caption("Frustum Info");
     get_place().div("vert<fov_prompt margin=[10,20]><near_plane_prompt margin=[10,20]><far_plane_prompt margin=[10,20]><buttons margin=[10,40] gap=10>");
@@ -35,7 +34,7 @@ FrustumInfoDialog::FrustumInfoDialog(nana::window owner, const std::string& came
 
     registerHandlers();
 
-    queryCamera(camera_name);
+    queryCamera(camera_id);
 }
 
 FrustumInfoDialog::~FrustumInfoDialog()
@@ -116,9 +115,9 @@ void FrustumInfoDialog::onCancelButton(const nana::arg_click& arg)
     close();
 }
 
-void FrustumInfoDialog::queryCamera(const std::string& camera_name)
+void FrustumInfoDialog::queryCamera(const Enigma::SceneGraph::SpatialId& camera_id)
 {
-    auto query = std::make_shared<Enigma::SceneGraph::QueryCamera>(camera_name);
+    auto query = std::make_shared<Enigma::SceneGraph::QueryCamera>(camera_id);
     Enigma::Frameworks::QueryDispatcher::dispatch(query);
     if (query->getResult())
     {
@@ -129,6 +128,6 @@ void FrustumInfoDialog::queryCamera(const std::string& camera_name)
     }
     else
     {
-        Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("QueryCameraFailed : " + camera_name));
+        Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("QueryCameraFailed : " + camera_id.name()));
     }
 }

@@ -1,13 +1,10 @@
 ﻿#include "CreateNewWorldDlg.h"
-
-#include <WorldMap/WorldMap.h>
-
+#include "WorldMap/WorldMap.h"
 #include "Frameworks/CommandBus.h"
 #include "WorldMap/WorldMapCommands.h"
 #include "WorldMap/WorldMapDto.h"
 #include "Platforms/PlatformLayer.h"
 #include "Platforms/MemoryMacro.h"
-#include "Platforms/MemoryAllocMacro.h"
 #include "WorldEditConsole.h"
 #include "nana/gui.hpp"
 

@@ -36,13 +36,13 @@ PawnLoader::~PawnLoader()
 error PawnLoader::StartLoadingPawn(const std::string& full_path)
 {
     if (full_path.empty()) return ErrorCode::emptyFilePath;
-    auto file = FileSystem::Instance()->OpenFile(full_path, Read | Binary);
+    auto file = FileSystem::instance()->openFile(full_path, read | binary);
     if (!file) return ErrorCode::fileIOError;
-    const size_t file_size = file->Size();
-    const auto read_buf = file->Read(0, file_size);
-    FileSystem::Instance()->CloseFile(file);
+    const size_t file_size = file->size();
+    const auto read_buf = file->read(0, file_size);
+    FileSystem::instance()->closeFile(file);
     if (!read_buf) return ErrorCode::fileIOError;
-    const auto dtos = DtoJsonGateway::Deserialize(convert_to_string(read_buf.value(), file_size));
+    const auto dtos = std::make_shared<DtoJsonGateway>()->deserialize(convert_to_string(read_buf.value(), file_size));
     if (dtos.empty()) return ErrorCode::fileIOError;
     m_pawnFullPath = full_path;
     CommandBus::post(std::make_shared<BuildSceneGraph>(m_pawnFullPath, dtos));

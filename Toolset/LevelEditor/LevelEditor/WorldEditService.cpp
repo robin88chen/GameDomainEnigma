@@ -8,9 +8,9 @@ using namespace Enigma::Frameworks;
 
 Rtti WorldEditService::TYPE_RTTI{ "LevelEditor.WorldEditService", &ISystemService::TYPE_RTTI };
 
-WorldEditService::WorldEditService(ServiceManager* srv_mngr, const std::shared_ptr<Enigma::WorldMap::WorldMapService>& map) : ISystemService(srv_mngr)
+WorldEditService::WorldEditService(ServiceManager* srv_mngr) : ISystemService(srv_mngr)
 {
-    m_worldMap = map;
+    //m_worldMap = map;
     m_needTick = false;
 }
 
@@ -31,19 +31,19 @@ ServiceResult WorldEditService::onTerm()
 
 std::tuple<Enigma::Engine::GenericDto, std::vector<Enigma::Engine::GenericDtoCollection>> WorldEditService::serializeWorldMapAndNodeGraphs(const std::string& path_id) const
 {
-    assert(!m_worldMap.expired());
-    auto node_collections = m_worldMap.lock()->serializeWorldSceneGraphs();
+    //assert(!m_worldMap.expired());
+    //auto node_collections = m_worldMap.lock()->serializeWorldSceneGraphs();
     /*for (auto& dtos : node_collections)
     {
         auto desc = dtos[0].GetRtti();
         desc.PathId(path_id);
         dtos[0].AddRtti(desc);
     }*/
-    auto map_dto = m_worldMap.lock()->serializeWorldMap();
+    //auto map_dto = m_worldMap.lock()->serializeWorldMap();
     /*auto desc = map_dto.GetRtti();
     desc.PathId(path_id);
     map_dto.AddRtti(desc);*/
-    return { map_dto, node_collections };
+    return { {}, {} };
 }
 
 void WorldEditService::deserializeWorldMap(const Enigma::Engine::GenericDtoCollection& world_map_dto, const std::string& portal_manager_name)

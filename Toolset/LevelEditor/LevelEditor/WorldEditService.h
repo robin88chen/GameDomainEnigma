@@ -9,7 +9,7 @@
 #define WORLD_EDIT_SERVICE_H
 
 #include "Frameworks/ServiceManager.h"
-#include "WorldMap/WorldMapService.h"
+#include "GameEngine/GenericDto.h"
 
 namespace LevelEditor
 {
@@ -17,7 +17,7 @@ namespace LevelEditor
     {
         DECLARE_EN_RTTI;
     public:
-        WorldEditService(Enigma::Frameworks::ServiceManager* srv_mngr, const std::shared_ptr<Enigma::WorldMap::WorldMapService>& map);
+        WorldEditService(Enigma::Frameworks::ServiceManager* srv_mngr);
         virtual ~WorldEditService() override;
 
         virtual Enigma::Frameworks::ServiceResult onInit() override;
@@ -43,7 +43,7 @@ namespace LevelEditor
 
         //void OnEditorModeSelected(EditorModeSelectedMessage* msg);
     private:
-        std::weak_ptr<Enigma::WorldMap::WorldMapService> m_worldMap;
+        //std::weak_ptr<Enigma::WorldMap::WorldMapService> m_worldMap;
         //Enigma::MessageSubscriberPtr m_onAsyncKeyPressed;
         //Enigma::MessageSubscriberPtr m_onAsyncKeyReleased;
 

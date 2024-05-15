@@ -4,10 +4,6 @@
 #include "LevelEditorCommands.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/CommandBus.h"
-#include "GameEngine/StandardGeometryDtoHelper.h"
-#include "Renderer/RenderablePrimitiveDtos.h"
-#include "GameEngine/EffectDtoHelper.h"
-#include "SceneGraph/SceneGraphDtoHelper.h"
 #include "SceneGraph/SceneGraphCommands.h"
 #include "SceneGraph/SceneGraphEvents.h"
 #include "GameCommon/GameSceneCommands.h"
@@ -108,7 +104,7 @@ ServiceResult TerrainEditConsole::onTerm()
 
 void TerrainEditConsole::createBrushPawn()
 {
-    SphereDtoHelper sphere_helper(BRUSH_SPHERE_TAG);
+    /*SphereDtoHelper sphere_helper(BRUSH_SPHERE_TAG);
     sphere_helper.Sphere(Vector3::ZERO, 1.0f, 32, 32).TextureCoord();
     EffectMaterialDtoHelper eff_dto_helper("DeferredShadingDecalGeometry");
     eff_dto_helper.FilenameAtPath("fx/DeferredShadingDecalGeometry.efx@APK_PATH");
@@ -127,7 +123,7 @@ void TerrainEditConsole::createBrushPawn()
     const Matrix4 local = Matrix4::MakeScaleTransform(static_cast<float>(m_brushSize), static_cast<float>(m_brushSize), static_cast<float>(m_brushSize));
     pawn_helper.LocalTransform(local);
     auto dtos = { pawn_helper.toGenericDto() };
-    CommandBus::post(std::make_shared<BuildSceneGraph>(BRUSH_SPHERE_TAG, dtos));
+    CommandBus::post(std::make_shared<BuildSceneGraph>(BRUSH_SPHERE_TAG, dtos));*/
 }
 
 void TerrainEditConsole::sendTerrainEditCommand(float elapse_time)
@@ -196,8 +192,8 @@ void TerrainEditConsole::onPawnPrimitiveBuilt(const Enigma::Frameworks::IEventPt
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<PawnPrimitiveBuilt>(e);
     if (!ev) return;
-    if (ev->GetPawn() != m_brush.lock()) return;
-    CommandBus::post(std::make_shared<Enigma::GameCommon::BindGBuffer>(ev->GetPawn()));
+    if (ev->pawn() != m_brush.lock()) return;
+    CommandBus::post(std::make_shared<Enigma::GameCommon::BindGBuffer>(ev->pawn()));
 }
 
 void TerrainEditConsole::onTerrainBrushSizeChanged(const Enigma::Frameworks::IEventPtr& e)

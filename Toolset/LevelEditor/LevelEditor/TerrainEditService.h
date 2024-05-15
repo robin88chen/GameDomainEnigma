@@ -62,7 +62,7 @@ namespace LevelEditor
 
     protected:
         std::weak_ptr<Enigma::Terrain::TerrainPawn> m_pickedTerrain;
-        std::unordered_map<std::string, std::weak_ptr<Enigma::Engine::Texture>> m_splatTextures;
+        std::unordered_map<Enigma::SceneGraph::SpatialId, std::weak_ptr<Enigma::Engine::Texture>, Enigma::SceneGraph::SpatialId::hash> m_splatTextures;
         std::weak_ptr<Enigma::Engine::Texture> m_pickedSplatTexture;
 
         Enigma::Frameworks::CommandSubscriberPtr m_createNewTerrain;

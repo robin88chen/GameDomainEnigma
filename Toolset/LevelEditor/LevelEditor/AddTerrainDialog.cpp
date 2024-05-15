@@ -1,8 +1,6 @@
 ﻿#include "AddTerrainDialog.h"
 #include "nana/gui/filebox.hpp"
-#include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/MemoryMacro.h"
-#include "Terrain/TerrainDtoHelper.h"
 #include "EditorUtilities.h"
 #include "Frameworks/CommandBus.h"
 #include "LevelEditorCommands.h"
@@ -156,11 +154,11 @@ void AddTerrainDialog::onOkButton(const nana::arg_click& arg)
     MathLib::Vector3 terrainLocalPos;
     if (std::tie(terrainLocalPos, isParseOk) = parseTextToVector3(m_terrainLocalPosInputBox->text()); !isParseOk) return;
 
-    Terrain::TerrainGeometryDtoHelper terrain_helper(terrainName);
+    /*Terrain::TerrainGeometryDtoHelper terrain_helper(terrainName);
     terrain_helper.NumRows(rows).NumCols(cols).MinPosition(minVertexPos).MaxPosition(maxVertexPos).MinTextureCoordinate(minUV).MinTextureCoordinate(maxUV);
 
     Frameworks::CommandBus::post(std::make_shared<CreateNewTerrain>(terrainName, terrain_helper.ToDto(), m_layerTextureFilenames, terrainLocalPos, m_worldEdit.lock()->getWorldMapPathId()));
-
+    */
     close();
 }
 

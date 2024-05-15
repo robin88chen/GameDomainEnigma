@@ -48,7 +48,7 @@ namespace LevelEditor
         ScenePicker& operator=(const ScenePicker&) = default;
         ScenePicker& operator=(ScenePicker&&) = default;
 
-        virtual TravelResult TravelTo(const Enigma::SceneGraph::SpatialPtr& spatial) override;
+        virtual TravelResult travelTo(const Enigma::SceneGraph::SpatialPtr& spatial) override;
 
         void setFilter(FilterFlag filter) { m_filter = filter; }
         FilterFlag getFilter() { return m_filter; }
@@ -69,7 +69,7 @@ namespace LevelEditor
         std::weak_ptr<Enigma::SceneGraph::Camera> m_camera;
         std::vector<PickerRecord> m_pickRecords;
         FilterFlag m_filter;
-        std::unordered_map<std::string, std::unique_ptr<Enigma::MathLib::IntersectorCache>> m_intersectorCache;
+        std::unordered_map<Enigma::SceneGraph::SpatialId, std::unique_ptr<Enigma::MathLib::IntersectorCache>, Enigma::SceneGraph::SpatialId::hash> m_intersectorCache;
     };
 };
 

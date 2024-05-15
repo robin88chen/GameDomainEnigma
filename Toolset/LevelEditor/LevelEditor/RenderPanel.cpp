@@ -140,5 +140,5 @@ void RenderPanel::onRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e)
     const auto ev = std::dynamic_pointer_cast<PrimaryRenderTargetCreated, IEvent>(e);
     if (!ev) return;
     CommandBus::post(std::make_shared<ResizePrimaryRenderTarget>(Dimension<unsigned>{ size().width, size().height }));
-    CommandBus::post(std::make_shared<ChangeTargetViewPort>(ev->GetRenderTargetName(), Enigma::Graphics::TargetViewPort{ 0, 0, size().width, size().height }));
+    CommandBus::post(std::make_shared<ChangeTargetViewPort>(ev->renderTargetName(), Enigma::Graphics::TargetViewPort{ 0, 0, size().width, size().height }));
 }

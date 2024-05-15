@@ -48,7 +48,7 @@ void WorldEditConsole::setWorldMapRootFolder(const std::filesystem::path& folder
     auto mediaPath = path / "../../../Media/";
     m_mapFileRootPath = mediaPath / folder;
     m_worldMapPathId = world_map_path_id;
-    FileSystem::Instance()->AddMountPath(std::make_shared<StdMountPath>(m_mapFileRootPath.string(), world_map_path_id));
+    FileSystem::instance()->addMountPath(std::make_shared<StdMountPath>(m_mapFileRootPath.string(), world_map_path_id));
 }
 
 bool WorldEditConsole::checkWorldMapFolder(const std::string& world_folder)
@@ -83,7 +83,7 @@ void WorldEditConsole::createWorldMapFolder(const std::string& folder_name)
 
 void WorldEditConsole::saveWorldMap()
 {
-    assert(!m_worldEditService.expired());
+    /*assert(!m_worldEditService.expired());
     CommandBus::post(std::make_shared<SaveTerrainSplatTexture>(m_worldMapPathId));
     auto [map_dto, node_graphs] = m_worldEditService.lock()->serializeWorldMapAndNodeGraphs(m_worldMapPathId);
     std::string json_map = Enigma::Gateways::DtoJsonGateway::Serialize({ map_dto });
@@ -98,12 +98,12 @@ void WorldEditConsole::saveWorldMap()
         if (FATAL_LOG_EXPR(!iFile)) return;
         iFile->Write(0, convert_to_buffer(json));
         FileSystem::Instance()->CloseFile(iFile);
-    }
+    }*/
 }
 
 void WorldEditConsole::loadWorldMap(const std::filesystem::path& map_filepath, const std::string& portal_manager_name)
 {
-    std::string path_string = filePathCombinePathID(map_filepath, m_worldMapPathId) + "@" + m_worldMapPathId;
+    /*std::string path_string = filePathCombinePathID(map_filepath, m_worldMapPathId) + "@" + m_worldMapPathId;
 
     Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Load World File " + path_string + "..."));
     IFilePtr iFile = FileSystem::Instance()->OpenFile(path_string, Read | Binary);
@@ -115,7 +115,7 @@ void WorldEditConsole::loadWorldMap(const std::filesystem::path& map_filepath, c
     if (!m_worldEditService.expired())
     {
         m_worldEditService.lock()->deserializeWorldMap(dtos, portal_manager_name);
-    }
+    }*/
 }
 
 void WorldEditConsole::onWorldMapCreated(const Enigma::Frameworks::IEventPtr& e)
@@ -123,5 +123,5 @@ void WorldEditConsole::onWorldMapCreated(const Enigma::Frameworks::IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<Enigma::WorldMap::WorldMapCreated, IEvent>(e);
     if (!ev) return;
-    m_currentWorldName = ev->name();
+    m_currentWorldName = ev->id().name();
 }

@@ -205,18 +205,18 @@ void SpatialInspectorPanel::onLightPropertyChanged(const nana::arg_propertygrid&
     case static_cast<size_t>(LightPropertyIndex::Color):
         if (auto [color, isParseOk] = parseTextToColorRGBA(value); isParseOk)
         {
-            light->SetLightColor(color);
+            light->setLightColor(color);
         }
         break;
     case static_cast<size_t>(LightPropertyIndex::Direction):
         if (auto [dir, isParseOk] = parseTextToVector3(value); isParseOk)
         {
-            light->SetLightDirection(dir);
+            light->setLightDirection(dir);
         }
         break;
     case static_cast<size_t>(LightPropertyIndex::Intensity):
         float range = std::strtof(value.c_str(), nullptr);
-        if (range != HUGE_VALF) light->SetLightRange(range);
+        if (range != HUGE_VALF) light->setLightRange(range);
         break;
     }
 }
@@ -292,7 +292,7 @@ void SpatialInspectorPanel::showSpatialProperties(const std::shared_ptr<Enigma::
     if (!spatial) return;
     if (auto item = m_properties->find(TAG_ATTRIBUTES, TAG_SPATIAL_NAME); item != nullptr)
     {
-        item.value(spatial->getSpatialName());
+        item.value(spatial->id().name());
     }
     if (auto item = m_properties->find(TAG_ATTRIBUTES, TAG_VISIBLE); item != nullptr)
     {
@@ -302,37 +302,37 @@ void SpatialInspectorPanel::showSpatialProperties(const std::shared_ptr<Enigma::
     if (auto item = m_properties->find(TAG_LOCAL_SPATIAL, TAG_POSITION); item != nullptr)
     {
         Vector3 pos = spatial->getLocalPosition();
-        std::string s = string_format("%6.2f, %6.2f, %6.2f", pos.X(), pos.Y(), pos.Z());
+        std::string s = string_format("%6.2f, %6.2f, %6.2f", pos.x(), pos.y(), pos.z());
         item.value(s);
     }
     if (auto item = m_properties->find(TAG_LOCAL_SPATIAL, TAG_ROTATION); item != nullptr)
     {
         Vector3 rot = spatial->getLocalEulerAngle();
-        std::string s = string_format("%6.2f, %6.2f, %6.2f", rot.X(), rot.Y(), rot.Z());
+        std::string s = string_format("%6.2f, %6.2f, %6.2f", rot.x(), rot.y(), rot.z());
         item.value(s);
     }
     if (auto item = m_properties->find(TAG_LOCAL_SPATIAL, TAG_SCALE); item != nullptr)
     {
         Vector3 scale = spatial->getLocalScale();
-        std::string s = string_format("%6.2f, %6.2f, %6.2f", scale.X(), scale.Y(), scale.Z());
+        std::string s = string_format("%6.2f, %6.2f, %6.2f", scale.x(), scale.y(), scale.z());
         item.value(s);
     }
     if (auto item = m_properties->find(TAG_WORLD_SPATIAL, TAG_POSITION); item != nullptr)
     {
         Vector3 pos = spatial->getWorldPosition();
-        std::string s = string_format("%6.2f, %6.2f, %6.2f", pos.X(), pos.Y(), pos.Z());
+        std::string s = string_format("%6.2f, %6.2f, %6.2f", pos.x(), pos.y(), pos.z());
         item.value(s);
     }
     if (auto item = m_properties->find(TAG_LOCAL_BOUNDING, TAG_CENTER); item != nullptr)
     {
         Vector3 pos = spatial->getModelBound().Center();
-        std::string s = string_format("%6.2f, %6.2f, %6.2f", pos.X(), pos.Y(), pos.Z());
+        std::string s = string_format("%6.2f, %6.2f, %6.2f", pos.x(), pos.y(), pos.z());
         item.value(s);
     }
     if (auto item = m_properties->find(TAG_WORLD_BOUNDING, TAG_CENTER); item != nullptr)
     {
         Vector3 pos = spatial->getWorldBound().Center();
-        std::string s = string_format("%6.2f, %6.2f, %6.2f", pos.X(), pos.Y(), pos.Z());
+        std::string s = string_format("%6.2f, %6.2f, %6.2f", pos.x(), pos.y(), pos.z());
         item.value(s);
     }
     auto box = spatial->getModelBound().BoundingBox3();
@@ -341,19 +341,19 @@ void SpatialInspectorPanel::showSpatialProperties(const std::shared_ptr<Enigma::
         if (auto item = m_properties->find(TAG_LOCAL_BOUNDING, TAG_AXIS_1); item != nullptr)
         {
             Vector3 axis = box->Axis(0);
-            std::string s = string_format("%6.2f, %6.2f, %6.2f", axis.X(), axis.Y(), axis.Z());
+            std::string s = string_format("%6.2f, %6.2f, %6.2f", axis.x(), axis.y(), axis.z());
             item.value(s);
         }
         if (auto item = m_properties->find(TAG_LOCAL_BOUNDING, TAG_AXIS_2); item != nullptr)
         {
             Vector3 axis = box->Axis(1);
-            std::string s = string_format("%6.2f, %6.2f, %6.2f", axis.X(), axis.Y(), axis.Z());
+            std::string s = string_format("%6.2f, %6.2f, %6.2f", axis.x(), axis.y(), axis.z());
             item.value(s);
         }
         if (auto item = m_properties->find(TAG_LOCAL_BOUNDING, TAG_AXIS_3); item != nullptr)
         {
             Vector3 axis = box->Axis(2);
-            std::string s = string_format("%6.2f, %6.2f, %6.2f", axis.X(), axis.Y(), axis.Z());
+            std::string s = string_format("%6.2f, %6.2f, %6.2f", axis.x(), axis.y(), axis.z());
             item.value(s);
         }
         if (auto item = m_properties->find(TAG_LOCAL_BOUNDING, TAG_EXTENT); item != nullptr)
@@ -369,19 +369,19 @@ void SpatialInspectorPanel::showSpatialProperties(const std::shared_ptr<Enigma::
         if (auto item = m_properties->find(TAG_WORLD_BOUNDING, TAG_AXIS_1); item != nullptr)
         {
             Vector3 axis = box->Axis(0);
-            std::string s = string_format("%6.2f, %6.2f, %6.2f", axis.X(), axis.Y(), axis.Z());
+            std::string s = string_format("%6.2f, %6.2f, %6.2f", axis.x(), axis.y(), axis.z());
             item.value(s);
         }
         if (auto item = m_properties->find(TAG_WORLD_BOUNDING, TAG_AXIS_2); item != nullptr)
         {
             Vector3 axis = box->Axis(1);
-            std::string s = string_format("%6.2f, %6.2f, %6.2f", axis.X(), axis.Y(), axis.Z());
+            std::string s = string_format("%6.2f, %6.2f, %6.2f", axis.x(), axis.y(), axis.z());
             item.value(s);
         }
         if (auto item = m_properties->find(TAG_WORLD_BOUNDING, TAG_AXIS_3); item != nullptr)
         {
             Vector3 axis = box->Axis(2);
-            std::string s = string_format("%6.2f, %6.2f, %6.2f", axis.X(), axis.Y(), axis.Z());
+            std::string s = string_format("%6.2f, %6.2f, %6.2f", axis.x(), axis.y(), axis.z());
             item.value(s);
         }
         if (auto item = m_properties->find(TAG_WORLD_BOUNDING, TAG_EXTENT); item != nullptr)
@@ -403,30 +403,30 @@ void SpatialInspectorPanel::showLightProperties(const std::shared_ptr<Enigma::Sc
         return;
     }
     m_lightProperties->enabled(true);
-    Enigma::SceneGraph::LightInfo::LightType lit_type = light->Info().GetLightType();
+    Enigma::SceneGraph::LightInfo::LightType lit_type = light->info().lightType();
     if (auto item = m_lightProperties->find(TAG_LIGHT, TAG_COLOR); item != nullptr)
     {
-        ColorRGBA color = light->GetLightColor();
+        ColorRGBA color = light->getLightColor();
         std::string s = string_format("%5.2f, %5.2f, %5.2f, %5.2f", color.R(), color.G(), color.B(), color.A());
         item.value(s);
     }
     if (auto item = m_lightProperties->find(TAG_LIGHT, TAG_DIRECTION); item != nullptr)
     {
-        Vector3 dir = light->GetLightDirection();
-        std::string s = string_format("%6.2f, %6.2f, %6.2f", dir.X(), dir.Y(), dir.Z());
+        Vector3 dir = light->getLightDirection();
+        std::string s = string_format("%6.2f, %6.2f, %6.2f", dir.x(), dir.y(), dir.z());
         item.value(s);
         item.enabled(lit_type == Enigma::SceneGraph::LightInfo::LightType::SunLight || lit_type == Enigma::SceneGraph::LightInfo::LightType::Directional);
     }
     if (auto item = m_lightProperties->find(TAG_LIGHT, TAG_POSITION); item != nullptr)
     {
-        Vector3 pos = light->GetLightPosition();
-        std::string s = string_format("%6.2f, %6.2f, %6.2f", pos.X(), pos.Y(), pos.Z());
+        Vector3 pos = light->getLightPosition();
+        std::string s = string_format("%6.2f, %6.2f, %6.2f", pos.x(), pos.y(), pos.z());
         item.value(s);
         item.enabled(lit_type == Enigma::SceneGraph::LightInfo::LightType::Point);
     }
     if (auto item = m_lightProperties->find(TAG_LIGHT, TAG_INTENSITY); item != nullptr)
     {
-        float range = light->GetLightRange();
+        float range = light->getLightRange();
         std::string s = string_format("%8.3f", range);
         item.value(s);
         item.enabled(lit_type == Enigma::SceneGraph::LightInfo::LightType::Point);

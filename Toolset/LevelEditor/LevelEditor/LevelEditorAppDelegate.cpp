@@ -33,6 +33,15 @@
 #include "LightEditService.h"
 #include "PawnEditService.h"
 #include "Gateways/DtoJsonGateway.h"
+#include "Geometries/GeometryInstallingPolicy.h"
+#include "Primitives/PrimitiveRepositoryInstallingPolicy.h"
+#include "Renderables/RenderablesInstallingPolicy.h"
+#include "GameEngine/EffectMaterialSourceRepositoryInstallingPolicy.h"
+#include "GameEngine/TextureRepositoryInstallingPolicy.h"
+#include "FileStorage/EffectMaterialSourceFileStoreMapper.h"
+#include "Controllers/ControllerEvents.h"
+#include "GameCommon/GameSceneCommands.h"
+#include "SceneGraph/SceneGraphAssemblers.h"
 #include <memory>
 
 using namespace LevelEditor;
@@ -140,11 +149,13 @@ void EditorAppDelegate::registerMediaMountPaths(const std::string& media_path)
 
 void EditorAppDelegate::installEngine()
 {
+    m_onRenderEngineInstalled = std::make_shared<EventSubscriber>([=](auto e) { onRenderEngineInstalled(e); });
+    EventPublisher::subscribe(typeid(RenderEngineInstalled), m_onRenderEngineInstalled);
+    m_onSceneRootCreated = std::make_shared<EventSubscriber>([=](auto e) { onSceneRootCreated(e); });
+    EventPublisher::subscribe(typeid(PortalSceneRootCreated), m_onSceneRootCreated);
     m_onSceneGraphChanged = std::make_shared<EventSubscriber>([=](auto e) { onSceneGraphChanged(e); });
     EventPublisher::subscribe(typeid(SceneGraphChanged), m_onSceneGraphChanged);
-    /*m_onSceneRootCreated = std::make_shared<EventSubscriber>([=](auto e) { onSceneRootCreated(e); });
-    EventPublisher::subscribe(typeid(SceneRootCreated), m_onSceneRootCreated);
-    m_onWorldMapCreated = std::make_shared<EventSubscriber>([=](auto e) { onWorldMapCreated(e); });
+    /*m_onWorldMapCreated = std::make_shared<EventSubscriber>([=](auto e) { onWorldMapCreated(e); });
     EventPublisher::subscribe(typeid(WorldMapCreated), m_onWorldMapCreated);
     m_onCreateWorldFailed = std::make_shared<EventSubscriber>([=](auto e) { onCreateWorldFailed(e); });
     EventPublisher::subscribe(typeid(CreateWorldMapFailed), m_onCreateWorldFailed);
@@ -157,6 +168,19 @@ void EditorAppDelegate::installEngine()
 
     auto creating_policy = std::make_shared<DeviceCreatingPolicy>(DeviceRequiredBits(), m_hwnd);
     auto engine_policy = std::make_shared<EngineInstallingPolicy>();
+
+    m_animationAssetFileStoreMapper = std::make_shared<AnimationAssetFileStoreMapper>("animation_assets.db.txt@APK_PATH ", std::make_shared<DtoJsonGateway>());
+    m_animatorFileStoreMapper = std::make_shared<AnimatorFileStoreMapper>("animators.db.txt@APK_PATH", std::make_shared<DtoJsonGateway>());
+    auto animator_policy = std::make_shared<AnimatorInstallingPolicy>(m_animatorFileStoreMapper, m_animationAssetFileStoreMapper);
+    m_geometryDataFileStoreMapper = std::make_shared<GeometryDataFileStoreMapper>("geometries.db.txt@APK_PATH", std::make_shared<DtoJsonGateway>());
+    auto geometry_policy = std::make_shared<Enigma::Geometries::GeometryInstallingPolicy>(m_geometryDataFileStoreMapper);
+    auto effect_material_source_policy = std::make_shared<EffectMaterialSourceRepositoryInstallingPolicy>(std::make_shared<EffectMaterialSourceFileStoreMapper>("effect_materials.db.txt@APK_PATH"));
+    m_textureFileStoreMapper = std::make_shared<TextureFileStoreMapper>("textures.db.txt@APK_PATH", std::make_shared<DtoJsonGateway>());
+    auto texture_policy = std::make_shared<TextureRepositoryInstallingPolicy>(m_textureFileStoreMapper);
+
+    m_primitiveFileStoreMapper = std::make_shared<PrimitiveFileStoreMapper>("primitives.db.txt@APK_PATH", std::make_shared<DtoJsonGateway>());
+    auto primitive_policy = std::make_shared<Enigma::Primitives::PrimitiveRepositoryInstallingPolicy>(m_primitiveFileStoreMapper);
+
     auto render_sys_policy = std::make_shared<RenderSystemInstallingPolicy>();
     auto deferred_config = std::make_shared<DeferredRendererServiceConfiguration>();
     deferred_config->sunLightEffect() = EffectMaterialId("fx/DeferredShadingWithShadowSunLightPass");
@@ -164,14 +188,15 @@ void EditorAppDelegate::installEngine()
     auto deferred_renderer_policy = std::make_shared<DeferredRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName, deferred_config);
     //auto scene_render_config = std::make_shared<SceneRendererServiceConfiguration>();
     //auto scene_renderer_policy = std::make_shared<SceneRendererInstallingPolicy>(m_appConfig->GetDefaultRendererName(), m_appConfig->GetPrimaryTargetName(), scene_render_config);
-    m_animationAssetFileStoreMapper = std::make_shared<AnimationAssetFileStoreMapper>("animation_assets.db.txt@APK_PATH ", std::make_shared<DtoJsonGateway>());
-    m_animatorFileStoreMapper = std::make_shared<AnimatorFileStoreMapper>("animators.db.txt@APK_PATH", std::make_shared<DtoJsonGateway>());
-    auto animator_policy = std::make_shared<AnimatorInstallingPolicy>(m_animatorFileStoreMapper, m_animationAssetFileStoreMapper);
+
     m_sceneGraphFileStoreMapper = std::make_shared<SceneGraphFileStoreMapper>("scene_graph.db.txt@DataPath", "lazy_scene.db.txt@DataPath", "lazied_", std::make_shared<DtoJsonGateway>());
     auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(m_sceneGraphFileStoreMapper);
+    auto renderables_policy = std::make_shared<Enigma::Renderables::RenderablesInstallingPolicy>();
+
     auto game_scene_policy = std::make_shared<GameSceneInstallingPolicy>();
     auto input_handler_policy = std::make_shared<Enigma::InputHandlers::InputHandlerInstallingPolicy>();
     auto game_camera_policy = std::make_shared<GameCameraInstallingPolicy>(m_appConfig->cameraId(), m_appConfig->cameraDto());
+
     m_worldMapFileStoreMapper = std::make_shared<WorldMapFileStoreMapper>("world_map.db.txt@DataPath", "quad_root.db.txt@DataPath", std::make_shared<DtoJsonGateway>());
     auto world_map_policy = std::make_shared<WorldMapInstallingPolicy>(m_worldMapFileStoreMapper);
     auto terrain_policy = std::make_shared<TerrainInstallingPolicy>();
@@ -180,7 +205,7 @@ void EditorAppDelegate::installEngine()
     auto shadow_map_policy = std::make_shared<ShadowMapInstallingPolicy>("shadowmap_renderer", "shadowmap_target", shadow_map_config);
     auto animated_pawn_policy = std::make_shared<AnimatedPawnInstallingPolicy>();
     auto prefab_policy = std::make_shared<PrefabInstallingPolicy>(std::make_shared<JsonFileDtoDeserializer>());
-    m_graphicMain->installRenderEngine({ creating_policy, engine_policy, render_sys_policy, deferred_renderer_policy, animator_policy, scene_graph_policy, input_handler_policy, game_camera_policy, world_map_policy, game_scene_policy, terrain_policy, game_light_policy, shadow_map_policy, animated_pawn_policy, prefab_policy });
+    m_graphicMain->installRenderEngine({ creating_policy, engine_policy, render_sys_policy, deferred_renderer_policy, animator_policy, scene_graph_policy, input_handler_policy, game_camera_policy, world_map_policy, game_scene_policy, terrain_policy, game_light_policy, shadow_map_policy, animated_pawn_policy, prefab_policy, geometry_policy, primitive_policy, renderables_policy, effect_material_source_policy, texture_policy });
     m_inputHandler = input_handler_policy->GetInputHandler();
     m_inputHandler.lock()->RegisterKeyboardAsyncKey('A');
     m_inputHandler.lock()->RegisterKeyboardAsyncKey('D');
@@ -196,10 +221,12 @@ void EditorAppDelegate::installEngine()
 
 void EditorAppDelegate::shutdownEngine()
 {
+    EventPublisher::unsubscribe(typeid(RenderEngineInstalled), m_onRenderEngineInstalled);
+    m_onRenderEngineInstalled = nullptr;
+    EventPublisher::unsubscribe(typeid(PortalSceneRootCreated), m_onSceneRootCreated);
+    m_onSceneRootCreated = nullptr;
     EventPublisher::unsubscribe(typeid(SceneGraphChanged), m_onSceneGraphChanged);
     m_onSceneGraphChanged = nullptr;
-    //EventPublisher::unsubscribe(typeid(SceneRootCreated), m_onSceneRootCreated);
-    //m_onSceneRootCreated = nullptr;
     //EventPublisher::unsubscribe(typeid(WorldMapCreated), m_onWorldMapCreated);
     //m_onWorldMapCreated = nullptr;
     //EventPublisher::unsubscribe(typeid(CreateWorldMapFailed), m_onCreateWorldFailed);
@@ -249,6 +276,34 @@ void EditorAppDelegate::onTimerElapsed()
     std::this_thread::sleep_for(30us);
 }
 
+void EditorAppDelegate::onRenderEngineInstalled(const IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<RenderEngineInstalled, IEvent>(e);
+    if (!ev) return;
+    CommandBus::post(std::make_shared<OutputMessage>("render engine installed"));
+    auto root_id = m_appConfig->portalManagementId();
+    if (!m_sceneGraphFileStoreMapper->hasSpatial(root_id))
+    {
+        PortalManagementNodeAssembler root_assembler(root_id);
+        root_assembler.asNative(root_id.name() + ".node@DataPath");
+        m_sceneGraphFileStoreMapper->putSpatial(root_id, root_assembler.toGenericDto());
+    }
+    CommandBus::post(std::make_shared<CreatePortalSceneRoot>(root_id));
+}
+
+void EditorAppDelegate::onSceneRootCreated(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<PortalSceneRootCreated, IEvent>(e);
+    if (!ev) return;
+    CommandBus::post(std::make_shared<OutputMessage>("portal scene root created : " + ev->root()->id().name()));
+    m_sceneRoot = ev->root();
+    SceneFlattenTraversal traversal;
+    m_sceneRoot.lock()->visitBy(&traversal);
+    CommandBus::post(std::make_shared<RefreshSceneGraph>(traversal.GetSpatials()));
+}
+
 void EditorAppDelegate::onSceneGraphChanged(const IEventPtr& e)
 {
     if (!e) return;
@@ -260,19 +315,7 @@ void EditorAppDelegate::onSceneGraphChanged(const IEventPtr& e)
     CommandBus::post(std::make_shared<RefreshSceneGraph>(traversal.GetSpatials()));
 }
 
-/*void EditorAppDelegate::onSceneRootCreated(const Enigma::Frameworks::IEventPtr& e)
-{
-    if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<SceneRootCreated, IEvent>(e);
-    if (!ev) return;
-    CommandBus::post(std::make_shared<OutputMessage>("scene root created : " + ev->GetSceneRoot()->getSpatialName()));
-    m_sceneRoot = ev->GetSceneRoot();
-    SceneFlattenTraversal traversal;
-    m_sceneRoot.lock()->visitBy(&traversal);
-    CommandBus::post(std::make_shared<RefreshSceneGraph>(traversal.GetSpatials()));
-}
-
-void EditorAppDelegate::onWorldMapCreated(const Enigma::Frameworks::IEventPtr& e)
+/*void EditorAppDelegate::onWorldMapCreated(const Enigma::Frameworks::IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<WorldMapCreated, IEvent>(e);

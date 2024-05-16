@@ -43,9 +43,11 @@ namespace Enigma::SceneGraph
 
     protected:
         void attachOutsideZone(const Frameworks::ICommandPtr& c);
+        std::shared_ptr<PortalZoneNode> cachedOutsideZone();
 
     protected:
         SpatialId m_outsideZoneId;
+        std::weak_ptr<PortalZoneNode> m_cachedOutsideZone;
         std::weak_ptr<PortalZoneNode> m_cachedStartZone;
 
         Frameworks::CommandSubscriberPtr m_attachOutsideZone;

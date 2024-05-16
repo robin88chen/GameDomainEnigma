@@ -1,17 +1,5 @@
 [{
-    "MediaPathId": { "Type" : "String", "Value" : "APK_PATH"},
-    "DataPathId": { "Type" : "String", "Value" : "DataPath" },
-    "PrimaryTargetName": { "Type" : "String", "Value" : "primary_target"},
-    "DefaultRendererName": { "Type" : "String", "Value" : "default_renderer" },
-    "SceneRootId": { "Type": "StringArray", "Value": ["_SceneRoot_", "En.SceneGraph.Node"] },
-    "PortalManagementId": { "Type" : "StringArray", "Value" : ["_PortalManagement_", "En.SceneGraph.PortalManagementNode"] },
-    "WorldMapRootFolder": { "Type" : "String", "Value" : "editor/world" },
-    "WorldMapPathID" : { "Type" : "String", "Value" : "WorldMaps" },
-    "Camera": {
-        "Type": "DataObject",
-        "Value":
-        {
-            "Rtti": {
+        "Rtti": {
             "Type": "FactoryDesc",
             "Value": {
                 "InstanceType": 0,
@@ -29,6 +17,10 @@
             "Type": "Uint32",
             "Value": 0
         },
+        "EyePosition": {
+            "Type": "Vector3",
+            "Value": [-5.0, 5.0, -5.0]
+        },
         "Frustum": {
             "Type": "DataObject",
             "Value": {
@@ -42,17 +34,13 @@
                         "InstanceType": 0,
                         "ResourceName": "",
                         "ResourceFilename": "",
-                        "RttiName": "En.SceneGraph.Camera",
+                        "RttiName": "En.SceneGraph.Frustum",
                         "PrefabFilename": ""
                     }
                 },
-                "FarPlaneZ": {
+                "NearWidth": {
                     "Type": "Float",
-                    "Value": 100.0
-                },
-                "Name": {
-                    "Type": "String",
-                    "Value": "frustum"
+                    "Value": 40.0
                 },
                 "HandSystem": {
                     "Type": "Uint32",
@@ -70,9 +58,9 @@
                     "Type": "Float",
                     "Value": 0.10000000149011612
                 },
-                "NearWidth": {
+                "FarPlaneZ": {
                     "Type": "Float",
-                    "Value": 40.0
+                    "Value": 100.0
                 },
                 "NearHeight": {
                     "Type": "Float",
@@ -80,22 +68,16 @@
                 }
             }
         },
-        "Name": {
-            "Type": "String",
-            "Value": "camera"
-        },
-        "EyePosition": {
-            "Type": "Vector3",
-            "Value": [-5.0, 5.0, -5.0]
-        },
         "LookAtDir": {
             "Type": "Vector3",
-            "Value": [1.0, -1.0, 1.0]
+            "Value": [0.5773502588272095, -0.5773502588272095, 0.5773502588272095]
         },
         "UpVector": {
             "Type": "Vector3",
-            "Value": [0.0, 1.0, 0.0]
+            "Value": [0.40824827551841736, 0.8164965510368347, 0.40824827551841736]
+        },
+        "Name": {
+            "Type": "String",
+            "Value": "camera"
         }
-    }
-}
-}]
+    }]

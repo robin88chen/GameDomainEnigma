@@ -529,7 +529,7 @@ PortalManagementNodeAssembler& PortalManagementNodeAssembler::asNative(const std
 
 PortalManagementNodeAssembler& PortalManagementNodeAssembler::outsideZoneNodeId(const SpatialId& outside_zone_node_id)
 {
-    m_dto.outsideZoneNodeId() = outside_zone_node_id;
+    m_dto.outsideZoneNodeId(outside_zone_node_id);
     return *this;
 }
 
@@ -538,7 +538,7 @@ PortalManagementNodeDto PortalManagementNodeAssembler::toPortalManagementNodeDto
     PortalManagementNodeDto portal_management_node_dto(m_nodeAssembler.toNodeDto());
     portal_management_node_dto.id() = m_dto.id();
     portal_management_node_dto.factoryDesc() = m_dto.factoryDesc();
-    portal_management_node_dto.outsideZoneNodeId() = m_dto.outsideZoneNodeId();
+    if (m_dto.outsideZoneNodeId()) portal_management_node_dto.outsideZoneNodeId(m_dto.outsideZoneNodeId().value());
     return portal_management_node_dto;
 }
 

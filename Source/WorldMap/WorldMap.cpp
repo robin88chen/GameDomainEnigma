@@ -12,9 +12,10 @@ WorldMap::WorldMap(const WorldMapId& id)
     m_id = id;
 }
 
-WorldMap::WorldMap(const WorldMapId& id, const std::vector<QuadTreeRootId>& quad_roots)
+WorldMap::WorldMap(const WorldMapId& id, const SceneGraph::SpatialId& out_region_id, const std::vector<QuadTreeRootId>& quad_roots)
 {
     m_id = id;
+    m_outRegionId = out_region_id;
     m_quadRootIds = quad_roots;
     if (!m_quadRootIds.empty()) m_quadRoots.resize(m_quadRootIds.size());
 }
@@ -24,6 +25,7 @@ WorldMap::WorldMap(const WorldMapId& id, const Engine::GenericDto& dto)
     m_id = id;
     WorldMapDto worldMapDto{ dto };
     assert(worldMapDto.id() == id);
+    if (worldMapDto.outRegionId()) m_outRegionId = worldMapDto.outRegionId().value();
     m_quadRootIds = worldMapDto.quadRootIds();
     if (!m_quadRootIds.empty()) m_quadRoots.resize(m_quadRootIds.size());
 }
@@ -36,6 +38,7 @@ GenericDto WorldMap::serializeDto() const
 {
     WorldMapDto worldMapDto;
     worldMapDto.id(m_id);
+    if (!m_outRegionId.empty()) worldMapDto.outRegionId(m_outRegionId);
     worldMapDto.quadRootIds(m_quadRootIds);
     return worldMapDto.toGenericDto();
 }

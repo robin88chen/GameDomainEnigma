@@ -24,8 +24,8 @@ namespace LevelEditor
         std::string dataPathId() const;
         std::string primaryTargetName() const;
         std::string defaultRendererName() const;
-        std::string sceneRootName() const;
-        std::string portalManagementName() const;
+        Enigma::SceneGraph::SpatialId sceneRootId() const;
+        Enigma::SceneGraph::SpatialId portalManagementId() const;
 
         std::string worldMapRootFolderName() const;
         std::string worldMapPathId() const;

@@ -26,7 +26,7 @@ PortalManagementNode::PortalManagementNode(const SpatialId& id) : Node(id)
 PortalManagementNode::PortalManagementNode(const SpatialId& id, const Engine::GenericDto& o) : Node(id, o)
 {
     PortalManagementNodeDto dto{ o };
-    m_outsideZoneId = dto.outsideZoneNodeId();
+    if (dto.outsideZoneNodeId()) m_outsideZoneId = dto.outsideZoneNodeId().value();
     m_attachOutsideZone = std::make_shared<Frameworks::CommandSubscriber>([=](const Frameworks::ICommandPtr& c) { attachOutsideZone(c); });
     Frameworks::CommandBus::subscribe(typeid(AttachPortalOutsideZone), m_attachOutsideZone);
 }
@@ -50,7 +50,7 @@ std::shared_ptr<PortalManagementNode> PortalManagementNode::constitute(const Spa
 GenericDto PortalManagementNode::serializeDto()
 {
     PortalManagementNodeDto dto(serializeNodeDto());
-    dto.outsideZoneNodeId() = m_outsideZoneId;
+    if (!m_outsideZoneId.empty()) dto.outsideZoneNodeId(m_outsideZoneId);
     return dto.toGenericDto();
 }
 
@@ -85,7 +85,7 @@ error PortalManagementNode::onCullingVisible(Culler* culler, bool noCull)
             startZone = zone_finder.GetContainingZone();
             if (startZone) m_cachedStartZone = startZone;
         }
-        if (!startZone) startZone = std::dynamic_pointer_cast<PortalZoneNode>(Node::queryNode(m_outsideZoneId));
+        if (!startZone) startZone = cachedOutsideZone();
         if (startZone)
         {
             er = startZone->cullVisibleSet(culler, noCull);
@@ -106,4 +106,14 @@ void PortalManagementNode::attachOutsideZone(const Frameworks::ICommandPtr& c)
     if (!cmd) return;
     attachChild(cmd->GetZone(), Matrix4::IDENTITY);
     attachOutsideZone(cmd->GetZone());
+}
+
+std::shared_ptr<PortalZoneNode> PortalManagementNode::cachedOutsideZone()
+{
+    if (m_outsideZoneId.empty()) return nullptr;
+    if ((m_cachedOutsideZone.expired()) || (m_cachedOutsideZone.lock()->id() != m_outsideZoneId))
+    {
+        m_cachedOutsideZone = std::dynamic_pointer_cast<PortalZoneNode>(Node::queryNode(m_outsideZoneId));
+    }
+    return m_cachedOutsideZone.lock();
 }

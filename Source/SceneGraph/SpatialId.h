@@ -17,7 +17,7 @@ namespace Enigma::SceneGraph
     class SpatialId
     {
     public:
-        SpatialId() = default;
+        SpatialId() : m_name(""), m_rtti(nullptr) {}
         SpatialId(const std::string& name, const Frameworks::Rtti& rtti);
         SpatialId(const std::vector<std::string>& tokens);
         ~SpatialId();

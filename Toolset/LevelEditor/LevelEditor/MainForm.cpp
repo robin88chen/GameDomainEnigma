@@ -229,7 +229,7 @@ void MainForm::onCloseCommand(const nana::menu::item_proxy& menu_item)
 
 void MainForm::onCreateWorldMapCommand(const nana::menu::item_proxy& menu_item)
 {
-    nana::API::modal_window(CreateNewWorldDlg(*this, m_worldConsole.lock(), m_appDelegate->appConfig()->portalManagementName()));
+    //nana::API::modal_window(CreateNewWorldDlg(*this, m_worldConsole.lock(), m_appDelegate->appConfig()->portalManagementName()));
 }
 
 void MainForm::onLoadWorldCommand(const nana::menu::item_proxy& menu_item)

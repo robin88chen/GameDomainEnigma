@@ -67,7 +67,7 @@ PortalManagementNodeDto::PortalManagementNodeDto() : NodeDto()
 PortalManagementNodeDto::PortalManagementNodeDto(const Engine::GenericDto& dto) : NodeDto(dto)
 {
     assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), PortalManagementNode::TYPE_RTTI.getName()));
-    if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_OUTSIDE_NODE_ID)) outsideZoneNodeId() = v.value();
+    if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_OUTSIDE_NODE_ID)) outsideZoneNodeId(v.value());
 }
 
 PortalManagementNodeDto::PortalManagementNodeDto(const NodeDto& node_dto) : NodeDto(node_dto)
@@ -78,6 +78,6 @@ PortalManagementNodeDto::PortalManagementNodeDto(const NodeDto& node_dto) : Node
 GenericDto PortalManagementNodeDto::toGenericDto()
 {
     GenericDto dto = NodeDto::toGenericDto();
-    dto.addOrUpdate(TOKEN_OUTSIDE_NODE_ID, m_outsideZoneNodeId.tokens());
+    if (m_outsideZoneNodeId) dto.addOrUpdate(TOKEN_OUTSIDE_NODE_ID, m_outsideZoneNodeId.value().tokens());
     return dto;
 }

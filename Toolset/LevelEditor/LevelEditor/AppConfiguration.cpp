@@ -11,8 +11,8 @@ std::string TOKEN_MEDIA_PATH_ID = "MediaPathId";
 std::string TOKEN_DATA_PATH_ID = "DataPathId";
 std::string TOKEN_PRIMARY_TARGET_NAME = "PrimaryTargetName";
 std::string TOKEN_DEFAULT_RENDERER_NAME = "DefaultRendererName";
-std::string TOKEN_SCENE_ROOT_NAME = "SceneRootName";
-std::string TOKEN_PORTAL_MANAGEMENT_NAME = "PortalManagementName";
+std::string TOKEN_SCENE_ROOT_ID = "SceneRootId";
+std::string TOKEN_PORTAL_MANAGEMENT_ID = "PortalManagementId";
 std::string TOKEN_CAMERA = "Camera";
 std::string TOKEN_WORLD_MAP_ROOT_FOLDER = "WorldMapRootFolder";
 std::string TOKEN_WORLD_MAP_PATH_ID = "WorldMapPathID";
@@ -58,18 +58,18 @@ std::string AppConfiguration::defaultRendererName() const
     return "";
 }
 
-std::string AppConfiguration::sceneRootName() const
+Enigma::SceneGraph::SpatialId AppConfiguration::sceneRootId() const
 {
     assert(!m_configDto.isEmpty());
-    if (auto v = m_configDto.tryGetValue<std::string>(TOKEN_SCENE_ROOT_NAME)) return v.value();
-    return "";
+    if (auto v = m_configDto.tryGetValue<std::vector<std::string>>(TOKEN_SCENE_ROOT_ID)) return v.value();
+    return {};
 }
 
-std::string AppConfiguration::portalManagementName() const
+Enigma::SceneGraph::SpatialId AppConfiguration::portalManagementId() const
 {
     assert(!m_configDto.isEmpty());
-    if (auto v = m_configDto.tryGetValue<std::string>(TOKEN_PORTAL_MANAGEMENT_NAME)) return v.value();
-    return "";
+    if (auto v = m_configDto.tryGetValue<std::vector<std::string>>(TOKEN_PORTAL_MANAGEMENT_ID)) return v.value();
+    return {};
 }
 
 Enigma::Engine::GenericDto AppConfiguration::cameraDto() const

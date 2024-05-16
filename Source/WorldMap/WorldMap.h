@@ -22,7 +22,7 @@ namespace Enigma::WorldMap
         DECLARE_EN_RTTI_NON_BASE;
     public:
         WorldMap(const WorldMapId& id);
-        WorldMap(const WorldMapId& id, const std::vector<QuadTreeRootId>& quad_roots);
+        WorldMap(const WorldMapId& id, const SceneGraph::SpatialId& out_region_id, const std::vector<QuadTreeRootId>& quad_roots);
         WorldMap(const WorldMapId& id, const Engine::GenericDto& dto);
         ~WorldMap();
         WorldMap(const WorldMap&) = delete;
@@ -38,6 +38,7 @@ namespace Enigma::WorldMap
 
     protected:
         WorldMapId m_id;
+        SceneGraph::SpatialId m_outRegionId;
         std::vector<QuadTreeRootId> m_quadRootIds;
         std::vector<std::weak_ptr<QuadTreeRoot>> m_quadRoots;
     };

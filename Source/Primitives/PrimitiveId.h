@@ -17,7 +17,7 @@ namespace Enigma::Primitives
     class PrimitiveId
     {
     public:
-        PrimitiveId() = default;
+        PrimitiveId() : m_name(""), m_sequence(0), m_rtti(nullptr) {}
         PrimitiveId(const std::string& name, const Frameworks::Rtti& rtti);
         PrimitiveId(const std::string& name, std::uint64_t sequence, const Frameworks::Rtti& rtti);
         PrimitiveId(const std::vector<std::string>& tokens);

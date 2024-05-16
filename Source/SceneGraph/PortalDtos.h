@@ -58,11 +58,11 @@ namespace Enigma::SceneGraph
 
         Engine::GenericDto toGenericDto();
 
-        [[nodiscard]] const SpatialId& outsideZoneNodeId() const { return m_outsideZoneNodeId; }
-        SpatialId& outsideZoneNodeId() { return m_outsideZoneNodeId; }
+        [[nodiscard]] const std::optional<SpatialId>& outsideZoneNodeId() const { return m_outsideZoneNodeId; }
+        void outsideZoneNodeId(const SpatialId& outside_id) { m_outsideZoneNodeId = outside_id; }
 
     protected:
-        SpatialId m_outsideZoneNodeId;
+        std::optional<SpatialId> m_outsideZoneNodeId;
     };
 }
 

@@ -20,7 +20,7 @@
 #include "FileStorage/AnimationAssetFileStoreMapper.h"
 #include "FileStorage/AnimatorFileStoreMapper.h"
 #include "FileStorage/SceneGraphFileStoreMapper.h"
-#include "FileStorage/WorldMapFileStoreMapper.h"
+#include "WorldMapFileStoreMapper.h"
 #include "FileStorage/TextureFileStoreMapper.h"
 
 namespace LevelEditor
@@ -49,6 +49,7 @@ namespace LevelEditor
 
         const std::unique_ptr<AppConfiguration>& appConfig() const { return m_appConfig; };
         std::shared_ptr<Enigma::InputHandlers::InputHandlerService> inputHandler() const { return m_inputHandler.lock(); };
+        const std::shared_ptr<WorldMapFileStoreMapper>& worldMapFileStoreMapper() const { return m_worldMapFileStoreMapper; };
 
     protected:
         void onRenderEngineInstalled(const Enigma::Frameworks::IEventPtr& e);
@@ -74,7 +75,7 @@ namespace LevelEditor
         std::shared_ptr<Enigma::FileStorage::AnimatorFileStoreMapper> m_animatorFileStoreMapper;
         std::shared_ptr<Enigma::FileStorage::TextureFileStoreMapper> m_textureFileStoreMapper;
         std::shared_ptr<Enigma::FileStorage::SceneGraphFileStoreMapper> m_sceneGraphFileStoreMapper;
-        std::shared_ptr<Enigma::FileStorage::WorldMapFileStoreMapper> m_worldMapFileStoreMapper;
+        std::shared_ptr<WorldMapFileStoreMapper> m_worldMapFileStoreMapper;
         std::weak_ptr<Enigma::InputHandlers::InputHandlerService> m_inputHandler;
         std::weak_ptr<Enigma::GameCommon::SceneRendererService> m_sceneRenderer;
         std::weak_ptr<Enigma::ShadowMap::ShadowMapService> m_shadowMapService;

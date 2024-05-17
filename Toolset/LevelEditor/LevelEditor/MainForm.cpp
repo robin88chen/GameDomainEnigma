@@ -107,13 +107,13 @@ void MainForm::initializeGraphics()
     events().destroy([this] { this->finalizeGraphics(); });
     auto srv_mngr = Enigma::Controllers::GraphicMain::instance()->getServiceManager();
     auto world_edit = std::dynamic_pointer_cast<WorldEditService>(srv_mngr->getSystemService(WorldEditService::TYPE_RTTI));
-    srv_mngr->registerSystemService(std::make_shared<WorldEditConsole>(srv_mngr, world_edit));
+    srv_mngr->registerSystemService(std::make_shared<WorldEditConsole>(srv_mngr, m_appDelegate->worldMapFileStoreMapper(), m_appDelegate->appConfig()->worldDataPathId()));
     srv_mngr->registerSystemService(std::make_shared<TerrainEditConsole>(srv_mngr));
     srv_mngr->registerSystemService(std::make_shared<EditorSceneConsole>(srv_mngr));
     auto pawn_edit = std::dynamic_pointer_cast<PawnEditService>(srv_mngr->getSystemService(PawnEditService::TYPE_RTTI));
     srv_mngr->registerSystemService(std::make_shared<PawnEditConsole>(srv_mngr, pawn_edit));
     m_worldConsole = srv_mngr->getSystemServiceAs<WorldEditConsole>();
-    m_worldConsole.lock()->setWorldMapRootFolder(m_appDelegate->appConfig()->worldMapRootFolderName(), m_appDelegate->appConfig()->worldMapPathId());
+    //m_worldConsole.lock()->setWorldMapRootFolder(m_appDelegate->appConfig()->worldMapRootFolderName(), m_appDelegate->appConfig()->worldMapPathId());
     m_pawnConsole = srv_mngr->getSystemServiceAs<PawnEditConsole>();
 }
 
@@ -229,7 +229,7 @@ void MainForm::onCloseCommand(const nana::menu::item_proxy& menu_item)
 
 void MainForm::onCreateWorldMapCommand(const nana::menu::item_proxy& menu_item)
 {
-    //nana::API::modal_window(CreateNewWorldDlg(*this, m_worldConsole.lock(), m_appDelegate->appConfig()->portalManagementName()));
+    nana::API::modal_window(CreateNewWorldDlg(*this, m_worldConsole.lock(), m_appDelegate->appConfig()->portalManagementId()));
 }
 
 void MainForm::onLoadWorldCommand(const nana::menu::item_proxy& menu_item)
@@ -252,7 +252,7 @@ void MainForm::onSaveWorldCommand(const nana::menu::item_proxy& menu_item)
 {
     assert(!m_worldConsole.expired());
     Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Save World File..."));
-    m_worldConsole.lock()->saveWorldMap();
+    //m_worldConsole.lock()->saveWorldMap();
 }
 
 void MainForm::onAddTerrainCommand(const nana::menu::item_proxy& menu_item)
@@ -263,7 +263,7 @@ void MainForm::onAddTerrainCommand(const nana::menu::item_proxy& menu_item)
 void MainForm::onAddEnvironmentLightCommand(const nana::menu::item_proxy& menu_item)
 {
     Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Add Environment Light..."));
-    Enigma::Frameworks::CommandBus::post(std::make_shared<CreateEnvironmentLight>(m_worldConsole.lock()->getCurrentWorldName()));
+    //Enigma::Frameworks::CommandBus::post(std::make_shared<CreateEnvironmentLight>(m_worldConsole.lock()->getCurrentWorldName()));
 }
 
 void MainForm::onSelectPawn(const nana::toolbar::item_proxy& drop_down_item, const std::string& pawn_name)

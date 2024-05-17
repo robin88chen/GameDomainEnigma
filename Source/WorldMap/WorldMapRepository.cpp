@@ -23,6 +23,8 @@ WorldMapRepository::~WorldMapRepository()
 
 ServiceResult WorldMapRepository::onInit()
 {
+    m_storeMapper->connect();
+
     m_queryQuadTreeRoot = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { queryQuadTreeRoot(q); });
     QueryDispatcher::subscribe(typeid(QueryQuadTreeRoot), m_queryQuadTreeRoot);
     m_hasQuadTreeRoot = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { hasQuadTreeRoot(q); });
@@ -36,9 +38,9 @@ ServiceResult WorldMapRepository::onInit()
     QueryDispatcher::subscribe(typeid(QueryWorldMap), m_queryWorldMap);
     m_hasWorldMap = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { hasWorldMap(q); });
     QueryDispatcher::subscribe(typeid(HasWorldMap), m_hasWorldMap);
-    m_requestQuadTreeRootCreation = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { requestWorldMapCreation(q); });
+    m_requestWorldMapCreation = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { requestWorldMapCreation(q); });
     QueryDispatcher::subscribe(typeid(RequestWorldMapCreation), m_requestWorldMapCreation);
-    m_requestQuadTreeRootConstitution = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { requestWorldMapConstitution(q); });
+    m_requestWorldMapConstitution = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { requestWorldMapConstitution(q); });
     QueryDispatcher::subscribe(typeid(RequestWorldMapConstitution), m_requestWorldMapConstitution);
 
     return ServiceResult::Complete;
@@ -63,6 +65,8 @@ ServiceResult WorldMapRepository::onTerm()
     m_requestWorldMapCreation = nullptr;
     QueryDispatcher::unsubscribe(typeid(RequestWorldMapConstitution), m_requestWorldMapConstitution);
     m_requestWorldMapConstitution = nullptr;
+
+    m_storeMapper->disconnect();
 
     return ServiceResult::Complete;
 }

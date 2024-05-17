@@ -30,6 +30,8 @@ namespace Enigma::WorldMap
         WorldMap& operator=(const WorldMap&) = delete;
         WorldMap& operator=(WorldMap&&) = delete;
 
+        const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
+        void factoryDesc(const Engine::FactoryDesc& fd) { m_factoryDesc = fd; }
         const WorldMapId& id() const { return m_id; }
 
         Engine::GenericDto serializeDto() const;
@@ -37,6 +39,7 @@ namespace Enigma::WorldMap
         std::shared_ptr<SceneGraph::LazyNode> findFittingNode(const Engine::BoundingVolume& bv_in_world);
 
     protected:
+        Engine::FactoryDesc m_factoryDesc;
         WorldMapId m_id;
         SceneGraph::SpatialId m_outRegionId;
         std::vector<QuadTreeRootId> m_quadRootIds;

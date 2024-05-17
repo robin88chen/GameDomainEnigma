@@ -1,0 +1,20 @@
+[{
+        "Rtti": {
+            "Type": "FactoryDesc",
+            "Value": {
+                "InstanceType": 3,
+                "ResourceName": "",
+                "ResourceFilename": "",
+                "RttiName": "En.WorldMap.WorldMap",
+                "PrefabFilename": "world1.wld@WorldData"
+            }
+        },
+        "QuadRootIds": {
+            "Type": "StringArray",
+            "Value": []
+        },
+        "ID": {
+            "Type": "String",
+            "Value": "world1"
+        }
+    }]

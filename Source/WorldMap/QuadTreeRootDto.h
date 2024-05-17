@@ -17,19 +17,22 @@ namespace Enigma::WorldMap
     class QuadTreeRootDto
     {
     public:
-        QuadTreeRootDto() = default;
+        QuadTreeRootDto();
         QuadTreeRootDto(const Engine::GenericDto& dto);
 
         [[nodiscard]] const QuadTreeRootId& id() const { return m_id; }
         void id(const QuadTreeRootId& id) { m_id = id; }
         [[nodiscard]] const SceneGraph::SpatialId& rootNodeId() const { return m_rootNodeId; }
         void rootNodeId(const SceneGraph::SpatialId& rootNodeId) { m_rootNodeId = rootNodeId; }
+        [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
+        void factoryDesc(const Engine::FactoryDesc& desc) { m_factoryDesc = desc; }
 
         Engine::GenericDto toGenericDto() const;
 
     protected:
         QuadTreeRootId m_id;
         SceneGraph::SpatialId m_rootNodeId;
+        Engine::FactoryDesc m_factoryDesc;
     };
 }
 

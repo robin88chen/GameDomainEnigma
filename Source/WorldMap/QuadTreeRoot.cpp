@@ -16,14 +16,15 @@ using namespace Enigma::Frameworks;
 
 DEFINE_RTTI_OF_BASE(WorldMap, QuadTreeRoot);
 
-QuadTreeRoot::QuadTreeRoot(const QuadTreeRootId& id) : m_id(id)
+QuadTreeRoot::QuadTreeRoot(const QuadTreeRootId& id) : m_id(id), m_factoryDesc(QuadTreeRoot::TYPE_RTTI)
 {
 }
 
-QuadTreeRoot::QuadTreeRoot(const QuadTreeRootId& id, const Engine::GenericDto& o) : m_id(id)
+QuadTreeRoot::QuadTreeRoot(const QuadTreeRootId& id, const Engine::GenericDto& o) : m_id(id), m_factoryDesc(QuadTreeRoot::TYPE_RTTI)
 {
     QuadTreeRootDto dto(o);
     assert(dto.id() == m_id);
+    m_factoryDesc = dto.factoryDesc();
     m_rootNodeId = dto.rootNodeId();
     if (!m_rootNodeId.empty())
     {
@@ -34,6 +35,7 @@ QuadTreeRoot::QuadTreeRoot(const QuadTreeRootId& id, const Engine::GenericDto& o
 Enigma::Engine::GenericDto QuadTreeRoot::serializeDto() const
 {
     QuadTreeRootDto dto;
+    dto.factoryDesc(m_factoryDesc);
     dto.id(m_id);
     dto.rootNodeId(m_rootNodeId);
     return dto.toGenericDto();

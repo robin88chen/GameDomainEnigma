@@ -28,6 +28,9 @@
     <Filter Include="Errors">
       <UniqueIdentifier>{0e915b66-e096-4240-b678-33fcae1a05a1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="FileStorages">
+      <UniqueIdentifier>{dc4164a1-0b25-4ea5-acbb-c55a3af519b2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SchemeColorDef.cpp">
@@ -63,9 +66,6 @@
     </ClCompile>
     <ClCompile Include="OutputPanel.cpp">
       <Filter>Forms</Filter>
-    </ClCompile>
-    <ClCompile Include="WorldEditConsole.cpp">
-      <Filter>EditorServices</Filter>
     </ClCompile>
     <ClCompile Include="AppConfiguration.cpp">
       <Filter>AppDelegate</Filter>
@@ -112,6 +112,12 @@
     <ClCompile Include="PawnLoader.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="WorldEditConsole.cpp">
+      <Filter>EditorServices</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldMapFileStoreMapper.cpp">
+      <Filter>FileStorages</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SchemeColorDef.h">
@@ -147,9 +153,6 @@
     </ClInclude>
     <ClInclude Include="LevelEditorCommands.h">
       <Filter>Events &amp; Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="WorldEditConsole.h">
-      <Filter>EditorServices</Filter>
     </ClInclude>
     <ClInclude Include="AppConfiguration.h">
       <Filter>AppDelegate</Filter>
@@ -204,6 +207,12 @@
     </ClInclude>
     <ClInclude Include="PawnLoader.h">
       <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldEditConsole.h">
+      <Filter>EditorServices</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldMapFileStoreMapper.h">
+      <Filter>FileStorages</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

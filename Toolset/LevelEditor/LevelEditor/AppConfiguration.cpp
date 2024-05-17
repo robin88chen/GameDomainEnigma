@@ -9,6 +9,8 @@ using namespace LevelEditor;
 
 std::string TOKEN_MEDIA_PATH_ID = "MediaPathId";
 std::string TOKEN_DATA_PATH_ID = "DataPathId";
+std::string TOKEN_WORLD_DATA_RELATIVE_PATH = "WorldDataRelativePath";
+std::string TOKEN_WORLD_DATA_PATH_ID = "WorldDataPathId";
 std::string TOKEN_PRIMARY_TARGET_NAME = "PrimaryTargetName";
 std::string TOKEN_DEFAULT_RENDERER_NAME = "DefaultRendererName";
 std::string TOKEN_SCENE_ROOT_ID = "SceneRootId";
@@ -41,6 +43,20 @@ std::string AppConfiguration::dataPathId() const
 {
     assert(!m_configDto.isEmpty());
     if (auto v = m_configDto.tryGetValue<std::string>(TOKEN_DATA_PATH_ID)) return v.value();
+    return "";
+}
+
+std::string AppConfiguration::worldDataRelativePath() const
+{
+    assert(!m_configDto.isEmpty());
+    if (auto v = m_configDto.tryGetValue<std::string>(TOKEN_WORLD_DATA_RELATIVE_PATH)) return v.value();
+    return "";
+}
+
+std::string AppConfiguration::worldDataPathId() const
+{
+    assert(!m_configDto.isEmpty());
+    if (auto v = m_configDto.tryGetValue<std::string>(TOKEN_WORLD_DATA_PATH_ID)) return v.value();
     return "";
 }
 

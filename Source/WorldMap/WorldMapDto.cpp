@@ -31,7 +31,7 @@ Enigma::Engine::GenericDto WorldMapDto::toGenericDto() const
 {
     Engine::GenericDto dto;
     dto.addRtti(factoryDesc());
-    dto.addOrUpdate(TOKEN_ID, id());
+    dto.addOrUpdate(TOKEN_ID, id().name());
     if (outRegionId().has_value()) dto.addOrUpdate(TOKEN_OUT_REGION_ID, outRegionId().value().tokens());
     std::vector<std::string> ids;
     for (const auto& id : quadRootIds())

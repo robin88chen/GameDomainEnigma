@@ -26,6 +26,7 @@ namespace LevelEditor
     class OutputPanel;
     class WorldEditConsole;
     class PawnEditConsole;
+    class TerrainEditConsole;
 
     class MainForm : public nana::form
     {
@@ -102,6 +103,7 @@ namespace LevelEditor
         OutputPanel* m_outputPanel;
 
         std::weak_ptr<WorldEditConsole> m_worldConsole;
+        std::weak_ptr<TerrainEditConsole> m_terrainConsole;
         std::weak_ptr<PawnEditConsole> m_pawnConsole;
 
         EditorMode m_editorMode;

@@ -16,6 +16,8 @@
 
 namespace LevelEditor
 {
+    class GeometryDataFileStoreMapper;
+
     class TerrainEditConsole : public Enigma::Frameworks::ISystemService
     {
         DECLARE_EN_RTTI;
@@ -28,7 +30,7 @@ namespace LevelEditor
             paintTexture,
         };
     public:
-        TerrainEditConsole(Enigma::Frameworks::ServiceManager* srv_mngr);
+        TerrainEditConsole(Enigma::Frameworks::ServiceManager* srv_mngr, const std::shared_ptr<GeometryDataFileStoreMapper>& geometry_data_file_store_mapper);
         TerrainEditConsole(const TerrainEditConsole&) = delete;
         TerrainEditConsole& operator=(const TerrainEditConsole&) = delete;
         virtual ~TerrainEditConsole() override;
@@ -37,6 +39,8 @@ namespace LevelEditor
 
         virtual Enigma::Frameworks::ServiceResult onInit() override;
         virtual Enigma::Frameworks::ServiceResult onTerm() override;
+
+        bool isTerrainNameDuplicated(const std::string& terrain_name) const;
 
     protected:
         //void DoCreatingNewTerrain(const Enigma::Frameworks::ICommandPtr& c);
@@ -58,6 +62,7 @@ namespace LevelEditor
 
     protected:
         bool m_isEnabled;
+        std::weak_ptr<GeometryDataFileStoreMapper> m_geometryDataFileStoreMapper;
         std::weak_ptr<Enigma::SceneGraph::Pawn> m_brush;
 
         //Enigma::Frameworks::CommandSubscriberPtr m_doCreatingNewTerrain;

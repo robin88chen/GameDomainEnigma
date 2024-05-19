@@ -223,13 +223,17 @@ void EditorAppDelegate::installEngine()
     m_sceneRenderer = m_graphicMain->getSystemServiceAs<SceneRendererService>();
     m_shadowMapService = m_graphicMain->getSystemServiceAs<ShadowMapService>();
     m_graphicMain->getServiceManager()->registerSystemService(std::make_shared<WorldEditService>(m_graphicMain->getServiceManager()));
-    m_graphicMain->getServiceManager()->registerSystemService(std::make_shared<TerrainEditService>(m_graphicMain->getServiceManager()));
+    m_graphicMain->getServiceManager()->registerSystemService(std::make_shared<TerrainEditService>(m_graphicMain->getServiceManager(), m_textureFileStoreMapper));
     m_graphicMain->getServiceManager()->registerSystemService(std::make_shared<LightEditService>(m_graphicMain->getServiceManager()));
     m_graphicMain->getServiceManager()->registerSystemService(std::make_shared<PawnEditService>(m_graphicMain->getServiceManager()));
+
+    m_textureFileStoreMapper->subscribeHandlers();
 }
 
 void EditorAppDelegate::shutdownEngine()
 {
+    m_textureFileStoreMapper->unsubscribeHandlers();
+
     EventPublisher::unsubscribe(typeid(RenderEngineInstalled), m_onRenderEngineInstalled);
     m_onRenderEngineInstalled = nullptr;
     EventPublisher::unsubscribe(typeid(PortalSceneRootCreated), m_onSceneRootCreated);

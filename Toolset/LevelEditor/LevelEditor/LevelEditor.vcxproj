@@ -137,6 +137,8 @@
     <ClCompile Include="CreateNewWorldDlg.cpp" />
     <ClCompile Include="EditorSceneConsole.cpp" />
     <ClCompile Include="EditorUtilities.cpp" />
+    <ClCompile Include="GeometryDataFileStoreMapper.cpp" />
+    <ClCompile Include="TextureFileStoreMapper.cpp" />
     <ClCompile Include="WorldMapFileStoreMapper.cpp" />
     <ClCompile Include="FrustumInfoDialog.cpp" />
     <ClCompile Include="LevelEditorAppDelegate.cpp" />
@@ -171,6 +173,9 @@
     <ClInclude Include="EditorModes.h" />
     <ClInclude Include="EditorSceneConsole.h" />
     <ClInclude Include="EditorUtilities.h" />
+    <ClInclude Include="GeometryDataFileStoreMapper.h" />
+    <ClInclude Include="LevelEditorUiQueries.h" />
+    <ClInclude Include="TextureFileStoreMapper.h" />
     <ClInclude Include="WorldMapFileStoreMapper.h" />
     <ClInclude Include="FrustumInfoDialog.h" />
     <ClInclude Include="LevelEditorAppDelegate.h" />

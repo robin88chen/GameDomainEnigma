@@ -43,21 +43,29 @@ namespace LevelEditor
     class CreateNewTerrain : public Enigma::Frameworks::ICommand
     {
     public:
-        CreateNewTerrain(const std::string& name, const Enigma::Terrain::TerrainGeometryDto& geometry_dto,
-            const std::array<std::string, TerrainEditService::TextureLayerNum> layer_textures,
-            const Enigma::MathLib::Vector3& local_pos, const std::string& asset_path_id)
-            : m_name(name), m_geometryDto(geometry_dto), m_layerTextures(layer_textures), m_localPos(local_pos), m_assetPathId(asset_path_id) {}
+        CreateNewTerrain(const Enigma::Geometries::GeometryId& geometry_id, unsigned numRows, unsigned numCols, const Enigma::MathLib::Vector3& minVtxPos, const Enigma::MathLib::Vector3& maxVtxPos, const Enigma::MathLib::Vector2& minUV, const Enigma::MathLib::Vector2& maxUV, const std::array<Enigma::Engine::TextureId, TerrainEditService::TextureLayerNum> layer_textures, const Enigma::MathLib::Vector3& local_pos, const std::string& asset_path_id)
+            : m_geometryId(geometry_id), m_numRows(numRows), m_numCols(numCols), m_minVtxPos(minVtxPos), m_maxVtxPos(maxVtxPos), m_minUV(minUV), m_maxUV(maxUV), m_layerTextures(layer_textures), m_localPos(local_pos), m_assetPathId(asset_path_id) {}
 
-        const std::string& getName() const { return m_name; }
-        const Enigma::Terrain::TerrainGeometryDto& getGeometryDto() const { return m_geometryDto; }
-        const std::array<std::string, TerrainEditService::TextureLayerNum>& getLayerTextures() const { return m_layerTextures; }
+        const Enigma::Geometries::GeometryId& geometryId() const { return m_geometryId; }
+        unsigned numRows() const { return m_numRows; }
+        unsigned numCols() const { return m_numCols; }
+        const Enigma::MathLib::Vector3& minVtxPos() const { return m_minVtxPos; }
+        const Enigma::MathLib::Vector3& maxVtxPos() const { return m_maxVtxPos; }
+        const Enigma::MathLib::Vector2& minUV() const { return m_minUV; }
+        const Enigma::MathLib::Vector2& maxUV() const { return m_maxUV; }
+        const std::array<Enigma::Engine::TextureId, TerrainEditService::TextureLayerNum>& getLayerTextures() const { return m_layerTextures; }
         const Enigma::MathLib::Vector3& getLocalPos() const { return m_localPos; }
         const std::string& getAssetPathId() const { return m_assetPathId; }
 
     protected:
-        std::string m_name;
-        Enigma::Terrain::TerrainGeometryDto m_geometryDto;
-        std::array<std::string, TerrainEditService::TextureLayerNum> m_layerTextures;
+        Enigma::Geometries::GeometryId m_geometryId;
+        unsigned m_numRows;
+        unsigned m_numCols;
+        Enigma::MathLib::Vector3 m_minVtxPos;
+        Enigma::MathLib::Vector3 m_maxVtxPos;
+        Enigma::MathLib::Vector2 m_minUV;
+        Enigma::MathLib::Vector2 m_maxUV;
+        std::array<Enigma::Engine::TextureId, TerrainEditService::TextureLayerNum> m_layerTextures;
         Enigma::MathLib::Vector3 m_localPos;
         std::string m_assetPathId;
     };

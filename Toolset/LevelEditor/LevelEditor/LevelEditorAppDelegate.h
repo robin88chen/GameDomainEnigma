@@ -15,13 +15,13 @@
 #include "InputHandlers/InputHandlerService.h"
 #include "Frameworks/EventSubscriber.h"
 #include "ShadowMap/ShadowMapService.h"
-#include "FileStorage/GeometryDataFileStoreMapper.h"
+#include "GeometryDataFileStoreMapper.h"
 #include "FileStorage/PrimitiveFileStoreMapper.h"
 #include "FileStorage/AnimationAssetFileStoreMapper.h"
 #include "FileStorage/AnimatorFileStoreMapper.h"
 #include "FileStorage/SceneGraphFileStoreMapper.h"
 #include "WorldMapFileStoreMapper.h"
-#include "FileStorage/TextureFileStoreMapper.h"
+#include "TextureFileStoreMapper.h"
 
 namespace LevelEditor
 {
@@ -47,9 +47,10 @@ namespace LevelEditor
 
         void onTimerElapsed();
 
-        const std::unique_ptr<AppConfiguration>& appConfig() const { return m_appConfig; };
-        std::shared_ptr<Enigma::InputHandlers::InputHandlerService> inputHandler() const { return m_inputHandler.lock(); };
-        const std::shared_ptr<WorldMapFileStoreMapper>& worldMapFileStoreMapper() const { return m_worldMapFileStoreMapper; };
+        const std::unique_ptr<AppConfiguration>& appConfig() const { return m_appConfig; }
+        std::shared_ptr<Enigma::InputHandlers::InputHandlerService> inputHandler() const { return m_inputHandler.lock(); }
+        const std::shared_ptr<WorldMapFileStoreMapper>& worldMapFileStoreMapper() const { return m_worldMapFileStoreMapper; }
+        const std::shared_ptr<GeometryDataFileStoreMapper>& geometryDataFileStoreMapper() const { return m_geometryDataFileStoreMapper; }
 
     protected:
         void onRenderEngineInstalled(const Enigma::Frameworks::IEventPtr& e);
@@ -69,11 +70,11 @@ namespace LevelEditor
         std::unique_ptr<AppConfiguration> m_appConfig;
 
         Enigma::Controllers::GraphicMain* m_graphicMain;
-        std::shared_ptr<Enigma::FileStorage::GeometryDataFileStoreMapper> m_geometryDataFileStoreMapper;
+        std::shared_ptr<GeometryDataFileStoreMapper> m_geometryDataFileStoreMapper;
         std::shared_ptr<Enigma::FileStorage::PrimitiveFileStoreMapper> m_primitiveFileStoreMapper;
         std::shared_ptr<Enigma::FileStorage::AnimationAssetFileStoreMapper> m_animationAssetFileStoreMapper;
         std::shared_ptr<Enigma::FileStorage::AnimatorFileStoreMapper> m_animatorFileStoreMapper;
-        std::shared_ptr<Enigma::FileStorage::TextureFileStoreMapper> m_textureFileStoreMapper;
+        std::shared_ptr<TextureFileStoreMapper> m_textureFileStoreMapper;
         std::shared_ptr<Enigma::FileStorage::SceneGraphFileStoreMapper> m_sceneGraphFileStoreMapper;
         std::shared_ptr<WorldMapFileStoreMapper> m_worldMapFileStoreMapper;
         std::weak_ptr<Enigma::InputHandlers::InputHandlerService> m_inputHandler;

@@ -9,6 +9,7 @@
 #include "GameCommon/GameSceneCommands.h"
 #include "GameCommon/DeferredRenderingCommands.h"
 #include "LevelEditorUiEvents.h"
+#include "GeometryDataFileStoreMapper.h"
 
 using namespace LevelEditor;
 using namespace Enigma::Frameworks;
@@ -22,7 +23,7 @@ Rtti TerrainEditConsole::TYPE_RTTI{ "LevelEditor.TerrainEditConsole", &ISystemSe
 std::string BRUSH_SPHERE_TAG = "_brush_sphere_";
 std::string SEMANTIC_DECAL_MAP = "DecalMap";
 
-TerrainEditConsole::TerrainEditConsole(ServiceManager* srv_mngr) : ISystemService(srv_mngr)
+TerrainEditConsole::TerrainEditConsole(ServiceManager* srv_mngr, const std::shared_ptr<GeometryDataFileStoreMapper>& geometry_data_file_store_mapper) : ISystemService(srv_mngr), m_geometryDataFileStoreMapper(geometry_data_file_store_mapper)
 {
     m_needTick = false;
     m_isEnabled = false;
@@ -100,6 +101,12 @@ ServiceResult TerrainEditConsole::onTerm()
     m_onSceneCursorReleased = nullptr;
 
     return ServiceResult::Complete;
+}
+
+bool TerrainEditConsole::isTerrainNameDuplicated(const std::string& terrain_name) const
+{
+    if (m_geometryDataFileStoreMapper.expired()) return false;
+    return m_geometryDataFileStoreMapper.lock()->isGeometryNameDuplicated(terrain_name);
 }
 
 void TerrainEditConsole::createBrushPawn()

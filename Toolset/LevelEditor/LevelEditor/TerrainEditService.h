@@ -8,6 +8,8 @@
 #ifndef TERRAIN_EDIT_SERVICE_H
 #define TERRAIN_EDIT_SERVICE_H
 
+#include <FileStorage/AnimationAssetFileStoreMapper.h>
+#include "FileStorage/TextureFileStoreMapper.h"
 #include "Frameworks/ServiceManager.h"
 #include "Frameworks/CommandSubscriber.h"
 #include "Frameworks/EventSubscriber.h"
@@ -23,7 +25,7 @@ namespace LevelEditor
     {
         DECLARE_EN_RTTI;
     public:
-        TerrainEditService(Enigma::Frameworks::ServiceManager* srv_mngr);
+        TerrainEditService(Enigma::Frameworks::ServiceManager* srv_mngr, const std::shared_ptr<Enigma::FileStorage::TextureFileStoreMapper>& texture_file_store_mapper);
         TerrainEditService(const TerrainEditService&) = delete;
         TerrainEditService& operator=(const TerrainEditService&) = delete;
         virtual ~TerrainEditService() override;
@@ -61,6 +63,7 @@ namespace LevelEditor
         static std::array<std::string, TextureLayerNum> LayerSemantics;
 
     protected:
+        std::weak_ptr<Enigma::FileStorage::TextureFileStoreMapper> m_textureFileStoreMapper;
         std::weak_ptr<Enigma::Terrain::TerrainPawn> m_pickedTerrain;
         std::unordered_map<Enigma::SceneGraph::SpatialId, std::weak_ptr<Enigma::Engine::Texture>, Enigma::SceneGraph::SpatialId::hash> m_splatTextures;
         std::weak_ptr<Enigma::Engine::Texture> m_pickedSplatTexture;

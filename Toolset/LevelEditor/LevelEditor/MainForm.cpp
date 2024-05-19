@@ -108,11 +108,12 @@ void MainForm::initializeGraphics()
     auto srv_mngr = Enigma::Controllers::GraphicMain::instance()->getServiceManager();
     auto world_edit = std::dynamic_pointer_cast<WorldEditService>(srv_mngr->getSystemService(WorldEditService::TYPE_RTTI));
     srv_mngr->registerSystemService(std::make_shared<WorldEditConsole>(srv_mngr, m_appDelegate->worldMapFileStoreMapper(), m_appDelegate->appConfig()->worldDataPathId()));
-    srv_mngr->registerSystemService(std::make_shared<TerrainEditConsole>(srv_mngr));
+    srv_mngr->registerSystemService(std::make_shared<TerrainEditConsole>(srv_mngr, m_appDelegate->geometryDataFileStoreMapper()));
     srv_mngr->registerSystemService(std::make_shared<EditorSceneConsole>(srv_mngr));
     auto pawn_edit = std::dynamic_pointer_cast<PawnEditService>(srv_mngr->getSystemService(PawnEditService::TYPE_RTTI));
     srv_mngr->registerSystemService(std::make_shared<PawnEditConsole>(srv_mngr, pawn_edit));
     m_worldConsole = srv_mngr->getSystemServiceAs<WorldEditConsole>();
+    m_terrainConsole = srv_mngr->getSystemServiceAs<TerrainEditConsole>();
     //m_worldConsole.lock()->setWorldMapRootFolder(m_appDelegate->appConfig()->worldMapRootFolderName(), m_appDelegate->appConfig()->worldMapPathId());
     m_pawnConsole = srv_mngr->getSystemServiceAs<PawnEditConsole>();
 }
@@ -153,8 +154,10 @@ void MainForm::initMenu()
     nana::menu& map_menu = m_menubar->push_back("&World Map");
     map_menu.append("Create New Map", [this](auto item) { onCreateWorldMapCommand(item); });
     map_menu.append_splitter();
-    map_menu.append("Add Terrain", [this](auto item) { onAddTerrainCommand(item); });
     map_menu.append("Add Environment Light", [this](auto item) { onAddEnvironmentLightCommand(item); });
+
+    nana::menu& terrain_menu = m_menubar->push_back("&Terrain");
+    terrain_menu.append("Add Terrain", [this](auto item) { onAddTerrainCommand(item); });
 
     nana::menu& portal_menu = m_menubar->push_back("&Portal");
     portal_menu.append("Create Zone Node...", [this](auto item) { onCreateZoneNodeCommand(item); });
@@ -257,7 +260,7 @@ void MainForm::onSaveWorldCommand(const nana::menu::item_proxy& menu_item)
 
 void MainForm::onAddTerrainCommand(const nana::menu::item_proxy& menu_item)
 {
-    nana::API::modal_window(AddTerrainDialog(*this, m_worldConsole.lock(), m_appDelegate->appConfig()->mediaPathId()));
+    nana::API::modal_window(AddTerrainDialog(*this, m_terrainConsole.lock(), m_appDelegate->appConfig()->mediaPathId()));
 }
 
 void MainForm::onAddEnvironmentLightCommand(const nana::menu::item_proxy& menu_item)

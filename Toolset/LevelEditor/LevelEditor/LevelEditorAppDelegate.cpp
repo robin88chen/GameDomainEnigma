@@ -132,20 +132,25 @@ void EditorAppDelegate::initializeMountPaths()
     if (FileSystem::instance())
     {
         auto path = std::filesystem::current_path();
-        auto dataPath = path / "Data";
+        //auto dataPath = path / "Data";
         auto mediaPath = path / "../../../Media/";
         FileSystem::instance()->addMountPath(std::make_shared<StdMountPath>(mediaPath.string(), m_appConfig->mediaPathId()));
-        if (!std::filesystem::exists(dataPath))
+        /*if (!std::filesystem::exists(dataPath))
         {
             std::filesystem::create_directory(dataPath);
         }
-        FileSystem::instance()->addMountPath(std::make_shared<StdMountPath>(dataPath.string(), m_appConfig->dataPathId()));
-        auto worldDataPath = path / m_appConfig->worldDataRelativePath();
+        FileSystem::instance()->addMountPath(std::make_shared<StdMountPath>(dataPath.string(), m_appConfig->dataPathId()));*/
+        auto worldDataPath = mediaPath / m_appConfig->worldDataRelativePath();
         if (!std::filesystem::exists(worldDataPath))
         {
             std::filesystem::create_directory(worldDataPath);
         }
-        FileSystem::instance()->addMountPath(std::make_shared<StdMountPath>(worldDataPath.string(), m_appConfig->worldDataPathId()));
+        //FileSystem::instance()->addMountPath(std::make_shared<StdMountPath>(worldDataPath.string(), m_appConfig->worldDataPathId()));
+        auto terrainPath = mediaPath / m_appConfig->terrainRelativePath();
+        if (!std::filesystem::exists(terrainPath))
+        {
+            std::filesystem::create_directory(terrainPath);
+        }
     }
 }
 
@@ -173,8 +178,6 @@ void EditorAppDelegate::installEngine()
     assert(m_graphicMain);
 
     auto mediaPathId = m_appConfig->mediaPathId();
-    auto dataPathId = m_appConfig->dataPathId();
-    auto worldPathId = m_appConfig->worldDataPathId();
     auto creating_policy = std::make_shared<DeviceCreatingPolicy>(DeviceRequiredBits(), m_hwnd);
     auto engine_policy = std::make_shared<EngineInstallingPolicy>();
 
@@ -198,7 +201,7 @@ void EditorAppDelegate::installEngine()
     //auto scene_render_config = std::make_shared<SceneRendererServiceConfiguration>();
     //auto scene_renderer_policy = std::make_shared<SceneRendererInstallingPolicy>(m_appConfig->GetDefaultRendererName(), m_appConfig->GetPrimaryTargetName(), scene_render_config);
 
-    m_sceneGraphFileStoreMapper = std::make_shared<SceneGraphFileStoreMapper>("scene_graph.db.txt@" + dataPathId, "lazy_scene.db.txt@" + dataPathId, "lazied_", std::make_shared<DtoJsonGateway>());
+    m_sceneGraphFileStoreMapper = std::make_shared<SceneGraphFileStoreMapper>("scene_graph.db.txt@" + mediaPathId, "lazy_scene.db.txt@" + mediaPathId, "lazied_", std::make_shared<DtoJsonGateway>());
     auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(m_sceneGraphFileStoreMapper);
     auto renderables_policy = std::make_shared<Enigma::Renderables::RenderablesInstallingPolicy>();
 
@@ -206,7 +209,7 @@ void EditorAppDelegate::installEngine()
     auto input_handler_policy = std::make_shared<Enigma::InputHandlers::InputHandlerInstallingPolicy>();
     auto game_camera_policy = std::make_shared<GameCameraInstallingPolicy>(m_appConfig->cameraId(), m_appConfig->cameraDto());
 
-    m_worldMapFileStoreMapper = std::make_shared<WorldMapFileStoreMapper>("world_map.db.txt@" + worldPathId, "quad_root.db.txt@" + worldPathId, std::make_shared<DtoJsonGateway>());
+    m_worldMapFileStoreMapper = std::make_shared<WorldMapFileStoreMapper>("world_map.db.txt@" + mediaPathId, "quad_root.db.txt@" + mediaPathId, std::make_shared<DtoJsonGateway>());
     auto world_map_policy = std::make_shared<WorldMapInstallingPolicy>(m_worldMapFileStoreMapper);
     auto terrain_policy = std::make_shared<TerrainInstallingPolicy>();
     auto game_light_policy = std::make_shared<GameLightInstallingPolicy>();
@@ -299,7 +302,7 @@ void EditorAppDelegate::onRenderEngineInstalled(const IEventPtr& e)
     if (!m_sceneGraphFileStoreMapper->hasSpatial(root_id))
     {
         PortalManagementNodeAssembler root_assembler(root_id);
-        root_assembler.asNative(root_id.name() + ".node@DataPath");
+        root_assembler.asNative(root_id.name() + ".node@" + m_appConfig->mediaPathId());
         m_sceneGraphFileStoreMapper->putSpatial(root_id, root_assembler.toGenericDto());
     }
     CommandBus::post(std::make_shared<CreatePortalSceneRoot>(root_id));

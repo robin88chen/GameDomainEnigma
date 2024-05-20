@@ -1,0 +1,3 @@
+terrain/ww1,En.Terrain.TerrainPawn,terrain/ww1.terrain@APK_PATH
+world/editor_camera,En.SceneGraph.Camera,world/editor_camera.cam@APK_PATH
+world/editor_portalmanagement,En.SceneGraph.PortalManagementNode,world/editor_portalmanagement.node@APK_PATH

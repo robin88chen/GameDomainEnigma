@@ -53,10 +53,10 @@ void CreateNewWorldDlg::onOkButton(const nana::arg_click& arg)
         Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Empty world name to create new world"));
         return;
     }
-    auto world_id = WorldMap::WorldMapId(world_name);
+    auto world_id = WorldMap::WorldMapId(m_worldEditor.lock()->worldRelativePath() + "/" + world_name);
     WorldMap::WorldMapDto world_map_dto;
     world_map_dto.id(world_id);
-    world_map_dto.factoryDesc(Engine::FactoryDesc(WorldMap::WorldMap::TYPE_RTTI).ClaimAsInstanced(world_name + ".wld", m_worldEditor.lock()->worldPathId()));
+    world_map_dto.factoryDesc(Engine::FactoryDesc(WorldMap::WorldMap::TYPE_RTTI).ClaimAsInstanced(world_id.name() + ".wld", m_worldEditor.lock()->mediaPathId()));
     auto world = std::make_shared<WorldMap::RequestWorldMapConstitution>(world_id, world_map_dto.toGenericDto(), WorldMap::PersistenceLevel::Store)->dispatch();
     //std::string folder_name = m_folderNameInputBox->text();
     //if (m_deleteExistFolderCheckBox->checked())

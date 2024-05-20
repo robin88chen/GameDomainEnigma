@@ -21,9 +21,10 @@ namespace LevelEditor
         void loadConfig();
 
         std::string mediaPathId() const;
-        std::string dataPathId() const;
+        //std::string dataPathId() const;
         std::string worldDataRelativePath() const;
-        std::string worldDataPathId() const;
+        //std::string worldDataPathId() const;
+        std::string terrainRelativePath() const;
         std::string primaryTargetName() const;
         std::string defaultRendererName() const;
         Enigma::SceneGraph::SpatialId sceneRootId() const;

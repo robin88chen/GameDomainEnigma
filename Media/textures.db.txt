@@ -25,3 +25,5 @@ image/mb30050808,image/mb30050808.tex@APK_PATH
 image/six,image/six.tex@APK_PATH
 image/terrain_brush_circle,image/terrain_brush_circle.tex@APK_PATH
 image/three,image/three.tex@APK_PATH
+ww1_splat,ww1_splat.tex@APK_PATH
+terrain/ww1_splat,terrain/ww1_splat.tex@APK_PATH

@@ -107,8 +107,8 @@ void MainForm::initializeGraphics()
     events().destroy([this] { this->finalizeGraphics(); });
     auto srv_mngr = Enigma::Controllers::GraphicMain::instance()->getServiceManager();
     auto world_edit = std::dynamic_pointer_cast<WorldEditService>(srv_mngr->getSystemService(WorldEditService::TYPE_RTTI));
-    srv_mngr->registerSystemService(std::make_shared<WorldEditConsole>(srv_mngr, m_appDelegate->worldMapFileStoreMapper(), m_appDelegate->appConfig()->worldDataPathId()));
-    srv_mngr->registerSystemService(std::make_shared<TerrainEditConsole>(srv_mngr, m_appDelegate->geometryDataFileStoreMapper()));
+    srv_mngr->registerSystemService(std::make_shared<WorldEditConsole>(srv_mngr, m_appDelegate->worldMapFileStoreMapper(), m_appDelegate->appConfig()->worldDataRelativePath(), m_appDelegate->appConfig()->mediaPathId()));
+    srv_mngr->registerSystemService(std::make_shared<TerrainEditConsole>(srv_mngr, m_appDelegate->geometryDataFileStoreMapper(), m_appDelegate->appConfig()->terrainRelativePath(), m_appDelegate->appConfig()->mediaPathId()));
     srv_mngr->registerSystemService(std::make_shared<EditorSceneConsole>(srv_mngr));
     auto pawn_edit = std::dynamic_pointer_cast<PawnEditService>(srv_mngr->getSystemService(PawnEditService::TYPE_RTTI));
     srv_mngr->registerSystemService(std::make_shared<PawnEditConsole>(srv_mngr, pawn_edit));
@@ -260,7 +260,7 @@ void MainForm::onSaveWorldCommand(const nana::menu::item_proxy& menu_item)
 
 void MainForm::onAddTerrainCommand(const nana::menu::item_proxy& menu_item)
 {
-    nana::API::modal_window(AddTerrainDialog(*this, m_terrainConsole.lock(), m_appDelegate->appConfig()->mediaPathId()));
+    nana::API::modal_window(AddTerrainDialog(*this, m_terrainConsole.lock()));
 }
 
 void MainForm::onAddEnvironmentLightCommand(const nana::menu::item_proxy& menu_item)

@@ -23,7 +23,7 @@ Rtti TerrainEditConsole::TYPE_RTTI{ "LevelEditor.TerrainEditConsole", &ISystemSe
 std::string BRUSH_SPHERE_TAG = "_brush_sphere_";
 std::string SEMANTIC_DECAL_MAP = "DecalMap";
 
-TerrainEditConsole::TerrainEditConsole(ServiceManager* srv_mngr, const std::shared_ptr<GeometryDataFileStoreMapper>& geometry_data_file_store_mapper) : ISystemService(srv_mngr), m_geometryDataFileStoreMapper(geometry_data_file_store_mapper)
+TerrainEditConsole::TerrainEditConsole(ServiceManager* srv_mngr, const std::shared_ptr<GeometryDataFileStoreMapper>& geometry_data_file_store_mapper, const std::string& terrain_path, const std::string& media_path_id) : ISystemService(srv_mngr), m_geometryDataFileStoreMapper(geometry_data_file_store_mapper), m_terrainPath(terrain_path), m_mediaPathId(media_path_id)
 {
     m_needTick = false;
     m_isEnabled = false;
@@ -106,7 +106,8 @@ ServiceResult TerrainEditConsole::onTerm()
 bool TerrainEditConsole::isTerrainNameDuplicated(const std::string& terrain_name) const
 {
     if (m_geometryDataFileStoreMapper.expired()) return false;
-    return m_geometryDataFileStoreMapper.lock()->isGeometryNameDuplicated(terrain_name);
+    auto terrain_path_name = m_terrainPath + "/" + terrain_name;
+    return m_geometryDataFileStoreMapper.lock()->isGeometryNameDuplicated(terrain_path_name);
 }
 
 void TerrainEditConsole::createBrushPawn()

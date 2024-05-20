@@ -17,7 +17,7 @@ namespace LevelEditor
     {
         DECLARE_EN_RTTI;
     public:
-        WorldEditConsole(Enigma::Frameworks::ServiceManager* srv_mngr, const std::shared_ptr<WorldMapFileStoreMapper>& world_map_file_store_mapper, const std::string& world_path_id);
+        WorldEditConsole(Enigma::Frameworks::ServiceManager* srv_mngr, const std::shared_ptr<WorldMapFileStoreMapper>& world_map_file_store_mapper, const std::string& world_relate_path, const std::string& media_path_id);
         WorldEditConsole(const WorldEditConsole&) = delete;
         WorldEditConsole(WorldEditConsole&&) = delete;
         virtual ~WorldEditConsole() override;
@@ -28,11 +28,13 @@ namespace LevelEditor
         virtual Enigma::Frameworks::ServiceResult onTerm() override;
 
         bool isWorldNameDuplicated(const std::string& world_name) const;
-        const std::string& worldPathId() const { return m_worldPathId; }
+        const std::string& worldRelativePath() const { return m_worldRelativePath; }
+        const std::string& mediaPathId() const { return m_mediaPathId; }
 
     private:
         std::weak_ptr<WorldMapFileStoreMapper> m_worldMapFileStoreMapper;
-        std::string m_worldPathId;
+        std::string m_worldRelativePath;
+        std::string m_mediaPathId;
     };
 }
 

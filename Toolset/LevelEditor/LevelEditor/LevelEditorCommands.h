@@ -10,7 +10,7 @@
 
 #include "Frameworks/Command.h"
 #include "SceneGraph/Spatial.h"
-#include "Terrain/TerrainGeometryDto.h"
+#include "GameEngine/TextureId.h"
 #include "GameEngine/GenericDto.h"
 #include "TerrainEditService.h"
 #include <vector>

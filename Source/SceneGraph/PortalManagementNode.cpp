@@ -91,6 +91,10 @@ error PortalManagementNode::onCullingVisible(Culler* culler, bool noCull)
             er = startZone->cullVisibleSet(culler, noCull);
             if (er) return er;
         }
+        else
+        {  // no start zone, so cull the whole scene
+            er = Node::onCullingVisible(culler, noCull);
+        }
     }
     else
     {

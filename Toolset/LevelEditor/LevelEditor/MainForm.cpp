@@ -26,10 +26,11 @@
 #include "PawnEditConsole.h"
 #include "PawnEditService.h"
 #include "EditorUtilities.h"
+#include "NameInputDialog.h"
+#include "SceneGraphFileStoreMapper.h"
 
 using namespace LevelEditor;
 using namespace Enigma::Graphics;
-using namespace Enigma::WorldMap;
 using namespace Enigma::Gateways;
 using namespace Enigma::Engine;
 using namespace Enigma::FileSystem;
@@ -153,11 +154,14 @@ void MainForm::initMenu()
 
     nana::menu& map_menu = m_menubar->push_back("&World Map");
     map_menu.append("Create New Map", [this](auto item) { onCreateWorldMapCommand(item); });
-    map_menu.append_splitter();
-    map_menu.append("Add Environment Light", [this](auto item) { onAddEnvironmentLightCommand(item); });
 
     nana::menu& terrain_menu = m_menubar->push_back("&Terrain");
     terrain_menu.append("Add Terrain", [this](auto item) { onAddTerrainCommand(item); });
+
+    nana::menu& light_menu = m_menubar->push_back("&Light");
+    light_menu.append("Add Ambient Light", [this](auto item) { onAddAmbientLightCommand(item); });
+    light_menu.append("Add Sun Light", [this](auto item) { onAddSunLightCommand(item); });
+    light_menu.append("Add Point Light", [this](auto item) { onAddPointLightCommand(item); });
 
     nana::menu& portal_menu = m_menubar->push_back("&Portal");
     portal_menu.append("Create Zone Node...", [this](auto item) { onCreateZoneNodeCommand(item); });
@@ -263,10 +267,21 @@ void MainForm::onAddTerrainCommand(const nana::menu::item_proxy& menu_item)
     nana::API::modal_window(AddTerrainDialog(*this, m_terrainConsole.lock()));
 }
 
-void MainForm::onAddEnvironmentLightCommand(const nana::menu::item_proxy& menu_item)
+void MainForm::onAddAmbientLightCommand(const nana::menu::item_proxy& menu_item)
 {
-    Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Add Environment Light..."));
-    //Enigma::Frameworks::CommandBus::post(std::make_shared<CreateEnvironmentLight>(m_worldConsole.lock()->getCurrentWorldName()));
+    Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Add Ambient Light..."));
+    NameInputDialog input_dialog(*this, "Add Ambient Light", [=](auto name) -> bool {  return m_appDelegate->sceneGraphFileStoreMapper()->isSpatialNameDuplicated(name); });
+    auto answer = input_dialog.modalizeShow();
+}
+
+void MainForm::onAddSunLightCommand(const nana::menu::item_proxy& menu_item)
+{
+
+}
+
+void MainForm::onAddPointLightCommand(const nana::menu::item_proxy& menu_item)
+{
+
 }
 
 void MainForm::onSelectPawn(const nana::toolbar::item_proxy& drop_down_item, const std::string& pawn_name)

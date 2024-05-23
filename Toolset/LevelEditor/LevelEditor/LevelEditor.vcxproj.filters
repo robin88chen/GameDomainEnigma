@@ -124,6 +124,12 @@
     <ClCompile Include="TextureFileStoreMapper.cpp">
       <Filter>FileStorages</Filter>
     </ClCompile>
+    <ClCompile Include="NameInputDialog.cpp">
+      <Filter>Forms</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneGraphFileStoreMapper.cpp">
+      <Filter>FileStorages</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SchemeColorDef.h">
@@ -227,6 +233,12 @@
       <Filter>Communications</Filter>
     </ClInclude>
     <ClInclude Include="TextureFileStoreMapper.h">
+      <Filter>FileStorages</Filter>
+    </ClInclude>
+    <ClInclude Include="NameInputDialog.h">
+      <Filter>Forms</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneGraphFileStoreMapper.h">
       <Filter>FileStorages</Filter>
     </ClInclude>
   </ItemGroup>

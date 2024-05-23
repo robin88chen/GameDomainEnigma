@@ -138,6 +138,8 @@
     <ClCompile Include="EditorSceneConsole.cpp" />
     <ClCompile Include="EditorUtilities.cpp" />
     <ClCompile Include="GeometryDataFileStoreMapper.cpp" />
+    <ClCompile Include="NameInputDialog.cpp" />
+    <ClCompile Include="SceneGraphFileStoreMapper.cpp" />
     <ClCompile Include="TextureFileStoreMapper.cpp" />
     <ClCompile Include="WorldMapFileStoreMapper.cpp" />
     <ClCompile Include="FrustumInfoDialog.cpp" />
@@ -175,6 +177,8 @@
     <ClInclude Include="EditorUtilities.h" />
     <ClInclude Include="GeometryDataFileStoreMapper.h" />
     <ClInclude Include="LevelEditorUiQueries.h" />
+    <ClInclude Include="NameInputDialog.h" />
+    <ClInclude Include="SceneGraphFileStoreMapper.h" />
     <ClInclude Include="TextureFileStoreMapper.h" />
     <ClInclude Include="WorldMapFileStoreMapper.h" />
     <ClInclude Include="FrustumInfoDialog.h" />

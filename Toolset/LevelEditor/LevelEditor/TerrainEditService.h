@@ -8,7 +8,6 @@
 #ifndef TERRAIN_EDIT_SERVICE_H
 #define TERRAIN_EDIT_SERVICE_H
 
-#include <FileStorage/AnimationAssetFileStoreMapper.h>
 #include "FileStorage/TextureFileStoreMapper.h"
 #include "Frameworks/ServiceManager.h"
 #include "Frameworks/CommandSubscriber.h"
@@ -21,6 +20,8 @@
 
 namespace LevelEditor
 {
+    class CreateNewTerrain;
+
     class TerrainEditService : public Enigma::Frameworks::ISystemService
     {
         DECLARE_EN_RTTI;
@@ -36,6 +37,10 @@ namespace LevelEditor
         virtual Enigma::Frameworks::ServiceResult onTerm() override;
 
     protected:
+        void assembleTerrainGeometry(const std::shared_ptr<CreateNewTerrain>& cmd);
+        Enigma::Engine::TextureId assembleTerrainSplatTexture(const std::shared_ptr<CreateNewTerrain>& cmd);
+        Enigma::Primitives::PrimitiveId assembleTerrainPrimitive(const std::shared_ptr<CreateNewTerrain>& cmd, const Enigma::Engine::TextureId& splat_texture_id);
+        std::shared_ptr<Enigma::Terrain::TerrainPawn> assembleTerrainPawn(const std::shared_ptr<CreateNewTerrain>& cmd, const Enigma::Primitives::PrimitiveId& terrain_primitive_id);
         void createNewTerrain(const Enigma::Frameworks::ICommandPtr& c);
         void moveUpTerrainVertex(const Enigma::Frameworks::ICommandPtr& c);
         void paintTerrainLayer(const Enigma::Frameworks::ICommandPtr& c);

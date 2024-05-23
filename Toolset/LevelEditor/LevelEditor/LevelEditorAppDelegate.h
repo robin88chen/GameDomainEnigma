@@ -15,17 +15,17 @@
 #include "InputHandlers/InputHandlerService.h"
 #include "Frameworks/EventSubscriber.h"
 #include "ShadowMap/ShadowMapService.h"
-#include "GeometryDataFileStoreMapper.h"
 #include "FileStorage/PrimitiveFileStoreMapper.h"
 #include "FileStorage/AnimationAssetFileStoreMapper.h"
 #include "FileStorage/AnimatorFileStoreMapper.h"
-#include "FileStorage/SceneGraphFileStoreMapper.h"
-#include "WorldMapFileStoreMapper.h"
-#include "TextureFileStoreMapper.h"
 
 namespace LevelEditor
 {
     class AppConfiguration;
+    class GeometryDataFileStoreMapper;
+    class WorldMapFileStoreMapper;
+    class TextureFileStoreMapper;
+    class SceneGraphFileStoreMapper;
 
     class EditorAppDelegate
     {
@@ -51,6 +51,7 @@ namespace LevelEditor
         std::shared_ptr<Enigma::InputHandlers::InputHandlerService> inputHandler() const { return m_inputHandler.lock(); }
         const std::shared_ptr<WorldMapFileStoreMapper>& worldMapFileStoreMapper() const { return m_worldMapFileStoreMapper; }
         const std::shared_ptr<GeometryDataFileStoreMapper>& geometryDataFileStoreMapper() const { return m_geometryDataFileStoreMapper; }
+        const std::shared_ptr<SceneGraphFileStoreMapper>& sceneGraphFileStoreMapper() const { return m_sceneGraphFileStoreMapper; }
 
     protected:
         void onRenderEngineInstalled(const Enigma::Frameworks::IEventPtr& e);
@@ -75,7 +76,7 @@ namespace LevelEditor
         std::shared_ptr<Enigma::FileStorage::AnimationAssetFileStoreMapper> m_animationAssetFileStoreMapper;
         std::shared_ptr<Enigma::FileStorage::AnimatorFileStoreMapper> m_animatorFileStoreMapper;
         std::shared_ptr<TextureFileStoreMapper> m_textureFileStoreMapper;
-        std::shared_ptr<Enigma::FileStorage::SceneGraphFileStoreMapper> m_sceneGraphFileStoreMapper;
+        std::shared_ptr<SceneGraphFileStoreMapper> m_sceneGraphFileStoreMapper;
         std::shared_ptr<WorldMapFileStoreMapper> m_worldMapFileStoreMapper;
         std::weak_ptr<Enigma::InputHandlers::InputHandlerService> m_inputHandler;
         std::weak_ptr<Enigma::GameCommon::SceneRendererService> m_sceneRenderer;

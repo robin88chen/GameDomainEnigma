@@ -70,7 +70,9 @@ namespace LevelEditor
         void onLoadWorldCommand(const nana::menu::item_proxy& menu_item);
         void onSaveWorldCommand(const nana::menu::item_proxy& menu_item);
         void onAddTerrainCommand(const nana::menu::item_proxy& menu_item);
-        void onAddEnvironmentLightCommand(const nana::menu::item_proxy& menu_item);
+        void onAddAmbientLightCommand(const nana::menu::item_proxy& menu_item);
+        void onAddSunLightCommand(const nana::menu::item_proxy& menu_item);
+        void onAddPointLightCommand(const nana::menu::item_proxy& menu_item);
 
         void onCreateZoneNodeCommand(const nana::menu::item_proxy& menu_item);
         void onAddPortalCommand(const nana::menu::item_proxy& menu_item);

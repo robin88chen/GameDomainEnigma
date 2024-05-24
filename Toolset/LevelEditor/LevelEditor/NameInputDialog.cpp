@@ -1,5 +1,6 @@
 ﻿#include "NameInputDialog.h"
 #include "Platforms/MemoryMacro.h"
+#include <nana/gui/msgbox.hpp>
 
 using namespace LevelEditor;
 
@@ -7,6 +8,7 @@ NameInputDialog::NameInputDialog(nana::window owner, const std::string& prompt, 
 {
     m_duplicateNameVerifier = duplicate_name_verifier;
     m_answer = Answer::cancel;
+    m_inputName = "";
     caption(prompt);
     get_place().div("vert<create_prompt arrange=[30%,variable] margin=[10,20]><validation_prompt margin=[10,20]><buttons margin=[10,20] gap=10>");
     m_namePrompt = menew nana::label(*this, "Name : ");
@@ -36,6 +38,15 @@ NameInputDialog::~NameInputDialog()
 
 void NameInputDialog::onOkButton(const nana::arg_click& arg)
 {
+    std::string name = m_nameInputBox->text();
+    if ((name.empty()) || (m_duplicateNameVerifier(name)))
+    {
+        nana::msgbox mb(*this, "Error");
+        mb << "input name is empty or duplicated";
+        auto answer = mb.show();
+        return;
+    }
+    m_inputName = name;
     m_answer = Answer::ok;
     close();
 }
@@ -62,7 +73,7 @@ void NameInputDialog::onInputNameChanged(const nana::arg_textbox& arg)
     }
 }
 
-NameInputDialog::Answer NameInputDialog::modalizeShow()
+NameInputDialog::Answer NameInputDialog::modalityShow()
 {
     modality();
     show();

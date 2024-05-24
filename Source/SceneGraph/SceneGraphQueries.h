@@ -97,6 +97,16 @@ namespace Enigma::SceneGraph
     protected:
         SpatialId m_id;
     };
+    class QueryRunningSpatial : public Frameworks::Query<std::shared_ptr<Spatial>>
+    {
+    public:
+        QueryRunningSpatial(const SpatialId& id) : m_id(id) {}
+
+        const SpatialId& id() const { return m_id; }
+
+    protected:
+        SpatialId m_id;
+    };
     class RequestSpatialCreation : public Frameworks::Query<std::shared_ptr<Spatial>>
     {
     public:

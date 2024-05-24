@@ -6,6 +6,7 @@
 #include "LevelEditorEvents.h"
 #include "Frameworks/StringFormat.h"
 #include "SceneGraph/SceneGraphEvents.h"
+#include "SceneGraph/SceneGraphQueries.h"
 #include "EditorUtilities.h"
 #include "SceneGraph/Light.h"
 
@@ -439,6 +440,7 @@ void SpatialInspectorPanel::onPickedSpatialChanged(const IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<PickedSpatialChanged>(e);
     if (!ev) return;
-    m_selectedSpatial = ev->spatial();
+
+    m_selectedSpatial = std::make_shared<Enigma::SceneGraph::QueryRunningSpatial>(ev->id())->dispatch();
     if (!m_selectedSpatial.expired()) showSpatialProperties(m_selectedSpatial.lock());
 }

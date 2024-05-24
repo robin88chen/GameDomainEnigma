@@ -81,6 +81,8 @@ void SceneGraphRepository::registerHandlers()
     QueryDispatcher::subscribe(typeid(QueryWorldTransform), m_queryWorldTransform);
     m_queryModelBound = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { queryModelBound(q); });
     QueryDispatcher::subscribe(typeid(QueryModelBound), m_queryModelBound);
+    m_queryRunningSpatial = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { queryRunningSpatial(q); });
+    QueryDispatcher::subscribe(typeid(QueryRunningSpatial), m_queryRunningSpatial);
 
     m_putCamera = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { putCamera(c); });
     CommandBus::subscribe(typeid(PutCamera), m_putCamera);
@@ -118,6 +120,8 @@ void SceneGraphRepository::unregisterHandlers()
     m_queryWorldTransform = nullptr;
     QueryDispatcher::unsubscribe(typeid(QueryModelBound), m_queryModelBound);
     m_queryModelBound = nullptr;
+    QueryDispatcher::unsubscribe(typeid(QueryRunningSpatial), m_queryRunningSpatial);
+    m_queryRunningSpatial = nullptr;
 
     CommandBus::unsubscribe(typeid(PutCamera), m_putCamera);
     m_putCamera = nullptr;
@@ -222,6 +226,13 @@ Enigma::Engine::BoundingVolume SceneGraphRepository::queryModelBound(const Spati
     if (bv_dto.box()) return BoundingVolume{ bv_dto.box().value() };
     if (bv_dto.sphere()) return BoundingVolume{ bv_dto.sphere().value() };
     return BoundingVolume{};
+}
+
+std::shared_ptr<Spatial> SceneGraphRepository::queryRunningSpatial(const SpatialId& id)
+{
+    std::lock_guard locker{ m_spatialMapLock };
+    if (auto it = m_spatials.find(id); it != m_spatials.end()) return it->second;
+    return nullptr;
 }
 
 void SceneGraphRepository::queryCamera(const IQueryPtr& q)
@@ -416,6 +427,14 @@ void SceneGraphRepository::queryModelBound(const Frameworks::IQueryPtr& q)
     const auto query = std::dynamic_pointer_cast<QueryModelBound>(q);
     assert(query);
     query->setResult(queryModelBound(query->id()));
+}
+
+void SceneGraphRepository::queryRunningSpatial(const Frameworks::IQueryPtr& q)
+{
+    if (!q) return;
+    const auto query = std::dynamic_pointer_cast<QueryRunningSpatial>(q);
+    assert(query);
+    query->setResult(queryRunningSpatial(query->id()));
 }
 
 void SceneGraphRepository::requestSpatialCreation(const Frameworks::IQueryPtr& r)

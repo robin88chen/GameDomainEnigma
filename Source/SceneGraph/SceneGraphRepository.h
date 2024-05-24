@@ -61,6 +61,7 @@ namespace Enigma::SceneGraph
         void hydrateLazyNode(const SpatialId& id);
         MathLib::Matrix4 queryWorldTransform(const SpatialId& id);
         Engine::BoundingVolume queryModelBound(const SpatialId& id);
+        std::shared_ptr<Spatial> queryRunningSpatial(const SpatialId& id);
 
         /** put entities */
         void putCamera(const std::shared_ptr<Camera>& camera);
@@ -86,6 +87,7 @@ namespace Enigma::SceneGraph
         void requestLightCreation(const Frameworks::IQueryPtr& r);
         void queryWorldTransform(const Frameworks::IQueryPtr& q);
         void queryModelBound(const Frameworks::IQueryPtr& q);
+        void queryRunningSpatial(const Frameworks::IQueryPtr& q);
 
         void putCamera(const Frameworks::ICommandPtr& c);
         void removeCamera(const Frameworks::ICommandPtr& c);
@@ -115,6 +117,7 @@ namespace Enigma::SceneGraph
         Frameworks::QuerySubscriberPtr m_requestLightCreation;
         Frameworks::QuerySubscriberPtr m_queryWorldTransform;
         Frameworks::QuerySubscriberPtr m_queryModelBound;
+        Frameworks::QuerySubscriberPtr m_queryRunningSpatial;
 
         Frameworks::CommandSubscriberPtr m_putCamera;
         Frameworks::CommandSubscriberPtr m_removeCamera;

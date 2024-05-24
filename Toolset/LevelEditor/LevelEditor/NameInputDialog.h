@@ -27,7 +27,9 @@ namespace LevelEditor
         NameInputDialog(nana::window owner, const std::string& prompt, const std::function<bool(const std::string&)>& duplicate_name_verifier);
         virtual ~NameInputDialog();
 
-        Answer modalizeShow();
+        Answer modalityShow();
+        const std::string& getInputName() const { return m_inputName; }
+
     private:
         void onOkButton(const nana::arg_click& arg);
         void onCancelButton(const nana::arg_click& arg);
@@ -41,6 +43,7 @@ namespace LevelEditor
         nana::textbox* m_nameInputBox;
         nana::label* m_nameValidationPrompt;
         Answer m_answer;
+        std::string m_inputName;
     };
 }
 

@@ -1,4 +1,7 @@
 ﻿#include "MainForm.h"
+
+#include <GameCommon/GameLightCommands.h>
+
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/EventPublisher.h"
 #include "FileSystem/FileSystem.h"
@@ -34,6 +37,7 @@ using namespace Enigma::Graphics;
 using namespace Enigma::Gateways;
 using namespace Enigma::Engine;
 using namespace Enigma::FileSystem;
+using namespace Enigma::SceneGraph;
 using namespace std::chrono_literals;
 
 MainForm::MainForm() : nana::form()
@@ -117,6 +121,7 @@ void MainForm::initializeGraphics()
     m_terrainConsole = srv_mngr->getSystemServiceAs<TerrainEditConsole>();
     //m_worldConsole.lock()->setWorldMapRootFolder(m_appDelegate->appConfig()->worldMapRootFolderName(), m_appDelegate->appConfig()->worldMapPathId());
     m_pawnConsole = srv_mngr->getSystemServiceAs<PawnEditConsole>();
+    m_sceneConsole = srv_mngr->getSystemServiceAs<EditorSceneConsole>();
 }
 
 void MainForm::finalizeGraphics()
@@ -271,17 +276,34 @@ void MainForm::onAddAmbientLightCommand(const nana::menu::item_proxy& menu_item)
 {
     Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Add Ambient Light..."));
     NameInputDialog input_dialog(*this, "Add Ambient Light", [=](auto name) -> bool {  return m_appDelegate->sceneGraphFileStoreMapper()->isSpatialNameDuplicated(name); });
-    auto answer = input_dialog.modalizeShow();
+    auto answer = input_dialog.modalityShow();
+    if (answer == NameInputDialog::Answer::ok)
+    {
+        Enigma::Frameworks::CommandBus::post(std::make_shared<Enigma::GameCommon::CreateAmbientLight>(m_sceneConsole.lock()->pickedSpatialId(), SpatialId(input_dialog.getInputName(), Light::TYPE_RTTI), Enigma::SceneGraph::PersistenceLevel::Store, Enigma::MathLib::ColorRGBA(0.2f, 0.2f, 0.2f, 1.0f)));
+    }
 }
 
 void MainForm::onAddSunLightCommand(const nana::menu::item_proxy& menu_item)
 {
-
+    Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Add Sun Light..."));
+    NameInputDialog input_dialog(*this, "Add Sun Light", [=](auto name) -> bool {  return m_appDelegate->sceneGraphFileStoreMapper()->isSpatialNameDuplicated(name); });
+    auto answer = input_dialog.modalityShow();
+    if (answer == NameInputDialog::Answer::ok)
+    {
+        Enigma::Frameworks::CommandBus::post(std::make_shared<Enigma::GameCommon::CreateSunLight>(m_sceneConsole.lock()->pickedSpatialId(), SpatialId(input_dialog.getInputName(), Light::TYPE_RTTI), Enigma::SceneGraph::PersistenceLevel::Store, Enigma::MathLib::Vector3(-1.0, -1.0, -1.0), Enigma::MathLib::ColorRGBA(0.6f, 0.6f, 0.6f, 1.0f)));
+    }
 }
 
 void MainForm::onAddPointLightCommand(const nana::menu::item_proxy& menu_item)
 {
-
+    Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Add Point Light..."));
+    NameInputDialog input_dialog(*this, "Add Point Light", [=](auto name) -> bool {  return m_appDelegate->sceneGraphFileStoreMapper()->isSpatialNameDuplicated(name); });
+    auto answer = input_dialog.modalityShow();
+    if (answer == NameInputDialog::Answer::ok)
+    {
+        auto mx = Enigma::MathLib::Matrix4::MakeTranslateTransform(2.0f, 2.0f, 2.0f);
+        Enigma::Frameworks::CommandBus::post(std::make_shared<Enigma::GameCommon::CreatePointLight>(m_sceneConsole.lock()->pickedSpatialId(), mx, SpatialId(input_dialog.getInputName(), Light::TYPE_RTTI), PersistenceLevel::Repository, Enigma::MathLib::Vector3(2.0f, 2.0f, 2.0f), Enigma::MathLib::ColorRGBA(3.0f, 0.0f, 3.0f, 1.0f), 3.50f));
+    }
 }
 
 void MainForm::onSelectPawn(const nana::toolbar::item_proxy& drop_down_item, const std::string& pawn_name)

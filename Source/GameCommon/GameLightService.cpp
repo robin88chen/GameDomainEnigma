@@ -80,12 +80,11 @@ ServiceResult GameLightService::onTerm()
     return ServiceResult::Complete;
 }
 
-void GameLightService::createAmbientLight(const SpatialId& parent_id, const SpatialId& light_id,
-    const MathLib::ColorRGBA& colorLight)
+void GameLightService::createAmbientLight(const SpatialId& parent_id, const SpatialId& light_id, const PersistenceLevel persistence_level, const MathLib::ColorRGBA& colorLight)
 {
     LightInfo info(LightInfo::LightType::Ambient);
     info.setLightColor(colorLight);
-    auto light = std::make_shared<RequestLightCreation>(light_id, info, PersistenceLevel::Repository)->dispatch();
+    auto light = std::make_shared<RequestLightCreation>(light_id, info, persistence_level)->dispatch();
     if (!parent_id.empty())
     {
         m_pendingLightIds.insert(light_id);
@@ -93,13 +92,12 @@ void GameLightService::createAmbientLight(const SpatialId& parent_id, const Spat
     }
 }
 
-void GameLightService::createSunLight(const SpatialId& parent_id, const SpatialId& light_id,
-    const MathLib::Vector3& dirLight, const MathLib::ColorRGBA& colorLight)
+void GameLightService::createSunLight(const SpatialId& parent_id, const SpatialId& light_id, const PersistenceLevel persistence_level, const MathLib::Vector3& dirLight, const MathLib::ColorRGBA& colorLight)
 {
     LightInfo info(LightInfo::LightType::SunLight);
     info.setLightColor(colorLight);
     info.setLightDirection(dirLight);
-    auto light = std::make_shared<RequestLightCreation>(light_id, info, PersistenceLevel::Repository)->dispatch();
+    auto light = std::make_shared<RequestLightCreation>(light_id, info, persistence_level)->dispatch();
     if (!parent_id.empty())
     {
         m_pendingLightIds.insert(light_id);
@@ -107,14 +105,13 @@ void GameLightService::createSunLight(const SpatialId& parent_id, const SpatialI
     }
 }
 
-void GameLightService::createPointLight(const SpatialId& parent_id, const MathLib::Matrix4& mxLocal,
-    const SpatialId& light_id, const MathLib::Vector3& vecPos, const MathLib::ColorRGBA& color, float range)
+void GameLightService::createPointLight(const SpatialId& parent_id, const MathLib::Matrix4& mxLocal, const SpatialId& light_id, SceneGraph::PersistenceLevel persistence_level, const MathLib::Vector3& vecPos, const MathLib::ColorRGBA& color, float range)
 {
     LightInfo info(LightInfo::LightType::Point);
     info.setLightColor(color);
     info.setLightPosition(vecPos);
     info.setLightRange(range);
-    auto light = std::make_shared<RequestLightCreation>(light_id, info, PersistenceLevel::Repository)->dispatch();
+    auto light = std::make_shared<RequestLightCreation>(light_id, info, persistence_level)->dispatch();
     if (!parent_id.empty())
     {
         m_pendingLightIds.insert(light_id);
@@ -127,7 +124,7 @@ void GameLightService::createAmbientLight(const ICommandPtr& c)
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<CreateAmbientLight, ICommand>(c);
     if (!cmd) return;
-    createAmbientLight(cmd->parentId(), cmd->lightId(), cmd->color());
+    createAmbientLight(cmd->parentId(), cmd->lightId(), cmd->persistenceLevel(), cmd->color());
 }
 
 void GameLightService::createSunLight(const ICommandPtr& command)
@@ -135,7 +132,7 @@ void GameLightService::createSunLight(const ICommandPtr& command)
     if (!command) return;
     const auto cmd = std::dynamic_pointer_cast<CreateSunLight, ICommand>(command);
     if (!cmd) return;
-    createSunLight(cmd->parentId(), cmd->lightId(), cmd->direction(), cmd->color());
+    createSunLight(cmd->parentId(), cmd->lightId(), cmd->persistenceLevel(), cmd->direction(), cmd->color());
 }
 
 void GameLightService::createPointLight(const ICommandPtr& command)
@@ -143,7 +140,7 @@ void GameLightService::createPointLight(const ICommandPtr& command)
     if (!command) return;
     const auto cmd = std::dynamic_pointer_cast<CreatePointLight, ICommand>(command);
     if (!cmd) return;
-    createPointLight(cmd->parentId(), cmd->localTransform(), cmd->lightId(), cmd->position(), cmd->color(), cmd->range());
+    createPointLight(cmd->parentId(), cmd->localTransform(), cmd->lightId(), cmd->persistenceLevel(), cmd->position(), cmd->color(), cmd->range());
 }
 
 void GameLightService::changeLightPosition(const ICommandPtr& command) const

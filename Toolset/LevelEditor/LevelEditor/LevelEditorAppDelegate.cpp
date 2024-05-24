@@ -320,10 +320,6 @@ void EditorAppDelegate::onSceneRootCreated(const Enigma::Frameworks::IEventPtr& 
     if (!ev) return;
     CommandBus::post(std::make_shared<OutputMessage>("portal scene root created : " + ev->root()->id().name()));
     m_sceneRoot = ev->root();
-    CommandBus::post(std::make_shared<CreateAmbientLight>(m_sceneRoot.lock()->id(), SpatialId("amb_lit", Light::TYPE_RTTI), Enigma::MathLib::ColorRGBA(0.2f, 0.2f, 0.2f, 1.0f)));
-    CommandBus::post(std::make_shared<CreateSunLight>(m_sceneRoot.lock()->id(), SpatialId("sun_lit", Light::TYPE_RTTI), Enigma::MathLib::Vector3(-1.0, -1.0, -1.0), Enigma::MathLib::ColorRGBA(0.6f, 0.6f, 0.6f, 1.0f)));
-    auto mx = Enigma::MathLib::Matrix4::MakeTranslateTransform(2.0f, 2.0f, 2.0f);
-    CommandBus::post(std::make_shared<CreatePointLight>(m_sceneRoot.lock()->id(), mx, SpatialId("point_lit", Light::TYPE_RTTI), Enigma::MathLib::Vector3(2.0f, 2.0f, 2.0f), Enigma::MathLib::ColorRGBA(3.0f, 0.0f, 3.0f, 1.0f), 3.50f));
     SceneFlattenTraversal traversal;
     m_sceneRoot.lock()->visitBy(&traversal);
     CommandBus::post(std::make_shared<RefreshSceneGraph>(traversal.GetSpatials()));

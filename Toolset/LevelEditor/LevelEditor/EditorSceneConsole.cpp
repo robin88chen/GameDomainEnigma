@@ -7,6 +7,7 @@
 #include "GameCommon/GameSceneEvents.h"
 #include "GameCommon/GameCameraEvents.h"
 #include "GameCommon/GameCameraCommands.h"
+#include "GameCommon/GameSceneEvents.h"
 #include "ScenePicker.h"
 #include "LevelEditorEvents.h"
 
@@ -32,10 +33,12 @@ Enigma::Frameworks::ServiceResult EditorSceneConsole::onInit()
 {
     m_onGameCameraCreated = std::make_shared<EventSubscriber>([=](auto e) { onGameCameraCreated(e); });
     EventPublisher::subscribe(typeid(GameCameraCreated), m_onGameCameraCreated);
-    //m_onSceneRootCreated = std::make_shared<EventSubscriber>([=](auto e) { onSceneRootCreated(e); });
-    //EventPublisher::subscribe(typeid(SceneRootCreated), m_onSceneRootCreated);
+    m_onSceneRootCreated = std::make_shared<EventSubscriber>([=](auto e) { onSceneRootCreated(e); });
+    EventPublisher::subscribe(typeid(PortalSceneRootCreated), m_onSceneRootCreated);
     m_onTargetViewportChanged = std::make_shared<EventSubscriber>([=](auto e) { onTargetViewportChanged(e); });
     EventPublisher::subscribe(typeid(TargetViewPortChanged), m_onTargetViewportChanged);
+    m_onPickedSpatialChanged = std::make_shared<EventSubscriber>([=](auto e) { onPickedSpatialChanged(e); });
+    EventPublisher::subscribe(typeid(PickedSpatialChanged), m_onPickedSpatialChanged);
     m_onMouseMoved = std::make_shared<EventSubscriber>([=](auto e) { onMouseMoved(e); });
     EventPublisher::subscribe(typeid(MouseMoved), m_onMouseMoved);
     m_onMouseLeftButtonDown = std::make_shared<EventSubscriber>([=](auto e) { onMouseLeftButtonDown(e); });
@@ -54,10 +57,12 @@ Enigma::Frameworks::ServiceResult EditorSceneConsole::onTerm()
 {
     EventPublisher::unsubscribe(typeid(GameCameraCreated), m_onGameCameraCreated);
     m_onGameCameraCreated = nullptr;
-    //EventPublisher::unsubscribe(typeid(SceneRootCreated), m_onSceneRootCreated);
-    //m_onSceneRootCreated = nullptr;
+    EventPublisher::unsubscribe(typeid(PortalSceneRootCreated), m_onSceneRootCreated);
+    m_onSceneRootCreated = nullptr;
     EventPublisher::unsubscribe(typeid(TargetViewPortChanged), m_onTargetViewportChanged);
     m_onTargetViewportChanged = nullptr;
+    EventPublisher::unsubscribe(typeid(PickedSpatialChanged), m_onPickedSpatialChanged);
+    m_onPickedSpatialChanged = nullptr;
     EventPublisher::unsubscribe(typeid(MouseMoved), m_onMouseMoved);
     m_onMouseMoved = nullptr;
     EventPublisher::unsubscribe(typeid(MouseLeftButtonDown), m_onMouseLeftButtonDown);
@@ -80,19 +85,29 @@ void EditorSceneConsole::onGameCameraCreated(const Enigma::Frameworks::IEventPtr
     m_camera = ev->GetCamera();
 }
 
-/*void EditorSceneConsole::onSceneRootCreated(const Enigma::Frameworks::IEventPtr& e)
+void EditorSceneConsole::onSceneRootCreated(const Enigma::Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<Enigma::GameCommon::SceneRootCreated, IEvent>(e);
+    auto ev = std::dynamic_pointer_cast<PortalSceneRootCreated, IEvent>(e);
     if (!ev) return;
-    m_sceneRoot = ev->GetSceneRoot();
-}*/
+    m_sceneRoot = ev->root();
+}
+
 void EditorSceneConsole::onTargetViewportChanged(const Enigma::Frameworks::IEventPtr& e)
 {
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<Enigma::Renderer::TargetViewPortChanged, IEvent>(e);
     if (!ev) return;
     m_targetViewport = ev->viewPort();
+}
+
+void EditorSceneConsole::onPickedSpatialChanged(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    auto ev = std::dynamic_pointer_cast<PickedSpatialChanged, IEvent>(e);
+    if (!ev) return;
+    if (ev->wherePickedFrom() != PickedSpatialChanged::PickedFrom::FromSceneGraph) return;
+    m_pickedSpatialId = ev->id();
 }
 
 void EditorSceneConsole::onMouseMoved(const Enigma::Frameworks::IEventPtr& e)

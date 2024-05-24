@@ -11,6 +11,7 @@
 #include "FileSystem/FileSystem.h"
 #include "GameEngine/Texture.h"
 #include "TerrainEditService.h"
+#include "SceneGraph/SceneGraphQueries.h"
 
 using namespace LevelEditor;
 
@@ -202,7 +203,7 @@ void TerrainToolPanel::onPickedSpatialChanged(const Enigma::Frameworks::IEventPt
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<PickedSpatialChanged>(e);
     if (!ev) return;
-    auto terrain = std::dynamic_pointer_cast<Enigma::Terrain::TerrainPawn>(ev->spatial());
+    auto terrain = std::dynamic_pointer_cast<Enigma::Terrain::TerrainPawn>(std::make_shared<Enigma::SceneGraph::QueryRunningSpatial>(ev->id())->dispatch());
     if (!terrain) return;
     auto terrain_prim = std::dynamic_pointer_cast<Enigma::Terrain::TerrainPrimitive>(terrain->getPrimitive());
     if (!terrain_prim) return;

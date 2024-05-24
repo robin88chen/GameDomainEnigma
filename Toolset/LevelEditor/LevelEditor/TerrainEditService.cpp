@@ -450,7 +450,9 @@ void TerrainEditService::onPickedSpatialChanged(const IEventPtr& e)
     if (!ev) return;
     m_pickedTerrain.reset();
     m_pickedSplatTexture.reset();
-    if (const auto terrain = std::dynamic_pointer_cast<TerrainPawn, Spatial>(ev->spatial())) m_pickedTerrain = terrain;
+    auto picked_spatial = std::make_shared<QueryRunningSpatial>(ev->id())->dispatch();
+    if (!picked_spatial) return;
+    if (const auto terrain = std::dynamic_pointer_cast<TerrainPawn, Spatial>(picked_spatial)) m_pickedTerrain = terrain;
     if (m_pickedTerrain.expired()) return;
     if (const auto splat_texture = m_splatTextures.find(m_pickedTerrain.lock()->id()); splat_texture != m_splatTextures.end())
     {

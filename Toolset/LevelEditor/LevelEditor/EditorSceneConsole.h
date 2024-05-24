@@ -32,10 +32,14 @@ namespace LevelEditor
         virtual Enigma::Frameworks::ServiceResult onInit() override;
         virtual Enigma::Frameworks::ServiceResult onTerm() override;
 
+        const Enigma::SceneGraph::SpatialId& pickedSpatialId() const { return m_pickedSpatialId; }
     protected:
         void onGameCameraCreated(const Enigma::Frameworks::IEventPtr& e);
-        //void onSceneRootCreated(const Enigma::Frameworks::IEventPtr& e);
+        void onSceneRootCreated(const Enigma::Frameworks::IEventPtr& e);
         void onTargetViewportChanged(const Enigma::Frameworks::IEventPtr& e);
+
+        void onPickedSpatialChanged(const Enigma::Frameworks::IEventPtr& e);
+
         void onMouseMoved(const Enigma::Frameworks::IEventPtr& e);
         void onMouseLeftButtonDown(const Enigma::Frameworks::IEventPtr& e);
         void onMouseLeftButtonUp(const Enigma::Frameworks::IEventPtr& e);
@@ -47,8 +51,11 @@ namespace LevelEditor
 
     protected:
         Enigma::Frameworks::EventSubscriberPtr m_onGameCameraCreated;
-        //Enigma::Frameworks::EventSubscriberPtr m_onSceneRootCreated;
+        Enigma::Frameworks::EventSubscriberPtr m_onSceneRootCreated;
         Enigma::Frameworks::EventSubscriberPtr m_onTargetViewportChanged;
+
+        Enigma::Frameworks::EventSubscriberPtr m_onPickedSpatialChanged;
+
         Enigma::Frameworks::EventSubscriberPtr m_onMouseMoved;
         Enigma::Frameworks::EventSubscriberPtr m_onMouseLeftButtonDown;
         Enigma::Frameworks::EventSubscriberPtr m_onMouseLeftButtonUp;
@@ -59,6 +66,8 @@ namespace LevelEditor
         std::weak_ptr<Enigma::SceneGraph::Camera> m_camera;
         std::weak_ptr<Enigma::SceneGraph::Node> m_sceneRoot;
         Enigma::Graphics::TargetViewPort m_targetViewport;
+
+        Enigma::SceneGraph::SpatialId m_pickedSpatialId;
 
         ScenePicker m_scenePicker;
     };

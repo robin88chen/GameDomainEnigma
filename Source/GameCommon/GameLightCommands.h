@@ -17,65 +17,68 @@
 
 namespace Enigma::GameCommon
 {
+    //------------------------------------------------------------------
+    //! Architectural Decision Record (ADR)
+    //! These commands are application service layer commands, so they will do completed work.
+    //------------------------------------------------------------------
     class CreateAmbientLight : public Frameworks::ICommand
     {
     public:
-        CreateAmbientLight(const SceneGraph::SpatialId& parent_id, const SceneGraph::SpatialId& light_id, SceneGraph::PersistenceLevel persistence_level, const MathLib::ColorRGBA& color)
-            : m_parentId(parent_id), m_lightId(light_id), m_persistenceLevel(persistence_level), m_color(color) {}
+        CreateAmbientLight(const SceneGraph::SpatialId& parent_id, const SceneGraph::SpatialId& light_id, const SceneGraph::LightInfo& info, const Engine::FactoryDesc& fd, SceneGraph::PersistenceLevel persistence_level)
+            : m_parentId(parent_id), m_lightId(light_id), m_info(info), m_fd(fd), m_persistenceLevel(persistence_level) {}
 
         const SceneGraph::SpatialId& parentId() const { return m_parentId; }
         const SceneGraph::SpatialId& lightId() const { return m_lightId; }
+        const SceneGraph::LightInfo& info() const { return m_info; }
+        const Engine::FactoryDesc& factoryDesc() const { return m_fd; }
         SceneGraph::PersistenceLevel persistenceLevel() const { return m_persistenceLevel; }
-        const MathLib::ColorRGBA& color() const { return m_color; }
 
     protected:
         SceneGraph::SpatialId m_parentId;
         SceneGraph::SpatialId m_lightId;
+        SceneGraph::LightInfo m_info;
+        Engine::FactoryDesc m_fd;
         SceneGraph::PersistenceLevel m_persistenceLevel;
-        MathLib::ColorRGBA m_color;
     };
     class CreateSunLight : public Frameworks::ICommand
     {
     public:
-        CreateSunLight(const SceneGraph::SpatialId& parent_id, const SceneGraph::SpatialId& light_id, SceneGraph::PersistenceLevel persistence_level, const MathLib::Vector3& dir, const MathLib::ColorRGBA& color)
-            : m_parentId(parent_id), m_lightId(light_id), m_persistenceLevel(persistence_level), m_dir(dir), m_color(color) {}
+        CreateSunLight(const SceneGraph::SpatialId& parent_id, const SceneGraph::SpatialId& light_id, const SceneGraph::LightInfo& info, const Engine::FactoryDesc& fd, SceneGraph::PersistenceLevel persistence_level)
+            : m_parentId(parent_id), m_lightId(light_id), m_info(info), m_fd(fd), m_persistenceLevel(persistence_level) {}
 
         const SceneGraph::SpatialId& parentId() const { return m_parentId; }
         const SceneGraph::SpatialId& lightId() const { return m_lightId; }
+        const SceneGraph::LightInfo& info() const { return m_info; }
+        const Engine::FactoryDesc& factoryDesc() const { return m_fd; }
         SceneGraph::PersistenceLevel persistenceLevel() const { return m_persistenceLevel; }
-        const MathLib::Vector3& direction() const { return m_dir; }
-        const MathLib::ColorRGBA& color() const { return m_color; }
 
     protected:
         SceneGraph::SpatialId m_parentId;
         SceneGraph::SpatialId m_lightId;
+        SceneGraph::LightInfo m_info;
+        Engine::FactoryDesc m_fd;
         SceneGraph::PersistenceLevel m_persistenceLevel;
-        MathLib::Vector3 m_dir;
-        MathLib::ColorRGBA m_color;
     };
     class CreatePointLight : public Frameworks::ICommand
     {
     public:
-        CreatePointLight(const SceneGraph::SpatialId& parent_id, const MathLib::Matrix4& mxLocal, const SceneGraph::SpatialId& lightId,
-            SceneGraph::PersistenceLevel persistence_level, const MathLib::Vector3& pos, const MathLib::ColorRGBA& color, float range)
-            : m_parentId(parent_id), m_mxLocal(mxLocal), m_lightId(lightId), m_persistenceLevel(persistence_level), m_pos(pos), m_color(color), m_range(range) {}
+        CreatePointLight(const SceneGraph::SpatialId& parent_id, const MathLib::Matrix4& mxLocal, const SceneGraph::SpatialId& lightId, const SceneGraph::LightInfo& info, const Engine::FactoryDesc& fd, SceneGraph::PersistenceLevel persistence_level)
+            : m_parentId(parent_id), m_mxLocal(mxLocal), m_lightId(lightId), m_info(info), m_fd(fd), m_persistenceLevel(persistence_level) {}
 
         const SceneGraph::SpatialId& parentId() const { return m_parentId; }
         const MathLib::Matrix4& localTransform() const { return m_mxLocal; }
         const SceneGraph::SpatialId& lightId() const { return m_lightId; }
+        const SceneGraph::LightInfo& info() const { return m_info; }
+        const Engine::FactoryDesc& factoryDesc() const { return m_fd; }
         SceneGraph::PersistenceLevel persistenceLevel() const { return m_persistenceLevel; }
-        const MathLib::Vector3& position() const { return m_pos; }
-        const MathLib::ColorRGBA& color() const { return m_color; }
-        float range() const { return m_range; }
 
     protected:
         SceneGraph::SpatialId m_parentId;
         MathLib::Matrix4 m_mxLocal;
         SceneGraph::SpatialId m_lightId;
+        SceneGraph::LightInfo m_info;
+        Engine::FactoryDesc m_fd;
         SceneGraph::PersistenceLevel m_persistenceLevel;
-        MathLib::Vector3 m_pos;
-        MathLib::ColorRGBA m_color;
-        float m_range;
     };
     //------------------------------------------------------------------
     class ChangeLightColor : public Frameworks::ICommand

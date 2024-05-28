@@ -36,6 +36,8 @@ namespace LevelEditor
         void onSceneGraphTreeSelected(const nana::arg_treebox& arg);
 
         void refreshSceneGraphTree(const Enigma::Frameworks::ICommandPtr& c);
+
+        std::string idToTreeViewKey(const Enigma::SceneGraph::SpatialId& id);
     private:
         MainForm* m_main;
         nana::place* m_place;

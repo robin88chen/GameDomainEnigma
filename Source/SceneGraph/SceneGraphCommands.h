@@ -13,6 +13,7 @@
 #include "SceneGraphFactory.h"
 #include "SpatialId.h"
 #include "MathLib/Matrix4.h"
+#include "SceneGraphPersistenceLevel.h"
 #include <string>
 #include <vector>
 
@@ -22,19 +23,6 @@ namespace Enigma::SceneGraph
     class LazyNode;
     class Spatial;
 
-    class BuildSceneGraph : public Frameworks::ICommand
-    {
-    public:
-        BuildSceneGraph(const std::string& scene_graph_id, const Engine::GenericDtoCollection& dtos)
-            : m_id(scene_graph_id), m_dtos(dtos) {}
-
-        const std::string& GetSceneGraphId() { return m_id; }
-        const Engine::GenericDtoCollection& GetDtos() { return m_dtos; }
-
-    protected:
-        std::string m_id;
-        Engine::GenericDtoCollection m_dtos;
-    };
     //--------------------------------------------------------------------------------
     class RegisterSpatialFactory : public Frameworks::ICommand
     {
@@ -65,14 +53,16 @@ namespace Enigma::SceneGraph
     class PutSpatial : public Frameworks::ICommand
     {
     public:
-        PutSpatial(const SpatialId& id, const std::shared_ptr<Spatial>& spatial) : m_id(id), m_spatial(spatial) {}
+        PutSpatial(const SpatialId& id, const std::shared_ptr<Spatial>& spatial, PersistenceLevel persistence_level) : m_id(id), m_spatial(spatial), m_persistenceLevel(persistence_level) {}
 
         const SpatialId& id() { return m_id; }
         const std::shared_ptr<Spatial>& spatial() { return m_spatial; }
+        PersistenceLevel persistenceLevel() { return m_persistenceLevel; }
 
     protected:
         SpatialId m_id;
         std::shared_ptr<Spatial> m_spatial;
+        PersistenceLevel m_persistenceLevel;
     };
     class RemoveSpatial : public Frameworks::ICommand
     {

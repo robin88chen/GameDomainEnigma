@@ -5,6 +5,7 @@
 #include "Frameworks/Rtti.h"
 #include "GameEngine/FactoryDesc.h"
 #include "SceneGraphQueries.h"
+#include "SceneGraphCommands.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Engine;
@@ -48,7 +49,8 @@ std::error_code LazyNode::hydrate(const Engine::GenericDto& dto)
         if (!child_spatial)
         {
             if (!child.dto().has_value()) return ErrorCode::childDtoNotFound;
-            child_spatial = std::make_shared<RequestSpatialConstitution>(child.id(), child.dto().value(), PersistenceLevel::Repository)->dispatch();
+            child_spatial = std::make_shared<RequestSpatialConstitution>(child.id(), child.dto().value())->dispatch();
+            if (child_spatial) std::make_shared<PutSpatial>(child.id(), child_spatial, PersistenceLevel::Repository)->execute();
         }
         if (child_spatial)
         {

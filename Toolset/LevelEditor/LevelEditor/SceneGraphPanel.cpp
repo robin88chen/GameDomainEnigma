@@ -82,7 +82,7 @@ void SceneGraphPanel::refreshSceneGraphTree(const std::vector<std::shared_ptr<En
     //m_sceneGraphTree->clear();
     bool is_empty = m_sceneGraphTree->empty();
 
-    std::unordered_map<std::string, nana::treebox::item_proxy> spatial_pos_map;
+    std::unordered_map<Enigma::SceneGraph::SpatialId, nana::treebox::item_proxy, Enigma::SceneGraph::SpatialId::hash> spatial_pos_map;
 
     unsigned int spatial_count = 0;
     std::shared_ptr scene_root = flattened_scene[0];
@@ -96,10 +96,10 @@ void SceneGraphPanel::refreshSceneGraphTree(const std::vector<std::shared_ptr<En
     {
         graph_node_name = std::string("untitled") + "<" + scene_root->typeInfo().getName() + ">";
     }
-    nana::treebox::item_proxy root_pos = m_sceneGraphTree->insert(scene_root->id().name(), graph_node_name);
+    nana::treebox::item_proxy root_pos = m_sceneGraphTree->insert(idToTreeViewKey(scene_root->id()), graph_node_name);
     // 掛入 value object, 統一使用基底 spatial 類別, 但不能用 weak_ptr
     root_pos.value(scene_root);
-    spatial_pos_map.emplace(scene_root->id().name(), root_pos);
+    spatial_pos_map.emplace(scene_root->id(), root_pos);
 
     auto iter = flattened_scene.begin();
     ++iter;  // skip scene root
@@ -116,18 +116,18 @@ void SceneGraphPanel::refreshSceneGraphTree(const std::vector<std::shared_ptr<En
             nana::treebox::item_proxy parent_pos;
             if (spatial->getParent() == nullptr)
             {
-                parent_pos = spatial_pos_map.find(scene_root->id().name())->second;
+                parent_pos = spatial_pos_map.find(scene_root->id())->second;
             }
             else
             {
                 auto parent = spatial->getParent();
                 if (parent)
                 {
-                    parent_pos = spatial_pos_map.find(parent->id().name())->second;
+                    parent_pos = spatial_pos_map.find(parent->id())->second;
                 }
                 else
                 {
-                    parent_pos = spatial_pos_map.find(scene_root->id().name())->second;
+                    parent_pos = spatial_pos_map.find(scene_root->id())->second;
                 }
             }
             //auto root = parent_pos.value<SpatialPtr>();
@@ -141,9 +141,9 @@ void SceneGraphPanel::refreshSceneGraphTree(const std::vector<std::shared_ptr<En
                 graph_node_name = std::string("untitled") + "<" + spatial->typeInfo().getName() + ">";
             }
             nana::treebox::item_proxy node_pos = m_sceneGraphTree->insert(
-                parent_pos, spatial->id().name(), graph_node_name);
+                parent_pos, idToTreeViewKey(spatial->id()), graph_node_name);
             node_pos.value(spatial);
-            spatial_pos_map.emplace(spatial->id().name(), node_pos);
+            spatial_pos_map.emplace(spatial->id(), node_pos);
         }
         ++iter;
     }
@@ -164,4 +164,15 @@ void SceneGraphPanel::refreshSceneGraphTree(const Enigma::Frameworks::ICommandPt
     const auto cmd = std::dynamic_pointer_cast<RefreshSceneGraph, Enigma::Frameworks::ICommand>(c);
     if (!cmd) return;
     refreshSceneGraphTree(cmd->getFlattenedSpatial());
+}
+
+std::string SceneGraphPanel::idToTreeViewKey(const Enigma::SceneGraph::SpatialId& id)
+{
+    // tree view key can't contain '/' or '\', it will be treated as path
+    auto key = id.name();
+    for (auto& c : key)
+    {
+        if ((c == '/') || (c == '\\')) c = '_';
+    }
+    return key;
 }

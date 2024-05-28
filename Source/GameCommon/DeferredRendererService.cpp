@@ -24,6 +24,7 @@
 #include "DeferredRenderingCommands.h"
 #include "Renderables/ModelPrimitive.h"
 #include "SceneGraph/SceneGraphQueries.h"
+#include "SceneGraph/SceneGraphCommands.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::Frameworks;
@@ -299,7 +300,8 @@ void DeferredRendererService::createAmbientLightQuad(const std::shared_ptr<Light
         lighting_pawn_dto.id() = amb_pawn_id;
         lighting_pawn_dto.hostLightId() = lit->id();
         auto pawn_dto = lighting_pawn_dto.toGenericDto();
-        lit_pawn = std::make_shared<RequestSpatialConstitution>(amb_pawn_id, pawn_dto, SceneGraph::PersistenceLevel::Repository)->dispatch();
+        lit_pawn = std::make_shared<RequestSpatialConstitution>(amb_pawn_id, pawn_dto)->dispatch();
+        if (lit_pawn) std::make_shared<PutSpatial>(amb_pawn_id, lit_pawn, PersistenceLevel::Repository)->execute();
     }
     if (lit_pawn)
     {
@@ -337,7 +339,8 @@ void DeferredRendererService::createSunLightQuad(const std::shared_ptr<Light>& l
         lighting_pawn_dto.id() = sun_pawn_id;
         lighting_pawn_dto.hostLightId() = lit->id();
         auto pawn_dto = lighting_pawn_dto.toGenericDto();
-        lit_pawn = std::make_shared<RequestSpatialConstitution>(sun_pawn_id, pawn_dto, SceneGraph::PersistenceLevel::Repository)->dispatch();
+        lit_pawn = std::make_shared<RequestSpatialConstitution>(sun_pawn_id, pawn_dto)->dispatch();
+        if (lit_pawn) std::make_shared<PutSpatial>(sun_pawn_id, lit_pawn, PersistenceLevel::Repository)->execute();
     }
     if (lit_pawn)
     {
@@ -376,7 +379,8 @@ void DeferredRendererService::createPointLightVolume(const std::shared_ptr<Light
         lighting_pawn_dto.id() = vol_pawn_id;
         lighting_pawn_dto.hostLightId() = lit->id();
         auto pawn_dto = lighting_pawn_dto.toGenericDto();
-        lit_pawn = std::make_shared<RequestSpatialConstitution>(vol_pawn_id, pawn_dto, SceneGraph::PersistenceLevel::Repository)->dispatch();
+        lit_pawn = std::make_shared<RequestSpatialConstitution>(vol_pawn_id, pawn_dto)->dispatch();
+        if (lit_pawn) std::make_shared<PutSpatial>(vol_pawn_id, lit_pawn, PersistenceLevel::Repository)->execute();
     }
     if (lit_pawn)
     {

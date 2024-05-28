@@ -15,6 +15,11 @@
 #include "SceneGraph/Node.h"
 #include <unordered_set>
 
+namespace Enigma::SceneGraph
+{
+    class Light;
+    class LightInfo;
+}
 namespace Enigma::GameCommon
 {
     class GameLightService : public Frameworks::ISystemService
@@ -31,10 +36,9 @@ namespace Enigma::GameCommon
         virtual Frameworks::ServiceResult onInit() override;
         virtual Frameworks::ServiceResult onTerm() override;
 
-        void createAmbientLight(const SceneGraph::SpatialId& parent_id, const SceneGraph::SpatialId& light_id, SceneGraph::PersistenceLevel persistence_level, const MathLib::ColorRGBA& colorLight);
-        void createSunLight(const SceneGraph::SpatialId& parent_id, const SceneGraph::SpatialId& light_id, SceneGraph::PersistenceLevel persistence_level, const MathLib::Vector3& dirLight, const MathLib::ColorRGBA& colorLight);
-
-        void createPointLight(const SceneGraph::SpatialId& parent_id, const MathLib::Matrix4& mxLocal, const SceneGraph::SpatialId& light_id, SceneGraph::PersistenceLevel persistence_level, const MathLib::Vector3& vecPos, const MathLib::ColorRGBA& color, float range);
+        void createAmbientLight(const SceneGraph::SpatialId& parent_id, const SceneGraph::SpatialId& light_id, const SceneGraph::LightInfo& info, const Engine::FactoryDesc& fd, SceneGraph::PersistenceLevel persistence_level);
+        void createSunLight(const SceneGraph::SpatialId& parent_id, const SceneGraph::SpatialId& light_id, const SceneGraph::LightInfo& info, const Engine::FactoryDesc& fd, SceneGraph::PersistenceLevel persistence_level);
+        void createPointLight(const SceneGraph::SpatialId& parent_id, const MathLib::Matrix4& mxLocal, const SceneGraph::SpatialId& light_id, const SceneGraph::LightInfo& info, const Engine::FactoryDesc& fd, SceneGraph::PersistenceLevel persistence_level);
 
     protected:
         void createAmbientLight(const Frameworks::ICommandPtr& command);

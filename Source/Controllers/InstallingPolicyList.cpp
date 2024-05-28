@@ -14,7 +14,6 @@
 #include "ShadowMap/ShadowMapInstallingPolicies.h"
 #include "Terrain/TerrainInstallingPolicy.h"
 #include "WorldMap/WorldMapInstallingPolicy.h"
-#include "Prefabs/PrefabInstallingPolicy.h"
 #include "Renderables/RenderablesInstallingPolicy.h"
 
 using namespace Enigma::Controllers;
@@ -42,7 +41,6 @@ constexpr std::uint16_t OrderOfSceneRendererInstalling = 600;
 constexpr std::uint16_t OrderOfShadowMapInstalling = 610;
 
 constexpr std::uint16_t OrderOfGamePawnsInstalling = 700;
-constexpr std::uint16_t OrderOfPrefabInstalling = 710;
 
 constexpr std::uint64_t OrderOfUnknownPolicy = UINT16_MAX;
 
@@ -89,5 +87,4 @@ void InstallingPolicyList::makeOrderMap()
     m_orderMap[typeid(ShadowMap::ShadowMapInstallingPolicy)] = OrderOfShadowMapInstalling;
     m_orderMap[typeid(ShadowMap::CascadeShadowMapInstallingPolicy)] = OrderOfShadowMapInstalling;
     m_orderMap[typeid(GameCommon::AnimatedPawnInstallingPolicy)] = OrderOfGamePawnsInstalling;
-    m_orderMap[typeid(Prefabs::PrefabInstallingPolicy)] = OrderOfPrefabInstalling;
 }

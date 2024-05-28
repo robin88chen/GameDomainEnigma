@@ -6,11 +6,9 @@
 #include "SceneGraphDtos.h"
 #include "SceneFlattenTraversal.h"
 #include "Frameworks/EventPublisher.h"
-#include "GameEngine/LinkageResolver.h"
 #include "Platforms/PlatformLayer.h"
 #include "SceneGraph/SceneGraphQueries.h"
 #include "SceneGraph/SceneGraphCommands.h"
-#include "Frameworks/CommandBus.h"
 
 using namespace Enigma::SceneGraph;
 
@@ -30,7 +28,8 @@ Node::Node(const SpatialId& id, const Engine::GenericDto& dto) : Spatial(id, dto
         if (!child_spatial)
         {
             assert(child.dto().has_value());
-            child_spatial = std::make_shared<RequestSpatialConstitution>(child.id(), child.dto().value(), PersistenceLevel::Repository)->dispatch();
+            child_spatial = std::make_shared<RequestSpatialConstitution>(child.id(), child.dto().value())->dispatch();
+            if (child_spatial) std::make_shared<PutSpatial>(child.id(), child_spatial, PersistenceLevel::Repository)->execute();
         }
         if (child_spatial) m_childList.push_back(child_spatial);
     }

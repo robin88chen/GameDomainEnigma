@@ -12,7 +12,6 @@
 #include "GameEngine/BoundingVolume.h"
 #include "SceneGraphDtos.h"
 #include "SceneGraph/Spatial.h"
-#include "SceneGraphPersistenceLevel.h"
 #include "PortalDtos.h"
 #include <string>
 
@@ -39,7 +38,7 @@ namespace Enigma::SceneGraph
         CameraAssembler& asNative(const std::string& file_at_path);
         CameraDto toCameraDto();
 
-        std::shared_ptr<Camera> constitute(PersistenceLevel persistence_level);
+        std::shared_ptr<Camera> constitute();
 
     protected:
         Engine::GenericDto toGenericDto();
@@ -94,7 +93,7 @@ namespace Enigma::SceneGraph
 
         Engine::GenericDto toGenericDto() const;
         PawnDto toPawnDto() const;
-        std::shared_ptr<Pawn> constitute(PersistenceLevel persistence_level);
+        std::shared_ptr<Pawn> constitute();
 
     private:
         SpatialId m_id;
@@ -122,7 +121,7 @@ namespace Enigma::SceneGraph
 
         Engine::GenericDto toGenericDto() const;
         NodeDto toNodeDto() const;
-        std::shared_ptr<Node> constitute(PersistenceLevel persistence_level);
+        std::shared_ptr<Node> constitute();
 
     private:
         SpatialId m_id;
@@ -146,10 +145,10 @@ namespace Enigma::SceneGraph
 
         Engine::GenericDto toHydratedGenericDto() const;
         LazyNodeDto toHydratedDto() const;
-        std::shared_ptr<LazyNode> constituteHydrated(PersistenceLevel persistence_level);
+        std::shared_ptr<LazyNode> constituteHydrated();
         Engine::GenericDto toDeHydratedGenericDto() const;
         LazyNodeDto toDeHydratedDto() const;
-        std::shared_ptr<LazyNode> constituteDeHydrated(PersistenceLevel persistence_level);
+        std::shared_ptr<LazyNode> constituteDeHydrated();
 
     private:
         SpatialId m_id;
@@ -173,7 +172,7 @@ namespace Enigma::SceneGraph
 
         Engine::GenericDto toGenericDto() const;
         PortalDto toPortalDto() const;
-        std::shared_ptr<Portal> constitute(PersistenceLevel persistence_level);
+        std::shared_ptr<Portal> constitute();
 
     private:
         SpatialId m_id;
@@ -196,10 +195,10 @@ namespace Enigma::SceneGraph
 
         Engine::GenericDto toHydratedGenericDto() const;
         PortalZoneNodeDto toHydratedDto() const;
-        std::shared_ptr<PortalZoneNode> constituteHydrated(PersistenceLevel persistence_level);
+        std::shared_ptr<PortalZoneNode> constituteHydrated();
         Engine::GenericDto toDeHydratedGenericDto() const;
         PortalZoneNodeDto toDeHydratedDto() const;
-        std::shared_ptr<PortalZoneNode> constituteDeHydrated(PersistenceLevel persistence_level);
+        std::shared_ptr<PortalZoneNode> constituteDeHydrated();
 
     private:
         SpatialId m_id;
@@ -222,7 +221,7 @@ namespace Enigma::SceneGraph
 
         Engine::GenericDto toGenericDto() const;
         PortalManagementNodeDto toPortalManagementNodeDto() const;
-        std::shared_ptr<PortalManagementNode> constitute(PersistenceLevel persistence_level);
+        std::shared_ptr<PortalManagementNode> constitute();
 
     private:
         SpatialId m_id;
@@ -244,10 +243,10 @@ namespace Enigma::SceneGraph
 
         Engine::GenericDto toHydratedGenericDto() const;
         VisibilityManagedNodeDto toHydratedDto() const;
-        std::shared_ptr<VisibilityManagedNode> constituteHydrated(PersistenceLevel persistence_level);
+        std::shared_ptr<VisibilityManagedNode> constituteHydrated();
         Engine::GenericDto toDeHydratedGenericDto() const;
         VisibilityManagedNodeDto toDeHydratedDto() const;
-        std::shared_ptr<VisibilityManagedNode> constituteDeHydrated(PersistenceLevel persistence_level);
+        std::shared_ptr<VisibilityManagedNode> constituteDeHydrated();
 
     private:
         SpatialId m_id;

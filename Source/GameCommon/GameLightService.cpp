@@ -80,11 +80,14 @@ ServiceResult GameLightService::onTerm()
     return ServiceResult::Complete;
 }
 
-void GameLightService::createAmbientLight(const SpatialId& parent_id, const SpatialId& light_id, const PersistenceLevel persistence_level, const MathLib::ColorRGBA& colorLight)
+void GameLightService::createAmbientLight(const SpatialId& parent_id, const SpatialId& light_id, const LightInfo& info, const Engine::FactoryDesc& fd, PersistenceLevel persistence_level)
 {
-    LightInfo info(LightInfo::LightType::Ambient);
-    info.setLightColor(colorLight);
-    auto light = std::make_shared<RequestLightCreation>(light_id, info, persistence_level)->dispatch();
+    assert(info.lightType() == LightInfo::LightType::Ambient);
+    assert(persistence_level != PersistenceLevel::None);
+    auto light = std::make_shared<RequestLightCreation>(light_id, info)->dispatch();
+    if (!light) return;
+    light->factoryDesc() = fd;
+    std::make_shared<PutSpatial>(light_id, light, persistence_level)->execute();
     if (!parent_id.empty())
     {
         m_pendingLightIds.insert(light_id);
@@ -92,12 +95,14 @@ void GameLightService::createAmbientLight(const SpatialId& parent_id, const Spat
     }
 }
 
-void GameLightService::createSunLight(const SpatialId& parent_id, const SpatialId& light_id, const PersistenceLevel persistence_level, const MathLib::Vector3& dirLight, const MathLib::ColorRGBA& colorLight)
+void GameLightService::createSunLight(const SpatialId& parent_id, const SpatialId& light_id, const LightInfo& info, const Engine::FactoryDesc& fd, PersistenceLevel persistence_level)
 {
-    LightInfo info(LightInfo::LightType::SunLight);
-    info.setLightColor(colorLight);
-    info.setLightDirection(dirLight);
-    auto light = std::make_shared<RequestLightCreation>(light_id, info, persistence_level)->dispatch();
+    assert(info.lightType() == LightInfo::LightType::SunLight);
+    assert(persistence_level != PersistenceLevel::None);
+    auto light = std::make_shared<RequestLightCreation>(light_id, info)->dispatch();
+    if (!light) return;
+    light->factoryDesc() = fd;
+    std::make_shared<PutSpatial>(light_id, light, persistence_level)->execute();
     if (!parent_id.empty())
     {
         m_pendingLightIds.insert(light_id);
@@ -105,13 +110,14 @@ void GameLightService::createSunLight(const SpatialId& parent_id, const SpatialI
     }
 }
 
-void GameLightService::createPointLight(const SpatialId& parent_id, const MathLib::Matrix4& mxLocal, const SpatialId& light_id, SceneGraph::PersistenceLevel persistence_level, const MathLib::Vector3& vecPos, const MathLib::ColorRGBA& color, float range)
+void GameLightService::createPointLight(const SpatialId& parent_id, const MathLib::Matrix4& mxLocal, const SpatialId& light_id, const LightInfo& info, const Engine::FactoryDesc& fd, PersistenceLevel persistence_level)
 {
-    LightInfo info(LightInfo::LightType::Point);
-    info.setLightColor(color);
-    info.setLightPosition(vecPos);
-    info.setLightRange(range);
-    auto light = std::make_shared<RequestLightCreation>(light_id, info, persistence_level)->dispatch();
+    assert(info.lightType() == LightInfo::LightType::Point);
+    assert(persistence_level != PersistenceLevel::None);
+    auto light = std::make_shared<RequestLightCreation>(light_id, info)->dispatch();
+    if (!light) return;
+    light->factoryDesc() = fd;
+    std::make_shared<PutSpatial>(light_id, light, persistence_level)->execute();
     if (!parent_id.empty())
     {
         m_pendingLightIds.insert(light_id);
@@ -124,7 +130,7 @@ void GameLightService::createAmbientLight(const ICommandPtr& c)
     if (!c) return;
     const auto cmd = std::dynamic_pointer_cast<CreateAmbientLight, ICommand>(c);
     if (!cmd) return;
-    createAmbientLight(cmd->parentId(), cmd->lightId(), cmd->persistenceLevel(), cmd->color());
+    createAmbientLight(cmd->parentId(), cmd->lightId(), cmd->info(), cmd->factoryDesc(), cmd->persistenceLevel());
 }
 
 void GameLightService::createSunLight(const ICommandPtr& command)
@@ -132,7 +138,7 @@ void GameLightService::createSunLight(const ICommandPtr& command)
     if (!command) return;
     const auto cmd = std::dynamic_pointer_cast<CreateSunLight, ICommand>(command);
     if (!cmd) return;
-    createSunLight(cmd->parentId(), cmd->lightId(), cmd->persistenceLevel(), cmd->direction(), cmd->color());
+    createSunLight(cmd->parentId(), cmd->lightId(), cmd->info(), cmd->factoryDesc(), cmd->persistenceLevel());
 }
 
 void GameLightService::createPointLight(const ICommandPtr& command)
@@ -140,7 +146,7 @@ void GameLightService::createPointLight(const ICommandPtr& command)
     if (!command) return;
     const auto cmd = std::dynamic_pointer_cast<CreatePointLight, ICommand>(command);
     if (!cmd) return;
-    createPointLight(cmd->parentId(), cmd->localTransform(), cmd->lightId(), cmd->persistenceLevel(), cmd->position(), cmd->color(), cmd->range());
+    createPointLight(cmd->parentId(), cmd->localTransform(), cmd->lightId(), cmd->info(), cmd->factoryDesc(), cmd->persistenceLevel());
 }
 
 void GameLightService::changeLightPosition(const ICommandPtr& command) const

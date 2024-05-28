@@ -17,38 +17,4 @@
       <UniqueIdentifier>{74c53204-86b8-45f9-9d3d-2b85308efa95}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\PawnPrefabDto.h">
-      <Filter>PawnPrefabs</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrefabIOService.h">
-      <Filter>PrefabIOService</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrefabCommands.h">
-      <Filter>Commands Events</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrefabErrors.h">
-      <Filter>Errors</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrefabEvents.h">
-      <Filter>Commands Events</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrefabInstallingPolicy.h">
-      <Filter>Installing</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\PawnPrefabDto.cpp">
-      <Filter>PawnPrefabs</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\PrefabIOService.cpp">
-      <Filter>PrefabIOService</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\PrefabErrors.cpp">
-      <Filter>Errors</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\PrefabInstallingPolicy.cpp">
-      <Filter>Installing</Filter>
-    </ClCompile>
-  </ItemGroup>
 </Project>

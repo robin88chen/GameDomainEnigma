@@ -64,7 +64,7 @@ namespace Enigma::SceneGraph
         std::shared_ptr<Spatial> queryRunningSpatial(const SpatialId& id);
 
         /** put entities */
-        void putCamera(const std::shared_ptr<Camera>& camera);
+        void putCamera(const std::shared_ptr<Camera>& camera, PersistenceLevel persistence_level);
         void putSpatial(const std::shared_ptr<Spatial>& spatial, PersistenceLevel persistence_level);
         void putLaziedContent(const std::shared_ptr<LazyNode>& lazy_node);
 

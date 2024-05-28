@@ -82,9 +82,9 @@ Enigma::Engine::GenericDto CameraAssembler::toGenericDto()
     return m_cameraDto.toGenericDto();
 }
 
-std::shared_ptr<Camera> CameraAssembler::constitute(PersistenceLevel persistence_level)
+std::shared_ptr<Camera> CameraAssembler::constitute()
 {
-    return std::make_shared<RequestCameraConstitution>(m_id, toGenericDto(), persistence_level)->dispatch();
+    return std::make_shared<RequestCameraConstitution>(m_id, toGenericDto())->dispatch();
 }
 
 SpatialAssembler::SpatialAssembler(const SpatialId& id)
@@ -214,9 +214,9 @@ Enigma::Engine::GenericDto PawnAssembler::toGenericDto() const
     return toPawnDto().toGenericDto();
 }
 
-std::shared_ptr<Pawn> PawnAssembler::constitute(PersistenceLevel persistence_level)
+std::shared_ptr<Pawn> PawnAssembler::constitute()
 {
-    return std::dynamic_pointer_cast<Pawn>(std::make_shared<RequestSpatialConstitution>(m_id, toGenericDto(), persistence_level)->dispatch());
+    return std::dynamic_pointer_cast<Pawn>(std::make_shared<RequestSpatialConstitution>(m_id, toGenericDto())->dispatch());
 }
 
 NodeAssembler::NodeAssembler(const SpatialId& id) : m_spatialAssembler(id)
@@ -311,9 +311,9 @@ Enigma::Engine::GenericDto NodeAssembler::toGenericDto() const
     return toNodeDto().toGenericDto();
 }
 
-std::shared_ptr<Node> NodeAssembler::constitute(PersistenceLevel persistence_level)
+std::shared_ptr<Node> NodeAssembler::constitute()
 {
-    return std::dynamic_pointer_cast<Node>(std::make_shared<RequestSpatialConstitution>(m_id, toGenericDto(), persistence_level)->dispatch());
+    return std::dynamic_pointer_cast<Node>(std::make_shared<RequestSpatialConstitution>(m_id, toGenericDto())->dispatch());
 }
 
 LazyNodeAssembler::LazyNodeAssembler(const SpatialId& id) : m_nodeAssembler(id)
@@ -356,9 +356,9 @@ Enigma::Engine::GenericDto LazyNodeAssembler::toHydratedGenericDto() const
     return toHydratedDto().toGenericDto();
 }
 
-std::shared_ptr<LazyNode> LazyNodeAssembler::constituteHydrated(PersistenceLevel persistence_level)
+std::shared_ptr<LazyNode> LazyNodeAssembler::constituteHydrated()
 {
-    return std::dynamic_pointer_cast<LazyNode>(std::make_shared<RequestSpatialConstitution>(m_id, toHydratedGenericDto(), persistence_level)->dispatch());
+    return std::dynamic_pointer_cast<LazyNode>(std::make_shared<RequestSpatialConstitution>(m_id, toHydratedGenericDto())->dispatch());
 }
 
 LazyNodeDto LazyNodeAssembler::toDeHydratedDto() const
@@ -375,9 +375,9 @@ Enigma::Engine::GenericDto LazyNodeAssembler::toDeHydratedGenericDto() const
     return toDeHydratedDto().toGenericDto();
 }
 
-std::shared_ptr<LazyNode> LazyNodeAssembler::constituteDeHydrated(PersistenceLevel persistence_level)
+std::shared_ptr<LazyNode> LazyNodeAssembler::constituteDeHydrated()
 {
-    return std::dynamic_pointer_cast<LazyNode>(std::make_shared<RequestSpatialConstitution>(m_id, toDeHydratedGenericDto(), persistence_level)->dispatch());
+    return std::dynamic_pointer_cast<LazyNode>(std::make_shared<RequestSpatialConstitution>(m_id, toDeHydratedGenericDto())->dispatch());
 }
 
 PortalAssembler::PortalAssembler(const SpatialId& id) : m_spatialAssembler(id)
@@ -434,9 +434,9 @@ Enigma::Engine::GenericDto PortalAssembler::toGenericDto() const
     return toPortalDto().toGenericDto();
 }
 
-std::shared_ptr<Portal> PortalAssembler::constitute(PersistenceLevel persistence_level)
+std::shared_ptr<Portal> PortalAssembler::constitute()
 {
-    return std::dynamic_pointer_cast<Portal>(std::make_shared<RequestSpatialConstitution>(m_id, toGenericDto(), persistence_level)->dispatch());
+    return std::dynamic_pointer_cast<Portal>(std::make_shared<RequestSpatialConstitution>(m_id, toGenericDto())->dispatch());
 }
 
 PortalZoneNodeAssembler::PortalZoneNodeAssembler(const SpatialId& id) : m_lazyNodeAssembler(id)

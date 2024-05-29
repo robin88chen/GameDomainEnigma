@@ -44,7 +44,6 @@ namespace Enigma::Engine
     private:
         void queryEffectMaterial(const Frameworks::IQueryPtr& q);
 
-
     private:
         std::shared_ptr<EffectMaterialSourceStoreMapper> m_storeMapper;
         EffectCompilingQueue* m_compilingQueue;

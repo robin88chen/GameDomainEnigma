@@ -111,9 +111,9 @@ void AnimationAssetRepository::removeAnimationAsset(const AnimationAssetId& id)
 
 void AnimationAssetRepository::putAnimationAsset(const AnimationAssetId& id, const std::shared_ptr<AnimationAsset>& asset)
 {
-    if (hasAnimationAsset(id)) return;
+    assert(asset);
+    assert(m_storeMapper);
     std::lock_guard locker{ m_animationAssetLock };
-    m_animationAssets.insert_or_assign(id, asset);
     error er = m_storeMapper->putAnimationAsset(id, asset->serializeDto());
     if (er)
     {
@@ -146,15 +146,9 @@ void AnimationAssetRepository::requestAnimationAssetCreation(const Frameworks::I
         return;
     }
     auto animation = m_factory->create(request->id(), request->rtti());
-    if (request->persistenceLevel() == PersistenceLevel::Repository)
-    {
-        std::lock_guard locker{ m_animationAssetLock };
-        m_animationAssets.insert_or_assign(request->id(), animation);
-    }
-    else if (request->persistenceLevel() == PersistenceLevel::Store)
-    {
-        putAnimationAsset(request->id(), animation);
-    }
+    assert(animation);
+    std::lock_guard lock(m_animationAssetLock);
+    m_animationAssets.insert_or_assign(request->id(), animation);
     request->setResult(animation);
 }
 
@@ -169,15 +163,9 @@ void AnimationAssetRepository::requestAnimationAssetConstitution(const Framework
         return;
     }
     auto animation = m_factory->constitute(request->id(), request->dto(), false);
-    if (request->persistenceLevel() == PersistenceLevel::Repository)
-    {
-        std::lock_guard locker{ m_animationAssetLock };
-        m_animationAssets.insert_or_assign(request->id(), animation);
-    }
-    else if (request->persistenceLevel() == PersistenceLevel::Store)
-    {
-        putAnimationAsset(request->id(), animation);
-    }
+    assert(animation);
+    std::lock_guard lock(m_animationAssetLock);
+    m_animationAssets.insert_or_assign(request->id(), animation);
     request->setResult(animation);
 }
 

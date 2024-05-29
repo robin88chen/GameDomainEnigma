@@ -31,7 +31,7 @@ namespace Enigma::Renderables
 
         Engine::GenericDto toGenericDto();
 
-        std::shared_ptr<ModelPrimitiveAnimator> constitute(Animators::PersistenceLevel persistence_level);
+        std::shared_ptr<ModelPrimitiveAnimator> constitute();
 
     protected:
         Animators::AnimatorId m_id;

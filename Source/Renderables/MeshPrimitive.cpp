@@ -9,7 +9,7 @@
 #include "Renderer/RenderElement.h"
 #include "Platforms/PlatformLayer.h"
 #include "RenderablePrimitiveDtos.h"
-#include "Geometries/GeometryDataFactory.h"
+#include "Geometries/GeometryDataQueries.h"
 #include "RenderableErrors.h"
 #include <cassert>
 
@@ -45,11 +45,7 @@ MeshPrimitive::MeshPrimitive(const Primitives::PrimitiveId& id, const Engine::Ge
     }
     else if (mesh_dto.geometry())
     {
-        m_geometry = geometry_repository->factory()->constitute(mesh_dto.geometryId(), mesh_dto.geometry().value(), false);
-        if (!m_geometry)
-        {
-            geometry_repository->putGeometryData(mesh_dto.geometryId(), m_geometry);
-        }
+        m_geometry = std::make_shared<Geometries::RequestGeometryConstitution>(mesh_dto.geometryId(), mesh_dto.geometry().value())->dispatch();
     }
     m_lazyStatus.changeStatus(Frameworks::LazyStatus::Status::Ghost);
     m_renderBuffer = nullptr;

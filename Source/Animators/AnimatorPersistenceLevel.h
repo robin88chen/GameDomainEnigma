@@ -8,9 +8,9 @@
 #ifndef ANIMATOR_PERSISTENCE_LEVEL_H
 #define ANIMATOR_PERSISTENCE_LEVEL_H
 
-namespace Enigma::Animators
-{
-    enum class PersistenceLevel { None, Repository, Store };
-}
+ /*namespace Enigma::Animators
+ {
+     enum class PersistenceLevel { None, Repository, Store };
+ }*/
 
 #endif // ANIMATOR_PERSISTENCE_LEVEL_H

@@ -10,7 +10,6 @@
 
 #include "AnimationAssetId.h"
 #include "Frameworks/Query.h"
-#include "AnimatorPersistenceLevel.h"
 #include "Frameworks/Rtti.h"
 
 namespace Enigma::Animators
@@ -30,28 +29,24 @@ namespace Enigma::Animators
     class RequestAnimationAssetCreation : public Frameworks::Query<std::shared_ptr<AnimationAsset>>
     {
     public:
-        RequestAnimationAssetCreation(const AnimationAssetId& id, const Frameworks::Rtti& rtti, PersistenceLevel persistence_level) : m_id(id), m_rtti(rtti.getName()), m_persistenceLevel(persistence_level) {}
+        RequestAnimationAssetCreation(const AnimationAssetId& id, const Frameworks::Rtti& rtti) : m_id(id), m_rtti(rtti.getName()) {}
         const AnimationAssetId& id() { return m_id; }
         const Frameworks::Rtti& rtti() { return Frameworks::Rtti::fromName(m_rtti); }
-        PersistenceLevel persistenceLevel() const { return m_persistenceLevel; }
 
     private:
         AnimationAssetId m_id;
         std::string m_rtti;
-        PersistenceLevel m_persistenceLevel;
     };
     class RequestAnimationAssetConstitution : public Frameworks::Query<std::shared_ptr<AnimationAsset>>
     {
     public:
-        RequestAnimationAssetConstitution(const AnimationAssetId& id, const Engine::GenericDto& dto, PersistenceLevel persistence_level) : m_id(id), m_dto(dto), m_persistenceLevel(persistence_level) {}
+        RequestAnimationAssetConstitution(const AnimationAssetId& id, const Engine::GenericDto& dto) : m_id(id), m_dto(dto) {}
         const AnimationAssetId& id() { return m_id; }
         const Engine::GenericDto& dto() { return m_dto; }
-        PersistenceLevel persistenceLevel() const { return m_persistenceLevel; }
 
     private:
         AnimationAssetId m_id;
         Engine::GenericDto m_dto;
-        PersistenceLevel m_persistenceLevel;
     };
 }
 

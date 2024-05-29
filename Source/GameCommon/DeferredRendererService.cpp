@@ -21,10 +21,9 @@
 #include "SceneGraph/SceneGraphAssemblers.h"
 #include "GameCommon/GameCameraService.h"
 #include "LightingPawnDto.h"
-#include "DeferredRenderingCommands.h"
+#include "Geometries/GeometryCommands.h"
 #include "Renderables/ModelPrimitive.h"
 #include "SceneGraph/SceneGraphQueries.h"
-#include "SceneGraph/SceneGraphCommands.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::Frameworks;
@@ -281,7 +280,7 @@ void DeferredRendererService::createAmbientLightQuad(const std::shared_ptr<Light
     auto quad_geo = Geometries::GeometryData::queryGeometryData(amb_quad_id);
     if (!quad_geo)
     {
-        quad_geo = Geometries::SquareQuadAssembler(amb_quad_id).xyQuad(MathLib::Vector3(-1.0f, -1.0f, 0.5f), MathLib::Vector3(1.0f, 1.0f, 0.5f)).textureCoord(MathLib::Vector2(0.0f, 1.0f), MathLib::Vector2(1.0f, 0.0f)).constitute(Geometries::PersistenceLevel::Repository);
+        quad_geo = Geometries::SquareQuadAssembler(amb_quad_id).xyQuad(MathLib::Vector3(-1.0f, -1.0f, 0.5f), MathLib::Vector3(1.0f, 1.0f, 0.5f)).textureCoord(MathLib::Vector2(0.0f, 1.0f), MathLib::Vector2(1.0f, 0.0f)).constitute();
     }
     const auto amb_mesh_id = Primitives::PrimitiveId(lit->id().name() + "_lit_quad", MeshPrimitive::TYPE_RTTI);
     auto lit_mesh = Primitives::Primitive::queryPrimitive(amb_mesh_id);
@@ -320,7 +319,7 @@ void DeferredRendererService::createSunLightQuad(const std::shared_ptr<Light>& l
     auto quad_geo = Geometries::GeometryData::queryGeometryData(sun_quad_id);
     if (!quad_geo)
     {
-        quad_geo = Geometries::SquareQuadAssembler(sun_quad_id).xyQuad(MathLib::Vector3(-1.0f, -1.0f, 0.5f), MathLib::Vector3(1.0f, 1.0f, 0.5f)).textureCoord(MathLib::Vector2(0.0f, 1.0f), MathLib::Vector2(1.0f, 0.0f)).constitute(Geometries::PersistenceLevel::Repository);
+        quad_geo = Geometries::SquareQuadAssembler(sun_quad_id).xyQuad(MathLib::Vector3(-1.0f, -1.0f, 0.5f), MathLib::Vector3(1.0f, 1.0f, 0.5f)).textureCoord(MathLib::Vector2(0.0f, 1.0f), MathLib::Vector2(1.0f, 0.0f)).constitute();
     }
     const auto sun_mesh_id = Primitives::PrimitiveId(lit->id().name() + "_lit_quad", MeshPrimitive::TYPE_RTTI);
     auto lit_mesh = Primitives::Primitive::queryPrimitive(sun_mesh_id);
@@ -359,7 +358,7 @@ void DeferredRendererService::createPointLightVolume(const std::shared_ptr<Light
     auto vol_geo = Geometries::GeometryData::queryGeometryData(vol_geo_id);
     if (!vol_geo)
     {
-        vol_geo = Geometries::SphereAssembler(vol_geo_id).sphere(MathLib::Vector3::ZERO, lit->getLightRange(), SPHERE_SLICES, SPHERE_STACKS).boxBound().constitute(Geometries::PersistenceLevel::Repository);
+        vol_geo = Geometries::SphereAssembler(vol_geo_id).sphere(MathLib::Vector3::ZERO, lit->getLightRange(), SPHERE_SLICES, SPHERE_STACKS).boxBound().constitute();
     }
     const auto vol_mesh_id = Primitives::PrimitiveId(lit->id().name() + "_lit_volume", MeshPrimitive::TYPE_RTTI);
     auto vol_mesh = Primitives::Primitive::queryPrimitive(vol_mesh_id);

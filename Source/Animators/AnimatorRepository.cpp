@@ -123,8 +123,7 @@ void AnimatorRepository::removeAnimator(const AnimatorId& id)
 void AnimatorRepository::putAnimator(const AnimatorId& id, const std::shared_ptr<Animator>& animator)
 {
     assert(animator);
-    std::lock_guard locker{ m_animatorLock };
-    m_animators.insert_or_assign(id, animator);
+    assert(m_storeMapper);
     if (id != id.origin()) return;  // only put origin animator to store
     error er = m_storeMapper->putAnimator(id.origin(), animator->serializeDto());
     if (er)
@@ -162,15 +161,9 @@ void AnimatorRepository::requestAnimatorCreation(const Frameworks::IQueryPtr& r)
         return;
     }
     auto animator = m_factory->create(request->id(), request->rtti());
-    if (request->persistenceLevel() == PersistenceLevel::Repository)
-    {
-        std::lock_guard locker{ m_animatorLock };
-        m_animators.insert_or_assign(request->id(), animator);
-    }
-    else if (request->persistenceLevel() == PersistenceLevel::Store)
-    {
-        putAnimator(request->id(), animator);
-    }
+    assert(animator);
+    std::lock_guard locker{ m_animatorLock };
+    m_animators.insert_or_assign(request->id(), animator);
     request->setResult(animator);
 }
 
@@ -185,15 +178,9 @@ void AnimatorRepository::requestAnimatorConstitution(const Frameworks::IQueryPtr
         return;
     }
     auto animator = m_factory->constitute(request->id(), request->dto(), false);
-    if (request->persistenceLevel() == PersistenceLevel::Repository)
-    {
-        std::lock_guard locker{ m_animatorLock };
-        m_animators.insert_or_assign(request->id(), animator);
-    }
-    else if (request->persistenceLevel() == PersistenceLevel::Store)
-    {
-        putAnimator(request->id(), animator);
-    }
+    assert(animator);
+    std::lock_guard locker{ m_animatorLock };
+    m_animators.insert_or_assign(request->id(), animator);
     request->setResult(animator);
 }
 

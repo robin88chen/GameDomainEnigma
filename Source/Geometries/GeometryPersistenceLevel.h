@@ -8,9 +8,9 @@
 #ifndef GEOMETRY_PERSISTENCE_LEVEL_H
 #define GEOMETRY_PERSISTENCE_LEVEL_H
 
-namespace Enigma::Geometries
-{
-    enum class PersistenceLevel { None, Repository, Store };
-}
+ /*namespace Enigma::Geometries
+ {
+     enum class PersistenceLevel { None, Repository, Store };
+ }*/
 
 #endif // GEOMETRY_PERSISTENCE_LEVEL_H

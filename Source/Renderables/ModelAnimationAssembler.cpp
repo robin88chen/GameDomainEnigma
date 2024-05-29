@@ -80,8 +80,8 @@ Enigma::Engine::GenericDto ModelAnimationAssembler::toGenericDto()
     return m_dto.toGenericDto();
 }
 
-std::shared_ptr<ModelAnimationAsset> ModelAnimationAssembler::constitute(Animators::PersistenceLevel persistence_level)
+std::shared_ptr<ModelAnimationAsset> ModelAnimationAssembler::constitute()
 {
-    return std::dynamic_pointer_cast<ModelAnimationAsset>(std::make_shared<Animators::RequestAnimationAssetConstitution>(m_id, toGenericDto(), persistence_level)->dispatch());
+    return std::dynamic_pointer_cast<ModelAnimationAsset>(std::make_shared<Animators::RequestAnimationAssetConstitution>(m_id, toGenericDto())->dispatch());
 }
 

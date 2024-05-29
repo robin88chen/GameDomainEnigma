@@ -13,7 +13,6 @@
 #include "MathLib/Vector3.h"
 #include "GeometryDataDto.h"
 #include "GraphicKernel/VertexDescription.h"
-#include "GeometryPersistenceLevel.h"
 
 namespace Enigma::Geometries
 {
@@ -30,7 +29,7 @@ namespace Enigma::Geometries
         SquareQuadAssembler& asAsset(const std::string& name, const std::string& filename, const std::string& path_id);
 
         Engine::GenericDto toGenericDto();
-        std::shared_ptr<GeometryData> constitute(PersistenceLevel persistence_level);
+        std::shared_ptr<GeometryData> constitute();
 
     protected:
         GeometryId m_id;
@@ -54,7 +53,7 @@ namespace Enigma::Geometries
         CubeAssembler& asAsset(const std::string& name, const std::string& filename, const std::string& path_id);
 
         Engine::GenericDto toGenericDto();
-        std::shared_ptr<GeometryData> constitute(PersistenceLevel persistence_level);
+        std::shared_ptr<GeometryData> constitute();
 
     protected:
         GeometryId m_id;
@@ -74,7 +73,7 @@ namespace Enigma::Geometries
         SphereAssembler& asAsset(const std::string& name, const std::string& filename, const std::string& path_id);
 
         Engine::GenericDto toGenericDto();
-        std::shared_ptr<GeometryData> constitute(PersistenceLevel persistence_level);
+        std::shared_ptr<GeometryData> constitute();
 
     protected:
         GeometryId m_id;

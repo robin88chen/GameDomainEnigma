@@ -118,15 +118,9 @@ void GeometryRepository::requestGeometryCreation(const IQueryPtr& r)
         return;
     }
     auto geometry = m_factory->create(request->id(), request->rtti());
-    if (request->persistenceLevel() == PersistenceLevel::Repository)
-    {
-        std::lock_guard locker{ m_geometryLock };
-        m_geometries.insert_or_assign(request->id(), geometry);
-    }
-    else if (request->persistenceLevel() == PersistenceLevel::Store)
-    {
-        putGeometryData(request->id(), geometry);
-    }
+    assert(geometry);
+    std::lock_guard locker{ m_geometryLock };
+    m_geometries.insert_or_assign(request->id(), geometry);
     request->setResult(geometry);
 }
 
@@ -141,15 +135,9 @@ void GeometryRepository::requestGeometryConstitution(const IQueryPtr& r)
         return;
     }
     auto geometry = m_factory->constitute(request->id(), request->dto(), false);
-    if (request->persistenceLevel() == PersistenceLevel::Repository)
-    {
-        std::lock_guard locker{ m_geometryLock };
-        m_geometries.insert_or_assign(request->id(), geometry);
-    }
-    else if (request->persistenceLevel() == PersistenceLevel::Store)
-    {
-        putGeometryData(request->id(), geometry);
-    }
+    assert(geometry);
+    std::lock_guard locker{ m_geometryLock };
+    m_geometries.insert_or_assign(request->id(), geometry);
     request->setResult(geometry);
 }
 
@@ -188,9 +176,8 @@ void GeometryRepository::removeGeometryData(const GeometryId& id)
 
 void GeometryRepository::putGeometryData(const GeometryId& id, const std::shared_ptr<GeometryData>& data)
 {
-    if (hasGeometryData(id)) return;
-    std::lock_guard locker{ m_geometryLock };
-    m_geometries.insert_or_assign(id, data);
+    assert(data);
+    assert(m_storeMapper);
     error er = m_storeMapper->putGeometry(id, data->serializeDto());
     if (er)
     {

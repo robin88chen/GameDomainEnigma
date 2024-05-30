@@ -12,6 +12,7 @@
 #include "Frameworks/QuerySubscriber.h"
 #include "Frameworks/CommandSubscriber.h"
 #include "AnimationAsset.h"
+#include "AnimatorFactoryDelegate.h"
 #include <mutex>
 
 namespace Enigma::Animators
@@ -33,7 +34,7 @@ namespace Enigma::Animators
         virtual Frameworks::ServiceResult onInit() override;
         virtual Frameworks::ServiceResult onTerm() override;
 
-        AnimationAssetFactory* factory() { return m_factory; }
+        void registerAnimationAssetFactory(const std::string& rtti_name, const AnimationAssetCreator& creator, const AnimationAssetConstitutor& constitutor);
 
         bool hasAnimationAsset(const AnimationAssetId& id);
         std::shared_ptr<AnimationAsset> queryAnimationAsset(const AnimationAssetId& id);

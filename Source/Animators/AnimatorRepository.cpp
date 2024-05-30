@@ -77,6 +77,12 @@ ServiceResult AnimatorRepository::onTerm()
     return ServiceResult::Complete;
 }
 
+void AnimatorRepository::registerAnimatorFactory(const std::string& rtti, const AnimatorCreator& creator, const AnimatorConstitutor& constitutor)
+{
+    assert(m_factory);
+    m_factory->registerAnimatorFactory(rtti, creator, constitutor);
+}
+
 std::uint64_t AnimatorRepository::nextSequenceNumber()
 {
     assert(m_storeMapper);

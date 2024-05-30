@@ -74,6 +74,12 @@ ServiceResult GeometryRepository::onTerm()
     return Frameworks::ServiceResult::Complete;
 }
 
+void GeometryRepository::registerGeometryFactory(const std::string& rtti_name, const GeometryCreator& creator, const GeometryConstitutor& constitutor)
+{
+    assert(m_factory);
+    m_factory->registerGeometryFactory(rtti_name, creator, constitutor);
+}
+
 bool GeometryRepository::hasGeometryData(const GeometryId& id)
 {
     assert(m_storeMapper);

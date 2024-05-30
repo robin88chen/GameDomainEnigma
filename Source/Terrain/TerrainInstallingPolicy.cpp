@@ -21,7 +21,7 @@ error TerrainInstallingPolicy::install(Frameworks::ServiceManager* service_manag
       //  [](auto o) { return new TerrainPawn(o); }));
     auto geometry_repository = service_manager->getSystemServiceAs<Enigma::Geometries::GeometryRepository>();
     assert(geometry_repository);
-    geometry_repository->factory()->registerGeometryFactory(TerrainGeometry::TYPE_RTTI.getName(),
+    geometry_repository->registerGeometryFactory(TerrainGeometry::TYPE_RTTI.getName(),
         [](auto id) { return std::make_shared<TerrainGeometry>(id); },
         [](auto id, auto dto) { return std::make_shared<TerrainGeometry>(id, dto); });
     auto renderable_builder = service_manager->getSystemServiceAs<RenderablePrimitiveBuilder>();
@@ -29,7 +29,7 @@ error TerrainInstallingPolicy::install(Frameworks::ServiceManager* service_manag
     renderable_builder->registerCustomMeshFactory(TerrainPrimitive::TYPE_RTTI.getName(), TerrainPrimitive::create, TerrainPrimitive::constitute);
     const auto scene_graph_repository = service_manager->getSystemServiceAs<SceneGraph::SceneGraphRepository>();
     assert(scene_graph_repository);
-    scene_graph_repository->factory()->registerSpatialFactory(TerrainPawn::TYPE_RTTI.getName(), TerrainPawn::create, TerrainPawn::constitute);
+    scene_graph_repository->registerSpatialFactory(TerrainPawn::TYPE_RTTI.getName(), TerrainPawn::create, TerrainPawn::constitute);
     return ErrorCode::ok;
 }
 

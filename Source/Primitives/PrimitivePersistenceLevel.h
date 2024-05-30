@@ -8,9 +8,9 @@
 #ifndef PRIMITIVE_PERSISTENCE_LEVEL_H
 #define PRIMITIVE_PERSISTENCE_LEVEL_H
 
-namespace Enigma::Primitives
-{
-    enum class PersistenceLevel { None, Repository, Store };
-}
+ /*namespace Enigma::Primitives
+ {
+     enum class PersistenceLevel { None, Repository, Store };
+ }*/
 
 #endif // PRIMITIVE_PERSISTENCE_LEVEL_H

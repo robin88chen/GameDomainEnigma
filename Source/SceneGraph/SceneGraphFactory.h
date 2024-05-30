@@ -9,20 +9,15 @@
 #define SCENE_GRAPH_FACTORY_H
 
 #include "SpatialId.h"
-#include "Frameworks/EventSubscriber.h"
 #include "Frameworks/CommandSubscriber.h"
 #include "GameEngine/GenericDto.h"
+#include "SceneGraphFactoryDelegate.h"
 #include <mutex>
 
 namespace Enigma::SceneGraph
 {
     class Camera;
     class Spatial;
-    class Light;
-    class LightInfo;
-    using SpatialCreator = std::function<std::shared_ptr<Spatial>(const SpatialId& id)>;
-    using SpatialConstitutor = std::function<std::shared_ptr<Spatial>(const SpatialId& id, const Engine::GenericDto& dto)>;
-    using LightCreator = std::function<std::shared_ptr<Light>(const SpatialId& id, const LightInfo& info)>;
 
     class SceneGraphFactory
     {

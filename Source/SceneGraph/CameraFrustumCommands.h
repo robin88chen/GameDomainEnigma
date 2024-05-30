@@ -17,16 +17,14 @@ namespace Enigma::SceneGraph
     class PutCamera : public Frameworks::ICommand
     {
     public:
-        PutCamera(const SpatialId& id, const std::shared_ptr<Camera>& camera, PersistenceLevel persistence_level) : m_id(id), m_camera(camera), m_persistenceLevel(persistence_level) {}
+        PutCamera(const SpatialId& id, const std::shared_ptr<Camera>& camera) : m_id(id), m_camera(camera) {}
 
         const SpatialId& id() { return m_id; }
         const std::shared_ptr<Camera>& camera() { return m_camera; }
-        PersistenceLevel persistenceLevel() { return m_persistenceLevel; }
 
     protected:
         SpatialId m_id;
         std::shared_ptr<Camera> m_camera;
-        PersistenceLevel m_persistenceLevel;
     };
     class RemoveCamera : public Frameworks::ICommand
     {

@@ -6,6 +6,7 @@
 #include "GameEngine/BoundingVolumeDto.h"
 #include "Geometries/TriangleList.h"
 #include "Geometries/GeometryDataQueries.h"
+#include "Geometries/GeometryCommands.h"
 
 using namespace Enigma::MathLib;
 using namespace Enigma::Engine;
@@ -144,5 +145,7 @@ std::shared_ptr<GeometryData> CubeGeometryMaker::makeCube(const GeometryId& id)
     dto.geometryBound() = m_geometryBounding.serializeDto().toGenericDto();
     dto.factoryDesc() = FactoryDesc(TriangleList::TYPE_RTTI.getName()).ClaimAsResourceAsset(id.name(), id.name() + ".geo", "DataPath");
 
-    return std::make_shared<RequestGeometryConstitution>(id, dto.toGenericDto(), PersistenceLevel::Store)->dispatch();
+    auto geometry = std::make_shared<RequestGeometryConstitution>(id, dto.toGenericDto())->dispatch();
+    std::make_shared<PutGeometry>(id, geometry)->execute();
+    return geometry;
 }

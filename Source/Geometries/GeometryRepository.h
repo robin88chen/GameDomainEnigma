@@ -12,6 +12,7 @@
 #include "Frameworks/ServiceManager.h"
 #include "Frameworks/QuerySubscriber.h"
 #include "Frameworks/CommandSubscriber.h"
+#include "GeometryFactoryDelegate.h"
 #include "GeometryId.h"
 #include <memory>
 #include <mutex>
@@ -41,7 +42,7 @@ namespace Enigma::Geometries
         /// On Term
         virtual Frameworks::ServiceResult onTerm() override;
 
-        GeometryDataFactory* factory() { return m_factory; }
+        void registerGeometryFactory(const std::string& rtti_name, const GeometryCreator& creator, const GeometryConstitutor& constitutor);
 
         bool hasGeometryData(const GeometryId& id);
         std::shared_ptr<GeometryData> queryGeometryData(const GeometryId& id);

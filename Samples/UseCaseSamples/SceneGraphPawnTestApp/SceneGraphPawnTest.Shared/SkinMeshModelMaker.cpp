@@ -1,10 +1,11 @@
 ﻿#include "SkinMeshModelMaker.h"
 #include "Renderables/ModelPrimitive.h"
 #include "Renderables/SkinMeshPrimitive.h"
-#include "GameEngine/EffectDtoHelper.h"
+#include "GameEngine/EffectTextureMapAssembler.h"
 #include "Primitives/PrimitiveId.h"
 #include "Geometries/GeometryId.h"
 #include "Renderables/RenderablePrimitiveAssembler.h"
+#include "Primitives/PrimitiveCommands.h"
 
 using namespace Enigma::Engine;
 using namespace Enigma::Animators;
@@ -15,7 +16,9 @@ using namespace Enigma::Primitives;
 std::shared_ptr<MeshPrimitive> SkinMeshModelMaker::makeCubeMeshPrimitive(const Enigma::Primitives::PrimitiveId& mesh_id, const Enigma::Geometries::GeometryId& geo_id)
 {
     if (auto mesh = Primitive::queryPrimitive(mesh_id)) return std::dynamic_pointer_cast<MeshPrimitive>(mesh);
-    return SkinMeshPrimitiveAssembler(mesh_id).geometryId(geo_id).asNative(mesh_id.name() + ".mesh@DataPath").effect(EffectMaterialId("skin_mesh_prim_test")).textureMap(EffectTextureMapDtoHelper().textureMapping(TextureId("earth"), std::nullopt, "DiffuseMap")).renderListID(Enigma::Renderer::Renderer::RenderListID::Scene).visualTechnique("Default").constitute(PersistenceLevel::Store);
+    auto mesh = SkinMeshPrimitiveAssembler(mesh_id).geometryId(geo_id).asNative(mesh_id.name() + ".mesh@DataPath").effect(EffectMaterialId("skin_mesh_prim_test")).textureMap(EffectTextureMapAssembler().textureMapping(TextureId("earth"), std::nullopt, "DiffuseMap")).renderListID(Enigma::Renderer::Renderer::RenderListID::Scene).visualTechnique("Default").constitute();
+    std::make_shared<PutPrimitive>(mesh_id, mesh)->execute();
+    return mesh;
 }
 
 std::shared_ptr<ModelPrimitive> SkinMeshModelMaker::makeModelPrimitive(const Enigma::Primitives::PrimitiveId& model_id, const Enigma::Primitives::PrimitiveId& mesh_id, const Enigma::Animators::AnimatorId& animator_id, const std::vector<std::string>& mesh_node_names)
@@ -38,5 +41,7 @@ std::shared_ptr<ModelPrimitive> SkinMeshModelMaker::makeModelPrimitive(const Eni
         }
         tree.addNode(node);
     }
-    return ModelPrimitiveAssembler(model_id).asNative(model_id.name() + ".model@DataPath").animator(animator_id).meshNodeTree(tree).constitute(PersistenceLevel::Store);
+    auto model = ModelPrimitiveAssembler(model_id).asNative(model_id.name() + ".model@DataPath").animator(animator_id).meshNodeTree(tree).constitute();
+    std::make_shared<PutPrimitive>(model_id, model)->execute();
+    return model;
 }

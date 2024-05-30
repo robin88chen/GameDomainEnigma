@@ -68,6 +68,12 @@ ServiceResult AnimationAssetRepository::onTerm()
     return ServiceResult::Complete;
 }
 
+void AnimationAssetRepository::registerAnimationAssetFactory(const std::string& rtti_name, const AnimationAssetCreator& creator, const AnimationAssetConstitutor& constitutor)
+{
+    assert(m_factory);
+    m_factory->registerAnimationAssetFactory(rtti_name, creator, constitutor);
+}
+
 bool AnimationAssetRepository::hasAnimationAsset(const AnimationAssetId& id)
 {
     assert(m_storeMapper);

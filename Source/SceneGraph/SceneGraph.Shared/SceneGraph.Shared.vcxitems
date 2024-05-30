@@ -47,6 +47,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphFactory.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphFactoryDelegate.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphInstallingPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraph.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphPersistenceLevel.h" />

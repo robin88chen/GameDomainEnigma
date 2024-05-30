@@ -10,6 +10,8 @@
 #include "SceneGraph/VisibilityManagedNode.h"
 #include <cassert>
 
+#include "SceneGraph/SceneGraphQueries.h"
+
 using namespace Enigma::WorldMap;
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Frameworks;
@@ -97,15 +99,15 @@ std::error_code QuadTreeRoot::createTreeNode(const std::shared_ptr<SceneGraph::S
     }
     MathLib::Matrix4 local_transform = volume->worldTransform() * parent_node->getWorldTransform().Inverse();
     Engine::GenericDto child_dto = assembleChildTreeNode(volume->parentId().value(), parent_node->factoryDesc(), volume->id(), local_transform, volume->worldTransform(), volume->modelBounding());
-    std::shared_ptr<LazyNode> child_node = std::dynamic_pointer_cast<LazyNode>(repository->factory()->constituteSpatial(volume->id(), child_dto, true));
+    std::shared_ptr<LazyNode> child_node = std::dynamic_pointer_cast<LazyNode>(std::make_shared<RequestSpatialConstitution>(volume->id(), child_dto)->dispatch());
     if (!child_node) return ErrorCode::childQuadNodeConstitutionFailed;
+    repository->putSpatial(child_node);
     std::error_code er = child_node->hydrate(child_dto);
     if (er) return er;
-    repository->putSpatial(child_node, SceneGraph::PersistenceLevel::Store);
     repository->putLaziedContent(child_node);
     er = parent_node->attachChild(child_node, local_transform);
     if (er) return er;
-    repository->putSpatial(parent_node, SceneGraph::PersistenceLevel::Store);
+    repository->putSpatial(parent_node);
     repository->putLaziedContent(parent_node);
     return ErrorCode::ok;
 }

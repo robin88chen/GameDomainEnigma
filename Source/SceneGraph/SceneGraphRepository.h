@@ -13,9 +13,9 @@
 #include "Frameworks/CommandSubscriber.h"
 #include "Frameworks/QuerySubscriber.h"
 #include "SpatialId.h"
-#include "SceneGraphPersistenceLevel.h"
 #include "MathLib/Matrix4.h"
 #include "GameEngine/BoundingVolume.h"
+#include "SceneGraphFactoryDelegate.h"
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -50,7 +50,7 @@ namespace Enigma::SceneGraph
         void setCoordinateSystem(GraphicCoordSys hand);
         GraphicCoordSys getCoordinateSystem();
 
-        SceneGraphFactory* factory() { return m_factory; }
+        void registerSpatialFactory(const std::string& rtti, const SpatialCreator& creator, const SpatialConstitutor& constitutor);
 
         /** query entities */
         bool hasCamera(const SpatialId& id);
@@ -64,8 +64,8 @@ namespace Enigma::SceneGraph
         std::shared_ptr<Spatial> queryRunningSpatial(const SpatialId& id);
 
         /** put entities */
-        void putCamera(const std::shared_ptr<Camera>& camera, PersistenceLevel persistence_level);
-        void putSpatial(const std::shared_ptr<Spatial>& spatial, PersistenceLevel persistence_level);
+        void putCamera(const std::shared_ptr<Camera>& camera);
+        void putSpatial(const std::shared_ptr<Spatial>& spatial);
         void putLaziedContent(const std::shared_ptr<LazyNode>& lazy_node);
 
         /** remove entities */

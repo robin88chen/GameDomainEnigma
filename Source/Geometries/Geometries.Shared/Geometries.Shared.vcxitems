@@ -33,6 +33,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataQueries.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataStoreMapper.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryErrors.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryFactoryDelegate.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryId.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryInstallingPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryPersistenceLevel.h" />

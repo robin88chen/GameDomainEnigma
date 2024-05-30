@@ -12,6 +12,7 @@
 #include "GameCameraCommands.h"
 #include "InputHandlers/GestureInputEvents.h"
 #include "SceneGraph/SceneGraphFactory.h"
+#include "SceneGraph/SceneGraphQueries.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::Frameworks;
@@ -108,8 +109,7 @@ void GameCameraService::constitutePrimaryCamera(const SceneGraph::SpatialId& id,
     }
     else
     {
-        m_primaryCamera = m_sceneGraphRepository.lock()->factory()->constituteCamera(id, dto, false);
-        m_sceneGraphRepository.lock()->putCamera(m_primaryCamera, PersistenceLevel::Repository);
+        m_primaryCamera = std::make_shared<RequestCameraConstitution>(id, dto)->dispatch();
     }
     assert(m_sceneGraphRepository.lock()->hasCamera(id));
     EventPublisher::post(std::make_shared<GameCameraCreated>(m_primaryCamera));

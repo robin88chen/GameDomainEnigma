@@ -286,7 +286,7 @@ void DeferredRendererService::createAmbientLightQuad(const std::shared_ptr<Light
     auto lit_mesh = Primitives::Primitive::queryPrimitive(amb_mesh_id);
     if (!lit_mesh)
     {
-        lit_mesh = Renderables::MeshPrimitiveAssembler(amb_mesh_id).geometryId(amb_quad_id).asNative(amb_mesh_id.name() + ".mesh@DataPath").effect(m_configuration->ambientEffect()).textureMap(getGBufferTextureSemantics()).renderListID(Renderer::Renderer::RenderListID::DeferredLighting).constitute(Primitives::PersistenceLevel::Repository);
+        lit_mesh = Renderables::MeshPrimitiveAssembler(amb_mesh_id).geometryId(amb_quad_id).asNative(amb_mesh_id.name() + ".mesh@DataPath").effect(m_configuration->ambientEffect()).textureMap(getGBufferTextureSemantics()).renderListID(Renderer::Renderer::RenderListID::DeferredLighting).constitute();
     }
     const auto amb_pawn_id = SpatialId(lit->id().name() + "_lit_quad", LightQuadPawn::TYPE_RTTI);
     auto lit_pawn = std::make_shared<QuerySpatial>(amb_pawn_id)->dispatch();
@@ -300,7 +300,6 @@ void DeferredRendererService::createAmbientLightQuad(const std::shared_ptr<Light
         lighting_pawn_dto.hostLightId() = lit->id();
         auto pawn_dto = lighting_pawn_dto.toGenericDto();
         lit_pawn = std::make_shared<RequestSpatialConstitution>(amb_pawn_id, pawn_dto)->dispatch();
-        if (lit_pawn) std::make_shared<PutSpatial>(amb_pawn_id, lit_pawn, PersistenceLevel::Repository)->execute();
     }
     if (lit_pawn)
     {
@@ -325,7 +324,7 @@ void DeferredRendererService::createSunLightQuad(const std::shared_ptr<Light>& l
     auto lit_mesh = Primitives::Primitive::queryPrimitive(sun_mesh_id);
     if (!lit_mesh)
     {
-        lit_mesh = Renderables::MeshPrimitiveAssembler(sun_mesh_id).geometryId(sun_quad_id).asNative(sun_mesh_id.name() + ".mesh@DataPath").effect(m_configuration->sunLightEffect()).textureMap(getGBufferTextureSemantics()).renderListID(Renderer::Renderer::RenderListID::DeferredLighting).constitute(Primitives::PersistenceLevel::Repository);
+        lit_mesh = Renderables::MeshPrimitiveAssembler(sun_mesh_id).geometryId(sun_quad_id).asNative(sun_mesh_id.name() + ".mesh@DataPath").effect(m_configuration->sunLightEffect()).textureMap(getGBufferTextureSemantics()).renderListID(Renderer::Renderer::RenderListID::DeferredLighting).constitute();
     }
     const auto sun_pawn_id = SpatialId(lit->id().name() + "_lit_quad", LightQuadPawn::TYPE_RTTI);
     auto lit_pawn = std::make_shared<QuerySpatial>(sun_pawn_id)->dispatch();
@@ -339,7 +338,6 @@ void DeferredRendererService::createSunLightQuad(const std::shared_ptr<Light>& l
         lighting_pawn_dto.hostLightId() = lit->id();
         auto pawn_dto = lighting_pawn_dto.toGenericDto();
         lit_pawn = std::make_shared<RequestSpatialConstitution>(sun_pawn_id, pawn_dto)->dispatch();
-        if (lit_pawn) std::make_shared<PutSpatial>(sun_pawn_id, lit_pawn, PersistenceLevel::Repository)->execute();
     }
     if (lit_pawn)
     {
@@ -364,7 +362,7 @@ void DeferredRendererService::createPointLightVolume(const std::shared_ptr<Light
     auto vol_mesh = Primitives::Primitive::queryPrimitive(vol_mesh_id);
     if (!vol_mesh)
     {
-        vol_mesh = Renderables::MeshPrimitiveAssembler(vol_mesh_id).geometryId(vol_geo_id).asNative(vol_mesh_id.name() + ".mesh@DataPath").effect(m_configuration->lightVolumeEffect()).textureMap(getGBufferTextureSemantics()).renderListID(Renderer::Renderer::RenderListID::DeferredLighting).constitute(Primitives::PersistenceLevel::Repository);
+        vol_mesh = Renderables::MeshPrimitiveAssembler(vol_mesh_id).geometryId(vol_geo_id).asNative(vol_mesh_id.name() + ".mesh@DataPath").effect(m_configuration->lightVolumeEffect()).textureMap(getGBufferTextureSemantics()).renderListID(Renderer::Renderer::RenderListID::DeferredLighting).constitute();
     }
 
     auto vol_pawn_id = SpatialId(lit->id().name() + "_lit_volume", LightVolumePawn::TYPE_RTTI);
@@ -379,7 +377,6 @@ void DeferredRendererService::createPointLightVolume(const std::shared_ptr<Light
         lighting_pawn_dto.hostLightId() = lit->id();
         auto pawn_dto = lighting_pawn_dto.toGenericDto();
         lit_pawn = std::make_shared<RequestSpatialConstitution>(vol_pawn_id, pawn_dto)->dispatch();
-        if (lit_pawn) std::make_shared<PutSpatial>(vol_pawn_id, lit_pawn, PersistenceLevel::Repository)->execute();
     }
     if (lit_pawn)
     {

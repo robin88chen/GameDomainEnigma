@@ -12,6 +12,7 @@
 #include "Frameworks/QuerySubscriber.h"
 #include "Frameworks/CommandSubscriber.h"
 #include "AnimatorId.h"
+#include "AnimatorFactoryDelegate.h"
 #include <mutex>
 
 namespace Enigma::Animators
@@ -34,7 +35,7 @@ namespace Enigma::Animators
         virtual Frameworks::ServiceResult onInit() override;
         virtual Frameworks::ServiceResult onTerm() override;
 
-        AnimatorFactory* factory() const { return m_factory; }
+        void registerAnimatorFactory(const std::string& rtti, const AnimatorCreator& creator, const AnimatorConstitutor& constitutor);
 
         std::uint64_t nextSequenceNumber();
         bool hasAnimator(const AnimatorId& id);

@@ -12,6 +12,7 @@
 #include "Frameworks/QuerySubscriber.h"
 #include "Frameworks/CommandSubscriber.h"
 #include "PrimitiveId.h"
+#include "PrimitiveFactoryDelegate.h"
 #include <mutex>
 
 namespace Enigma::Primitives
@@ -36,7 +37,7 @@ namespace Enigma::Primitives
         /// On Term
         virtual Frameworks::ServiceResult onTerm() override;
 
-        PrimitiveFactory* factory() const { return m_factory; }
+        void registerPrimitiveFactory(const std::string& rtti, const PrimitiveCreator& creator, const PrimitiveConstitutor& constitutor);
 
         std::uint64_t nextSequenceNumber();
         bool hasPrimitive(const PrimitiveId& id);

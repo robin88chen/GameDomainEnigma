@@ -13,7 +13,6 @@
 #include "SceneGraphFactory.h"
 #include "SpatialId.h"
 #include "MathLib/Matrix4.h"
-#include "SceneGraphPersistenceLevel.h"
 #include <string>
 #include <vector>
 
@@ -53,16 +52,14 @@ namespace Enigma::SceneGraph
     class PutSpatial : public Frameworks::ICommand
     {
     public:
-        PutSpatial(const SpatialId& id, const std::shared_ptr<Spatial>& spatial, PersistenceLevel persistence_level) : m_id(id), m_spatial(spatial), m_persistenceLevel(persistence_level) {}
+        PutSpatial(const SpatialId& id, const std::shared_ptr<Spatial>& spatial) : m_id(id), m_spatial(spatial) {}
 
         const SpatialId& id() { return m_id; }
         const std::shared_ptr<Spatial>& spatial() { return m_spatial; }
-        PersistenceLevel persistenceLevel() { return m_persistenceLevel; }
 
     protected:
         SpatialId m_id;
         std::shared_ptr<Spatial> m_spatial;
-        PersistenceLevel m_persistenceLevel;
     };
     class RemoveSpatial : public Frameworks::ICommand
     {

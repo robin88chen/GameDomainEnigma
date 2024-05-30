@@ -23,7 +23,6 @@ error NodalSceneGraph::createRoot(const SpatialId& scene_root_id)
     assert(!scene_root_id.empty());
     m_root = Node::queryNode(scene_root_id);
     if (!m_root) return ErrorCode::sceneRepositoryFailed;
-    m_sceneGraphRepository.lock()->putSpatial(m_root, PersistenceLevel::Repository);
     m_root->setLocalTransform(Matrix4::IDENTITY);
     return ErrorCode::ok;
 }

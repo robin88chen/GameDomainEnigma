@@ -77,6 +77,12 @@ ServiceResult PrimitiveRepository::onTerm()
     return ServiceResult::Complete;
 }
 
+void PrimitiveRepository::registerPrimitiveFactory(const std::string& rtti, const PrimitiveCreator& creator, const PrimitiveConstitutor& constitutor)
+{
+    assert(m_factory);
+    m_factory->registerPrimitiveFactory(rtti, creator, constitutor);
+}
+
 bool PrimitiveRepository::hasPrimitive(const PrimitiveId& id)
 {
     assert(m_storeMapper);
@@ -112,19 +118,26 @@ void PrimitiveRepository::removePrimitive(const PrimitiveId& id)
         Platforms::Debug::ErrorPrintf("remove primitive %s failed : %s\n", id.name().c_str(), er.message().c_str());
         EventPublisher::post(std::make_shared<RemovePrimitiveFailed>(id, er));
     }
+    else
+    {
+        EventPublisher::post(std::make_shared<PrimitiveRemoved>(id));
+    }
 }
 
 void PrimitiveRepository::putPrimitive(const PrimitiveId& id, const std::shared_ptr<Primitive>& primitive)
 {
-    if (hasPrimitive(id)) return;
-    std::lock_guard locker{ m_primitiveLock };
-    m_primitives.insert_or_assign(id, primitive);
+    assert(primitive);
+    assert(m_storeMapper);
     if (id != id.origin()) return;  // only put origin primitive to store
     error er = m_storeMapper->putPrimitive(id.origin(), primitive->serializeDto());
     if (er)
     {
         Platforms::Debug::ErrorPrintf("put primitive %s failed : %s\n", id.name().c_str(), er.message().c_str());
         EventPublisher::post(std::make_shared<PutPrimitiveFailed>(id, er));
+    }
+    else
+    {
+        EventPublisher::post(std::make_shared<PrimitivePut>(id));
     }
 }
 
@@ -162,15 +175,9 @@ void PrimitiveRepository::requestPrimitiveCreation(const Frameworks::IQueryPtr& 
         return;
     }
     auto primitive = m_factory->create(request->id(), request->rtti());
-    if (request->persistenceLevel() == PersistenceLevel::Repository)
-    {
-        std::lock_guard locker{ m_primitiveLock };
-        m_primitives.insert_or_assign(request->id(), primitive);
-    }
-    else if (request->persistenceLevel() == PersistenceLevel::Store)
-    {
-        putPrimitive(request->id(), primitive);
-    }
+    assert(primitive);
+    std::lock_guard locker{ m_primitiveLock };
+    m_primitives.insert_or_assign(request->id(), primitive);
     request->setResult(primitive);
 }
 
@@ -185,15 +192,9 @@ void PrimitiveRepository::requestPrimitiveConstitution(const Frameworks::IQueryP
         return;
     }
     auto primitive = m_factory->constitute(request->id(), request->dto(), false);
-    if (request->persistenceLevel() == PersistenceLevel::Repository)
-    {
-        std::lock_guard locker{ m_primitiveLock };
-        m_primitives.insert_or_assign(request->id(), primitive);
-    }
-    else if (request->persistenceLevel() == PersistenceLevel::Store)
-    {
-        putPrimitive(request->id(), primitive);
-    }
+    assert(primitive);
+    std::lock_guard locker{ m_primitiveLock };
+    m_primitives.insert_or_assign(request->id(), primitive);
     request->setResult(primitive);
 }
 

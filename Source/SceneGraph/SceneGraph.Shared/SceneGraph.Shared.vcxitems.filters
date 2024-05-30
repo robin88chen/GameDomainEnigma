@@ -198,6 +198,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalSceneGraph.h">
       <Filter>Scene Graph</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphFactoryDelegate.h">
+      <Filter>Repository</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp">

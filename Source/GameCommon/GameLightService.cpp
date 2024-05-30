@@ -87,7 +87,10 @@ void GameLightService::createAmbientLight(const SpatialId& parent_id, const Spat
     auto light = std::make_shared<RequestLightCreation>(light_id, info)->dispatch();
     if (!light) return;
     light->factoryDesc() = fd;
-    std::make_shared<PutSpatial>(light_id, light, persistence_level)->execute();
+    if (persistence_level >= PersistenceLevel::Store)
+    {
+        std::make_shared<PutSpatial>(light_id, light)->execute();
+    }
     if (!parent_id.empty())
     {
         m_pendingLightIds.insert(light_id);
@@ -102,7 +105,10 @@ void GameLightService::createSunLight(const SpatialId& parent_id, const SpatialI
     auto light = std::make_shared<RequestLightCreation>(light_id, info)->dispatch();
     if (!light) return;
     light->factoryDesc() = fd;
-    std::make_shared<PutSpatial>(light_id, light, persistence_level)->execute();
+    if (persistence_level >= PersistenceLevel::Store)
+    {
+        std::make_shared<PutSpatial>(light_id, light)->execute();
+    }
     if (!parent_id.empty())
     {
         m_pendingLightIds.insert(light_id);
@@ -117,7 +123,10 @@ void GameLightService::createPointLight(const SpatialId& parent_id, const MathLi
     auto light = std::make_shared<RequestLightCreation>(light_id, info)->dispatch();
     if (!light) return;
     light->factoryDesc() = fd;
-    std::make_shared<PutSpatial>(light_id, light, persistence_level)->execute();
+    if (persistence_level >= PersistenceLevel::Store)
+    {
+        std::make_shared<PutSpatial>(light_id, light)->execute();
+    }
     if (!parent_id.empty())
     {
         m_pendingLightIds.insert(light_id);

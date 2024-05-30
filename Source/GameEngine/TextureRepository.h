@@ -39,8 +39,6 @@ namespace Enigma::Engine
         virtual Frameworks::ServiceResult onInit() override;
         virtual Frameworks::ServiceResult onTerm() override;
 
-        TextureFactory* factory() { return m_factory; }
-
         bool hasTexture(const TextureId& id);
         std::shared_ptr<Texture> queryTexture(const TextureId& id);
         void removeTexture(const TextureId& id);

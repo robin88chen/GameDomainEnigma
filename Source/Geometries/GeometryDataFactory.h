@@ -9,17 +9,14 @@
 #define GEOMETRY_DATA_FACTORY_H
 
 #include "GeometryId.h"
+#include "GeometryFactoryDelegate.h"
 #include "GameEngine/GenericDto.h"
 #include "Frameworks/Rtti.h"
 #include "Frameworks/CommandSubscriber.h"
-#include "Frameworks/QuerySubscriber.h"
 
 namespace Enigma::Geometries
 {
     class GeometryData;
-    using GeometryCreator = std::function<std::shared_ptr<GeometryData>(const GeometryId& id)>;
-    using GeometryConstitutor = std::function<std::shared_ptr<GeometryData>(const GeometryId& id, const Engine::GenericDto& dto)>;
-
     class GeometryDataFactory
     {
     public:

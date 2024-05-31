@@ -279,7 +279,11 @@ void MainForm::onAddAmbientLightCommand(const nana::menu::item_proxy& menu_item)
     auto answer = input_dialog.modalityShow();
     if (answer == NameInputDialog::Answer::ok)
     {
-        Enigma::Frameworks::CommandBus::post(std::make_shared<Enigma::GameCommon::CreateAmbientLight>(m_sceneConsole.lock()->pickedSpatialId(), SpatialId(input_dialog.getInputName(), Light::TYPE_RTTI), Enigma::SceneGraph::PersistenceLevel::Store, Enigma::MathLib::ColorRGBA(0.2f, 0.2f, 0.2f, 1.0f)));
+        LightInfo info(LightInfo::LightType::Ambient);
+        info.setLightColor(Enigma::MathLib::ColorRGBA(0.2f, 0.2f, 0.2f, 1.0f));
+        SpatialId light_id(input_dialog.getInputName(), Light::TYPE_RTTI);
+        FactoryDesc fd = FactoryDesc(Light::TYPE_RTTI).ClaimAsInstanced(light_id.name() + ".light", m_appDelegate->appConfig()->mediaPathId());
+        Enigma::Frameworks::CommandBus::post(std::make_shared<Enigma::GameCommon::CreateAmbientLight>(m_sceneConsole.lock()->pickedSpatialId(), light_id, info, fd, PersistenceLevel::Store));
     }
 }
 
@@ -290,7 +294,12 @@ void MainForm::onAddSunLightCommand(const nana::menu::item_proxy& menu_item)
     auto answer = input_dialog.modalityShow();
     if (answer == NameInputDialog::Answer::ok)
     {
-        Enigma::Frameworks::CommandBus::post(std::make_shared<Enigma::GameCommon::CreateSunLight>(m_sceneConsole.lock()->pickedSpatialId(), SpatialId(input_dialog.getInputName(), Light::TYPE_RTTI), Enigma::SceneGraph::PersistenceLevel::Store, Enigma::MathLib::Vector3(-1.0, -1.0, -1.0), Enigma::MathLib::ColorRGBA(0.6f, 0.6f, 0.6f, 1.0f)));
+        LightInfo info(LightInfo::LightType::SunLight);
+        info.setLightColor(Enigma::MathLib::ColorRGBA(0.6f, 0.6f, 0.6f, 1.0f));
+        info.setLightDirection(Enigma::MathLib::Vector3(-1.0f, -1.0f, -1.0f));
+        SpatialId light_id(input_dialog.getInputName(), Light::TYPE_RTTI);
+        FactoryDesc fd = FactoryDesc(Light::TYPE_RTTI).ClaimAsInstanced(light_id.name() + ".light", m_appDelegate->appConfig()->mediaPathId());
+        Enigma::Frameworks::CommandBus::post(std::make_shared<Enigma::GameCommon::CreateSunLight>(m_sceneConsole.lock()->pickedSpatialId(), light_id, info, fd, PersistenceLevel::Store));
     }
 }
 
@@ -301,8 +310,14 @@ void MainForm::onAddPointLightCommand(const nana::menu::item_proxy& menu_item)
     auto answer = input_dialog.modalityShow();
     if (answer == NameInputDialog::Answer::ok)
     {
+        LightInfo info(LightInfo::LightType::Point);
+        info.setLightColor(Enigma::MathLib::ColorRGBA(3.0f, 0.0f, 3.0f, 1.0f));
+        info.setLightRange(3.50f);
+        info.setLightPosition(Enigma::MathLib::Vector3(2.0f, 2.0f, 2.0f));
+        SpatialId light_id(input_dialog.getInputName(), Light::TYPE_RTTI);
+        FactoryDesc fd = FactoryDesc(Light::TYPE_RTTI).ClaimAsInstanced(light_id.name() + ".light", m_appDelegate->appConfig()->mediaPathId());
         auto mx = Enigma::MathLib::Matrix4::MakeTranslateTransform(2.0f, 2.0f, 2.0f);
-        Enigma::Frameworks::CommandBus::post(std::make_shared<Enigma::GameCommon::CreatePointLight>(m_sceneConsole.lock()->pickedSpatialId(), mx, SpatialId(input_dialog.getInputName(), Light::TYPE_RTTI), PersistenceLevel::Repository, Enigma::MathLib::Vector3(2.0f, 2.0f, 2.0f), Enigma::MathLib::ColorRGBA(3.0f, 0.0f, 3.0f, 1.0f), 3.50f));
+        Enigma::Frameworks::CommandBus::post(std::make_shared<Enigma::GameCommon::CreatePointLight>(m_sceneConsole.lock()->pickedSpatialId(), mx, light_id, info, fd, PersistenceLevel::Store));
     }
 }
 

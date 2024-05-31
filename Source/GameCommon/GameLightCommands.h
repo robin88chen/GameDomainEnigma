@@ -14,6 +14,8 @@
 #include "MathLib/Matrix4.h"
 #include "SceneGraph/SpatialId.h"
 #include "SceneGraph/SceneGraphPersistenceLevel.h"
+#include "SceneGraph/LightInfo.h"
+#include "GameEngine/FactoryDesc.h"
 
 namespace Enigma::GameCommon
 {

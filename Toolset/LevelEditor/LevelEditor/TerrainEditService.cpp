@@ -9,6 +9,7 @@
 #include "Terrain/TerrainPrimitive.h"
 #include "Terrain/TerrainGeometry.h"
 #include "Geometries/GeometryDataQueries.h"
+#include "Geometries/GeometryCommands.h"
 #include "WorldMap/WorldMapCommands.h"
 #include "LevelEditorEvents.h"
 #include "MathLib/MathGlobal.h"
@@ -20,7 +21,9 @@
 #include "FileSystem/IFile.h"
 #include "GameEngine/TextureDto.h"
 #include "Primitives/PrimitiveQueries.h"
+#include "Primitives/PrimitiveCommands.h"
 #include "SceneGraph/SceneGraphQueries.h"
+#include "SceneGraph/SceneGraphCommands.h"
 #include "GameCommon/GameSceneCommands.h"
 
 using namespace LevelEditor;
@@ -312,7 +315,9 @@ void TerrainEditService::assembleTerrainGeometry(const std::shared_ptr<CreateNew
     TerrainGeometryAssembler geometry_assembler(cmd->geometryId());
     geometry_assembler.numRows(cmd->numRows()).numCols(cmd->numCols()).minPosition(cmd->minVtxPos()).maxPosition(cmd->maxVtxPos())
         .minTextureCoordinate(cmd->minUV()).maxTextureCoordinate(cmd->maxUV()).asAsset(cmd->geometryId().name(), cmd->geometryId().name() + ".geo", cmd->getAssetPathId());
-    auto terrain_geo = std::make_shared<Enigma::Geometries::RequestGeometryConstitution>(cmd->geometryId(), geometry_assembler.dto().toGenericDto(), Enigma::Geometries::PersistenceLevel::Store)->dispatch();
+    auto terrain_geo = std::make_shared<Enigma::Geometries::RequestGeometryConstitution>(cmd->geometryId(), geometry_assembler.dto().toGenericDto())->dispatch();
+    assert(terrain_geo);
+    std::make_shared<Enigma::Geometries::PutGeometry>(cmd->geometryId(), terrain_geo)->execute();
 }
 
 Enigma::Engine::TextureId TerrainEditService::assembleTerrainSplatTexture(const std::shared_ptr<CreateNewTerrain>& cmd)
@@ -344,7 +349,9 @@ Enigma::Primitives::PrimitiveId TerrainEditService::assembleTerrainPrimitive(con
     }
     primitive_assembler.meshPrimitive().textureMap(EffectTextureMapAssembler().textureMapping(splat_texture_id, std::nullopt, ALPHA_TEXTURE_SEMANTIC));
     primitive_assembler.asNative(terrain_prim_id.name() + ".mesh@" + cmd->getAssetPathId());
-    auto terrain_primitive = std::make_shared<Enigma::Primitives::RequestPrimitiveConstitution>(terrain_prim_id, primitive_assembler.toGenericDto(), Enigma::Primitives::PersistenceLevel::Store)->dispatch();
+    auto terrain_primitive = std::make_shared<Enigma::Primitives::RequestPrimitiveConstitution>(terrain_prim_id, primitive_assembler.toGenericDto())->dispatch();
+    assert(terrain_primitive);
+    std::make_shared<Enigma::Primitives::PutPrimitive>(terrain_prim_id, terrain_primitive)->execute();
     return terrain_prim_id;
 }
 
@@ -355,7 +362,9 @@ std::shared_ptr<Enigma::Terrain::TerrainPawn> TerrainEditService::assembleTerrai
     pawn_assembler.pawn().primitive(terrain_primitive_id);
     pawn_assembler.pawn().spatial().localTransform(Matrix4::MakeTranslateTransform(cmd->getLocalPos()));
     pawn_assembler.asNative(pawn_id.name() + ".terrain@" + cmd->getAssetPathId());
-    auto terrain = std::make_shared<Enigma::SceneGraph::RequestSpatialConstitution>(pawn_id, pawn_assembler.toGenericDto(), Enigma::SceneGraph::PersistenceLevel::Store)->dispatch();
+    auto terrain = std::make_shared<Enigma::SceneGraph::RequestSpatialConstitution>(pawn_id, pawn_assembler.toGenericDto())->dispatch();
+    assert(terrain);
+    std::make_shared<PutSpatial>(pawn_id, terrain)->execute();
     return std::dynamic_pointer_cast<TerrainPawn>(terrain);
 }
 

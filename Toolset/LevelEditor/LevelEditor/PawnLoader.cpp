@@ -45,7 +45,7 @@ error PawnLoader::StartLoadingPawn(const std::string& full_path)
     const auto dtos = std::make_shared<DtoJsonGateway>()->deserialize(convert_to_string(read_buf.value(), file_size));
     if (dtos.empty()) return ErrorCode::fileIOError;
     m_pawnFullPath = full_path;
-    CommandBus::post(std::make_shared<BuildSceneGraph>(m_pawnFullPath, dtos));
+    //CommandBus::post(std::make_shared<BuildSceneGraph>(m_pawnFullPath, dtos));
     return ErrorCode::ok;
 }
 

@@ -29,7 +29,6 @@
 #include "Terrain/TerrainInstallingPolicy.h"
 #include "ShadowMap/ShadowMapInstallingPolicies.h"
 #include "ShadowMap/SpatialShadowFlags.h"
-#include "Prefabs/PrefabInstallingPolicy.h"
 #include "LightEditService.h"
 #include "PawnEditService.h"
 #include "Gateways/DtoJsonGateway.h"
@@ -67,7 +66,6 @@ using namespace Enigma::MathLib;
 using namespace Enigma::InputHandlers;
 using namespace Enigma::Terrain;
 using namespace Enigma::ShadowMap;
-using namespace Enigma::Prefabs;
 using namespace Enigma::FileStorage;
 
 std::string PrimaryTargetName = "primary_target";
@@ -221,8 +219,7 @@ void EditorAppDelegate::installEngine()
     auto shadow_map_config = std::make_shared<ShadowMapServiceConfiguration>();
     auto shadow_map_policy = std::make_shared<ShadowMapInstallingPolicy>("shadowmap_renderer", "shadowmap_target", shadow_map_config);
     auto animated_pawn_policy = std::make_shared<AnimatedPawnInstallingPolicy>();
-    auto prefab_policy = std::make_shared<PrefabInstallingPolicy>(std::make_shared<JsonFileDtoDeserializer>());
-    m_graphicMain->installRenderEngine({ creating_policy, engine_policy, render_sys_policy, deferred_renderer_policy, animator_policy, scene_graph_policy, input_handler_policy, game_camera_policy, world_map_policy, game_scene_policy, terrain_policy, game_light_policy, shadow_map_policy, animated_pawn_policy, prefab_policy, geometry_policy, primitive_policy, renderables_policy, effect_material_source_policy, texture_policy });
+    m_graphicMain->installRenderEngine({ creating_policy, engine_policy, render_sys_policy, deferred_renderer_policy, animator_policy, scene_graph_policy, input_handler_policy, game_camera_policy, world_map_policy, game_scene_policy, terrain_policy, game_light_policy, shadow_map_policy, animated_pawn_policy, geometry_policy, primitive_policy, renderables_policy, effect_material_source_policy, texture_policy });
     m_inputHandler = input_handler_policy->GetInputHandler();
     m_inputHandler.lock()->RegisterKeyboardAsyncKey('A');
     m_inputHandler.lock()->RegisterKeyboardAsyncKey('D');

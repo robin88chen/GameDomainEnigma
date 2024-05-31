@@ -9,9 +9,9 @@
 #include "Frameworks/CommandBus.h"
 #include "MathLib/Matrix4.h"
 #include "Platforms/MemoryMacro.h"
-#include "Prefabs/PawnPrefabDto.h"
-#include "Prefabs/PrefabCommands.h"
-#include "Prefabs/PrefabEvents.h"
+//#include "Prefabs/PawnPrefabDto.h"
+//#include "Prefabs/PrefabCommands.h"
+//#include "Prefabs/PrefabEvents.h"
 #include "GameEngine/FactoryDesc.h"
 #include "GameCommon/AnimatedPawn.h"
 #include "WorldMap/WorldMapQueries.h"
@@ -24,7 +24,7 @@ using namespace Enigma::Frameworks;
 using namespace Enigma::SceneGraph;
 using namespace Enigma::GameCommon;
 using namespace Enigma::MathLib;
-using namespace Enigma::Prefabs;
+//using namespace Enigma::Prefabs;
 using namespace Enigma::Engine;
 using namespace Enigma::WorldMap;
 
@@ -43,10 +43,10 @@ PawnEditService::~PawnEditService()
 
 ServiceResult PawnEditService::onInit()
 {
-    m_onPrefabLoaded = std::make_shared<EventSubscriber>([=](auto e) { onPrefabLoaded(e); });
-    EventPublisher::subscribe(typeid(PawnPrefabLoaded), m_onPrefabLoaded);
-    m_onLoadPrefabFailed = std::make_shared<EventSubscriber>([=](auto e) { onLoadPrefabFailed(e); });
-    EventPublisher::subscribe(typeid(LoadPawnPrefabFailed), m_onLoadPrefabFailed);
+    //m_onPrefabLoaded = std::make_shared<EventSubscriber>([=](auto e) { onPrefabLoaded(e); });
+    //EventPublisher::subscribe(typeid(PawnPrefabLoaded), m_onPrefabLoaded);
+    //m_onLoadPrefabFailed = std::make_shared<EventSubscriber>([=](auto e) { onLoadPrefabFailed(e); });
+    //EventPublisher::subscribe(typeid(LoadPawnPrefabFailed), m_onLoadPrefabFailed);
     //m_onFittingNodeCreated = std::make_shared<EventSubscriber>([=](auto e) { onFittingNodeCreated(e); });
     //EventPublisher::subscribe(typeid(FittingNodeCreated), m_onFittingNodeCreated);
     //m_onCreateFittingNodeFailed = std::make_shared<EventSubscriber>([=](auto e) { onCreateFittingNodeFailed(e); });
@@ -68,8 +68,8 @@ ServiceResult PawnEditService::onTerm()
 {
     EventPublisher::unsubscribe(typeid(PawnLoaded), m_onPrefabLoaded);
     m_onPrefabLoaded = nullptr;
-    EventPublisher::unsubscribe(typeid(LoadPawnPrefabFailed), m_onLoadPrefabFailed);
-    m_onLoadPrefabFailed = nullptr;
+    //EventPublisher::unsubscribe(typeid(LoadPawnPrefabFailed), m_onLoadPrefabFailed);
+    //m_onLoadPrefabFailed = nullptr;
     //EventPublisher::unsubscribe(typeid(FittingNodeCreated), m_onFittingNodeCreated);
     //m_onFittingNodeCreated = nullptr;
     //EventPublisher::unsubscribe(typeid(CreateFittingNodeFailed), m_onCreateFittingNodeFailed);
@@ -98,18 +98,18 @@ void PawnEditService::loadNextPawn()
     }
     m_currentLoadingPawn = m_loadingPawns.front();
     m_loadingPawns.pop_front();
-    PawnPrefabDto dto;
+    /*PawnPrefabDto dto;
     dto.name() = m_currentLoadingPawn->m_name;
     dto.isTopLevel() = true;
     dto.factoryDesc() = FactoryDesc(AnimatedPawn::TYPE_RTTI.getName()).ClaimByPrefab(m_currentLoadingPawn->m_full_path);
     dto.worldTransform() = Matrix4::MakeTranslateTransform(m_currentLoadingPawn->m_position);
-    CommandBus::post(std::make_shared<LoadPawnPrefab>(dto.toGenericDto()));
+    CommandBus::post(std::make_shared<LoadPawnPrefab>(dto.toGenericDto()));*/
 }
 
 void PawnEditService::onPrefabLoaded(const IEventPtr& e)
 {
     if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<PawnPrefabLoaded>(e);
+    /*const auto ev = std::dynamic_pointer_cast<PawnPrefabLoaded>(e);
     if (!ev) return;
     if (!m_currentLoadingPawn) return;
     if (ev->getPrefabAtPath() != m_currentLoadingPawn->m_full_path) return;
@@ -122,17 +122,17 @@ void PawnEditService::onPrefabLoaded(const IEventPtr& e)
     else
     {
         createFittingNodeForPawn(m_loadedPawn, m_currentLoadingPawn->m_position);
-    }
+    }*/
 }
 
 void PawnEditService::onLoadPrefabFailed(const IEventPtr& e)
 {
     if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<LoadPawnPrefabFailed>(e);
+    /*const auto ev = std::dynamic_pointer_cast<LoadPawnPrefabFailed>(e);
     if (!ev) return;
     if (!m_currentLoadingPawn) return;
     //if (ev->GetPrefabFilePath() != m_currentLoadingPawn->m_full_path) return;
-    failPutCandidatePawn(ev->GetError());
+    failPutCandidatePawn(ev->GetError());*/
 }
 
 /*void PawnEditService::onFittingNodeCreated(const IEventPtr& e)
@@ -176,11 +176,11 @@ bool PawnEditService::tryPutPawnAt(const std::shared_ptr<Pawn>& pawn, const Vect
 
 void PawnEditService::createFittingNodeForPawn(const std::shared_ptr<Pawn>& pawn, const Vector3& position)
 {
-    auto world_transform = Matrix4::MakeTranslateTransform(position);
+    /*auto world_transform = Matrix4::MakeTranslateTransform(position);
     BoundingVolume bv = BoundingVolume::CreateFromTransform(pawn->getModelBound(), world_transform);
     auto cmd = std::make_shared<CreateFittingQuadNode>(bv);
     m_creatNodeRuid = cmd->getRuid();
-    CommandBus::post(cmd);
+    CommandBus::post(cmd);*/
 }
 
 void PawnEditService::completePutCandidatePawn()

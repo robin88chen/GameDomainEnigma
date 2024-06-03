@@ -37,7 +37,7 @@ RenderTarget::RenderTarget(const std::string& name, PrimaryType primary,
 
     if (m_isPrimary)
     {
-        Frameworks::CommandBus::post(std::make_shared<Graphics::CreatePrimarySurface>(
+        Frameworks::CommandBus::enqueue(std::make_shared<Graphics::CreatePrimarySurface>(
             primary_back_surface_name, primary_depth_surface_name));
     }
 }
@@ -91,21 +91,21 @@ RenderTarget::~RenderTarget()
 
 error RenderTarget::initBackSurface(const Graphics::BackSurfaceSpecification& specification)
 {
-    Frameworks::CommandBus::post(std::make_shared<Graphics::CreateBacksurface>(specification));
+    Frameworks::CommandBus::enqueue(std::make_shared<Graphics::CreateBacksurface>(specification));
 
     return ErrorCode::ok;
 }
 
 error RenderTarget::initMultiBackSurface(const Graphics::MultiBackSurfaceSpecification& specification)
 {
-    Frameworks::CommandBus::post(std::make_shared<Graphics::CreateMultiBacksurface>(specification));
+    Frameworks::CommandBus::enqueue(std::make_shared<Graphics::CreateMultiBacksurface>(specification));
 
     return ErrorCode::ok;
 }
 
 error RenderTarget::initDepthStencilSurface(const Graphics::DepthStencilSurfaceSpecification& specification)
 {
-    Frameworks::CommandBus::post(std::make_shared<Graphics::CreateDepthStencilSurface>(specification));
+    Frameworks::CommandBus::enqueue(std::make_shared<Graphics::CreateDepthStencilSurface>(specification));
 
     return ErrorCode::ok;
 }
@@ -121,7 +121,7 @@ error RenderTarget::shareDepthStencilSurface(const std::string& depth_name,
     {
         m_depthSpecification = std::nullopt;
     }
-    Frameworks::CommandBus::post(std::make_shared<Graphics::ShareDepthStencilSurface>(depth_name, surface));
+    Frameworks::CommandBus::enqueue(std::make_shared<Graphics::ShareDepthStencilSurface>(depth_name, surface));
 
     return ErrorCode::ok;
 }
@@ -139,14 +139,14 @@ error RenderTarget::bind()
         return ErrorCode::nullBackSurface;
     }
     Graphics::IGraphicAPI::instance()->bind(m_backSurface, m_depthStencilSurface);
-    //Frameworks::CommandBus::post(std::make_shared<Graphics::BindBackSurface>(m_backSurface, m_depthStencilSurface));
+    //Frameworks::CommandBus::enqueue(std::make_shared<Graphics::BindBackSurface>(m_backSurface, m_depthStencilSurface));
     return ErrorCode::ok;
 }
 
 error RenderTarget::bindViewPort()
 {
     Graphics::IGraphicAPI::instance()->bind(m_viewPort);
-    //Frameworks::CommandBus::post(std::make_shared<Graphics::BindViewPort>(m_viewPort));
+    //Frameworks::CommandBus::enqueue(std::make_shared<Graphics::BindViewPort>(m_viewPort));
     return ErrorCode::ok;
 }
 
@@ -158,7 +158,7 @@ error RenderTarget::clear(const MathLib::ColorRGBA& color, float depth_value, un
         (flag & (RenderTargetClearingBits)RenderTargetClear::ColorBuffer).any() ? m_backSurface : nullptr,
         (flag & (RenderTargetClearingBits)RenderTargetClear::DepthBuffer).any() ? m_depthStencilSurface : nullptr,
         color, depth_value, stencil_value);
-    //Frameworks::CommandBus::post(std::make_shared<Graphics::ClearSurface>(
+    //Frameworks::CommandBus::enqueue(std::make_shared<Graphics::ClearSurface>(
       //  ((int)flag & (int)BufferClearFlag::ColorBuffer) ? m_backSurface : nullptr,
       //  ((int)flag & (int)BufferClearFlag::DepthBuffer) ? m_depthStencilSurface : nullptr,
       //  color, depth_value, stencil_value));
@@ -175,7 +175,7 @@ error RenderTarget::flip() const
 {
     if (FATAL_LOG_EXPR(!m_isPrimary)) return ErrorCode::flipNotPrimary;
     Graphics::IGraphicAPI::instance()->flip();
-    //Frameworks::CommandBus::post(std::make_shared<Graphics::FlipBackSurface>());
+    //Frameworks::CommandBus::enqueue(std::make_shared<Graphics::FlipBackSurface>());
     return ErrorCode::ok;
 }
 
@@ -197,7 +197,7 @@ error RenderTarget::changeClearingProperty(const RenderTargetClearChangingProper
     {
         m_clearingProperty.m_clearingBits = prop.m_clearingBits.value();
     }
-    Frameworks::EventPublisher::post(std::make_shared<TargetClearingPropertyChanged>(shared_from_this(), m_clearingProperty));
+    Frameworks::EventPublisher::enqueue(std::make_shared<TargetClearingPropertyChanged>(shared_from_this(), m_clearingProperty));
 
     return ErrorCode::ok;
 }
@@ -212,7 +212,7 @@ error RenderTarget::resize(const MathLib::Dimension<unsigned>& dimension)
     if (Graphics::IGraphicAPI::instance()->CurrentBoundBackSurface() == m_backSurface)
     {
         isCurrentBound = true;
-        Frameworks::CommandBus::post(std::make_shared<Graphics::BindBackSurface>(nullptr, nullptr));
+        Frameworks::CommandBus::enqueue(std::make_shared<Graphics::BindBackSurface>(nullptr, nullptr));
     }
     m_backSurface->ResizeSurface(dimension);
     m_dimension = m_backSurface->getDimension();
@@ -230,7 +230,7 @@ error RenderTarget::resize(const MathLib::Dimension<unsigned>& dimension)
     }
     if (isCurrentBound)
     {
-        Frameworks::CommandBus::post(std::make_shared<Graphics::BindBackSurface>(m_backSurface, m_depthStencilSurface));
+        Frameworks::CommandBus::enqueue(std::make_shared<Graphics::BindBackSurface>(m_backSurface, m_depthStencilSurface));
     }
 
     return ErrorCode::ok;
@@ -312,13 +312,13 @@ void RenderTarget::initViewPortSize()
     m_viewPort.Width() = m_dimension.m_width;
     m_viewPort.Height() = m_dimension.m_height;
 
-    Frameworks::EventPublisher::post(std::make_shared<TargetViewPortInitialized>(shared_from_this(), m_viewPort));
+    Frameworks::EventPublisher::enqueue(std::make_shared<TargetViewPortInitialized>(shared_from_this(), m_viewPort));
 }
 
 void RenderTarget::setViewPort(const Graphics::TargetViewPort& vp)
 {
     m_viewPort = vp;
-    Frameworks::EventPublisher::post(std::make_shared<TargetViewPortChanged>(shared_from_this(), m_viewPort));
+    Frameworks::EventPublisher::enqueue(std::make_shared<TargetViewPortChanged>(shared_from_this(), m_viewPort));
 }
 
 void RenderTarget::onPrimarySurfaceCreated(const Frameworks::IEventPtr& e)
@@ -405,7 +405,7 @@ void RenderTarget::onBackSurfaceResized(const Frameworks::IEventPtr& e)
     if (m_resizingBits.all())
     {
         initViewPortSize();
-        Frameworks::EventPublisher::post(std::make_shared<RenderTargetResized>(shared_from_this(), m_dimension));
+        Frameworks::EventPublisher::enqueue(std::make_shared<RenderTargetResized>(shared_from_this(), m_dimension));
     }
 }
 
@@ -419,7 +419,7 @@ void RenderTarget::onDepthSurfaceResized(const Frameworks::IEventPtr& e)
     if (m_resizingBits.all())
     {
         initViewPortSize();
-        Frameworks::EventPublisher::post(std::make_shared<RenderTargetResized>(shared_from_this(), m_dimension));
+        Frameworks::EventPublisher::enqueue(std::make_shared<RenderTargetResized>(shared_from_this(), m_dimension));
     }
 }
 
@@ -440,7 +440,7 @@ void RenderTarget::onHydrateTextureFailed(const Frameworks::IEventPtr& e)
     auto ev = std::dynamic_pointer_cast<Engine::HydrateTextureFailed>(e);
     if (!ev) return;
     if (ev->id() != m_renderTargetTexture->id()) return;
-    Frameworks::EventPublisher::post(std::make_shared<CreateRenderTargetTextureFailed>(ev->id().name(), ev->error()));
+    Frameworks::EventPublisher::enqueue(std::make_shared<CreateRenderTargetTextureFailed>(ev->id().name(), ev->error()));
 }
 
 void RenderTarget::completeSurfaceCreation()
@@ -454,7 +454,7 @@ void RenderTarget::completeSurfaceCreation()
     initViewPortSize();
     if (m_isPrimary)
     {
-        Frameworks::EventPublisher::post(std::make_shared<PrimaryRenderTargetCreated>(m_name, shared_from_this()));
+        Frameworks::EventPublisher::enqueue(std::make_shared<PrimaryRenderTargetCreated>(m_name, shared_from_this()));
     }
 }
 
@@ -465,7 +465,7 @@ void RenderTarget::completeRenderTextureHydration()
     if (!m_backSurface) return;
 
     m_renderTargetTexture->getDeviceTexture()->asBackSurface(m_backSurface, m_usages);
-    Frameworks::EventPublisher::post(std::make_shared<RenderTargetTextureCreated>(shared_from_this(), m_renderTargetTexture->id().name()));
+    Frameworks::EventPublisher::enqueue(std::make_shared<RenderTargetTextureCreated>(shared_from_this(), m_renderTargetTexture->id().name()));
 }
 
 std::string RenderTarget::backSurfaceName() const

@@ -56,7 +56,7 @@ error VertexShaderDx11::CompileCode(const std::string& code, const std::string& 
         LOG(Error, str);
         SAFE_RELEASE(outBuf);
         SAFE_RELEASE(errorBuf);
-        Frameworks::EventPublisher::post(std::make_shared<Graphics::VertexShaderCompileFailed>(m_name, str));
+        Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::VertexShaderCompileFailed>(m_name, str));
         return ErrorCode::compileShader;
     }
     SAFE_RELEASE(errorBuf);
@@ -81,7 +81,7 @@ error VertexShaderDx11::CompileCode(const std::string& code, const std::string& 
 
     m_hasCompiled = true;
 
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::VertexShaderCompiled>(m_name));
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::VertexShaderCompiled>(m_name));
     return ErrorCode::ok;
 }
 
@@ -93,7 +93,7 @@ void VertexShaderDx11::VertexFormatSemanticMapping(const std::string& semantic_n
     {
         m_shaderVertexFormat.m_fvfCode =
             (m_shaderVertexFormat.m_fvfCode & (~Graphics::VertexFormatCode::POSITION_MASK))
-                | Graphics::VertexFormatCode::XYZ;
+            | Graphics::VertexFormatCode::XYZ;
     }
     else if (semantic_name == VertexDeclarationDx11::m_weightsSemanticName)
     {
@@ -102,25 +102,25 @@ void VertexShaderDx11::VertexFormatSemanticMapping(const std::string& semantic_n
         case 0x01:
             m_shaderVertexFormat.m_fvfCode =
                 (m_shaderVertexFormat.m_fvfCode & (~Graphics::VertexFormatCode::POSITION_MASK))
-                    | Graphics::VertexFormatCode::XYZB1;
+                | Graphics::VertexFormatCode::XYZB1;
             break;
         case 0x03:
             m_shaderVertexFormat.m_fvfCode =
                 (m_shaderVertexFormat.m_fvfCode & (~Graphics::VertexFormatCode::POSITION_MASK))
-                    | Graphics::VertexFormatCode::XYZB2;
+                | Graphics::VertexFormatCode::XYZB2;
             break;
         case 0x07:
             m_shaderVertexFormat.m_fvfCode =
                 (m_shaderVertexFormat.m_fvfCode & (~Graphics::VertexFormatCode::POSITION_MASK))
-                    | Graphics::VertexFormatCode::XYZB3;
+                | Graphics::VertexFormatCode::XYZB3;
             break;
         case 0x0f:
             m_shaderVertexFormat.m_fvfCode =
                 (m_shaderVertexFormat.m_fvfCode & (~Graphics::VertexFormatCode::POSITION_MASK))
-                    | Graphics::VertexFormatCode::XYZB4;
+                | Graphics::VertexFormatCode::XYZB4;
             break;
-            default:
-                break;
+        default:
+            break;
         }
     }
     else if (semantic_name == VertexDeclarationDx11::m_boneIndexSemanticName)
@@ -131,30 +131,30 @@ void VertexShaderDx11::VertexFormatSemanticMapping(const std::string& semantic_n
         case Graphics::VertexFormatCode::XYZ:
             m_shaderVertexFormat.m_fvfCode =
                 (m_shaderVertexFormat.m_fvfCode & (~Graphics::VertexFormatCode::POSITION_MASK))
-                    | Graphics::VertexFormatCode::XYZB1;
+                | Graphics::VertexFormatCode::XYZB1;
             break;
         case Graphics::VertexFormatCode::XYZB1:
             m_shaderVertexFormat.m_fvfCode =
                 (m_shaderVertexFormat.m_fvfCode & (~Graphics::VertexFormatCode::POSITION_MASK))
-                    | Graphics::VertexFormatCode::XYZB2;
+                | Graphics::VertexFormatCode::XYZB2;
             break;
         case Graphics::VertexFormatCode::XYZB2:
             m_shaderVertexFormat.m_fvfCode =
                 (m_shaderVertexFormat.m_fvfCode & (~Graphics::VertexFormatCode::POSITION_MASK))
-                    | Graphics::VertexFormatCode::XYZB3;
+                | Graphics::VertexFormatCode::XYZB3;
             break;
         case Graphics::VertexFormatCode::XYZB3:
             m_shaderVertexFormat.m_fvfCode =
                 (m_shaderVertexFormat.m_fvfCode & (~Graphics::VertexFormatCode::POSITION_MASK))
-                    | Graphics::VertexFormatCode::XYZB4;
+                | Graphics::VertexFormatCode::XYZB4;
             break;
         case Graphics::VertexFormatCode::XYZB4:
             m_shaderVertexFormat.m_fvfCode =
                 (m_shaderVertexFormat.m_fvfCode & (~Graphics::VertexFormatCode::POSITION_MASK))
-                    | Graphics::VertexFormatCode::XYZB5;
+                | Graphics::VertexFormatCode::XYZB5;
             break;
-            default:
-                break;
+        default:
+            break;
         }
         m_shaderVertexFormat.m_fvfCode |= Graphics::VertexFormatCode::LASTBETA_UBYTE4;
     }

@@ -59,7 +59,7 @@ void EffectCompiler::compileEffect(const std::shared_ptr<EffectMaterial>& effect
 
     if (m_profile.m_techniques.empty())
     {
-        EventPublisher::post(std::make_shared<CompileEffectMaterialFailed>(m_profile.m_name, ErrorCode::compilingEmptyEffectTech));
+        EventPublisher::enqueue(std::make_shared<CompileEffectMaterialFailed>(m_profile.m_name, ErrorCode::compilingEmptyEffectTech));
         return;
     }
     m_builtEffectTechniques.reserve(m_profile.m_techniques.size());
@@ -76,7 +76,7 @@ void EffectCompiler::compileEffect(const std::shared_ptr<EffectMaterial>& effect
                 m_builtPrograms.emplace(pass.m_program.m_programName, nullptr);
             }
             EffectPassStates built_pass_states;
-            CommandBus::post(std::make_shared<BuildShaderProgram>(pass.m_program));
+            CommandBus::enqueue(std::make_shared<BuildShaderProgram>(pass.m_program));
             if (!pass.m_samplers.empty())
             {
                 built_pass_states.m_samplers = std::vector<Graphics::IDeviceSamplerStatePtr>{};
@@ -84,13 +84,13 @@ void EffectCompiler::compileEffect(const std::shared_ptr<EffectMaterial>& effect
             }
             for (auto& samp : pass.m_samplers)
             {
-                CommandBus::post(std::make_shared<CreateSamplerState>(samp.m_name, samp.m_data));
+                CommandBus::enqueue(std::make_shared<CreateSamplerState>(samp.m_name, samp.m_data));
                 if (built_pass_states.m_samplers) built_pass_states.m_samplers->emplace_back(nullptr);
                 if (built_pass_states.m_samplerNames) built_pass_states.m_samplerNames->emplace_back(samp.m_variableName);
             }
-            CommandBus::post(std::make_shared<CreateDepthStencilState>(pass.m_depth.m_name, pass.m_depth.m_data));
-            CommandBus::post(std::make_shared<CreateBlendState>(pass.m_blend.m_name, pass.m_blend.m_data));
-            CommandBus::post(std::make_shared<CreateRasterizerState>(pass.m_rasterizer.m_name, pass.m_rasterizer.m_data));
+            CommandBus::enqueue(std::make_shared<CreateDepthStencilState>(pass.m_depth.m_name, pass.m_depth.m_data));
+            CommandBus::enqueue(std::make_shared<CreateBlendState>(pass.m_blend.m_name, pass.m_blend.m_data));
+            CommandBus::enqueue(std::make_shared<CreateRasterizerState>(pass.m_rasterizer.m_name, pass.m_rasterizer.m_data));
             m_builtPassStates.emplace(pass.m_name, built_pass_states);
         }
         m_builtEffectTechniques.emplace_back(built_effect_technique);
@@ -113,7 +113,7 @@ void EffectCompiler::onBuildProgramFailed(const Frameworks::IEventPtr& e)
     if (!e) return;
     auto ev_fail = std::dynamic_pointer_cast<BuildShaderProgramFailed, IEvent>(e);
     if (!ev_fail) return;
-    EventPublisher::post(std::make_shared<CompileEffectMaterialFailed>(m_profile.m_name, ev_fail->GetErrorCode()));
+    EventPublisher::enqueue(std::make_shared<CompileEffectMaterialFailed>(m_profile.m_name, ev_fail->GetErrorCode()));
 }
 
 void EffectCompiler::onSamplerStateCreated(const Frameworks::IEventPtr& e)
@@ -253,7 +253,7 @@ void EffectCompiler::tryBuildEffectMaterial()
         effect_techniques.emplace_back(built_tech.m_technique.value());
     }
     m_compilingEffect->hydrateTechniques(effect_techniques);
-    EventPublisher::post(std::make_shared<EffectMaterialCompiled>(m_compilingEffect->id(), m_compilingEffect));
+    EventPublisher::enqueue(std::make_shared<EffectMaterialCompiled>(m_compilingEffect->id(), m_compilingEffect));
     m_hasMaterialProduced = true;
 }
 

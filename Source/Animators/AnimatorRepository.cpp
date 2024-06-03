@@ -122,7 +122,7 @@ void AnimatorRepository::removeAnimator(const AnimatorId& id)
     if (er)
     {
         Platforms::Debug::ErrorPrintf("remove animator %s failed : %s\n", id.name().c_str(), er.message().c_str());
-        EventPublisher::post(std::make_shared<RemoveAnimatorFailed>(id, er));
+        EventPublisher::enqueue(std::make_shared<RemoveAnimatorFailed>(id, er));
     }
 }
 
@@ -135,7 +135,7 @@ void AnimatorRepository::putAnimator(const AnimatorId& id, const std::shared_ptr
     if (er)
     {
         Platforms::Debug::ErrorPrintf("put animator %s failed : %s\n", id.name().c_str(), er.message().c_str());
-        EventPublisher::post(std::make_shared<PutAnimatorFailed>(id, er));
+        EventPublisher::enqueue(std::make_shared<PutAnimatorFailed>(id, er));
     }
 }
 
@@ -163,7 +163,7 @@ void AnimatorRepository::requestAnimatorCreation(const Frameworks::IQueryPtr& r)
     if (!request) return;
     if (hasAnimator(request->id()))
     {
-        EventPublisher::post(std::make_shared<CreateAnimatorFailed>(request->id(), ErrorCode::animatorEntityAlreadyExists));
+        EventPublisher::enqueue(std::make_shared<CreateAnimatorFailed>(request->id(), ErrorCode::animatorEntityAlreadyExists));
         return;
     }
     auto animator = m_factory->create(request->id(), request->rtti());
@@ -180,7 +180,7 @@ void AnimatorRepository::requestAnimatorConstitution(const Frameworks::IQueryPtr
     if (!request) return;
     if (hasAnimator(request->id()))
     {
-        EventPublisher::post(std::make_shared<ConstituteAnimatorFailed>(request->id(), ErrorCode::animatorEntityAlreadyExists));
+        EventPublisher::enqueue(std::make_shared<ConstituteAnimatorFailed>(request->id(), ErrorCode::animatorEntityAlreadyExists));
         return;
     }
     auto animator = m_factory->constitute(request->id(), request->dto(), false);

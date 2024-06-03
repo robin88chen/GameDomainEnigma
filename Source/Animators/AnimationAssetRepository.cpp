@@ -107,11 +107,11 @@ void AnimationAssetRepository::removeAnimationAsset(const AnimationAssetId& id)
     if (er)
     {
         Platforms::Debug::ErrorPrintf("remove animation asset %s failed : %s\n", id.name().c_str(), er.message().c_str());
-        EventPublisher::post(std::make_shared<RemoveAnimationAssetFailed>(id, er));
+        EventPublisher::enqueue(std::make_shared<RemoveAnimationAssetFailed>(id, er));
     }
     else
     {
-        EventPublisher::post(std::make_shared<AnimationAssetRemoved>(id));
+        EventPublisher::enqueue(std::make_shared<AnimationAssetRemoved>(id));
     }
 }
 
@@ -124,11 +124,11 @@ void AnimationAssetRepository::putAnimationAsset(const AnimationAssetId& id, con
     if (er)
     {
         Platforms::Debug::ErrorPrintf("put animation asset %s failed : %s\n", id.name().c_str(), er.message().c_str());
-        EventPublisher::post(std::make_shared<PutAnimationAssetFailed>(id, er));
+        EventPublisher::enqueue(std::make_shared<PutAnimationAssetFailed>(id, er));
     }
     else
     {
-        EventPublisher::post(std::make_shared<AnimationAssetPut>(id));
+        EventPublisher::enqueue(std::make_shared<AnimationAssetPut>(id));
     }
 }
 
@@ -148,7 +148,7 @@ void AnimationAssetRepository::requestAnimationAssetCreation(const Frameworks::I
     if (!request) return;
     if (hasAnimationAsset(request->id()))
     {
-        EventPublisher::post(std::make_shared<CreateAnimationAssetFailed>(request->id(), ErrorCode::animationAssetAlreadyExists));
+        EventPublisher::enqueue(std::make_shared<CreateAnimationAssetFailed>(request->id(), ErrorCode::animationAssetAlreadyExists));
         return;
     }
     auto animation = m_factory->create(request->id(), request->rtti());
@@ -165,7 +165,7 @@ void AnimationAssetRepository::requestAnimationAssetConstitution(const Framework
     if (!request) return;
     if (hasAnimationAsset(request->id()))
     {
-        EventPublisher::post(std::make_shared<ConstituteAnimationAssetFailed>(request->id(), ErrorCode::animationAssetAlreadyExists));
+        EventPublisher::enqueue(std::make_shared<ConstituteAnimationAssetFailed>(request->id(), ErrorCode::animationAssetAlreadyExists));
         return;
     }
     auto animation = m_factory->constitute(request->id(), request->dto(), false);

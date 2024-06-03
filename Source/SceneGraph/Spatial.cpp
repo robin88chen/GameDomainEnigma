@@ -259,7 +259,7 @@ void Spatial::setCullingMode(CullingMode mode)
     }
     if ((testNotifyFlag(Notify_CullMode)) && (has_changed))
     {
-        Frameworks::EventPublisher::post(std::make_shared<SpatialCullModeChanged>(m_id));
+        Frameworks::EventPublisher::enqueue(std::make_shared<SpatialCullModeChanged>(m_id));
     }
 }
 
@@ -281,7 +281,7 @@ error Spatial::_updateBoundData()
 
     if (testNotifyFlag(Notify_Bounding))
     {
-        Frameworks::EventPublisher::post(std::make_shared<SpatialBoundChanged>(m_id));
+        Frameworks::EventPublisher::enqueue(std::make_shared<SpatialBoundChanged>(m_id));
     }
 
     error er = ErrorCode::ok;
@@ -304,7 +304,7 @@ error Spatial::_updateLocalTransform(const MathLib::Matrix4& mxLocal)
 
     if (testNotifyFlag(Notify_Location))
     {
-        Frameworks::EventPublisher::post(std::make_shared<SpatialLocationChanged>(m_id));
+        Frameworks::EventPublisher::enqueue(std::make_shared<SpatialLocationChanged>(m_id));
     }
     // propagate up
     er = _updateBoundData();
@@ -321,7 +321,7 @@ error Spatial::_updateSpatialRenderState()
     }
     if (testNotifyFlag(Notify_RenderState))
     {
-        Frameworks::EventPublisher::post(std::make_shared<SpatialRenderStateChanged>(m_id));
+        Frameworks::EventPublisher::enqueue(std::make_shared<SpatialRenderStateChanged>(m_id));
     }
     return ErrorCode::ok;
 }
@@ -343,7 +343,7 @@ void Spatial::addSpatialFlag(SpatialFlags flag)
     const bool visible_after = testSpatialFlag(SpatialBit::Spatial_Hide);
     if ((visible_before != visible_after) && (testNotifyFlag(Notify_Visibility)))
     {
-        Frameworks::EventPublisher::post(std::make_shared<SpatialVisibilityChanged>(m_id));
+        Frameworks::EventPublisher::enqueue(std::make_shared<SpatialVisibilityChanged>(m_id));
     }
 }
 
@@ -354,6 +354,6 @@ void Spatial::removeSpatialFlag(SpatialFlags flag)
     const bool visible_after = testSpatialFlag(SpatialBit::Spatial_Hide);
     if ((visible_before != visible_after) && (testNotifyFlag(Notify_Visibility)))
     {
-        Frameworks::EventPublisher::post(std::make_shared<SpatialVisibilityChanged>(m_id));
+        Frameworks::EventPublisher::enqueue(std::make_shared<SpatialVisibilityChanged>(m_id));
     }
 }

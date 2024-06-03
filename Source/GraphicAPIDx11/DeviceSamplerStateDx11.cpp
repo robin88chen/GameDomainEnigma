@@ -49,7 +49,7 @@ error DeviceSamplerStateDx11::CreateFromData(const SamplerStateData& data)
     HRESULT hr = device->CreateSamplerState(&desc, &m_d3dSampler);
     if (FATAL_LOG_EXPR(hr)) return ErrorCode::dxCreateSamplerState;
 
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::SamplerStateResourceCreated>(m_name));
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::SamplerStateResourceCreated>(m_name));
     return ErrorCode::ok;
 }
 

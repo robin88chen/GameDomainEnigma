@@ -17,31 +17,6 @@
 namespace Enigma::Engine
 {
     class EffectMaterial;
-    class EffectMaterialCompiled : public Frameworks::IResponseEvent
-    {
-    public:
-        EffectMaterialCompiled(const Frameworks::Ruid& request_ruid, const std::string& name, const std::shared_ptr<EffectMaterial>& eff)
-            : IResponseEvent(request_ruid), m_name(name), m_effect(eff) {};
-        const std::string& getName() { return m_name; }
-        bool HasEffect() { return m_effect != nullptr; }
-        std::shared_ptr<EffectMaterial> GetEffect() { return m_effect; }
-
-    private:
-        std::string m_name;
-        std::shared_ptr<EffectMaterial> m_effect;
-    };
-    class CompileEffectMaterialFailed : public Frameworks::IResponseEvent
-    {
-    public:
-        CompileEffectMaterialFailed(const Frameworks::Ruid& request_ruid, const std::string& name, std::error_code er)
-            : IResponseEvent(request_ruid), m_name(name), m_error(er) {};
-        const std::string& getName() { return m_name; }
-        std::error_code GetErrorCode() const { return m_error; }
-
-    private:
-        std::string m_name;
-        std::error_code m_error;
-    };
     class EffectMaterialSourceCompiled : public Frameworks::IEvent
     {
     public:

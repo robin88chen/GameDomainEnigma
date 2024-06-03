@@ -243,7 +243,7 @@ void DeferredRendererService::onLightInfoDeleted(const IEventPtr& e)
     if (auto pawn = findLightingPawn(ev->lightId())) pawn_id = pawn->id();
 
     removeLightingPawn(ev->lightId());
-    CommandBus::post(std::make_shared<DeleteSceneSpatial>(pawn_id));
+    CommandBus::enqueue(std::make_shared<DeleteSceneSpatial>(pawn_id));
 }
 
 void DeferredRendererService::onLightInfoUpdated(const IEventPtr& e)

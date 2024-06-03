@@ -177,7 +177,7 @@ void TextureResourceProcessor::onLoaderTextureLoaded(const Frameworks::IEventPtr
     auto ev = std::dynamic_pointer_cast<TextureLoader::TextureLoaded>(e);
     if (!ev) return;
     if (ev->id() != m_currentHydratingTexture->id()) return;
-    Frameworks::EventPublisher::post(std::make_shared<TextureHydrated>(ev->id(), ev->texture()));
+    Frameworks::EventPublisher::enqueue(std::make_shared<TextureHydrated>(ev->id(), ev->texture()));
     m_currentHydratingTexture = nullptr;
     const auto er = hydrateNextTextureResource();
     assert(!er);
@@ -190,7 +190,7 @@ void TextureResourceProcessor::onLoaderLoadTextureFailed(const Frameworks::IEven
     auto ev = std::dynamic_pointer_cast<TextureLoader::LoadTextureFailed>(e);
     if (!ev) return;
     Platforms::Debug::ErrorPrintf("texture %s load failed : %s\n", ev->id().name().c_str(), ev->error().message().c_str());
-    Frameworks::EventPublisher::post(std::make_shared<HydrateTextureFailed>(ev->id(), ev->error()));
+    Frameworks::EventPublisher::enqueue(std::make_shared<HydrateTextureFailed>(ev->id(), ev->error()));
     m_currentHydratingTexture = nullptr;
     const auto er = hydrateNextTextureResource();
     assert(!er);
@@ -203,7 +203,7 @@ void TextureResourceProcessor::onSaverTextureSaved(const Frameworks::IEventPtr& 
     const auto ev = std::dynamic_pointer_cast<TextureSaver::TextureSaved>(e);
     if (!ev) return;
     if (ev->id() != m_currentSavingTexture->id()) return;
-    Frameworks::EventPublisher::post(std::make_shared<TextureSaved>(ev->id()));
+    Frameworks::EventPublisher::enqueue(std::make_shared<TextureSaved>(ev->id()));
     m_currentSavingTexture = nullptr;
     const auto er = saveNextTextureResource();
     assert(!er);
@@ -216,7 +216,7 @@ void TextureResourceProcessor::onSaverSaveTextureFailed(const Frameworks::IEvent
     auto ev = std::dynamic_pointer_cast<TextureSaver::SaveTextureFailed>(e);
     if (!ev) return;
     Platforms::Debug::ErrorPrintf("texture %s save failed : %s\n", ev->id().name().c_str(), ev->error().message().c_str());
-    Frameworks::EventPublisher::post(std::make_shared<SaveTextureFailed>(ev->id(), ev->error()));
+    Frameworks::EventPublisher::enqueue(std::make_shared<SaveTextureFailed>(ev->id(), ev->error()));
     m_currentSavingTexture = nullptr;
     const auto er = saveNextTextureResource();
     assert(!er);
@@ -229,7 +229,7 @@ void TextureResourceProcessor::onUpdaterImageRetrieved(const Frameworks::IEventP
     const auto ev = std::dynamic_pointer_cast<TextureImageUpdater::TextureImageRetrieved>(e);
     if (!ev) return;
     if (ev->id() != m_currentProcessingTexture->id()) return;
-    Frameworks::EventPublisher::post(std::make_shared<TextureImageRetrieved>(ev->id(), ev->buffer()));
+    Frameworks::EventPublisher::enqueue(std::make_shared<TextureImageRetrieved>(ev->id(), ev->buffer()));
     m_currentProcessingTexture = nullptr;
     const auto er = processNextTextureResource();
     assert(!er);
@@ -242,7 +242,7 @@ void TextureResourceProcessor::onUpdaterRetrieveImageFailed(const Frameworks::IE
     const auto ev = std::dynamic_pointer_cast<TextureImageUpdater::RetrieveTextureFailed>(e);
     if (!ev) return;
     if (ev->id() != m_currentProcessingTexture->id()) return;
-    Frameworks::EventPublisher::post(std::make_shared<RetrieveTextureImageFailed>(ev->id(), ev->error()));
+    Frameworks::EventPublisher::enqueue(std::make_shared<RetrieveTextureImageFailed>(ev->id(), ev->error()));
     m_currentProcessingTexture = nullptr;
     const auto er = processNextTextureResource();
     assert(!er);
@@ -255,7 +255,7 @@ void TextureResourceProcessor::onUpdaterImageUpdated(const Frameworks::IEventPtr
     const auto ev = std::dynamic_pointer_cast<TextureImageUpdater::TextureImageUpdated>(e);
     if (!ev) return;
     if (ev->id() != m_currentProcessingTexture->id()) return;
-    Frameworks::EventPublisher::post(std::make_shared<TextureImageUpdated>(ev->id()));
+    Frameworks::EventPublisher::enqueue(std::make_shared<TextureImageUpdated>(ev->id()));
     m_currentProcessingTexture = nullptr;
     const auto er = processNextTextureResource();
     assert(!er);
@@ -268,7 +268,7 @@ void TextureResourceProcessor::onUpdaterUpdateImageFailed(const Frameworks::IEve
     const auto ev = std::dynamic_pointer_cast<TextureImageUpdater::UpdateTextureFailed>(e);
     if (!ev) return;
     if (ev->id() != m_currentProcessingTexture->id()) return;
-    Frameworks::EventPublisher::post(std::make_shared<UpdateTextureImageFailed>(ev->id(), ev->error()));
+    Frameworks::EventPublisher::enqueue(std::make_shared<UpdateTextureImageFailed>(ev->id(), ev->error()));
     m_currentProcessingTexture = nullptr;
     const auto er = processNextTextureResource();
     assert(!er);

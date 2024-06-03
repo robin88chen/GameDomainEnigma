@@ -68,7 +68,7 @@ void QuadTreeRoot::createFittingNodes(const std::shared_ptr<SceneGraph::SceneGra
     auto fitting_volumes = root->collectFitVolumes(bv_in_world);
     if (fitting_volumes.empty())
     {
-        EventPublisher::post(std::make_shared<FittingNodeCreationFailed>(m_id, ErrorCode::emptyQuadVolumeList));
+        EventPublisher::enqueue(std::make_shared<FittingNodeCreationFailed>(m_id, ErrorCode::emptyQuadVolumeList));
         return;
     }
     for (const auto& quad_tree_volume : fitting_volumes)
@@ -77,11 +77,11 @@ void QuadTreeRoot::createFittingNodes(const std::shared_ptr<SceneGraph::SceneGra
         if (repository->hasSpatial(quad_tree_volume->id())) continue;
         if (auto er = createTreeNode(repository, quad_tree_volume))
         {
-            EventPublisher::post(std::make_shared<FittingNodeCreationFailed>(m_id, er));
+            EventPublisher::enqueue(std::make_shared<FittingNodeCreationFailed>(m_id, er));
             return;
         }
     }
-    EventPublisher::post(std::make_shared<FittingNodeCreated>(m_id));
+    EventPublisher::enqueue(std::make_shared<FittingNodeCreated>(m_id));
 }
 
 std::error_code QuadTreeRoot::createTreeNode(const std::shared_ptr<SceneGraph::SceneGraphRepository>& repository, const std::shared_ptr<QuadTreeVolume>& volume)

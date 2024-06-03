@@ -262,7 +262,7 @@ void MainForm::onLoadWorldCommand(const nana::menu::item_proxy& menu_item)
 void MainForm::onSaveWorldCommand(const nana::menu::item_proxy& menu_item)
 {
     assert(!m_worldConsole.expired());
-    Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Save World File..."));
+    Enigma::Frameworks::CommandBus::enqueue(std::make_shared<OutputMessage>("Save World File..."));
     //m_worldConsole.lock()->saveWorldMap();
 }
 
@@ -273,7 +273,7 @@ void MainForm::onAddTerrainCommand(const nana::menu::item_proxy& menu_item)
 
 void MainForm::onAddAmbientLightCommand(const nana::menu::item_proxy& menu_item)
 {
-    Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Add Ambient Light..."));
+    Enigma::Frameworks::CommandBus::enqueue(std::make_shared<OutputMessage>("Add Ambient Light..."));
     NameInputDialog input_dialog(*this, "Add Ambient Light", InputNameVerifier::isSpatialNameDuplicated);
     auto answer = input_dialog.modalityShow();
     if (answer == NameInputDialog::Answer::ok)
@@ -282,13 +282,13 @@ void MainForm::onAddAmbientLightCommand(const nana::menu::item_proxy& menu_item)
         info.setLightColor(Enigma::MathLib::ColorRGBA(0.2f, 0.2f, 0.2f, 1.0f));
         SpatialId light_id(input_dialog.getInputName(), Light::TYPE_RTTI);
         FactoryDesc fd = FactoryDesc(Light::TYPE_RTTI).ClaimAsInstanced(light_id.name() + ".light", m_appDelegate->appConfig()->mediaPathId());
-        Enigma::Frameworks::CommandBus::post(std::make_shared<Enigma::GameCommon::CreateAmbientLight>(m_sceneConsole.lock()->pickedSpatialId(), light_id, info, fd, PersistenceLevel::Store));
+        Enigma::Frameworks::CommandBus::enqueue(std::make_shared<Enigma::GameCommon::CreateAmbientLight>(m_sceneConsole.lock()->pickedSpatialId(), light_id, info, fd, PersistenceLevel::Store));
     }
 }
 
 void MainForm::onAddSunLightCommand(const nana::menu::item_proxy& menu_item)
 {
-    Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Add Sun Light..."));
+    Enigma::Frameworks::CommandBus::enqueue(std::make_shared<OutputMessage>("Add Sun Light..."));
     NameInputDialog input_dialog(*this, "Add Sun Light", InputNameVerifier::isSpatialNameDuplicated);
     auto answer = input_dialog.modalityShow();
     if (answer == NameInputDialog::Answer::ok)
@@ -298,13 +298,13 @@ void MainForm::onAddSunLightCommand(const nana::menu::item_proxy& menu_item)
         info.setLightDirection(Enigma::MathLib::Vector3(-1.0f, -1.0f, -1.0f));
         SpatialId light_id(input_dialog.getInputName(), Light::TYPE_RTTI);
         FactoryDesc fd = FactoryDesc(Light::TYPE_RTTI).ClaimAsInstanced(light_id.name() + ".light", m_appDelegate->appConfig()->mediaPathId());
-        Enigma::Frameworks::CommandBus::post(std::make_shared<Enigma::GameCommon::CreateSunLight>(m_sceneConsole.lock()->pickedSpatialId(), light_id, info, fd, PersistenceLevel::Store));
+        Enigma::Frameworks::CommandBus::enqueue(std::make_shared<Enigma::GameCommon::CreateSunLight>(m_sceneConsole.lock()->pickedSpatialId(), light_id, info, fd, PersistenceLevel::Store));
     }
 }
 
 void MainForm::onAddPointLightCommand(const nana::menu::item_proxy& menu_item)
 {
-    Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Add Point Light..."));
+    Enigma::Frameworks::CommandBus::enqueue(std::make_shared<OutputMessage>("Add Point Light..."));
     NameInputDialog input_dialog(*this, "Add Point Light", InputNameVerifier::isSpatialNameDuplicated);
     auto answer = input_dialog.modalityShow();
     if (answer == NameInputDialog::Answer::ok)
@@ -316,7 +316,7 @@ void MainForm::onAddPointLightCommand(const nana::menu::item_proxy& menu_item)
         SpatialId light_id(input_dialog.getInputName(), Light::TYPE_RTTI);
         FactoryDesc fd = FactoryDesc(Light::TYPE_RTTI).ClaimAsInstanced(light_id.name() + ".light", m_appDelegate->appConfig()->mediaPathId());
         auto mx = Enigma::MathLib::Matrix4::MakeTranslateTransform(2.0f, 2.0f, 2.0f);
-        Enigma::Frameworks::CommandBus::post(std::make_shared<Enigma::GameCommon::CreatePointLight>(m_sceneConsole.lock()->pickedSpatialId(), mx, light_id, info, fd, PersistenceLevel::Store));
+        Enigma::Frameworks::CommandBus::enqueue(std::make_shared<Enigma::GameCommon::CreatePointLight>(m_sceneConsole.lock()->pickedSpatialId(), mx, light_id, info, fd, PersistenceLevel::Store));
     }
 }
 
@@ -344,7 +344,7 @@ void MainForm::onAddCandidatePawn(const nana::toolbar::item_proxy& drop_down_ite
     {
         Filename filename_obj(paths[0].string());
         std::string pawn_name = filename_obj.getBaseFileName();
-        Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Add Candidate Pawn " + pawn_name + " File " + paths[0].string() + "..."));
+        Enigma::Frameworks::CommandBus::enqueue(std::make_shared<OutputMessage>("Add Candidate Pawn " + pawn_name + " File " + paths[0].string() + "..."));
         if (!m_pawnConsole.expired())
         {
             std::string filename_sub_path = filePathCombinePathID(paths[0], m_appDelegate->appConfig()->mediaPathId());
@@ -370,15 +370,15 @@ void MainForm::onToolBarSelected(const nana::arg_toolbar& arg)
     switch (arg.button)
     {
     case static_cast<size_t>(ToolIndex::ToolCursor):
-        Enigma::Frameworks::EventPublisher::post(std::make_shared<EditorModeChanged>(m_editorMode, EditorMode::cursor));
+        Enigma::Frameworks::EventPublisher::enqueue(std::make_shared<EditorModeChanged>(m_editorMode, EditorMode::cursor));
         m_editorMode = EditorMode::cursor;
         break;
     case static_cast<size_t>(ToolIndex::ToolTerrain):
-        Enigma::Frameworks::EventPublisher::post(std::make_shared<EditorModeChanged>(m_editorMode, EditorMode::terrain));
+        Enigma::Frameworks::EventPublisher::enqueue(std::make_shared<EditorModeChanged>(m_editorMode, EditorMode::terrain));
         m_editorMode = EditorMode::terrain;
         break;
     case static_cast<size_t>(ToolIndex::ToolEntity):
-        Enigma::Frameworks::EventPublisher::post(std::make_shared<EditorModeChanged>(m_editorMode, EditorMode::pawn));
+        Enigma::Frameworks::EventPublisher::enqueue(std::make_shared<EditorModeChanged>(m_editorMode, EditorMode::pawn));
         m_editorMode = EditorMode::pawn;
         break;
         /*case static_cast<size_t>(ToolIndex::ToolMoveEntity):

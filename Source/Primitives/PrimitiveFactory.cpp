@@ -43,11 +43,11 @@ std::shared_ptr<Primitive> PrimitiveFactory::create(const PrimitiveId& id, const
     if (creator == m_creators.end())
     {
         Platforms::Debug::Printf("Can't find creator of %s\n", rtti.getName().c_str());
-        EventPublisher::post(std::make_shared<CreatePrimitiveFailed>(id, ErrorCode::primitiveFactoryNotExists));
+        EventPublisher::enqueue(std::make_shared<CreatePrimitiveFailed>(id, ErrorCode::primitiveFactoryNotExists));
         return nullptr;
     }
     auto prim = creator->second(id);
-    EventPublisher::post(std::make_shared<PrimitiveCreated>(id, prim));
+    EventPublisher::enqueue(std::make_shared<PrimitiveCreated>(id, prim));
     return prim;
 }
 
@@ -57,11 +57,11 @@ std::shared_ptr<Primitive> PrimitiveFactory::constitute(const PrimitiveId& id, c
     if (constitutor == m_constitutors.end())
     {
         Platforms::Debug::Printf("Can't find constitutor of %s\n", dto.getRtti().GetRttiName().c_str());
-        EventPublisher::post(std::make_shared<ConstitutePrimitiveFailed>(id, ErrorCode::primitiveFactoryNotExists));
+        EventPublisher::enqueue(std::make_shared<ConstitutePrimitiveFailed>(id, ErrorCode::primitiveFactoryNotExists));
         return nullptr;
     }
     auto prim = constitutor->second(id, dto);
-    EventPublisher::post(std::make_shared<PrimitiveConstituted>(id, prim, is_persisted));
+    EventPublisher::enqueue(std::make_shared<PrimitiveConstituted>(id, prim, is_persisted));
     return prim;
 }
 

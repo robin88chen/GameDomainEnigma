@@ -44,7 +44,7 @@ ServiceResult CommandBus::onTick()
         }
         m_commandListLock.unlock();
         if (!cmd) break;
-        send(cmd);
+        execute(cmd);
         cmd_sended++;
     }
     return ServiceResult::Pendding;
@@ -75,7 +75,7 @@ void CommandBus::unsubscribe(const std::type_info& cmd_type, const CommandSubscr
     assert(res == 1);
 }
 
-void CommandBus::post(const ICommandPtr& c)
+void CommandBus::enqueue(const ICommandPtr& c)
 {
     assert(m_thisBus);
     if (!c) return;
@@ -87,7 +87,7 @@ void CommandBus::post(const ICommandPtr& c)
     m_thisBus->m_needTick = true;
 }
 
-void CommandBus::send(const ICommandPtr& c)
+void CommandBus::execute(const ICommandPtr& c)
 {
     assert(m_thisBus);
     if (!c) return;

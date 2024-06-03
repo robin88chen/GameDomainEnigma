@@ -24,14 +24,22 @@ namespace LevelEditor
         CreateNewWorldDlg(nana::window owner, const std::shared_ptr<WorldEditConsole>& world_editor, const Enigma::SceneGraph::SpatialId& portal_manager_id);
         virtual ~CreateNewWorldDlg();
 
+    private:
         void onOkButton(const nana::arg_click& arg);
         void onCancelButton(const nana::arg_click& arg);
         void onInputNameChanged(const nana::arg_textbox& arg);
+
+        Enigma::SceneGraph::SpatialId outsideRegionFromInput();
+        void createWorldMapOutsideRegion(const Enigma::SceneGraph::SpatialId& region_id);
+
+        std::error_code validateInputNames();
     private:
         nana::button* m_okButton;
         nana::button* m_cancelButton;
         nana::label* m_namePrompt;
         nana::textbox* m_nameInputBox;
+        nana::checkbox* m_regionCheckbox;
+        nana::textbox* m_regionNameInputBox;
         nana::label* m_nameValidationPrompt;
 
         std::weak_ptr<WorldEditConsole> m_worldEditor;

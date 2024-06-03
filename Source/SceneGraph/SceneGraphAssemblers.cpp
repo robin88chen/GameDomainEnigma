@@ -486,6 +486,11 @@ Enigma::Engine::GenericDto PortalZoneNodeAssembler::toHydratedGenericDto() const
     return toHydratedDto().toGenericDto();
 }
 
+std::shared_ptr<PortalZoneNode> PortalZoneNodeAssembler::constituteHydrated()
+{
+    return std::dynamic_pointer_cast<PortalZoneNode>(std::make_shared<RequestSpatialConstitution>(m_id, toHydratedGenericDto())->dispatch());
+}
+
 PortalZoneNodeDto PortalZoneNodeAssembler::toDeHydratedDto() const
 {
     PortalZoneNodeDto portal_zone_node_dto(m_lazyNodeAssembler.toDeHydratedDto());
@@ -498,6 +503,11 @@ PortalZoneNodeDto PortalZoneNodeAssembler::toDeHydratedDto() const
 Enigma::Engine::GenericDto PortalZoneNodeAssembler::toDeHydratedGenericDto() const
 {
     return toDeHydratedDto().toGenericDto();
+}
+
+std::shared_ptr<PortalZoneNode> PortalZoneNodeAssembler::constituteDeHydrated()
+{
+    return std::dynamic_pointer_cast<PortalZoneNode>(std::make_shared<RequestSpatialConstitution>(m_id, toDeHydratedGenericDto())->dispatch());
 }
 
 PortalManagementNodeAssembler::PortalManagementNodeAssembler(const SpatialId& id) : m_nodeAssembler(id)

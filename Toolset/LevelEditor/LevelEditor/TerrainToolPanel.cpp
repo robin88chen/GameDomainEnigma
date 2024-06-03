@@ -142,7 +142,7 @@ void TerrainToolPanel::setTerrainName(const std::string& name)
 void TerrainToolPanel::onBrushSizeChanged(const nana::arg_spinbox& arg)
 {
     if (!m_brushSizeSpin) return;
-    Enigma::Frameworks::EventPublisher::post(std::make_shared<TerrainBrushSizeChanged>(m_brushSizeSpin->to_int()));
+    Enigma::Frameworks::EventPublisher::enqueue(std::make_shared<TerrainBrushSizeChanged>(m_brushSizeSpin->to_int()));
 }
 
 void TerrainToolPanel::onBrushHeightChanged(const nana::arg_textbox& arg)
@@ -150,7 +150,7 @@ void TerrainToolPanel::onBrushHeightChanged(const nana::arg_textbox& arg)
     if ((m_brushHeight) && (!m_brushHeight->text().empty()))
     {
         auto height = static_cast<float>(m_brushHeight->to_double());
-        Enigma::Frameworks::EventPublisher::post(std::make_shared<TerrainBrushHeightChanged>(height));
+        Enigma::Frameworks::EventPublisher::enqueue(std::make_shared<TerrainBrushHeightChanged>(height));
     }
 }
 
@@ -158,18 +158,18 @@ void TerrainToolPanel::onLayerDensityChanged(const nana::arg_slider& arg)
 {
     if (!m_textureDensity) return;
     auto density = slideValueToDensity(m_textureDensity->value());
-    Enigma::Frameworks::EventPublisher::post(std::make_shared<TerrainBrushDensityChanged>(density));
+    Enigma::Frameworks::EventPublisher::enqueue(std::make_shared<TerrainBrushDensityChanged>(density));
 }
 
 void TerrainToolPanel::onTextureLayerButton(const nana::arg_click& arg, unsigned int index)
 {
     if (index >= m_textureLayerButtons.size()) return;
-    Enigma::Frameworks::EventPublisher::post(std::make_shared<TerrainPaintingLayerChanged>(index));
+    Enigma::Frameworks::EventPublisher::enqueue(std::make_shared<TerrainPaintingLayerChanged>(index));
 }
 
 void TerrainToolPanel::onTerrainToolButton(const nana::toolbar::item_proxy& it, TerrainEditToolSelected::Tool tool)
 {
-    Enigma::Frameworks::EventPublisher::post(std::make_shared<TerrainEditToolSelected>(tool));
+    Enigma::Frameworks::EventPublisher::enqueue(std::make_shared<TerrainEditToolSelected>(tool));
 }
 
 unsigned int TerrainToolPanel::densityToSlideValue(float density) const

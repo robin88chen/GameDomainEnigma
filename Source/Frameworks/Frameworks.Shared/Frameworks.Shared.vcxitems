@@ -17,6 +17,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Command.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\CommandBus.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\CommandSubscriber.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Event.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EventPublisher.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EventSubscriber.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ExtentTypesDefine.cpp" />

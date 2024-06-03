@@ -29,7 +29,7 @@ error DeviceDepthStencilStateEgl::CreateFromData(const DepthStencilData& data)
     m_backFaceZFailOp = ToStencilOp(m_data.m_backFaceOp.m_depthFailOp);
     m_backFacePassOp = ToStencilOp(m_data.m_backFaceOp.m_passOp);
 
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::DepthStencilStateResourceCreated>(m_name));
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::DepthStencilStateResourceCreated>(m_name));
     return ErrorCode::ok;
 }
 

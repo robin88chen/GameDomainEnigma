@@ -25,7 +25,7 @@ error DeviceRasterizerStateEgl::CreateFromData(const RasterizerStateData& data)
     m_depthBias = PixeledDepthBiasByData(m_data.m_depthBias);
     m_depthSlopeFactor = m_data.m_slopeScaledDepthBias;
 
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::RasterizerStateResourceCreated>(m_name));
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::RasterizerStateResourceCreated>(m_name));
     return ErrorCode::ok;
 }
 

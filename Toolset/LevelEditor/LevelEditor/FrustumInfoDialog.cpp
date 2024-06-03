@@ -75,7 +75,7 @@ void FrustumInfoDialog::onOkButton(const nana::arg_click& arg)
         }
         else
         {
-            Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Invalid fov value."));
+            Enigma::Frameworks::CommandBus::enqueue(std::make_shared<OutputMessage>("Invalid fov value."));
         }
     }
     float near_plane = 0.0f;
@@ -86,7 +86,7 @@ void FrustumInfoDialog::onOkButton(const nana::arg_click& arg)
     }
     if (near_plane <= 0.0f)
     {
-        Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Invalid near plane value."));
+        Enigma::Frameworks::CommandBus::enqueue(std::make_shared<OutputMessage>("Invalid near plane value."));
         return;
     }
     if (!m_farPlaneInputBox->caption().empty())
@@ -95,7 +95,7 @@ void FrustumInfoDialog::onOkButton(const nana::arg_click& arg)
     }
     if (far_plane <= 0.0f)
     {
-        Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Invalid far plane value."));
+        Enigma::Frameworks::CommandBus::enqueue(std::make_shared<OutputMessage>("Invalid far plane value."));
         return;
     }
     if (near_plane < far_plane)
@@ -105,7 +105,7 @@ void FrustumInfoDialog::onOkButton(const nana::arg_click& arg)
     }
     else
     {
-        Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Invalid near/far plane value."));
+        Enigma::Frameworks::CommandBus::enqueue(std::make_shared<OutputMessage>("Invalid near/far plane value."));
     }
     close();
 }
@@ -128,6 +128,6 @@ void FrustumInfoDialog::queryCamera(const Enigma::SceneGraph::SpatialId& camera_
     }
     else
     {
-        Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("QueryCameraFailed : " + camera_id.name()));
+        Enigma::Frameworks::CommandBus::enqueue(std::make_shared<OutputMessage>("QueryCameraFailed : " + camera_id.name()));
     }
 }

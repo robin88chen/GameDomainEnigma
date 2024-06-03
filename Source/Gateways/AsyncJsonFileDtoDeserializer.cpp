@@ -35,7 +35,7 @@ void AsyncJsonFileDtoDeserializer::DeserializeProcedure()
     IFilePtr readFile = readingFile.get();
     if (!readFile)
     {
-        Frameworks::EventPublisher::post(std::make_shared<DeserializeDtoFailed>(m_ruid, FileSystem::ErrorCode::fileOpenError));
+        Frameworks::EventPublisher::enqueue(std::make_shared<DeserializeDtoFailed>(m_ruid, FileSystem::ErrorCode::fileOpenError));
         return;
     }
     size_t filesize = readFile->size();
@@ -44,9 +44,9 @@ void AsyncJsonFileDtoDeserializer::DeserializeProcedure()
     auto buff = read.get();
     if (!buff)
     {
-        Frameworks::EventPublisher::post(std::make_shared<DeserializeDtoFailed>(m_ruid, FileSystem::ErrorCode::readFail));
+        Frameworks::EventPublisher::enqueue(std::make_shared<DeserializeDtoFailed>(m_ruid, FileSystem::ErrorCode::readFail));
         return;
     }
     std::string read_json = convert_to_string(buff.value(), buff->size());
-    Frameworks::EventPublisher::post(std::make_shared<GenericDtoDeserialized>(m_ruid, m_gateway->deserialize(read_json)));
+    Frameworks::EventPublisher::enqueue(std::make_shared<GenericDtoDeserialized>(m_ruid, m_gateway->deserialize(read_json)));
 }

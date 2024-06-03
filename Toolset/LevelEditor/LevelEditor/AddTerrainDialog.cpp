@@ -165,7 +165,7 @@ void AddTerrainDialog::onOkButton(const nana::arg_click& arg)
 
     auto terrain_id = Geometries::GeometryId(m_terrainEdit.lock()->terrainPath() + "/" + terrainName);
 
-    Frameworks::CommandBus::post(std::make_shared<CreateNewTerrain>(terrain_id, rows, cols, minVertexPos, maxVertexPos, minUV, maxUV, m_layerTextureIds, terrainLocalPos, m_terrainEdit.lock()->mediaPathId()));
+    Frameworks::CommandBus::enqueue(std::make_shared<CreateNewTerrain>(terrain_id, rows, cols, minVertexPos, maxVertexPos, minUV, maxUV, m_layerTextureIds, terrainLocalPos, m_terrainEdit.lock()->mediaPathId()));
 
     close();
 }

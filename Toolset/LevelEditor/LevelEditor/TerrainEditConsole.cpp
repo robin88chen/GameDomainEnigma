@@ -143,13 +143,13 @@ void TerrainEditConsole::sendTerrainEditCommand(float elapse_time)
     case TerrainEditMode::unknown:
         break;
     case TerrainEditMode::raiseHeight:
-        CommandBus::post(std::make_shared<MoveUpTerrainVertex>(m_brush.lock()->getWorldPosition(), static_cast<float>(m_brushSize), elapse_time * m_brushHeight));
+        CommandBus::enqueue(std::make_shared<MoveUpTerrainVertex>(m_brush.lock()->getWorldPosition(), static_cast<float>(m_brushSize), elapse_time * m_brushHeight));
         break;
     case TerrainEditMode::lowerHeight:
-        CommandBus::post(std::make_shared<MoveUpTerrainVertex>(m_brush.lock()->getWorldPosition(), static_cast<float>(m_brushSize), -elapse_time * m_brushHeight));
+        CommandBus::enqueue(std::make_shared<MoveUpTerrainVertex>(m_brush.lock()->getWorldPosition(), static_cast<float>(m_brushSize), -elapse_time * m_brushHeight));
         break;
     case TerrainEditMode::paintTexture:
-        CommandBus::post(std::make_shared<PaintTerrainTextureLayer>(m_brush.lock()->getWorldPosition(), (float)m_brushSize, m_brushDensity, m_layerIndex));
+        CommandBus::enqueue(std::make_shared<PaintTerrainTextureLayer>(m_brush.lock()->getWorldPosition(), (float)m_brushSize, m_brushDensity, m_layerIndex));
         break;
     }
 }
@@ -162,7 +162,7 @@ void TerrainEditConsole::onEditorModeChanged(const IEventPtr& e)
     m_isEnabled = ev->currMode() == EditorMode::terrain;
     if (m_isEnabled)
     {
-        CommandBus::post(std::make_shared<OutputMessage>("Mode : Terrain Edit Selected"));
+        CommandBus::enqueue(std::make_shared<OutputMessage>("Mode : Terrain Edit Selected"));
         if (m_brush.expired())
         {
             createBrushPawn();
@@ -190,8 +190,8 @@ void TerrainEditConsole::onSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& 
     if (ev->GetTopLevelSpatial().empty()) return;
     auto pawn = std::dynamic_pointer_cast<Pawn, Spatial>(ev->GetTopLevelSpatial().front());
     m_brush = pawn;
-    CommandBus::post(std::make_shared<OutputMessage>("Brush Pawn Created"));
-    CommandBus::post(std::make_shared<Enigma::GameCommon::AttachSceneRootChild>(pawn, pawn->getLocalTransform()));
+    CommandBus::enqueue(std::make_shared<OutputMessage>("Brush Pawn Created"));
+    CommandBus::enqueue(std::make_shared<Enigma::GameCommon::AttachSceneRootChild>(pawn, pawn->getLocalTransform()));
 }
 
 void TerrainEditConsole::onPawnPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e)
@@ -201,7 +201,7 @@ void TerrainEditConsole::onPawnPrimitiveBuilt(const Enigma::Frameworks::IEventPt
     const auto ev = std::dynamic_pointer_cast<PawnPrimitiveBuilt>(e);
     if (!ev) return;
     if (ev->pawn() != m_brush.lock()) return;
-    CommandBus::post(std::make_shared<Enigma::GameCommon::BindGBuffer>(ev->pawn()));
+    CommandBus::enqueue(std::make_shared<Enigma::GameCommon::BindGBuffer>(ev->pawn()));
 }
 
 void TerrainEditConsole::onTerrainBrushSizeChanged(const Enigma::Frameworks::IEventPtr& e)
@@ -257,7 +257,7 @@ void TerrainEditConsole::onTerrainToolSelected(const Enigma::Frameworks::IEventP
         m_currMode = TerrainEditMode::paintTexture;
         break;
     }
-    CommandBus::post(std::make_shared<OutputMessage>("Terrain Tool Selected : " + std::to_string(static_cast<int>(m_currMode))));
+    CommandBus::enqueue(std::make_shared<OutputMessage>("Terrain Tool Selected : " + std::to_string(static_cast<int>(m_currMode))));
 }
 
 void TerrainEditConsole::onSceneCursorMoved(const Enigma::Frameworks::IEventPtr& e)
@@ -306,6 +306,6 @@ void TerrainEditConsole::onSceneCursorReleased(const Enigma::Frameworks::IEventP
     if (!m_brush.expired())
     {
         m_brush.lock()->changeWorldPosition(ev->position(), std::nullopt);
-        CommandBus::post(std::make_shared<CompleteTerrainEditOperation>(m_brush.lock()->getWorldPosition()));
+        CommandBus::enqueue(std::make_shared<CompleteTerrainEditOperation>(m_brush.lock()->getWorldPosition()));
     }
 }

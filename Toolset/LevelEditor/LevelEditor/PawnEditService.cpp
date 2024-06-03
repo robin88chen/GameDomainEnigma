@@ -185,14 +185,14 @@ void PawnEditService::createFittingNodeForPawn(const std::shared_ptr<Pawn>& pawn
 
 void PawnEditService::completePutCandidatePawn()
 {
-    CommandBus::post(std::make_shared<OutputMessage>(string_format("Pawn %s put at (%f, %f, %f)", m_currentLoadingPawn->m_name.c_str(), m_currentLoadingPawn->m_position.x(), m_currentLoadingPawn->m_position.y(), m_currentLoadingPawn->m_position.z())));
+    CommandBus::enqueue(std::make_shared<OutputMessage>(string_format("Pawn %s put at (%f, %f, %f)", m_currentLoadingPawn->m_name.c_str(), m_currentLoadingPawn->m_position.x(), m_currentLoadingPawn->m_position.y(), m_currentLoadingPawn->m_position.z())));
     m_currentLoadingPawn = std::nullopt;
     m_loadedPawn = nullptr;
 }
 
 void PawnEditService::failPutCandidatePawn(const error& err)
 {
-    CommandBus::post(std::make_shared<OutputMessage>(string_format("Pawn %s put failed : %s", m_currentLoadingPawn->m_name.c_str(), err.message().c_str())));
+    CommandBus::enqueue(std::make_shared<OutputMessage>(string_format("Pawn %s put failed : %s", m_currentLoadingPawn->m_name.c_str(), err.message().c_str())));
     m_currentLoadingPawn = std::nullopt;
     m_loadedPawn = nullptr;
 }

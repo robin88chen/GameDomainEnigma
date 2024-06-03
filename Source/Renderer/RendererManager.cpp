@@ -112,7 +112,7 @@ error RendererManager::createRenderer(const std::string& name)
     m_accumulateRendererStamp |= stamp;
     render->SetStampBitMask(stamp);
 
-    Frameworks::EventPublisher::post(std::make_shared<RendererCreated>(render->getName(), render));
+    Frameworks::EventPublisher::enqueue(std::make_shared<RendererCreated>(render->getName(), render));
 
     return ErrorCode::ok;
 }
@@ -140,7 +140,7 @@ error RendererManager::createCustomRenderer(const std::string& type_name, const 
     m_accumulateRendererStamp |= stamp;
     render->SetStampBitMask(stamp);
 
-    Frameworks::EventPublisher::post(std::make_shared<RendererCreated>(render->getName(), render));
+    Frameworks::EventPublisher::enqueue(std::make_shared<RendererCreated>(render->getName(), render));
 
     return ErrorCode::ok;
 }
@@ -162,7 +162,7 @@ error RendererManager::insertRenderer(const std::string& name, const IRendererPt
     }
     m_accumulateRendererStamp |= stamp;
     renderer->SetStampBitMask(stamp);
-    Frameworks::EventPublisher::post(std::make_shared<RendererCreated>(renderer->getName(), renderer));
+    Frameworks::EventPublisher::enqueue(std::make_shared<RendererCreated>(renderer->getName(), renderer));
     return ErrorCode::ok;
 }
 
@@ -175,7 +175,7 @@ error RendererManager::destroyRenderer(const std::string& name)
     m_accumulateRendererStamp &= (~stamp);
     m_renderers.erase(name);
 
-    Frameworks::EventPublisher::post(std::make_shared<RendererDestroyed>(name));
+    Frameworks::EventPublisher::enqueue(std::make_shared<RendererDestroyed>(name));
 
     return ErrorCode::ok;
 }
@@ -237,7 +237,7 @@ error RendererManager::destroyRenderTarget(const std::string& name)
     if (!target) return ErrorCode::renderTargetNotExist;
     m_renderTargets.erase(name);
 
-    Frameworks::EventPublisher::post(std::make_shared<RenderTargetDestroyed>(name));
+    Frameworks::EventPublisher::enqueue(std::make_shared<RenderTargetDestroyed>(name));
 
     return ErrorCode::ok;
 }

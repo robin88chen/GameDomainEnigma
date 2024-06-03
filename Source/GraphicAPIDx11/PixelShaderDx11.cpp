@@ -56,7 +56,7 @@ error PixelShaderDx11::CompileCode(const std::string& code, const std::string& p
         LOG(Error, str);
         SAFE_RELEASE(outBuf);
         SAFE_RELEASE(errorBuf);
-        Frameworks::EventPublisher::post(std::make_shared<Graphics::PixelShaderCompileFailed>(m_name, str));
+        Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::PixelShaderCompileFailed>(m_name, str));
         return ErrorCode::compileShader;
     }
     SAFE_RELEASE(errorBuf);
@@ -76,7 +76,7 @@ error PixelShaderDx11::CompileCode(const std::string& code, const std::string& p
 
     m_hasCompiled = true;
 
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::PixelShaderCompiled>(m_name));
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::PixelShaderCompiled>(m_name));
     return ErrorCode::ok;
 }
 

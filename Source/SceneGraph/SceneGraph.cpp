@@ -63,16 +63,16 @@ void SceneGraph::attachNodeChild(const ICommandPtr& c)
     const auto node = std::dynamic_pointer_cast<Node>(findSpatial(cmd->nodeId()));
     if (!node)
     {
-        EventPublisher::post(std::make_shared<AttachNodeChildFailed>(cmd->nodeId(), cmd->child()->id(), ErrorCode::nodeNotFound));
+        EventPublisher::enqueue(std::make_shared<AttachNodeChildFailed>(cmd->nodeId(), cmd->child()->id(), ErrorCode::nodeNotFound));
         return;
     }
     if (error er = node->attachChild(cmd->child(), cmd->localTransform()))
     {
-        EventPublisher::post(std::make_shared<AttachNodeChildFailed>(cmd->nodeId(), cmd->child()->id(), er));
+        EventPublisher::enqueue(std::make_shared<AttachNodeChildFailed>(cmd->nodeId(), cmd->child()->id(), er));
     }
     else
     {
-        EventPublisher::post(std::make_shared<NodeChildAttached>(cmd->nodeId(), cmd->child()));
+        EventPublisher::enqueue(std::make_shared<NodeChildAttached>(cmd->nodeId(), cmd->child()));
     }
 }
 
@@ -84,21 +84,21 @@ void SceneGraph::detachNodeChild(const ICommandPtr& c)
     const auto node = std::dynamic_pointer_cast<Node>(findSpatial(cmd->nodeId()));
     if (!node)
     {
-        EventPublisher::post(std::make_shared<DetachNodeChildFailed>(cmd->nodeId(), cmd->childId(), ErrorCode::nodeNotFound));
+        EventPublisher::enqueue(std::make_shared<DetachNodeChildFailed>(cmd->nodeId(), cmd->childId(), ErrorCode::nodeNotFound));
         return;
     }
     const auto child = findSpatial(cmd->childId());
     if (!child)
     {
-        EventPublisher::post(std::make_shared<DetachNodeChildFailed>(cmd->nodeId(), cmd->childId(), ErrorCode::spatialNotFound));
+        EventPublisher::enqueue(std::make_shared<DetachNodeChildFailed>(cmd->nodeId(), cmd->childId(), ErrorCode::spatialNotFound));
     }
     if (error er = node->detachChild(child))
     {
-        EventPublisher::post(std::make_shared<DetachNodeChildFailed>(cmd->nodeId(), cmd->childId(), er));
+        EventPublisher::enqueue(std::make_shared<DetachNodeChildFailed>(cmd->nodeId(), cmd->childId(), er));
     }
     else
     {
-        EventPublisher::post(std::make_shared<NodeChildDetached>(cmd->nodeId(), cmd->childId()));
+        EventPublisher::enqueue(std::make_shared<NodeChildDetached>(cmd->nodeId(), cmd->childId()));
     }
 }
 
@@ -110,7 +110,7 @@ void SceneGraph::deleteSceneSpatial(const ICommandPtr& c)
     auto spatial = findSpatial(cmd->id());
     if (!spatial)
     {
-        EventPublisher::post(std::make_shared<DeleteSceneSpatialFailed>(cmd->id(), ErrorCode::spatialNotFound));
+        EventPublisher::enqueue(std::make_shared<DeleteSceneSpatialFailed>(cmd->id(), ErrorCode::spatialNotFound));
         return;
     }
     if (const auto parent = spatial->getParent())
@@ -121,6 +121,6 @@ void SceneGraph::deleteSceneSpatial(const ICommandPtr& c)
         }
     }
     spatial = nullptr;
-    EventPublisher::post(std::make_shared<SceneSpatialDeleted>(cmd->id()));
+    EventPublisher::enqueue(std::make_shared<SceneSpatialDeleted>(cmd->id()));
 }
 

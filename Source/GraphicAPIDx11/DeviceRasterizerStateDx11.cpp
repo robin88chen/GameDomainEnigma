@@ -46,7 +46,7 @@ error DeviceRasterizerStateDx11::CreateFromData(const RasterizerStateData& data)
     HRESULT hr = device->CreateRasterizerState(&desc, &m_d3dRasterizer);
     if (FATAL_LOG_EXPR(hr)) return ErrorCode::dxCreateRasterizerState;
 
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::RasterizerStateResourceCreated>(m_name));
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::RasterizerStateResourceCreated>(m_name));
     return ErrorCode::ok;
 }
 

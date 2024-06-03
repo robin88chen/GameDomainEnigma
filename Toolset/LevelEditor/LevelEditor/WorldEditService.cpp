@@ -49,5 +49,5 @@ std::tuple<Enigma::Engine::GenericDto, std::vector<Enigma::Engine::GenericDtoCol
 void WorldEditService::deserializeWorldMap(const Enigma::Engine::GenericDtoCollection& world_map_dto, const std::string& portal_manager_name)
 {
     assert(!world_map_dto.empty());
-    Enigma::Frameworks::CommandBus::post(std::make_shared<Enigma::WorldMap::DeserializeWorldMap>(world_map_dto[0].getName(), world_map_dto, portal_manager_name));
+    Enigma::Frameworks::CommandBus::enqueue(std::make_shared<Enigma::WorldMap::DeserializeWorldMap>(world_map_dto[0].getName(), world_map_dto, portal_manager_name));
 }

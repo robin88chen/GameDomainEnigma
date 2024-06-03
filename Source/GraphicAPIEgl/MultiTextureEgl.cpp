@@ -45,7 +45,7 @@ error MultiTextureEgl::createFromSystemMemories(const MathLib::Dimension<unsigne
         er = createOneFromSystemMemory(i, dimension, buffs[i]);
         if (er) return er;
     }
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::MultiTextureResourceFromMemoryCreated>(m_name));
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::MultiTextureResourceFromMemoryCreated>(m_name));
     return er;
 }
 
@@ -89,7 +89,7 @@ error MultiTextureEgl::loadTextureImages(const std::vector<byte_buffer>& img_buf
         }
     }
 
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::MultiTextureResourceImagesLoaded>(m_name));
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::MultiTextureResourceImagesLoaded>(m_name));
     return ErrorCode::ok;
 }
 
@@ -135,7 +135,7 @@ error MultiTextureEgl::useAsBackSurface(const Graphics::IBackSurfacePtr& back_su
     glDrawBuffers(static_cast<GLsizei>(m_textures.size()), drawBuffers);
     SAFE_FREE(drawBuffers);
 
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::MultiTextureResourcesAsBackSurfaceUsed>(m_name, back_surf->getName()));
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::MultiTextureResourcesAsBackSurfaceUsed>(m_name, back_surf->getName()));
     return ErrorCode::ok;
 }
 

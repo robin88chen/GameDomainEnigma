@@ -50,7 +50,7 @@ void EffectMaterialSource::hydrateDuplicatedEffects()
         if (!effect.expired() && !effect.lock()->lazyStatus().isReady())
         {
             effect.lock()->hydrateTechniques(m_sourceEffectMaterial->effectTechniques());
-            Frameworks::EventPublisher::post(std::make_shared<EffectMaterialHydrated>(m_id, effect.lock()->id()));
+            Frameworks::EventPublisher::enqueue(std::make_shared<EffectMaterialHydrated>(m_id, effect.lock()->id()));
         }
     }
 }

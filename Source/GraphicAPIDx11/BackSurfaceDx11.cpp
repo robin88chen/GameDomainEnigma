@@ -38,7 +38,7 @@ BackSurfaceDx11::BackSurfaceDx11(const std::string& name, ID3D11Device* device, 
 }
 
 BackSurfaceDx11::BackSurfaceDx11(const std::string& name, ID3D11Device* device, const MathLib::Dimension<unsigned>& dimension,
-     const Enigma::Graphics::GraphicFormat& fmt) : IBackSurface(name, false)
+    const Enigma::Graphics::GraphicFormat& fmt) : IBackSurface(name, false)
 {
     assert(device);
     m_dimension = MathLib::Dimension<unsigned>{ 0, 0 };
@@ -75,7 +75,7 @@ error BackSurfaceDx11::Resize(const MathLib::Dimension<unsigned>& dimension)
         if (er) return er;
     }
     CreateD3DRenderTarget(graphic->GetD3DDevice(), m_d3dSurface);
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::BackSurfaceResized>(m_name, m_dimension));
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::BackSurfaceResized>(m_name, m_dimension));
 
     return ErrorCode::ok;
 }

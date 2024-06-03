@@ -116,11 +116,11 @@ void PrimitiveRepository::removePrimitive(const PrimitiveId& id)
     if (er)
     {
         Platforms::Debug::ErrorPrintf("remove primitive %s failed : %s\n", id.name().c_str(), er.message().c_str());
-        EventPublisher::post(std::make_shared<RemovePrimitiveFailed>(id, er));
+        EventPublisher::enqueue(std::make_shared<RemovePrimitiveFailed>(id, er));
     }
     else
     {
-        EventPublisher::post(std::make_shared<PrimitiveRemoved>(id));
+        EventPublisher::enqueue(std::make_shared<PrimitiveRemoved>(id));
     }
 }
 
@@ -133,11 +133,11 @@ void PrimitiveRepository::putPrimitive(const PrimitiveId& id, const std::shared_
     if (er)
     {
         Platforms::Debug::ErrorPrintf("put primitive %s failed : %s\n", id.name().c_str(), er.message().c_str());
-        EventPublisher::post(std::make_shared<PutPrimitiveFailed>(id, er));
+        EventPublisher::enqueue(std::make_shared<PutPrimitiveFailed>(id, er));
     }
     else
     {
-        EventPublisher::post(std::make_shared<PrimitivePut>(id));
+        EventPublisher::enqueue(std::make_shared<PrimitivePut>(id));
     }
 }
 
@@ -171,7 +171,7 @@ void PrimitiveRepository::requestPrimitiveCreation(const Frameworks::IQueryPtr& 
     if (!request) return;
     if (hasPrimitive(request->id()))
     {
-        EventPublisher::post(std::make_shared<CreatePrimitiveFailed>(request->id(), ErrorCode::primitiveEntityAlreadyExists));
+        EventPublisher::enqueue(std::make_shared<CreatePrimitiveFailed>(request->id(), ErrorCode::primitiveEntityAlreadyExists));
         return;
     }
     auto primitive = m_factory->create(request->id(), request->rtti());
@@ -188,7 +188,7 @@ void PrimitiveRepository::requestPrimitiveConstitution(const Frameworks::IQueryP
     if (!request) return;
     if (hasPrimitive(request->id()))
     {
-        EventPublisher::post(std::make_shared<ConstitutePrimitiveFailed>(request->id(), ErrorCode::primitiveEntityAlreadyExists));
+        EventPublisher::enqueue(std::make_shared<ConstitutePrimitiveFailed>(request->id(), ErrorCode::primitiveEntityAlreadyExists));
         return;
     }
     auto primitive = m_factory->constitute(request->id(), request->dto(), false);

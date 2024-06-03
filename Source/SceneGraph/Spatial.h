@@ -269,7 +269,7 @@ namespace Enigma::SceneGraph
         SpatialFlags m_spatialFlags;  ///< default: "belong to parent"
 
         //todo : 先全開，之後再看效能決定要不要減少
-        NotifyFlags m_notifyFlags;  ///< post message when location/bound/visibility... has changed, default is all
+        NotifyFlags m_notifyFlags;  ///< enqueue message when location/bound/visibility... has changed, default is all
     };
 
     using SpatialPtr = std::shared_ptr<Spatial>;

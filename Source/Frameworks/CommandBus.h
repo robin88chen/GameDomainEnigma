@@ -46,8 +46,8 @@ namespace Enigma::Frameworks
         static void subscribe(const std::type_info& cmd_type, const CommandSubscriberPtr& sub);
         static void unsubscribe(const std::type_info& cmd_type, const CommandSubscriberPtr& sub);
 
-        static void post(const ICommandPtr& c);
-        static void send(const ICommandPtr& c);
+        static void enqueue(const ICommandPtr& c);
+        static void execute(const ICommandPtr& c);
 
         void cleanupAllCommands();
 

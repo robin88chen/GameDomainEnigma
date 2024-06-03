@@ -12,6 +12,10 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::emptyFilePath: return "Empty file path";
     case ErrorCode::fileIOError: return "File IO error";
     case ErrorCode::pawnPutProcedureError: return "Pawn put procedure error";
+    case ErrorCode::emptyWorldName: return "Empty world name";
+    case ErrorCode::duplicatedWorldName: return "Duplicated world name";
+    case ErrorCode::emptyOutRegionName: return "Empty out region name";
+    case ErrorCode::duplicatedOutRegionName: return "Duplicated out region name";
     }
     return "Unknown";
 }

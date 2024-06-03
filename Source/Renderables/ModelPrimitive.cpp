@@ -107,7 +107,7 @@ void ModelPrimitive::onMeshHydrated(const Frameworks::IEventPtr& e)
     }
     if (all_hydrated)
     {
-        Frameworks::EventPublisher::post(std::make_shared<RenderablePrimitiveHydrated>(m_id));
+        Frameworks::EventPublisher::enqueue(std::make_shared<RenderablePrimitiveHydrated>(m_id));
     }
 }
 

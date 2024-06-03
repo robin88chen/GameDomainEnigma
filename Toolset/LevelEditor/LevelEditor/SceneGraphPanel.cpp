@@ -155,7 +155,7 @@ void SceneGraphPanel::onSceneGraphTreeSelected(const nana::arg_treebox& arg)
     if (arg.item.empty()) return;
     const auto& spatial = arg.item.value<std::shared_ptr<Enigma::SceneGraph::Spatial>>();
     if (!spatial) return;
-    Enigma::Frameworks::EventPublisher::post(std::make_shared<PickedSpatialChanged>(spatial->id(), PickedSpatialChanged::PickedFrom::FromSceneGraph));
+    Enigma::Frameworks::EventPublisher::enqueue(std::make_shared<PickedSpatialChanged>(spatial->id(), PickedSpatialChanged::PickedFrom::FromSceneGraph));
 }
 
 void SceneGraphPanel::refreshSceneGraphTree(const Enigma::Frameworks::ICommandPtr& c)

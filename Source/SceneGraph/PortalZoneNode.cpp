@@ -64,7 +64,7 @@ error PortalZoneNode::onCullingVisible(Culler* culler, bool noCull)
     // 需要讀取
     if (m_lazyStatus.isGhost())
     {
-        CommandBus::post(std::make_shared<HydrateLazyNode>(m_id));
+        CommandBus::enqueue(std::make_shared<HydrateLazyNode>(m_id));
         return ErrorCode::ok;
     }
     if (!m_lazyStatus.isReady())

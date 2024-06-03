@@ -178,7 +178,7 @@ void ShaderRepository::OnBuilderShaderProgramBuilt(const Frameworks::IEventPtr& 
         std::lock_guard locker{ m_programTableLock };
         m_programTable.insert_or_assign(program->getName(), program);
     }
-    Frameworks::EventPublisher::post(std::make_shared<ShaderProgramBuilt>(program->getName(), program));
+    Frameworks::EventPublisher::enqueue(std::make_shared<ShaderProgramBuilt>(program->getName(), program));
     m_isCurrentBuilding = false;
 }
 

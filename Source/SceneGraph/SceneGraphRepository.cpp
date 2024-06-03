@@ -257,7 +257,7 @@ void SceneGraphRepository::requestCameraCreation(const Frameworks::IQueryPtr& r)
     if (!request) return;
     if (hasCamera(request->id()))
     {
-        EventPublisher::post(std::make_shared<CreateCameraFailed>(request->id(), ErrorCode::entityAlreadyExists));
+        EventPublisher::enqueue(std::make_shared<CreateCameraFailed>(request->id(), ErrorCode::entityAlreadyExists));
         return;
     }
     auto camera = m_factory->createCamera(request->id());
@@ -275,7 +275,7 @@ void SceneGraphRepository::requestCameraConstitution(const Frameworks::IQueryPtr
     if (!request) return;
     if (hasCamera(request->id()))
     {
-        EventPublisher::post(std::make_shared<ConstituteCameraFailed>(request->id(), ErrorCode::entityAlreadyExists));
+        EventPublisher::enqueue(std::make_shared<ConstituteCameraFailed>(request->id(), ErrorCode::entityAlreadyExists));
         return;
     }
     auto camera = m_factory->constituteCamera(request->id(), request->dto(), false);
@@ -293,11 +293,11 @@ void SceneGraphRepository::putCamera(const std::shared_ptr<Camera>& camera)
     auto er = m_storeMapper->putCamera(camera->id(), { camera_dto });
     if (!er)
     {
-        EventPublisher::post(std::make_shared<CameraPut>(camera->id()));
+        EventPublisher::enqueue(std::make_shared<CameraPut>(camera->id()));
     }
     else
     {
-        EventPublisher::post(std::make_shared<PutCameraFailed>(camera->id(), er));
+        EventPublisher::enqueue(std::make_shared<PutCameraFailed>(camera->id(), er));
     }
 }
 
@@ -309,11 +309,11 @@ void SceneGraphRepository::removeCamera(const SpatialId& id)
     auto er = m_storeMapper->removeCamera(id);
     if (!er)
     {
-        EventPublisher::post(std::make_shared<CameraRemoved>(id));
+        EventPublisher::enqueue(std::make_shared<CameraRemoved>(id));
     }
     else
     {
-        EventPublisher::post(std::make_shared<RemoveCameraFailed>(id, er));
+        EventPublisher::enqueue(std::make_shared<RemoveCameraFailed>(id, er));
     }
 }
 
@@ -327,11 +327,11 @@ void SceneGraphRepository::putSpatial(const std::shared_ptr<Spatial>& spatial)
     auto er = m_storeMapper->putSpatial(spatial->id(), { dto });
     if (!er)
     {
-        EventPublisher::post(std::make_shared<SpatialPut>(spatial->id()));
+        EventPublisher::enqueue(std::make_shared<SpatialPut>(spatial->id()));
     }
     else
     {
-        EventPublisher::post(std::make_shared<PutSpatialFailed>(spatial->id(), er));
+        EventPublisher::enqueue(std::make_shared<PutSpatialFailed>(spatial->id(), er));
     }
 }
 
@@ -343,11 +343,11 @@ void SceneGraphRepository::putLaziedContent(const std::shared_ptr<LazyNode>& laz
     auto er = m_storeMapper->putLaziedContent(lazy_node->id(), dto);
     if (!er)
     {
-        EventPublisher::post(std::make_shared<LaziedContentPut>(lazy_node->id()));
+        EventPublisher::enqueue(std::make_shared<LaziedContentPut>(lazy_node->id()));
     }
     else
     {
-        EventPublisher::post(std::make_shared<PutLaziedContentFailed>(lazy_node->id(), er));
+        EventPublisher::enqueue(std::make_shared<PutLaziedContentFailed>(lazy_node->id(), er));
     }
 }
 
@@ -360,11 +360,11 @@ void SceneGraphRepository::removeSpatial(const SpatialId& id)
     auto er = m_storeMapper->removeSpatial(id);
     if (!er)
     {
-        EventPublisher::post(std::make_shared<SpatialRemoved>(id));
+        EventPublisher::enqueue(std::make_shared<SpatialRemoved>(id));
     }
     else
     {
-        EventPublisher::post(std::make_shared<RemoveSpatialFailed>(id, er));
+        EventPublisher::enqueue(std::make_shared<RemoveSpatialFailed>(id, er));
     }
 }
 
@@ -374,11 +374,11 @@ void SceneGraphRepository::removeLaziedContent(const SpatialId& id)
     auto er = m_storeMapper->removeLaziedContent(id);
     if (!er)
     {
-        EventPublisher::post(std::make_shared<LaziedContentRemoved>(id));
+        EventPublisher::enqueue(std::make_shared<LaziedContentRemoved>(id));
     }
     else
     {
-        EventPublisher::post(std::make_shared<RemoveLaziedContentFailed>(id, er));
+        EventPublisher::enqueue(std::make_shared<RemoveLaziedContentFailed>(id, er));
     }
 }
 
@@ -430,7 +430,7 @@ void SceneGraphRepository::requestSpatialCreation(const Frameworks::IQueryPtr& r
     if (!request) return;
     if (hasSpatial(request->id()))
     {
-        EventPublisher::post(std::make_shared<CreateSpatialFailed>(request->id(), ErrorCode::entityAlreadyExists));
+        EventPublisher::enqueue(std::make_shared<CreateSpatialFailed>(request->id(), ErrorCode::entityAlreadyExists));
         return;
     }
     auto spatial = m_factory->createSpatial(request->id());
@@ -449,7 +449,7 @@ void SceneGraphRepository::requestSpatialConstitution(const Frameworks::IQueryPt
     if (!request) return;
     if (hasSpatial(request->id()))
     {
-        EventPublisher::post(std::make_shared<ConstituteSpatialFailed>(request->id(), ErrorCode::entityAlreadyExists));
+        EventPublisher::enqueue(std::make_shared<ConstituteSpatialFailed>(request->id(), ErrorCode::entityAlreadyExists));
         return;
     }
     auto spatial = m_factory->constituteSpatial(request->id(), request->dto(), false);
@@ -468,7 +468,7 @@ void SceneGraphRepository::requestLightCreation(const Frameworks::IQueryPtr& r)
     if (!request) return;
     if (hasSpatial(request->id()))
     {
-        EventPublisher::post(std::make_shared<CreateSpatialFailed>(request->id(), ErrorCode::entityAlreadyExists));
+        EventPublisher::enqueue(std::make_shared<CreateSpatialFailed>(request->id(), ErrorCode::entityAlreadyExists));
         return;
     }
     const auto light = m_factory->createLight(request->id(), request->info());
@@ -524,7 +524,7 @@ void SceneGraphRepository::hydrateLazyNode(const SpatialId& id)
     auto lazy_node = std::dynamic_pointer_cast<LazyNode>(querySpatial(id));
     if (!lazy_node)
     {
-        EventPublisher::post(std::make_shared<LazyNodeHydrationFailed>(id, ErrorCode::nodeNotFound));
+        EventPublisher::enqueue(std::make_shared<LazyNodeHydrationFailed>(id, ErrorCode::nodeNotFound));
         return;
     }
     if (!lazy_node->lazyStatus().isInQueue()) return;
@@ -533,16 +533,16 @@ void SceneGraphRepository::hydrateLazyNode(const SpatialId& id)
     if (!content)
     {
         lazy_node->lazyStatus().changeStatus(LazyStatus::Status::Failed);
-        EventPublisher::post(std::make_shared<LazyNodeHydrationFailed>(id, ErrorCode::laziedContentNotFound));
+        EventPublisher::enqueue(std::make_shared<LazyNodeHydrationFailed>(id, ErrorCode::laziedContentNotFound));
         return;
     }
     if (error er = lazy_node->hydrate(content.value()))
     {
-        EventPublisher::post(std::make_shared<LazyNodeHydrationFailed>(id, er));
+        EventPublisher::enqueue(std::make_shared<LazyNodeHydrationFailed>(id, er));
     }
     else
     {
-        EventPublisher::post(std::make_shared<LazyNodeHydrated>(id));
+        EventPublisher::enqueue(std::make_shared<LazyNodeHydrated>(id));
     }
 }
 

@@ -46,14 +46,14 @@ error VisibilityManagedNode::onCullingVisible(Culler* culler, bool noCull)
     // 需要讀取
     if (m_lazyStatus.isGhost())
     {
-        CommandBus::post(std::make_shared<HydrateLazyNode>(m_id));
+        CommandBus::enqueue(std::make_shared<HydrateLazyNode>(m_id));
         return ErrorCode::ok;
     }
     if (!m_lazyStatus.isReady())
     {
         return ErrorCode::dataNotReady;
     }
-    EventPublisher::post(std::make_shared<VisibilityChanged>(m_id, true));
+    EventPublisher::enqueue(std::make_shared<VisibilityChanged>(m_id, true));
     return Node::onCullingVisible(culler, noCull);
 }
 
@@ -64,7 +64,7 @@ void VisibilityManagedNode::onCullingCompleteNotVisible(Culler* culler)
     // let me check first
     if (!culler) return;
     if (!culler->IsOuterClippingEnable()) return;
-    EventPublisher::post(std::make_shared<VisibilityChanged>(m_id, false));
+    EventPublisher::enqueue(std::make_shared<VisibilityChanged>(m_id, false));
 }
 
 void VisibilityManagedNode::dehydrate()

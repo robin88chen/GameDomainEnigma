@@ -120,7 +120,7 @@ void EditorSceneConsole::onMouseMoved(const Enigma::Frameworks::IEventPtr& e)
     auto [pickedPawn, picked_pos] = pickingOnSceneView(clipping_pos);
     if (pickedPawn)
     {
-        EventPublisher::post(std::make_shared<SceneCursorMoved>(picked_pos, pickedPawn, ev->m_param));
+        EventPublisher::enqueue(std::make_shared<SceneCursorMoved>(picked_pos, pickedPawn, ev->m_param));
     }
 }
 
@@ -134,7 +134,7 @@ void EditorSceneConsole::onMouseLeftButtonDown(const Enigma::Frameworks::IEventP
     auto [pickedPawn, picked_pos] = pickingOnSceneView(clipping_pos);
     if (pickedPawn)
     {
-        EventPublisher::post(std::make_shared<SceneCursorPressed>(picked_pos, pickedPawn, ev->m_param));
+        EventPublisher::enqueue(std::make_shared<SceneCursorPressed>(picked_pos, pickedPawn, ev->m_param));
     }
 }
 
@@ -148,7 +148,7 @@ void EditorSceneConsole::onMouseLeftButtonUp(const Enigma::Frameworks::IEventPtr
     auto [pickedPawn, picked_pos] = pickingOnSceneView(clipping_pos);
     if (pickedPawn)
     {
-        EventPublisher::post(std::make_shared<SceneCursorReleased>(picked_pos, pickedPawn, ev->m_param));
+        EventPublisher::enqueue(std::make_shared<SceneCursorReleased>(picked_pos, pickedPawn, ev->m_param));
     }
 }
 
@@ -162,7 +162,7 @@ void EditorSceneConsole::onMouseLeftDragged(const Enigma::Frameworks::IEventPtr&
     auto [pickedPawn, picked_pos] = pickingOnSceneView(clipping_pos);
     if (pickedPawn)
     {
-        EventPublisher::post(std::make_shared<SceneCursorDragged>(picked_pos, pickedPawn, ev->m_param));
+        EventPublisher::enqueue(std::make_shared<SceneCursorDragged>(picked_pos, pickedPawn, ev->m_param));
     }
 }
 
@@ -173,19 +173,19 @@ void EditorSceneConsole::onKeyboardAsyncKeyPressed(const Enigma::Frameworks::IEv
     if (!ev) return;
     if (ev->m_param.m_virtualKey == 'A')
     {
-        CommandBus::post(std::make_shared<MoveCamera>(0.0f, -0.1f));
+        CommandBus::enqueue(std::make_shared<MoveCamera>(0.0f, -0.1f));
     }
     else if (ev->m_param.m_virtualKey == 'D')
     {
-        CommandBus::post(std::make_shared<MoveCamera>(0.0f, 0.1f));
+        CommandBus::enqueue(std::make_shared<MoveCamera>(0.0f, 0.1f));
     }
     else if (ev->m_param.m_virtualKey == 'S')
     {
-        CommandBus::post(std::make_shared<MoveCamera>(-0.1f, 0.0f));
+        CommandBus::enqueue(std::make_shared<MoveCamera>(-0.1f, 0.0f));
     }
     else if (ev->m_param.m_virtualKey == 'W')
     {
-        CommandBus::post(std::make_shared<MoveCamera>(0.1f, 0.0f));
+        CommandBus::enqueue(std::make_shared<MoveCamera>(0.1f, 0.0f));
     }
 }
 

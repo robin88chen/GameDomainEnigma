@@ -52,7 +52,7 @@ error VertexShaderEgl::CompileCode(const std::string& code, const std::string& p
             {
                 glGetShaderInfoLog(m_shader, infoLogLen, NULL, infoLog);
                 Platforms::Debug::ErrorPrintf("Could not compile vertex shader:\n%s\n", infoLog);
-                Frameworks::EventPublisher::post(std::make_shared<Graphics::VertexShaderCompileFailed>(m_name, infoLog));
+                Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::VertexShaderCompileFailed>(m_name, infoLog));
                 free(infoLog);
             }
         }
@@ -62,7 +62,7 @@ error VertexShaderEgl::CompileCode(const std::string& code, const std::string& p
     ParseSamplerStateTable(code);
 
     m_hasCompiled = true;
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::VertexShaderCompiled>(m_name));
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::VertexShaderCompiled>(m_name));
 
     return ErrorCode::ok;
 }

@@ -43,7 +43,7 @@ error VertexBufferDx11::create(unsigned sizeofVertex, unsigned sizeBuffer)
     HRESULT hr = graphic->GetD3DDevice()->CreateBuffer(&bd, NULL, &m_d3dBuffer);
     if (FATAL_LOG_EXPR(FAILED(hr))) return ErrorCode::deviceCreateVertexBuffer;
 
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::VertexBufferResourceCreated>(m_name));
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::VertexBufferResourceCreated>(m_name));
     return ErrorCode::ok;
 }
 
@@ -53,7 +53,7 @@ error VertexBufferDx11::UpdateBuffer(const byte_buffer& dataVertex)
     assert(!dataVertex.empty());
     if (FATAL_LOG_EXPR(dataVertex.size() > m_bufferSize))
     {
-        Frameworks::EventPublisher::post(std::make_shared<Graphics::VertexBufferUpdateFailed>(m_name, ErrorCode::bufferSize));
+        Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::VertexBufferUpdateFailed>(m_name, ErrorCode::bufferSize));
         return ErrorCode::bufferSize;
     }
 
@@ -61,14 +61,14 @@ error VertexBufferDx11::UpdateBuffer(const byte_buffer& dataVertex)
     assert(graphic);
     if (FATAL_LOG_EXPR(!graphic->GetD3DDevice()))
     {
-        Frameworks::EventPublisher::post(std::make_shared<Graphics::VertexBufferUpdateFailed>(m_name, ErrorCode::d3dDeviceNullPointer));
+        Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::VertexBufferUpdateFailed>(m_name, ErrorCode::d3dDeviceNullPointer));
         return ErrorCode::d3dDeviceNullPointer;
     }
 
     D3D11_BOX d3dBox = { 0, 0, 0, static_cast<unsigned int>(dataVertex.size()), 1, 1 };
     graphic->GetD3DDeviceContext()->UpdateSubresource(m_d3dBuffer, 0, &d3dBox, &dataVertex[0], 0, 0);
 
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::VertexBufferResourceUpdated>(m_name));
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::VertexBufferResourceUpdated>(m_name));
     return ErrorCode::ok;
 }
 
@@ -78,14 +78,14 @@ error VertexBufferDx11::RangedUpdateBuffer(const ranged_buffer& buffer)
     assert(!buffer.data.empty());
     if (FATAL_LOG_EXPR(buffer.data.size() > m_bufferSize))
     {
-        Frameworks::EventPublisher::post(std::make_shared<Graphics::VertexBufferUpdateFailed>(m_name, ErrorCode::bufferSize));
+        Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::VertexBufferUpdateFailed>(m_name, ErrorCode::bufferSize));
         return ErrorCode::bufferSize;
     }
     GraphicAPIDx11* graphic = dynamic_cast<GraphicAPIDx11*>(Graphics::IGraphicAPI::instance());
     assert(graphic);
     if (FATAL_LOG_EXPR(!graphic->GetD3DDevice()))
     {
-        Frameworks::EventPublisher::post(std::make_shared<Graphics::VertexBufferUpdateFailed>(m_name, ErrorCode::d3dDeviceNullPointer));
+        Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::VertexBufferUpdateFailed>(m_name, ErrorCode::d3dDeviceNullPointer));
         return ErrorCode::d3dDeviceNullPointer;
     }
 
@@ -96,7 +96,7 @@ error VertexBufferDx11::RangedUpdateBuffer(const ranged_buffer& buffer)
     D3D11_BOX d3dBox = { byte_offset, 0, 0, byte_length + byte_offset, 1, 1 };
     graphic->GetD3DDeviceContext()->UpdateSubresource(m_d3dBuffer, 0, &d3dBox, &(buffer.data[0]), 0, 0);
 
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::VertexBufferResourceRangedUpdated>(
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::VertexBufferResourceRangedUpdated>(
         m_name, buffer.vtx_offset, buffer.vtx_count));
     return ErrorCode::ok;
 }

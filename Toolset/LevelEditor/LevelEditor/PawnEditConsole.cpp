@@ -68,7 +68,7 @@ void PawnEditConsole::onEditorModeChanged(const Enigma::Frameworks::IEventPtr& e
     m_isEnabled = ev->currMode() == EditorMode::pawn;
     if (m_isEnabled)
     {
-        CommandBus::post(std::make_shared<OutputMessage>("Mode : Pawn Edit Selected"));
+        CommandBus::enqueue(std::make_shared<OutputMessage>("Mode : Pawn Edit Selected"));
     }
 }
 
@@ -98,6 +98,6 @@ void PawnEditConsole::putSelectedPawnToScene(const Enigma::MathLib::Vector3& pos
     if (m_selectedCandidatePawnName.empty()) return;
     auto it = m_pawnFilePaths.find(m_selectedCandidatePawnName);
     if (it == m_pawnFilePaths.end()) return;
-    CommandBus::post(std::make_shared<OutputMessage>("Put pawn to scene : " + it->second));
+    CommandBus::enqueue(std::make_shared<OutputMessage>("Put pawn to scene : " + it->second));
     if (!m_editService.expired()) m_editService.lock()->putCandidatePawn(m_selectedCandidatePawnName, it->second, pos);
 }

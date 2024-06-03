@@ -83,7 +83,7 @@ void MeshPrimitiveBuilder::hydrateMeshPrimitive(const std::shared_ptr<MeshPrimit
     {
         buffer.m_idxBuffer = m_builtGeometry->getIndexMemory();
     }
-    CommandBus::post(std::make_shared<BuildRenderBuffer>(buffer));
+    CommandBus::enqueue(std::make_shared<BuildRenderBuffer>(buffer));
 }
 
 void MeshPrimitiveBuilder::onRenderBufferBuilt(const Frameworks::IEventPtr& e)
@@ -227,7 +227,7 @@ void MeshPrimitiveBuilder::tryCompletingMesh()
     m_builtPrimitive->renderListId() = m_buildingDto->renderListID();
     m_builtPrimitive->selectVisualTechnique(m_buildingDto->visualTechniqueSelection());
     m_builtPrimitive->lazyStatus().changeStatus(LazyStatus::Status::Ready);
-    EventPublisher::post(std::make_shared<MeshPrimitiveHydrated>(m_buildingId, m_buildingId.name(), m_builtPrimitive));
+    EventPublisher::enqueue(std::make_shared<MeshPrimitiveHydrated>(m_buildingId, m_buildingId.name(), m_builtPrimitive));
 
     m_buildingDto = std::nullopt;
     m_metaDto = nullptr;
@@ -240,7 +240,7 @@ void MeshPrimitiveBuilder::failMeshHydration(const std::error_code er)
     m_metaDto = nullptr;
     m_builtEffects.clear();
     m_builtTextures.clear();
-    EventPublisher::post(std::make_shared<HydrateMeshPrimitiveFailed>(m_buildingId, m_buildingId.name(), er));
+    EventPublisher::enqueue(std::make_shared<HydrateMeshPrimitiveFailed>(m_buildingId, m_buildingId.name(), er));
     m_buildingId = Primitives::PrimitiveId();
 }
 

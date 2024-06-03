@@ -45,14 +45,14 @@ void SceneGraphFactory::unregisterHandlers()
 std::shared_ptr<Camera> SceneGraphFactory::createCamera(const SpatialId& id)
 {
     auto camera = std::make_shared<Camera>(id, GraphicCoordSys::LeftHand);
-    EventPublisher::post(std::make_shared<CameraCreated>(id, camera));
+    EventPublisher::enqueue(std::make_shared<CameraCreated>(id, camera));
     return camera;
 }
 
 std::shared_ptr<Camera> SceneGraphFactory::constituteCamera(const SpatialId& id, const Engine::GenericDto& dto, bool is_persisted)
 {
     auto camera = std::make_shared<Camera>(id, dto);
-    EventPublisher::post(std::make_shared<CameraConstituted>(id, camera, is_persisted));
+    EventPublisher::enqueue(std::make_shared<CameraConstituted>(id, camera, is_persisted));
     return camera;
 }
 
@@ -62,11 +62,11 @@ std::shared_ptr<Spatial> SceneGraphFactory::createSpatial(const SpatialId& id)
     if (creator == m_creators.end())
     {
         Platforms::Debug::Printf("Can't find creator of %s\n", id.rtti().getName().c_str());
-        EventPublisher::post(std::make_shared<CreateSpatialFailed>(id, ErrorCode::spatialFactoryNotFound));
+        EventPublisher::enqueue(std::make_shared<CreateSpatialFailed>(id, ErrorCode::spatialFactoryNotFound));
         return nullptr;
     }
     auto spatial = creator->second(id);
-    EventPublisher::post(std::make_shared<SpatialCreated>(id, spatial));
+    EventPublisher::enqueue(std::make_shared<SpatialCreated>(id, spatial));
     return spatial;
 }
 
@@ -76,18 +76,18 @@ std::shared_ptr <Spatial> SceneGraphFactory::constituteSpatial(const SpatialId& 
     if (constitutor == m_constitutors.end())
     {
         Platforms::Debug::Printf("Can't find constitutor of %s\n", dto.getRtti().GetRttiName().c_str());
-        EventPublisher::post(std::make_shared<ConstituteSpatialFailed>(id, ErrorCode::spatialFactoryNotFound));
+        EventPublisher::enqueue(std::make_shared<ConstituteSpatialFailed>(id, ErrorCode::spatialFactoryNotFound));
         return nullptr;
     }
     auto spatial = constitutor->second(id, dto);
-    EventPublisher::post(std::make_shared<SpatialConstituted>(id, spatial, is_persisted));
+    EventPublisher::enqueue(std::make_shared<SpatialConstituted>(id, spatial, is_persisted));
     return spatial;
 }
 
 std::shared_ptr<Light> SceneGraphFactory::createLight(const SpatialId& id, const LightInfo& info)
 {
     auto light = std::make_shared<Light>(id, info);
-    EventPublisher::post(std::make_shared<SpatialCreated>(id, light));
+    EventPublisher::enqueue(std::make_shared<SpatialCreated>(id, light));
     return light;
 }
 

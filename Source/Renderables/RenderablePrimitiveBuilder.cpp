@@ -166,7 +166,7 @@ void RenderablePrimitiveBuilder::onPrimitiveHydrated(const IEventPtr& e)
     if (const auto ev = std::dynamic_pointer_cast<MeshPrimitiveBuilder::MeshPrimitiveHydrated, IEvent>(e))
     {
         if (ev->id() != m_currentBuildingId.value()) return;
-        EventPublisher::post(std::make_shared<RenderablePrimitiveHydrated>(m_currentBuildingId.value()));
+        EventPublisher::enqueue(std::make_shared<RenderablePrimitiveHydrated>(m_currentBuildingId.value()));
         m_currentBuildingId = std::nullopt;
     }
 }
@@ -180,7 +180,7 @@ void RenderablePrimitiveBuilder::onHydratePrimitiveFailed(const IEventPtr& e)
         if (ev->id() != m_currentBuildingId.value()) return;
         Platforms::Debug::ErrorPrintf("mesh primitive %s build failed : %s\n",
             ev->name().c_str(), ev->error().message().c_str());
-        EventPublisher::post(std::make_shared<RenderablePrimitiveHydrationFailed>(m_currentBuildingId.value(), ev->error()));
+        EventPublisher::enqueue(std::make_shared<RenderablePrimitiveHydrationFailed>(m_currentBuildingId.value(), ev->error()));
         m_currentBuildingId = std::nullopt;
     }
 }

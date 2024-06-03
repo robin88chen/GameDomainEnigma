@@ -106,7 +106,7 @@ void TextureRepository::removeTexture(const TextureId& id)
     if (er)
     {
         Platforms::Debug::ErrorPrintf("remove texture %s failed : %s\n", id.name().c_str(), er.message().c_str());
-        Frameworks::EventPublisher::post(std::make_shared<RemoveTextureFailed>(id, er));
+        Frameworks::EventPublisher::enqueue(std::make_shared<RemoveTextureFailed>(id, er));
     }
 }
 
@@ -119,7 +119,7 @@ void TextureRepository::putTexture(const TextureId& id, const std::shared_ptr<Te
     if (er)
     {
         Platforms::Debug::ErrorPrintf("put primitive %s failed : %s\n", id.name().c_str(), er.message().c_str());
-        Frameworks::EventPublisher::post(std::make_shared<PutTextureFailed>(id, er));
+        Frameworks::EventPublisher::enqueue(std::make_shared<PutTextureFailed>(id, er));
     }
 }
 
@@ -155,7 +155,7 @@ void TextureRepository::requestTextureConstitution(const Frameworks::IQueryPtr& 
     if (!request) return;
     if (hasTexture(request->id()))
     {
-        Frameworks::EventPublisher::post(std::make_shared<ConstituteTextureFailed>(request->id(), ErrorCode::textureAlreadyExists));
+        Frameworks::EventPublisher::enqueue(std::make_shared<ConstituteTextureFailed>(request->id(), ErrorCode::textureAlreadyExists));
         return;
     }
     auto tex = m_factory->constitute(request->id(), request->dto(), false);

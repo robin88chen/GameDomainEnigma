@@ -120,7 +120,7 @@ void GeometryRepository::requestGeometryCreation(const IQueryPtr& r)
     if (!request) return;
     if (hasGeometryData(request->id()))
     {
-        EventPublisher::post(std::make_shared<CreateGeometryFailed>(request->id(), ErrorCode::geometryEntityAlreadyExists));
+        EventPublisher::enqueue(std::make_shared<CreateGeometryFailed>(request->id(), ErrorCode::geometryEntityAlreadyExists));
         return;
     }
     auto geometry = m_factory->create(request->id(), request->rtti());
@@ -137,7 +137,7 @@ void GeometryRepository::requestGeometryConstitution(const IQueryPtr& r)
     if (!request) return;
     if (hasGeometryData(request->id()))
     {
-        EventPublisher::post(std::make_shared<ConstituteGeometryFailed>(request->id(), ErrorCode::geometryEntityAlreadyExists));
+        EventPublisher::enqueue(std::make_shared<ConstituteGeometryFailed>(request->id(), ErrorCode::geometryEntityAlreadyExists));
         return;
     }
     auto geometry = m_factory->constitute(request->id(), request->dto(), false);
@@ -172,11 +172,11 @@ void GeometryRepository::removeGeometryData(const GeometryId& id)
     if (er)
     {
         Platforms::Debug::ErrorPrintf("remove geometry data %s failed : %s\n", id.name().c_str(), er.message().c_str());
-        EventPublisher::post(std::make_shared<RemoveGeometryFailed>(id, er));
+        EventPublisher::enqueue(std::make_shared<RemoveGeometryFailed>(id, er));
     }
     else
     {
-        EventPublisher::post(std::make_shared<GeometryRemoved>(id));
+        EventPublisher::enqueue(std::make_shared<GeometryRemoved>(id));
     }
 }
 
@@ -188,10 +188,10 @@ void GeometryRepository::putGeometryData(const GeometryId& id, const std::shared
     if (er)
     {
         Platforms::Debug::ErrorPrintf("put geometry data %s failed : %s\n", id.name().c_str(), er.message().c_str());
-        EventPublisher::post(std::make_shared<PutGeometryFailed>(id, er));
+        EventPublisher::enqueue(std::make_shared<PutGeometryFailed>(id, er));
     }
     else
     {
-        EventPublisher::post(std::make_shared<GeometryPut>(id));
+        EventPublisher::enqueue(std::make_shared<GeometryPut>(id));
     }
 }

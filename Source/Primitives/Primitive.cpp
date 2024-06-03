@@ -17,7 +17,7 @@ Primitive::Primitive(const PrimitiveId& id) : m_id(id), m_factoryDesc(Primitive:
 
 Primitive::~Primitive()
 {
-    Frameworks::CommandBus::post(std::make_shared<Animators::RemoveAnimator>(m_animatorId));
+    Frameworks::CommandBus::enqueue(std::make_shared<Animators::RemoveAnimator>(m_animatorId));
 }
 
 std::shared_ptr<Primitive> Primitive::queryPrimitive(const PrimitiveId& id)

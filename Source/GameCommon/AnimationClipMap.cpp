@@ -52,11 +52,11 @@ std::optional<AnimationClipMap::AnimClip> AnimationClipMap::findAnimationClip(co
 void AnimationClipMap::insertClip(const AnimClip& anim_clip)
 {
     m_animClips[anim_clip.getName()] = anim_clip;
-    Frameworks::EventPublisher::post(std::make_shared<AnimationClipMapChanged>(animationClipMap()));
+    Frameworks::EventPublisher::enqueue(std::make_shared<AnimationClipMapChanged>(animationClipMap()));
 }
 
 void AnimationClipMap::removeClip(const std::string& name)
 {
     m_animClips.erase(name);
-    Frameworks::EventPublisher::post(std::make_shared<AnimationClipMapChanged>(animationClipMap()));
+    Frameworks::EventPublisher::enqueue(std::make_shared<AnimationClipMapChanged>(animationClipMap()));
 }

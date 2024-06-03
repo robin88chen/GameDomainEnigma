@@ -107,11 +107,11 @@ void WorldMapRepository::putQuadTreeRoot(const QuadTreeRootId& id, const std::sh
         auto er = m_storeMapper->putQuadTreeRoot(id, quad_tree_root->serializeDto());
         if (!er)
         {
-            EventPublisher::post(std::make_shared<QuadTreeRootPut>(id));
+            EventPublisher::enqueue(std::make_shared<QuadTreeRootPut>(id));
         }
         else
         {
-            EventPublisher::post(std::make_shared<PutQuadTreeRootFailed>(id, er));
+            EventPublisher::enqueue(std::make_shared<PutQuadTreeRootFailed>(id, er));
         }
     }
 }
@@ -125,11 +125,11 @@ void WorldMapRepository::removeQuadTreeRoot(const QuadTreeRootId& id)
     auto er = m_storeMapper->removeQuadTreeRoot(id);
     if (!er)
     {
-        EventPublisher::post(std::make_shared<QuadTreeRootRemoved>(id));
+        EventPublisher::enqueue(std::make_shared<QuadTreeRootRemoved>(id));
     }
     else
     {
-        EventPublisher::post(std::make_shared<RemoveQuadTreeRootFailed>(id, er));
+        EventPublisher::enqueue(std::make_shared<RemoveQuadTreeRootFailed>(id, er));
     }
 }
 
@@ -169,11 +169,11 @@ void WorldMapRepository::putWorldMap(const WorldMapId& id, const std::shared_ptr
         auto er = m_storeMapper->putWorldMap(id, world_map->serializeDto());
         if (!er)
         {
-            EventPublisher::post(std::make_shared<WorldMapPut>(id));
+            EventPublisher::enqueue(std::make_shared<WorldMapPut>(id));
         }
         else
         {
-            EventPublisher::post(std::make_shared<PutWorldMapFailed>(id, er));
+            EventPublisher::enqueue(std::make_shared<PutWorldMapFailed>(id, er));
         }
     }
 }
@@ -187,11 +187,11 @@ void WorldMapRepository::removeWorldMap(const WorldMapId& id)
     auto er = m_storeMapper->removeWorldMap(id);
     if (!er)
     {
-        EventPublisher::post(std::make_shared<WorldMapRemoved>(id));
+        EventPublisher::enqueue(std::make_shared<WorldMapRemoved>(id));
     }
     else
     {
-        EventPublisher::post(std::make_shared<RemoveWorldMapFailed>(id, er));
+        EventPublisher::enqueue(std::make_shared<RemoveWorldMapFailed>(id, er));
     }
 }
 
@@ -216,7 +216,7 @@ void WorldMapRepository::requestQuadTreeRootCreation(const Frameworks::IQueryPtr
     assert(request);
     if (hasQuadTreeRoot(request->id()))
     {
-        EventPublisher::post(std::make_shared<QuadTreeRootCreationFailed>(request->id(), ErrorCode::quadRootAlreadyExists));
+        EventPublisher::enqueue(std::make_shared<QuadTreeRootCreationFailed>(request->id(), ErrorCode::quadRootAlreadyExists));
         return;
     }
     auto quadTreeRoot = std::make_shared<QuadTreeRoot>(request->id());
@@ -230,7 +230,7 @@ void WorldMapRepository::requestQuadTreeRootConstitution(const Frameworks::IQuer
     assert(request);
     if (hasQuadTreeRoot(request->id()))
     {
-        EventPublisher::post(std::make_shared<QuadTreeRootConstitutionFailed>(request->id(), ErrorCode::quadRootAlreadyExists));
+        EventPublisher::enqueue(std::make_shared<QuadTreeRootConstitutionFailed>(request->id(), ErrorCode::quadRootAlreadyExists));
         return;
     }
     auto quadTreeRoot = std::make_shared<QuadTreeRoot>(request->id(), request->dto());
@@ -259,7 +259,7 @@ void WorldMapRepository::requestWorldMapCreation(const Frameworks::IQueryPtr q)
     assert(request);
     if (hasWorldMap(request->id()))
     {
-        EventPublisher::post(std::make_shared<WorldMapCreationFailed>(request->id(), ErrorCode::worldMapAlreadyExists));
+        EventPublisher::enqueue(std::make_shared<WorldMapCreationFailed>(request->id(), ErrorCode::worldMapAlreadyExists));
         return;
     }
     auto worldMap = std::make_shared<WorldMap>(request->id());
@@ -273,7 +273,7 @@ void WorldMapRepository::requestWorldMapConstitution(const Frameworks::IQueryPtr
     assert(request);
     if (hasWorldMap(request->id()))
     {
-        EventPublisher::post(std::make_shared<WorldMapConstitutionFailed>(request->id(), ErrorCode::worldMapAlreadyExists));
+        EventPublisher::enqueue(std::make_shared<WorldMapConstitutionFailed>(request->id(), ErrorCode::worldMapAlreadyExists));
         return;
     }
     auto worldMap = std::make_shared<WorldMap>(request->id(), request->dto());

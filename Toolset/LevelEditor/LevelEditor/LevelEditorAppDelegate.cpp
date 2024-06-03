@@ -303,7 +303,7 @@ void EditorAppDelegate::onRenderEngineInstalled(const IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<RenderEngineInstalled, IEvent>(e);
     if (!ev) return;
-    CommandBus::post(std::make_shared<OutputMessage>("render engine installed"));
+    CommandBus::enqueue(std::make_shared<OutputMessage>("render engine installed"));
     auto root_id = m_appConfig->portalManagementId();
     if (!m_sceneGraphFileStoreMapper->hasSpatial(root_id))
     {
@@ -311,7 +311,7 @@ void EditorAppDelegate::onRenderEngineInstalled(const IEventPtr& e)
         root_assembler.asNative(root_id.name() + ".node@" + m_appConfig->mediaPathId());
         m_sceneGraphFileStoreMapper->putSpatial(root_id, root_assembler.toGenericDto());
     }
-    CommandBus::post(std::make_shared<CreatePortalSceneRoot>(root_id));
+    CommandBus::enqueue(std::make_shared<CreatePortalSceneRoot>(root_id));
 }
 
 void EditorAppDelegate::onSceneRootCreated(const Enigma::Frameworks::IEventPtr& e)
@@ -319,11 +319,11 @@ void EditorAppDelegate::onSceneRootCreated(const Enigma::Frameworks::IEventPtr& 
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<PortalSceneRootCreated, IEvent>(e);
     if (!ev) return;
-    CommandBus::post(std::make_shared<OutputMessage>("portal scene root created : " + ev->root()->id().name()));
+    CommandBus::enqueue(std::make_shared<OutputMessage>("portal scene root created : " + ev->root()->id().name()));
     m_sceneRoot = ev->root();
     SceneFlattenTraversal traversal;
     m_sceneRoot.lock()->visitBy(&traversal);
-    CommandBus::post(std::make_shared<RefreshSceneGraph>(traversal.GetSpatials()));
+    CommandBus::enqueue(std::make_shared<RefreshSceneGraph>(traversal.GetSpatials()));
 }
 
 void EditorAppDelegate::onSceneGraphChanged(const IEventPtr& e)
@@ -334,7 +334,7 @@ void EditorAppDelegate::onSceneGraphChanged(const IEventPtr& e)
     if (m_sceneRoot.expired()) return;
     SceneFlattenTraversal traversal;
     m_sceneRoot.lock()->visitBy(&traversal);
-    CommandBus::post(std::make_shared<RefreshSceneGraph>(traversal.GetSpatials()));
+    CommandBus::enqueue(std::make_shared<RefreshSceneGraph>(traversal.GetSpatials()));
 }
 
 /*void EditorAppDelegate::onWorldMapCreated(const Enigma::Frameworks::IEventPtr& e)

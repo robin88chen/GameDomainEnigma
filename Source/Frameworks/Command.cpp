@@ -5,6 +5,10 @@ using namespace Enigma::Frameworks;
 
 void ICommand::execute()
 {
-    CommandBus::send(shared_from_this());
+    CommandBus::execute(shared_from_this());
 }
 
+void ICommand::enqueue()
+{
+    CommandBus::enqueue(shared_from_this());
+}

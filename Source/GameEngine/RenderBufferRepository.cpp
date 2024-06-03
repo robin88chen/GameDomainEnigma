@@ -102,7 +102,7 @@ void RenderBufferRepository::OnRenderBufferBuilt(const Frameworks::IEventPtr& e)
     std::lock_guard locker{ m_bufferMapLock };
     m_renderBuffers.insert_or_assign(ev->GetSignature(), ev->GetBuffer());
     m_isCurrentBuilding = false;
-    Frameworks::EventPublisher::post(std::make_shared<RenderBufferBuilt>(ev->getName(), ev->GetSignature(), ev->GetBuffer()));
+    Frameworks::EventPublisher::enqueue(std::make_shared<RenderBufferBuilt>(ev->getName(), ev->GetSignature(), ev->GetBuffer()));
 }
 
 void RenderBufferRepository::OnBuildRenderBufferFailed(const Frameworks::IEventPtr& e)

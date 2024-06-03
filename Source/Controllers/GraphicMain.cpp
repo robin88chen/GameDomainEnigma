@@ -37,7 +37,7 @@ error GraphicMain::installFrameworks()
     m_serviceManager->registerSystemService(std::make_shared <Frameworks::CommandBus>(m_serviceManager));
     m_serviceManager->registerSystemService(std::make_shared<Frameworks::QueryDispatcher>(m_serviceManager));
 
-    Frameworks::EventPublisher::post(std::make_shared<FrameworksInstalled>());
+    Frameworks::EventPublisher::enqueue(std::make_shared<FrameworksInstalled>());
 
     return ErrorCode::ok;
 }
@@ -61,7 +61,7 @@ error GraphicMain::installRenderEngine(const InstallingPolicyList& policies)
         if (er) return er;
     }
     m_serviceManager->runToState(Frameworks::ServiceManager::ServiceState::WaitingToRun); // make sure all services initialized
-    Frameworks::EventPublisher::post(std::make_shared<RenderEngineInstalled>());
+    Frameworks::EventPublisher::enqueue(std::make_shared<RenderEngineInstalled>());
     return ErrorCode::ok;
 }
 

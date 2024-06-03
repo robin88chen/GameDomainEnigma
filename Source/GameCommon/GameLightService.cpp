@@ -94,7 +94,7 @@ void GameLightService::createAmbientLight(const SpatialId& parent_id, const Spat
     if (!parent_id.empty())
     {
         m_pendingLightIds.insert(light_id);
-        CommandBus::post(std::make_shared<AttachNodeChild>(parent_id, light, MathLib::Matrix4::IDENTITY));
+        CommandBus::enqueue(std::make_shared<AttachNodeChild>(parent_id, light, MathLib::Matrix4::IDENTITY));
     }
 }
 
@@ -112,7 +112,7 @@ void GameLightService::createSunLight(const SpatialId& parent_id, const SpatialI
     if (!parent_id.empty())
     {
         m_pendingLightIds.insert(light_id);
-        CommandBus::post(std::make_shared<AttachNodeChild>(parent_id, light, MathLib::Matrix4::IDENTITY));
+        CommandBus::enqueue(std::make_shared<AttachNodeChild>(parent_id, light, MathLib::Matrix4::IDENTITY));
     }
 }
 
@@ -130,7 +130,7 @@ void GameLightService::createPointLight(const SpatialId& parent_id, const MathLi
     if (!parent_id.empty())
     {
         m_pendingLightIds.insert(light_id);
-        CommandBus::post(std::make_shared<AttachNodeChild>(parent_id, light, mxLocal));
+        CommandBus::enqueue(std::make_shared<AttachNodeChild>(parent_id, light, mxLocal));
     }
 }
 
@@ -230,7 +230,7 @@ void GameLightService::deleteLight(const ICommandPtr& command) const
     if (!command) return;
     const auto cmd = std::dynamic_pointer_cast<DeleteLight, ICommand>(command);
     if (!cmd) return;
-    CommandBus::post(std::make_shared<DeleteSceneSpatial>(cmd->lightId()));
+    CommandBus::enqueue(std::make_shared<DeleteSceneSpatial>(cmd->lightId()));
 }
 
 void GameLightService::onSceneNodeChildAttached(const IEventPtr& e)
@@ -242,7 +242,7 @@ void GameLightService::onSceneNodeChildAttached(const IEventPtr& e)
     if (!light) return;
     if (const auto it = m_pendingLightIds.find(light->id()); it != m_pendingLightIds.end())
     {
-        EventPublisher::post(std::make_shared<GameLightCreated>(light));
+        EventPublisher::enqueue(std::make_shared<GameLightCreated>(light));
         m_pendingLightIds.erase(it);
     }
 }
@@ -255,7 +255,7 @@ void GameLightService::onAttachSceneNodeChildFailed(const IEventPtr& e)
     auto child_id = ev->childId();
     if (auto it = m_pendingLightIds.find(child_id); it != m_pendingLightIds.end())
     {
-        EventPublisher::post(std::make_shared<CreateGameLightFailed>(child_id, ev->error()));
+        EventPublisher::enqueue(std::make_shared<CreateGameLightFailed>(child_id, ev->error()));
         m_pendingLightIds.erase(it);
     }
 }

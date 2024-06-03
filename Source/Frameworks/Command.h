@@ -26,6 +26,7 @@ namespace Enigma::Frameworks
         virtual const std::type_info& typeInfo() { return typeid(*this); };  ///< 實作層的 type info
 
         void execute();
+        void enqueue();
     };
 
     using ICommandPtr = std::shared_ptr<ICommand>;

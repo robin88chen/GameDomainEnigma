@@ -9,6 +9,7 @@
 #define EDITOR_WORLD_MAP_FILE_STORE_MAPPER_H
 
 #include "FileStorage/WorldMapFileStoreMapper.h"
+#include "Frameworks/QuerySubscriber.h"
 
 namespace LevelEditor
 {
@@ -18,7 +19,16 @@ namespace LevelEditor
         WorldMapFileStoreMapper(const std::string& world_mapper_filename, const std::string& quad_root_mapper_filename, const std::shared_ptr<Enigma::Gateways::IDtoGateway>& gateway);
         ~WorldMapFileStoreMapper() override;
 
+        void subscribeHandlers();
+        void unsubscribeHandlers();
+
+    protected:
         bool isWorldNameDuplicated(const std::string& world_name);
+
+        void isWorldNameDuplicated(const Enigma::Frameworks::IQueryPtr& q);
+
+    protected:
+        Enigma::Frameworks::QuerySubscriberPtr m_isWorldNameDuplicated;
     };
 }
 

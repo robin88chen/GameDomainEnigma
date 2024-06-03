@@ -8,18 +8,20 @@
 #include "Platforms/MemoryMacro.h"
 #include "WorldEditConsole.h"
 #include "SceneGraph/PortalZoneNode.h"
+#include "InputNameVerifier.h"
 #include "nana/gui.hpp"
 
 using namespace LevelEditor;
 using namespace Enigma;
 
-CreateNewWorldDlg::CreateNewWorldDlg(nana::window owner, const std::shared_ptr<WorldEditConsole>& world_editor, const SceneGraph::SpatialId& portal_manager_id) : form(owner, nana::API::make_center(400, 320), nana::appear::decorate<>{})
+CreateNewWorldDlg::CreateNewWorldDlg(nana::window owner, const std::shared_ptr<WorldEditConsole>& world_editor, const SceneGraph::SpatialId& portal_manager_id) : form(owner, nana::API::make_center(480, 320), nana::appear::decorate<>{})
 {
     m_portalManagerId = portal_manager_id;
     m_worldEditor = world_editor;
     caption("Create New World");
-    get_place().div("vert<><create_prompt arrange=[40%,variable] margin=[10,20]><validation_prompt arrange=[40%,variable] margin=[10,20]><><><buttons margin=[10,40] gap=10><>");
-    m_namePrompt = menew nana::label(*this, "World Map Name : ");
+    get_place().div("vert<><create_prompt arrange=[45%,variable] margin=[10,20]><validation_prompt arrange=[45%,variable] margin=[10,20]><><><buttons margin=[10,40] gap=10><>");
+    std::string prompt = "World Map Name : " + world_editor->worldRelativePath() + "/";
+    m_namePrompt = menew nana::label(*this, prompt);
     (*m_namePrompt).text_align(nana::align::right);
     m_nameInputBox = menew nana::textbox(*this, "");
     m_nameInputBox->events().text_changed([this](const nana::arg_textbox& a) { this->onInputNameChanged(a); });
@@ -96,13 +98,14 @@ void CreateNewWorldDlg::onCancelButton(const nana::arg_click& arg)
 void CreateNewWorldDlg::onInputNameChanged(const nana::arg_textbox& arg)
 {
     if (FATAL_LOG_EXPR(m_worldEditor.expired())) return;
+    std::string world_path_name = m_worldEditor.lock()->worldRelativePath() + "/" + arg.widget.text();
     if (arg.widget.text().empty())
     {
         m_nameValidationPrompt->caption("world name empty");
     }
-    else if (m_worldEditor.lock()->isWorldNameDuplicated(arg.widget.text()))
+    else if (InputNameVerifier::isWorldNameDuplicated(world_path_name))
     {
-        m_nameValidationPrompt->caption("duplicated name");
+        m_nameValidationPrompt->caption("world duplicated name");
     }
     else
     {

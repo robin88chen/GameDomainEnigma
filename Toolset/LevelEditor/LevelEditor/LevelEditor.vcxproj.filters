@@ -130,6 +130,9 @@
     <ClCompile Include="SceneGraphFileStoreMapper.cpp">
       <Filter>FileStorages</Filter>
     </ClCompile>
+    <ClCompile Include="InputNameVerifier.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SchemeColorDef.h">
@@ -229,7 +232,7 @@
     <ClInclude Include="GeometryDataFileStoreMapper.h">
       <Filter>FileStorages</Filter>
     </ClInclude>
-    <ClInclude Include="LevelEditorUiQueries.h">
+    <ClInclude Include="LevelEditorQueries.h">
       <Filter>Communications</Filter>
     </ClInclude>
     <ClInclude Include="TextureFileStoreMapper.h">
@@ -240,6 +243,9 @@
     </ClInclude>
     <ClInclude Include="SceneGraphFileStoreMapper.h">
       <Filter>FileStorages</Filter>
+    </ClInclude>
+    <ClInclude Include="InputNameVerifier.h">
+      <Filter>Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

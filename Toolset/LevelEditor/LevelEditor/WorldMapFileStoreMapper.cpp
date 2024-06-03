@@ -1,4 +1,6 @@
 ﻿#include "WorldMapFileStoreMapper.h"
+#include "LevelEditorQueries.h"
+#include "Frameworks/QueryDispatcher.h"
 
 using namespace LevelEditor;
 
@@ -8,6 +10,18 @@ WorldMapFileStoreMapper::WorldMapFileStoreMapper(const std::string& world_mapper
 
 WorldMapFileStoreMapper::~WorldMapFileStoreMapper()
 {
+}
+
+void WorldMapFileStoreMapper::subscribeHandlers()
+{
+    m_isWorldNameDuplicated = std::make_shared<Enigma::Frameworks::QuerySubscriber>([=](const Enigma::Frameworks::IQueryPtr& q) { isWorldNameDuplicated(q); });
+    Enigma::Frameworks::QueryDispatcher::subscribe(typeid(IsWorldNameDuplicated), m_isWorldNameDuplicated);
+}
+
+void WorldMapFileStoreMapper::unsubscribeHandlers()
+{
+    Enigma::Frameworks::QueryDispatcher::unsubscribe(typeid(IsWorldNameDuplicated), m_isWorldNameDuplicated);
+    m_isWorldNameDuplicated = nullptr;
 }
 
 bool WorldMapFileStoreMapper::isWorldNameDuplicated(const std::string& world_name)
@@ -21,4 +35,13 @@ bool WorldMapFileStoreMapper::isWorldNameDuplicated(const std::string& world_nam
         }
     }
     return false;
+}
+
+void WorldMapFileStoreMapper::isWorldNameDuplicated(const Enigma::Frameworks::IQueryPtr& q)
+{
+    auto query = std::dynamic_pointer_cast<IsWorldNameDuplicated>(q);
+    if (query)
+    {
+        query->setResult(isWorldNameDuplicated(query->worldName()));
+    }
 }

@@ -138,6 +138,7 @@
     <ClCompile Include="EditorSceneConsole.cpp" />
     <ClCompile Include="EditorUtilities.cpp" />
     <ClCompile Include="GeometryDataFileStoreMapper.cpp" />
+    <ClCompile Include="InputNameVerifier.cpp" />
     <ClCompile Include="NameInputDialog.cpp" />
     <ClCompile Include="SceneGraphFileStoreMapper.cpp" />
     <ClCompile Include="TextureFileStoreMapper.cpp" />
@@ -176,7 +177,8 @@
     <ClInclude Include="EditorSceneConsole.h" />
     <ClInclude Include="EditorUtilities.h" />
     <ClInclude Include="GeometryDataFileStoreMapper.h" />
-    <ClInclude Include="LevelEditorUiQueries.h" />
+    <ClInclude Include="InputNameVerifier.h" />
+    <ClInclude Include="LevelEditorQueries.h" />
     <ClInclude Include="NameInputDialog.h" />
     <ClInclude Include="SceneGraphFileStoreMapper.h" />
     <ClInclude Include="TextureFileStoreMapper.h" />

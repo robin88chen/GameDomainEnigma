@@ -9,6 +9,7 @@
 #define EDITOR_SCENE_GRAPH_FILE_STORE_MAPPER_H
 
 #include "FileStorage/SceneGraphFileStoreMapper.h"
+#include "Frameworks/QuerySubscriber.h"
 
 namespace LevelEditor
 {
@@ -22,7 +23,14 @@ namespace LevelEditor
         void unsubscribeHandlers();
 
         std::optional<Enigma::SceneGraph::SpatialId> spatialId(const std::string& spatial_name) const;
+
+    protected:
         bool isSpatialNameDuplicated(const std::string& spatial_name) const;
+
+        void isSpatialNameDuplicated(const Enigma::Frameworks::IQueryPtr& q);
+
+    protected:
+        Enigma::Frameworks::QuerySubscriberPtr m_isSpatialNameDuplicated;
     };
 }
 

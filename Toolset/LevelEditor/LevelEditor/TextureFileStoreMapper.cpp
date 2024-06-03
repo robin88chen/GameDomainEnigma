@@ -1,5 +1,5 @@
 ﻿#include "TextureFileStoreMapper.h"
-#include "LevelEditorUiQueries.h"
+#include "LevelEditorQueries.h"
 #include "Frameworks/QueryDispatcher.h"
 
 using namespace LevelEditor;
@@ -7,12 +7,10 @@ using namespace Enigma::Frameworks;
 
 TextureFileStoreMapper::TextureFileStoreMapper(const std::string& mapper_filename, const std::shared_ptr<Enigma::Gateways::IDtoGateway>& gateway) : Enigma::FileStorage::TextureFileStoreMapper(mapper_filename, gateway)
 {
-
 }
 
 TextureFileStoreMapper::~TextureFileStoreMapper()
 {
-
 }
 
 void TextureFileStoreMapper::subscribeHandlers()

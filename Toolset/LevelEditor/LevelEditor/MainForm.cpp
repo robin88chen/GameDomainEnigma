@@ -1,36 +1,35 @@
 ﻿#include "MainForm.h"
-
-#include <GameCommon/GameLightCommands.h>
-
-#include "Frameworks/CommandBus.h"
-#include "Frameworks/EventPublisher.h"
-#include "FileSystem/FileSystem.h"
 #include "AddTerrainDialog.h"
-#include "CreateNewWorldDlg.h"
-#include "Platforms/MemoryMacro.h"
-#include "SchemeColorDef.h"
-#include "LevelEditorAppDelegate.h"
-#include "RenderPanel.h"
-#include "SceneGraphPanel.h"
-#include "SpatialInspectorToolPanel.h"
-#include "TerrainToolPanel.h"
-#include "OutputPanel.h"
-#include "WorldEditConsole.h"
 #include "AppConfiguration.h"
-#include "LevelEditorCommands.h"
-#include "WorldEditService.h"
-#include "TerrainEditService.h"
-#include "TerrainEditConsole.h"
+#include "CreateNewWorldDlg.h"
 #include "EditorSceneConsole.h"
-#include "Gateways/DtoJsonGateway.h"
-#include "LevelEditorEvents.h"
-#include "nana/gui/filebox.hpp"
+#include "EditorUtilities.h"
 #include "FrustumInfoDialog.h"
+#include "InputNameVerifier.h"
+#include "LevelEditorAppDelegate.h"
+#include "LevelEditorCommands.h"
+#include "LevelEditorEvents.h"
+#include "NameInputDialog.h"
+#include "OutputPanel.h"
 #include "PawnEditConsole.h"
 #include "PawnEditService.h"
-#include "EditorUtilities.h"
-#include "NameInputDialog.h"
+#include "RenderPanel.h"
 #include "SceneGraphFileStoreMapper.h"
+#include "SceneGraphPanel.h"
+#include "SchemeColorDef.h"
+#include "SpatialInspectorToolPanel.h"
+#include "TerrainEditConsole.h"
+#include "TerrainEditService.h"
+#include "TerrainToolPanel.h"
+#include "WorldEditConsole.h"
+#include "WorldEditService.h"
+#include "FileSystem/FileSystem.h"
+#include "Frameworks/CommandBus.h"
+#include "Frameworks/EventPublisher.h"
+#include "GameCommon/GameLightCommands.h"
+#include "Gateways/DtoJsonGateway.h"
+#include "nana/gui/filebox.hpp"
+#include "Platforms/MemoryMacro.h"
 
 using namespace LevelEditor;
 using namespace Enigma::Graphics;
@@ -112,7 +111,7 @@ void MainForm::initializeGraphics()
     events().destroy([this] { this->finalizeGraphics(); });
     auto srv_mngr = Enigma::Controllers::GraphicMain::instance()->getServiceManager();
     auto world_edit = std::dynamic_pointer_cast<WorldEditService>(srv_mngr->getSystemService(WorldEditService::TYPE_RTTI));
-    srv_mngr->registerSystemService(std::make_shared<WorldEditConsole>(srv_mngr, m_appDelegate->worldMapFileStoreMapper(), m_appDelegate->appConfig()->worldDataRelativePath(), m_appDelegate->appConfig()->mediaPathId()));
+    srv_mngr->registerSystemService(std::make_shared<WorldEditConsole>(srv_mngr, m_appDelegate->appConfig()->worldDataRelativePath(), m_appDelegate->appConfig()->mediaPathId()));
     srv_mngr->registerSystemService(std::make_shared<TerrainEditConsole>(srv_mngr, m_appDelegate->geometryDataFileStoreMapper(), m_appDelegate->appConfig()->terrainRelativePath(), m_appDelegate->appConfig()->mediaPathId()));
     srv_mngr->registerSystemService(std::make_shared<EditorSceneConsole>(srv_mngr));
     auto pawn_edit = std::dynamic_pointer_cast<PawnEditService>(srv_mngr->getSystemService(PawnEditService::TYPE_RTTI));
@@ -275,7 +274,7 @@ void MainForm::onAddTerrainCommand(const nana::menu::item_proxy& menu_item)
 void MainForm::onAddAmbientLightCommand(const nana::menu::item_proxy& menu_item)
 {
     Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Add Ambient Light..."));
-    NameInputDialog input_dialog(*this, "Add Ambient Light", [=](auto name) -> bool {  return m_appDelegate->sceneGraphFileStoreMapper()->isSpatialNameDuplicated(name); });
+    NameInputDialog input_dialog(*this, "Add Ambient Light", InputNameVerifier::isSpatialNameDuplicated);
     auto answer = input_dialog.modalityShow();
     if (answer == NameInputDialog::Answer::ok)
     {
@@ -290,7 +289,7 @@ void MainForm::onAddAmbientLightCommand(const nana::menu::item_proxy& menu_item)
 void MainForm::onAddSunLightCommand(const nana::menu::item_proxy& menu_item)
 {
     Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Add Sun Light..."));
-    NameInputDialog input_dialog(*this, "Add Sun Light", [=](auto name) -> bool {  return m_appDelegate->sceneGraphFileStoreMapper()->isSpatialNameDuplicated(name); });
+    NameInputDialog input_dialog(*this, "Add Sun Light", InputNameVerifier::isSpatialNameDuplicated);
     auto answer = input_dialog.modalityShow();
     if (answer == NameInputDialog::Answer::ok)
     {
@@ -306,7 +305,7 @@ void MainForm::onAddSunLightCommand(const nana::menu::item_proxy& menu_item)
 void MainForm::onAddPointLightCommand(const nana::menu::item_proxy& menu_item)
 {
     Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Add Point Light..."));
-    NameInputDialog input_dialog(*this, "Add Point Light", [=](auto name) -> bool {  return m_appDelegate->sceneGraphFileStoreMapper()->isSpatialNameDuplicated(name); });
+    NameInputDialog input_dialog(*this, "Add Point Light", InputNameVerifier::isSpatialNameDuplicated);
     auto answer = input_dialog.modalityShow();
     if (answer == NameInputDialog::Answer::ok)
     {

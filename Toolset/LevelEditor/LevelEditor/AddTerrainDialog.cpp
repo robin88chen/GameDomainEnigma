@@ -9,7 +9,7 @@
 #include "Terrain/TerrainAssemblers.h"
 #include <cstdlib>
 
-#include "LevelEditorUiQueries.h"
+#include "LevelEditorQueries.h"
 #include "MathLib/Matrix4.h"
 #include "nana/gui/msgbox.hpp"
 

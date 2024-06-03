@@ -232,11 +232,15 @@ void EditorAppDelegate::installEngine()
     m_graphicMain->getServiceManager()->registerSystemService(std::make_shared<LightEditService>(m_graphicMain->getServiceManager()));
     m_graphicMain->getServiceManager()->registerSystemService(std::make_shared<PawnEditService>(m_graphicMain->getServiceManager()));
 
+    m_sceneGraphFileStoreMapper->subscribeHandlers();
+    m_worldMapFileStoreMapper->subscribeHandlers();
     m_textureFileStoreMapper->subscribeHandlers();
 }
 
 void EditorAppDelegate::shutdownEngine()
 {
+    m_sceneGraphFileStoreMapper->unsubscribeHandlers();
+    m_worldMapFileStoreMapper->unsubscribeHandlers();
     m_textureFileStoreMapper->unsubscribeHandlers();
 
     EventPublisher::unsubscribe(typeid(RenderEngineInstalled), m_onRenderEngineInstalled);

@@ -402,13 +402,13 @@ PortalAssembler& PortalAssembler::factory(const Engine::FactoryDesc& factory)
 
 PortalAssembler& PortalAssembler::adjacentZoneNodeId(const SpatialId& adjacent_zone_node_id)
 {
-    m_dto.adjacentZoneNodeId() = adjacent_zone_node_id;
+    m_dto.adjacentZoneNodeId(adjacent_zone_node_id);
     return *this;
 }
 
 PortalAssembler& PortalAssembler::isOpen(bool is_open)
 {
-    m_dto.isOpen() = is_open;
+    m_dto.isOpen(is_open);
     return *this;
 }
 
@@ -424,8 +424,8 @@ PortalDto PortalAssembler::toPortalDto() const
     PortalDto portal_dto(m_spatialAssembler.toGenericDto());
     portal_dto.id() = m_dto.id();
     portal_dto.factoryDesc() = m_dto.factoryDesc();
-    portal_dto.adjacentZoneNodeId() = m_dto.adjacentZoneNodeId();
-    portal_dto.isOpen() = m_dto.isOpen();
+    portal_dto.adjacentZoneNodeId(m_dto.adjacentZoneNodeId());
+    portal_dto.isOpen(m_dto.isOpen());
     return portal_dto;
 }
 
@@ -461,7 +461,7 @@ PortalZoneNodeAssembler& PortalZoneNodeAssembler::factory(const Engine::FactoryD
 
 PortalZoneNodeAssembler& PortalZoneNodeAssembler::portalParentId(const SpatialId& portal_parent_id)
 {
-    m_dto.portalParentId() = portal_parent_id;
+    m_dto.portalParentId(portal_parent_id);
     return *this;
 }
 
@@ -477,7 +477,7 @@ PortalZoneNodeDto PortalZoneNodeAssembler::toHydratedDto() const
     PortalZoneNodeDto portal_zone_node_dto(m_lazyNodeAssembler.toHydratedDto());
     portal_zone_node_dto.id() = m_dto.id();
     portal_zone_node_dto.factoryDesc() = m_dto.factoryDesc();
-    portal_zone_node_dto.portalParentId() = m_dto.portalParentId();
+    portal_zone_node_dto.portalParentId(m_dto.portalParentId());
     return portal_zone_node_dto;
 }
 
@@ -496,7 +496,7 @@ PortalZoneNodeDto PortalZoneNodeAssembler::toDeHydratedDto() const
     PortalZoneNodeDto portal_zone_node_dto(m_lazyNodeAssembler.toDeHydratedDto());
     portal_zone_node_dto.id() = m_dto.id();
     portal_zone_node_dto.factoryDesc() = m_dto.factoryDesc();
-    portal_zone_node_dto.portalParentId() = m_dto.portalParentId();
+    portal_zone_node_dto.portalParentId(m_dto.portalParentId());
     return portal_zone_node_dto;
 }
 

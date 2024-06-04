@@ -42,14 +42,14 @@ std::shared_ptr<PortalZoneNode> PortalZoneNode::constitute(const SpatialId& id, 
 GenericDto PortalZoneNode::serializeDto()
 {
     PortalZoneNodeDto dto = PortalZoneNodeDto(LazyNode::serializeLazyNodeAsLaziness());
-    dto.portalParentId() = m_portalParentId;
+    dto.portalParentId(m_portalParentId);
     return dto.toGenericDto();
 }
 
 GenericDto PortalZoneNode::serializeLaziedContent()
 {
     PortalZoneNodeDto dto = PortalZoneNodeDto(LazyNodeDto(Node::serializeNodeDto()));
-    dto.portalParentId() = m_portalParentId;
+    dto.portalParentId(m_portalParentId);
     return dto.toGenericDto();
 }
 

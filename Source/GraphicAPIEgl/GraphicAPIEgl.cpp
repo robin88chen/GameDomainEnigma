@@ -43,7 +43,7 @@ GraphicAPIEgl::~GraphicAPIEgl()
 
 }
 
-error GraphicAPIEgl::CreateDevice(const Graphics::DeviceRequiredBits& rqb, void* hwnd)
+error GraphicAPIEgl::createDevice(const Graphics::DeviceRequiredBits& rqb, void* hwnd)
 {
     m_wnd = hwnd;
     m_deviceRequiredBits = rqb;
@@ -54,18 +54,18 @@ error GraphicAPIEgl::CreateDevice(const Graphics::DeviceRequiredBits& rqb, void*
     return ErrorCode::ok;
 }
 
-error GraphicAPIEgl::CleanupDevice()
+error GraphicAPIEgl::cleanupDevice()
 {
     CleanupDeviceObjects();
     return ErrorCode::ok;
 }
 
-error GraphicAPIEgl::BeginDrawingScene()
+error GraphicAPIEgl::beginDrawingScene()
 {
     return ErrorCode::ok;
 }
 
-error GraphicAPIEgl::EndDrawingScene()
+error GraphicAPIEgl::endDrawingScene()
 {
     return ErrorCode::ok;
 }
@@ -82,13 +82,13 @@ void GraphicAPIEgl::CleanupDeviceObjects()
     m_boundDepthSurface = nullptr;
 }
 
-error GraphicAPIEgl::DrawPrimitive(unsigned vertexCount, unsigned vertexOffset)
+error GraphicAPIEgl::drawPrimitive(unsigned vertexCount, unsigned vertexOffset)
 {
     glDrawArrays(PrimitiveTopologyToGL(m_boundTopology), static_cast<GLint>(vertexOffset), static_cast<GLsizei>(vertexCount));
     return ErrorCode::ok;
 }
 
-error GraphicAPIEgl::DrawIndexedPrimitive(unsigned indexCount, unsigned vertexCount, unsigned indexOffset, int baseVertexOffset)
+error GraphicAPIEgl::drawIndexedPrimitive(unsigned indexCount, unsigned vertexCount, unsigned indexOffset, int baseVertexOffset)
 {
     // GLES 3.0 才有
     glDrawRangeElements(PrimitiveTopologyToGL(m_boundTopology), baseVertexOffset, baseVertexOffset + vertexCount - 1,
@@ -96,7 +96,7 @@ error GraphicAPIEgl::DrawIndexedPrimitive(unsigned indexCount, unsigned vertexCo
     return ErrorCode::ok;
 }
 
-error GraphicAPIEgl::FlipBackSurface()
+error GraphicAPIEgl::flipBackSurface()
 {
     return ErrorCode::ok;
 }

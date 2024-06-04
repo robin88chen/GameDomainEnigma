@@ -98,5 +98,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\WorldMapDto.cpp">
       <Filter>WorldMap</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\WorldMapCommands.cpp">
+      <Filter>Commands &amp; Events &amp; Queries</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

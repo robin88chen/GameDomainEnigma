@@ -8,7 +8,6 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 
-#include "ruid.h"
 #include <functional>
 #include <memory>
 
@@ -24,8 +23,8 @@ namespace Enigma::Frameworks
         ICommand& operator=(const ICommand&) = delete;
         ICommand& operator=(ICommand&&) = delete;
         virtual const std::type_info& typeInfo() { return typeid(*this); };  ///< 實作層的 type info
-
-        void execute();
+        //! ADR : 執行命令，預設是由註冊在 CommandBus 的 handler 來執行。concrete command 可以改寫為直接實作執行邏輯，簡單又單純，但就沒有置換 handler 的機會了。
+        virtual void execute();
         void enqueue();
     };
 

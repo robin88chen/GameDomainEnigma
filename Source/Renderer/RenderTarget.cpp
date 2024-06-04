@@ -175,7 +175,7 @@ error RenderTarget::flip() const
 {
     if (FATAL_LOG_EXPR(!m_isPrimary)) return ErrorCode::flipNotPrimary;
     Graphics::IGraphicAPI::instance()->flip();
-    //Frameworks::CommandBus::enqueue(std::make_shared<Graphics::FlipBackSurface>());
+    //Frameworks::CommandBus::enqueue(std::make_shared<Graphics::flipBackSurface>());
     return ErrorCode::ok;
 }
 

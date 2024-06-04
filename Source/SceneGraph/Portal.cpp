@@ -58,8 +58,8 @@ std::shared_ptr<Portal> Portal::constitute(const SpatialId& id, const Engine::Ge
 Enigma::Engine::GenericDto Portal::serializeDto()
 {
     PortalDto dto(serializeSpatialDto());
-    dto.isOpen() = m_isOpen;
-    dto.adjacentZoneNodeId() = m_adjacentZoneId;
+    dto.isOpen(m_isOpen);
+    dto.adjacentZoneNodeId(m_adjacentZoneId);
     return dto.toGenericDto();
 }
 

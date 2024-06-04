@@ -52,7 +52,7 @@ GraphicAPIDx11::~GraphicAPIDx11()
     SAFE_DELETE(m_adapter);
 }
 
-error GraphicAPIDx11::CreateDevice(const Graphics::DeviceRequiredBits& rqb, void* hwnd)
+error GraphicAPIDx11::createDevice(const Graphics::DeviceRequiredBits& rqb, void* hwnd)
 {
     Platforms::Debug::Printf("create dx11 device in thread %d\n", std::this_thread::get_id());
     m_deviceRequiredBits = rqb;
@@ -72,7 +72,7 @@ error GraphicAPIDx11::CreateDevice(const Graphics::DeviceRequiredBits& rqb, void
     return er;
 }
 
-error GraphicAPIDx11::CleanupDevice()
+error GraphicAPIDx11::cleanupDevice()
 {
     Platforms::Debug::Printf("cleanup device in thread %d\n", std::this_thread::get_id());
     m_stash->clear();
@@ -83,26 +83,26 @@ error GraphicAPIDx11::CleanupDevice()
     return Graphics::ErrorCode::ok;
 }
 
-error GraphicAPIDx11::BeginDrawingScene()
+error GraphicAPIDx11::beginDrawingScene()
 {
     //Platforms::Debug::Printf("begin scene in thread %d\n", std::this_thread::get_id());
     return ErrorCode::ok;
 }
 
-error GraphicAPIDx11::EndDrawingScene()
+error GraphicAPIDx11::endDrawingScene()
 {
     //Platforms::Debug::Printf("end scene in thread %d\n", std::this_thread::get_id());
     return ErrorCode::ok;
 }
 
-error GraphicAPIDx11::DrawPrimitive(unsigned vertexCount, unsigned vertexOffset)
+error GraphicAPIDx11::drawPrimitive(unsigned vertexCount, unsigned vertexOffset)
 {
     if (FATAL_LOG_EXPR(m_d3dDeviceContext)) return ErrorCode::d3dDeviceNullPointer;
     m_d3dDeviceContext->Draw(vertexCount, vertexOffset);
     return ErrorCode::ok;
 }
 
-error GraphicAPIDx11::DrawIndexedPrimitive(unsigned indexCount, unsigned vertexCount, unsigned indexOffset,
+error GraphicAPIDx11::drawIndexedPrimitive(unsigned indexCount, unsigned vertexCount, unsigned indexOffset,
     int baseVertexOffset)
 {
     if (FATAL_LOG_EXPR(!m_d3dDeviceContext)) return ErrorCode::d3dDeviceNullPointer;
@@ -110,7 +110,7 @@ error GraphicAPIDx11::DrawIndexedPrimitive(unsigned indexCount, unsigned vertexC
     return ErrorCode::ok;
 }
 
-error GraphicAPIDx11::FlipBackSurface()
+error GraphicAPIDx11::flipBackSurface()
 {
     assert(m_swapChain);
     //DebugPrintf("flip in thread %d\n", std::this_thread::get_id());

@@ -19,7 +19,7 @@ PortalZoneNodeDto::PortalZoneNodeDto() : LazyNodeDto()
 PortalZoneNodeDto::PortalZoneNodeDto(const Engine::GenericDto& dto) : LazyNodeDto(dto)
 {
     assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), PortalZoneNode::TYPE_RTTI.getName()));
-    if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_PORTAL_PARENT_ID)) portalParentId() = v.value();
+    if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_PORTAL_PARENT_ID)) portalParentId(v.value());
 }
 
 PortalZoneNodeDto::PortalZoneNodeDto(const LazyNodeDto& lazy_node_dto) : LazyNodeDto(lazy_node_dto)
@@ -30,7 +30,7 @@ PortalZoneNodeDto::PortalZoneNodeDto(const LazyNodeDto& lazy_node_dto) : LazyNod
 GenericDto PortalZoneNodeDto::toGenericDto() const
 {
     GenericDto dto = LazyNodeDto::toGenericDto();
-    dto.addOrUpdate(TOKEN_PORTAL_PARENT_ID, m_portalParentId.tokens());
+    if (!m_portalParentId.empty()) dto.addOrUpdate(TOKEN_PORTAL_PARENT_ID, m_portalParentId.tokens());
     return dto;
 }
 
@@ -42,8 +42,8 @@ PortalDto::PortalDto() : SpatialDto(), m_isOpen(false)
 PortalDto::PortalDto(const Engine::GenericDto& dto) : SpatialDto(dto)
 {
     assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), Portal::TYPE_RTTI.getName()));
-    if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_ADJACENT_NODE_ID)) adjacentZoneNodeId() = v.value();
-    if (auto v = dto.tryGetValue<bool>(TOKEN_IS_PORTAL_OPEN)) isOpen() = v.value();
+    if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_ADJACENT_NODE_ID)) adjacentZoneNodeId(v.value());
+    if (auto v = dto.tryGetValue<bool>(TOKEN_IS_PORTAL_OPEN)) isOpen(v.value());
 }
 
 PortalDto::PortalDto(const SpatialDto& spatial_dto) : SpatialDto(spatial_dto), m_isOpen(false)
@@ -54,7 +54,7 @@ PortalDto::PortalDto(const SpatialDto& spatial_dto) : SpatialDto(spatial_dto), m
 GenericDto PortalDto::toGenericDto()
 {
     GenericDto dto = SpatialDto::toGenericDto();
-    dto.addOrUpdate(TOKEN_ADJACENT_NODE_ID, m_adjacentZoneNodeId.tokens());
+    if (!m_adjacentZoneNodeId.empty()) dto.addOrUpdate(TOKEN_ADJACENT_NODE_ID, m_adjacentZoneNodeId.tokens());
     dto.addOrUpdate(TOKEN_IS_PORTAL_OPEN, m_isOpen);
     return dto;
 }

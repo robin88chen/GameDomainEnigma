@@ -21,7 +21,7 @@ namespace Enigma::SceneGraph
         PortalZoneNodeDto(const LazyNodeDto& lazy_node_dto);
 
         [[nodiscard]] const SpatialId& portalParentId() const { return m_portalParentId; }
-        SpatialId& portalParentId() { return m_portalParentId; }
+        void portalParentId(const SpatialId& id) { m_portalParentId = id; }
 
         Engine::GenericDto toGenericDto() const;
 
@@ -37,10 +37,10 @@ namespace Enigma::SceneGraph
         PortalDto(const SpatialDto& spatial_dto);
 
         [[nodiscard]] const SpatialId& adjacentZoneNodeId() const { return m_adjacentZoneNodeId; }
-        SpatialId& adjacentZoneNodeId() { return m_adjacentZoneNodeId; }
+        void adjacentZoneNodeId(const SpatialId& id) { m_adjacentZoneNodeId = id; }
 
         [[nodiscard]] bool isOpen() const { return m_isOpen; }
-        bool& isOpen() { return m_isOpen; }
+        void isOpen(bool open) { m_isOpen = open; }
 
         Engine::GenericDto toGenericDto();
 

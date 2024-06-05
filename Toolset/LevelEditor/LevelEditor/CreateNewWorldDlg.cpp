@@ -5,6 +5,7 @@
 #include "Frameworks/CommandBus.h"
 #include "WorldMap/WorldMapQueries.h"
 #include "WorldMap/WorldMapDto.h"
+#include "WorldMap/WorldMapCommands.h"
 #include "Platforms/PlatformLayer.h"
 #include "Platforms/MemoryMacro.h"
 #include "WorldEditConsole.h"
@@ -72,42 +73,17 @@ void CreateNewWorldDlg::onOkButton(const nana::arg_click& arg)
     }
 
     auto world_id = WorldMap::WorldMapId(m_worldEditor.lock()->worldRelativePath() + "/" + world_name);
-    WorldMap::WorldMapDto world_map_dto;
-    world_map_dto.id(world_id);
-    world_map_dto.factoryDesc(Engine::FactoryDesc(WorldMap::WorldMap::TYPE_RTTI).ClaimAsInstanced(world_id.name() + ".wld", m_worldEditor.lock()->mediaPathId()));
+    std::optional<SceneGraph::SpatialId> region_id;
     if (m_regionCheckbox->checked())
     {
-        SceneGraph::SpatialId region_id = outsideRegionFromInput();
-        createWorldMapOutsideRegion(region_id);
-        world_map_dto.outRegionId(region_id);
+        region_id = outsideRegionFromInput();
+        Engine::FactoryDesc factory_desc(region_id->rtti());
+        factory_desc.ClaimAsDeferred(region_id->name() + ".node", m_worldEditor.lock()->mediaPathId());
+        std::make_shared<WorldMap::CreateWorldMapOutsideRegion>(*region_id, factory_desc)->execute();
     }
-    auto world = std::make_shared<WorldMap::RequestWorldMapConstitution>(world_id, world_map_dto.toGenericDto(), WorldMap::PersistenceLevel::Store)->dispatch();
-    //std::string folder_name = m_folderNameInputBox->text();
-    //if (m_deleteExistFolderCheckBox->checked())
-    {
-        /*if (const bool world_file_exist = m_worldEditor.lock()->checkWorldMapFolder(folder_name); world_file_exist)
-        {
-            nana::msgbox mb(*this, "Create New World Map", nana::msgbox::yes_no);
-            mb << "Delete Exist World Map Folder?";
-            auto answer = mb.show();
-            if (answer == nana::msgbox::pick_yes)
-            {
-                m_worldEditor.lock()->deleteWorldMapFolder(folder_name);
-            }
-        }*/
-    }
-
-    //world_name = folder_name + "/" + world_name;
-    //Engine::FactoryDesc factory_desc(WorldMap::WorldMap::TYPE_RTTI.getName());
-    //factory_desc.ClaimAsInstanced(world_name + ".wld").PathId(m_worldEditor.lock()->getWorldMapPathId());
-    /*SceneGraph::PortalZoneNodeDto portal_root_dto;
-    portal_root_dto.Name() = world_name + "_portal_root";
-    WorldMap::WorldMapDto world_map_dto;
-    world_map_dto.name() = world_name;
-    world_map_dto.factoryDesc().ClaimAsInstanced(folder_name + "/" + world_name + ".wld");
-    world_map_dto.portalRoot() = portal_root_dto.toGenericDto();*/
-    //Frameworks::CommandBus::post(std::make_shared<WorldMap::CreateEmptyWorldMap>(world_name, factory_desc, m_portalManagerName));
-    //m_worldEditor.lock()->createWorldMapFolder(folder_name);
+    Engine::FactoryDesc factory_desc(WorldMap::WorldMap::TYPE_RTTI);
+    factory_desc.ClaimAsInstanced(world_id.name() + ".wld", m_worldEditor.lock()->mediaPathId());
+    std::make_shared<WorldMap::CreateEmptyWorldMap>(world_id, factory_desc, region_id)->execute();
 
     close();
 }
@@ -137,18 +113,6 @@ Enigma::SceneGraph::SpatialId CreateNewWorldDlg::outsideRegionFromInput()
     std::string region_name = m_regionNameInputBox->text();
     SceneGraph::SpatialId region_id = SceneGraph::SpatialId(m_worldEditor.lock()->worldRelativePath() + "/" + region_name, SceneGraph::PortalZoneNode::TYPE_RTTI);
     return region_id;
-}
-
-void CreateNewWorldDlg::createWorldMapOutsideRegion(const Enigma::SceneGraph::SpatialId& region_id)
-{
-    assert(!m_worldEditor.expired());
-    SceneGraph::PortalZoneNodeAssembler region_assembler(region_id);
-    region_assembler.asDeferred(region_id.name() + ".node", m_worldEditor.lock()->mediaPathId());
-    auto region = region_assembler.constituteDeHydrated();
-    std::make_shared<SceneGraph::PutSpatial>(region_id, region)->execute();
-    region->hydrate(region_assembler.toHydratedGenericDto());
-    std::make_shared<SceneGraph::PutLaziedContent>(region_id, region)->execute();
-    std::make_shared<GameCommon::AttachSceneRootChild>(region, region->getLocalTransform())->enqueue();
 }
 
 std::error_code CreateNewWorldDlg::validateInputNames()

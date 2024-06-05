@@ -30,7 +30,6 @@ namespace LevelEditor
         void onInputNameChanged(const nana::arg_textbox& arg);
 
         Enigma::SceneGraph::SpatialId outsideRegionFromInput();
-        void createWorldMapOutsideRegion(const Enigma::SceneGraph::SpatialId& region_id);
 
         std::error_code validateInputNames();
     private:

@@ -196,8 +196,8 @@ void AddTerrainDialog::onTextureLayerButton(const nana::arg_click& arg)
         std::string stem = paths[0].stem().generic_string();
         std::string sub_path = (--(--paths[0].end()))->generic_string();
         auto texure_id = std::make_shared<ResolveTextureId>(sub_path + "/" + stem)->dispatch();
-        if (texure_id.name().empty()) return;
-        m_layerTextureIds[btn_idx] = texure_id;
+        if (!texure_id.has_value()) return;
+        m_layerTextureIds[btn_idx] = texure_id.value();
     }
 }
 

@@ -16,6 +16,7 @@
 #include "RenderPanel.h"
 #include "SceneGraphFileStoreMapper.h"
 #include "SceneGraphPanel.h"
+#include "AssetsBrowsePanel.h"
 #include "SchemeColorDef.h"
 #include "SpatialInspectorToolPanel.h"
 #include "TerrainEditConsole.h"
@@ -47,6 +48,7 @@ MainForm::MainForm() : nana::form()
     m_timer = nullptr;
     m_renderPanel = nullptr;
     m_sceneGraphPanel = nullptr;
+    m_assetsBrowsePanel = nullptr;
     m_spatialInspectorPanel = nullptr;
     m_terrainToolPanel = nullptr;
     m_outputPanel = nullptr;
@@ -62,6 +64,7 @@ MainForm::~MainForm()
     SAFE_DELETE(m_timer);
     SAFE_DELETE(m_renderPanel);
     SAFE_DELETE(m_sceneGraphPanel);
+    SAFE_DELETE(m_assetsBrowsePanel);
     SAFE_DELETE(m_spatialInspectorPanel);
     SAFE_DELETE(m_appDelegate);
     SAFE_DELETE(m_terrainToolPanel);
@@ -71,7 +74,7 @@ MainForm::~MainForm()
 void MainForm::initSubPanels()
 {
     UISchemeColors::applySchemaColors(scheme());
-    get_place().div("vert<menubar weight=28><main_tools weight=28>< <scene_graph_panel weight=15%> | <render_panel weight=70%> | <vert<toolsbar weight=28> <toolsframe> > > <outputpanel weight=100><statuspanel weight=16>");
+    get_place().div("vert<menubar weight=28><main_tools weight=28>< <vert weight=15%<scene_graph_panel>|<asset_browse_panel>> | <vert weight=70% <render_panel>|<outputpanel weight=100>> | <vert<toolsbar weight=28> <toolsframe> > > <statuspanel weight=16>");
     initMenu();
     m_tabbar = menew nana::tabbar<int>{ *this };
     UISchemeColors::applySchemaColors(m_tabbar->scheme());
@@ -185,6 +188,9 @@ void MainForm::initPanels()
     m_sceneGraphPanel = menew SceneGraphPanel{ *this };
     m_sceneGraphPanel->initialize(this);
     get_place().field("scene_graph_panel").fasten(*m_sceneGraphPanel);
+    m_assetsBrowsePanel = menew AssetsBrowsePanel{ *this };
+    m_assetsBrowsePanel->initialize(this);
+    get_place().field("asset_browse_panel").fasten(*m_assetsBrowsePanel);
 
     m_spatialInspectorPanel = menew SpatialInspectorPanel{ *this };
     m_spatialInspectorPanel->initialize(this);

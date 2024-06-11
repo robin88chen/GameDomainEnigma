@@ -10,6 +10,7 @@
 
 #include "FileStorage/WorldMapFileStoreMapper.h"
 #include "Frameworks/QuerySubscriber.h"
+#include "WorldMap/WorldMapId.h"
 
 namespace LevelEditor
 {
@@ -22,13 +23,16 @@ namespace LevelEditor
         void subscribeHandlers();
         void unsubscribeHandlers();
 
-    protected:
         bool isWorldNameDuplicated(const std::string& world_name);
+        std::optional<Enigma::WorldMap::WorldMapId> worldMapId(const std::string& filename);
 
+    protected:
         void isWorldNameDuplicated(const Enigma::Frameworks::IQueryPtr& q);
+        void resolveWorldMapId(const Enigma::Frameworks::IQueryPtr& q);
 
     protected:
         Enigma::Frameworks::QuerySubscriberPtr m_isWorldNameDuplicated;
+        Enigma::Frameworks::QuerySubscriberPtr m_resolveWorldMapId;
     };
 }
 

@@ -44,5 +44,5 @@ void TextureFileStoreMapper::resolveTextureId(const Enigma::Frameworks::IQueryPt
     if (query == nullptr) return;
 
     const auto texture_id = textureId(query->filename());
-    if (texture_id) query->setResult(texture_id.value());
+    query->setResult(texture_id);
 }

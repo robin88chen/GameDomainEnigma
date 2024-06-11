@@ -133,6 +133,9 @@
     <ClCompile Include="InputNameVerifier.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="AssetsBrowsePanel.cpp">
+      <Filter>Forms</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SchemeColorDef.h">
@@ -246,6 +249,9 @@
     </ClInclude>
     <ClInclude Include="InputNameVerifier.h">
       <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetsBrowsePanel.h">
+      <Filter>Forms</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

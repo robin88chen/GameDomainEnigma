@@ -8,15 +8,27 @@
 #ifndef LEVEL_EDITOR_QUERIES_H
 #define LEVEL_EDITOR_QUERIES_H
 
+#include "WorldMap/WorldMapId.h"
 #include "Frameworks/Query.h"
 #include "GameEngine/TextureId.h"
+#include <optional>
 
 namespace LevelEditor
 {
-    class ResolveTextureId : public Enigma::Frameworks::Query<Enigma::Engine::TextureId>
+    class ResolveTextureId : public Enigma::Frameworks::Query<std::optional<Enigma::Engine::TextureId>>
     {
     public:
         ResolveTextureId(const std::string& filename) : m_filename(filename) {}
+
+        const std::string& filename() const { return m_filename; }
+
+    protected:
+        std::string m_filename;
+    };
+    class ResolveWorldId : public Enigma::Frameworks::Query<std::optional<Enigma::WorldMap::WorldMapId>>
+    {
+    public:
+        ResolveWorldId(const std::string& filename) : m_filename(filename) {}
 
         const std::string& filename() const { return m_filename; }
 

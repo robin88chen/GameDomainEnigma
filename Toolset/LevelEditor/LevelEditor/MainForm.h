@@ -24,6 +24,7 @@ namespace LevelEditor
     class SpatialInspectorPanel;
     class TerrainToolPanel;
     class OutputPanel;
+    class AssetsBrowsePanel;
     class WorldEditConsole;
     class PawnEditConsole;
     class TerrainEditConsole;
@@ -101,6 +102,7 @@ namespace LevelEditor
         nana::timer* m_timer;
         RenderPanel* m_renderPanel;
         SceneGraphPanel* m_sceneGraphPanel;
+        AssetsBrowsePanel* m_assetsBrowsePanel;
         SpatialInspectorPanel* m_spatialInspectorPanel;
         TerrainToolPanel* m_terrainToolPanel;
         OutputPanel* m_outputPanel;

@@ -19,18 +19,18 @@ using namespace Enigma::SceneGraph;
 
 PawnLoader::PawnLoader()
 {
-    m_onSceneGraphBuilt = std::make_shared<EventSubscriber>([=](auto e) { OnSceneGraphBuilt(e); });
-    EventPublisher::subscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
-    m_onBuildSceneGraphFailed = std::make_shared<EventSubscriber>([=](auto e) { OnBuildSceneGraphFailed(e); });
-    EventPublisher::subscribe(typeid(BuildFactorySceneGraphFailed), m_onBuildSceneGraphFailed);
+    //m_onSceneGraphBuilt = std::make_shared<EventSubscriber>([=](auto e) { OnSceneGraphBuilt(e); });
+    //EventPublisher::subscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
+    //m_onBuildSceneGraphFailed = std::make_shared<EventSubscriber>([=](auto e) { OnBuildSceneGraphFailed(e); });
+    //EventPublisher::subscribe(typeid(BuildFactorySceneGraphFailed), m_onBuildSceneGraphFailed);
 }
 
 PawnLoader::~PawnLoader()
 {
-    EventPublisher::unsubscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
-    m_onSceneGraphBuilt = nullptr;
-    EventPublisher::unsubscribe(typeid(BuildFactorySceneGraphFailed), m_onBuildSceneGraphFailed);
-    m_onBuildSceneGraphFailed = nullptr;
+    //EventPublisher::unsubscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
+    //m_onSceneGraphBuilt = nullptr;
+    //EventPublisher::unsubscribe(typeid(BuildFactorySceneGraphFailed), m_onBuildSceneGraphFailed);
+    //m_onBuildSceneGraphFailed = nullptr;
 }
 
 error PawnLoader::StartLoadingPawn(const std::string& full_path)
@@ -49,7 +49,7 @@ error PawnLoader::StartLoadingPawn(const std::string& full_path)
     return ErrorCode::ok;
 }
 
-void PawnLoader::OnSceneGraphBuilt(const IEventPtr& e)
+/*void PawnLoader::OnSceneGraphBuilt(const IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<FactorySceneGraphBuilt>(e);
@@ -68,4 +68,4 @@ void PawnLoader::OnBuildSceneGraphFailed(const Enigma::Frameworks::IEventPtr& e)
     if (!ev) return;
     if (ev->GetSceneGraphId() != m_pawnFullPath) return;
     EventPublisher::enqueue(std::make_shared<LoadPawnFailed>(m_pawnFullPath, ev->GetErrorCode()));
-}
+}*/

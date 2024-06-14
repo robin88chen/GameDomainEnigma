@@ -77,3 +77,30 @@ double LevelEditor::getSystemTime()
 {
     return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() / 1000.0;
 }
+
+bool LevelEditor::clearTreeItemValue(nana::treebox::item_proxy i)
+{
+    i.value(nullptr);
+    return true;
+}
+
+std::string replaceSlashCharacter(const std::string& str)
+{
+    std::string result = str;
+    for (auto& c : result)
+    {
+        if ((c == '/') || (c == '\\')) c = '_';
+    }
+    return result;
+}
+// tree view key can't contain '/' or '\', it will be treated as path
+std::string LevelEditor::idToTreeViewKey(const Enigma::SceneGraph::SpatialId& id)
+{
+    return replaceSlashCharacter(id.name());
+}
+
+std::string LevelEditor::idToTreeViewKey(const Enigma::WorldMap::WorldMapId& id)
+{
+    return replaceSlashCharacter(id.name());
+}
+

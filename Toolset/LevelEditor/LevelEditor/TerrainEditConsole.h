@@ -48,8 +48,8 @@ namespace LevelEditor
     protected:
         //void DoCreatingNewTerrain(const Enigma::Frameworks::ICommandPtr& c);
         void onEditorModeChanged(const Enigma::Frameworks::IEventPtr& e);
-        void onSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
-        void onPawnPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
+        //void onSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
+        //void onPawnPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
         void onTerrainBrushSizeChanged(const Enigma::Frameworks::IEventPtr& e);
         void onTerrainBrushHeightChanged(const Enigma::Frameworks::IEventPtr& e);
         void onTerrainBrushDensityChanged(const Enigma::Frameworks::IEventPtr& e);
@@ -76,8 +76,8 @@ namespace LevelEditor
         Enigma::Frameworks::EventSubscriberPtr m_onSceneCursorPressed;
         Enigma::Frameworks::EventSubscriberPtr m_onSceneCursorReleased;
         Enigma::Frameworks::EventSubscriberPtr m_onEditorModeChanged;
-        Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
-        Enigma::Frameworks::EventSubscriberPtr m_onPawnPrimitiveBuilt;
+        //Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
+        //Enigma::Frameworks::EventSubscriberPtr m_onPawnPrimitiveBuilt;
         Enigma::Frameworks::EventSubscriberPtr m_onTerrainBrushSizeChanged;
         Enigma::Frameworks::EventSubscriberPtr m_onTerrainBrushHeightChanged;
         Enigma::Frameworks::EventSubscriberPtr m_onTerrainBrushDensityChanged;

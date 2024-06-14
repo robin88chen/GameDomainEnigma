@@ -1,6 +1,7 @@
 ﻿#include "SceneGraphFileStoreMapper.h"
 #include "LevelEditorQueries.h"
 #include "Frameworks/QueryDispatcher.h"
+#include "SceneGraph/Node.h"
 #include <algorithm>
 
 using namespace LevelEditor;
@@ -17,12 +18,16 @@ void SceneGraphFileStoreMapper::subscribeHandlers()
 {
     m_isSpatialNameDuplicated = std::make_shared<Enigma::Frameworks::QuerySubscriber>([=](const Enigma::Frameworks::IQueryPtr& q) { isSpatialNameDuplicated(q); });
     Enigma::Frameworks::QueryDispatcher::subscribe(typeid(IsSpatialNameDuplicated), m_isSpatialNameDuplicated);
+    m_queryNodeIds = std::make_shared<Enigma::Frameworks::QuerySubscriber>([=](const Enigma::Frameworks::IQueryPtr& q) { queryNodeIds(q); });
+    Enigma::Frameworks::QueryDispatcher::subscribe(typeid(QueryNodeIds), m_queryNodeIds);
 }
 
 void SceneGraphFileStoreMapper::unsubscribeHandlers()
 {
     Enigma::Frameworks::QueryDispatcher::unsubscribe(typeid(IsSpatialNameDuplicated), m_isSpatialNameDuplicated);
     m_isSpatialNameDuplicated = nullptr;
+    Enigma::Frameworks::QueryDispatcher::unsubscribe(typeid(QueryNodeIds), m_queryNodeIds);
+    m_queryNodeIds = nullptr;
 }
 
 std::optional<Enigma::SceneGraph::SpatialId> SceneGraphFileStoreMapper::spatialId(const std::string& spatial_name) const
@@ -37,6 +42,19 @@ std::optional<Enigma::SceneGraph::SpatialId> SceneGraphFileStoreMapper::spatialI
     return std::nullopt;
 }
 
+std::vector<Enigma::SceneGraph::SpatialId> SceneGraphFileStoreMapper::NodeIds() const
+{
+    std::vector<Enigma::SceneGraph::SpatialId> ids;
+    for (const auto& [id, name] : m_spatialMap.map())
+    {
+        if (id.rtti().isDerived(Enigma::SceneGraph::Node::TYPE_RTTI))
+        {
+            ids.push_back(id);
+        }
+    }
+    return ids;
+}
+
 bool SceneGraphFileStoreMapper::isSpatialNameDuplicated(const std::string& spatial_name) const
 {
     return std::any_of(m_spatialMap.map().begin(), m_spatialMap.map().end(),
@@ -48,4 +66,11 @@ void SceneGraphFileStoreMapper::isSpatialNameDuplicated(const Enigma::Frameworks
     if (!q) return;
     auto query = std::dynamic_pointer_cast<IsSpatialNameDuplicated>(q);
     query->setResult(isSpatialNameDuplicated(query->spatialName()));
+}
+
+void SceneGraphFileStoreMapper::queryNodeIds(const Enigma::Frameworks::IQueryPtr& q)
+{
+    if (!q) return;
+    auto query = std::dynamic_pointer_cast<QueryNodeIds>(q);
+    query->setResult(NodeIds());
 }

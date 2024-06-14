@@ -25,14 +25,17 @@ namespace LevelEditor
 
         bool isWorldNameDuplicated(const std::string& world_name);
         std::optional<Enigma::WorldMap::WorldMapId> worldMapId(const std::string& filename);
+        std::vector<Enigma::WorldMap::WorldMapId> worldMapIds();
 
     protected:
         void isWorldNameDuplicated(const Enigma::Frameworks::IQueryPtr& q);
         void resolveWorldMapId(const Enigma::Frameworks::IQueryPtr& q);
+        void queryWorldMapIds(const Enigma::Frameworks::IQueryPtr& q);
 
     protected:
         Enigma::Frameworks::QuerySubscriberPtr m_isWorldNameDuplicated;
         Enigma::Frameworks::QuerySubscriberPtr m_resolveWorldMapId;
+        Enigma::Frameworks::QuerySubscriberPtr m_queryWorldMapIds;
     };
 }
 

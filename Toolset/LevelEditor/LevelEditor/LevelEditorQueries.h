@@ -11,6 +11,7 @@
 #include "WorldMap/WorldMapId.h"
 #include "Frameworks/Query.h"
 #include "GameEngine/TextureId.h"
+#include "SceneGraph/SpatialId.h"
 #include <optional>
 
 namespace LevelEditor
@@ -48,6 +49,11 @@ namespace LevelEditor
     protected:
         std::string m_worldName;
     };
+    class QueryWorldMapIds : public Enigma::Frameworks::Query<std::vector<Enigma::WorldMap::WorldMapId>>
+    {
+    public:
+        QueryWorldMapIds() = default;
+    };
     class IsSpatialNameDuplicated : public Enigma::Frameworks::Query<bool>
     {
     public:
@@ -60,6 +66,11 @@ namespace LevelEditor
 
     protected:
         std::string m_spatialName;
+    };
+    class QueryNodeIds : public Enigma::Frameworks::Query<std::vector<Enigma::SceneGraph::SpatialId>>
+    {
+    public:
+        QueryNodeIds() = default;
     };
 }
 

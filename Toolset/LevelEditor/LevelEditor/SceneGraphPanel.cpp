@@ -1,4 +1,5 @@
 ﻿#include "SceneGraphPanel.h"
+#include "EditorUtilities.h"
 #include "Platforms/MemoryMacro.h"
 #include "SchemeColorDef.h"
 #include "LevelEditorCommands.h"
@@ -7,12 +8,6 @@
 #include "LevelEditorEvents.h"
 
 using namespace LevelEditor;
-
-bool clear_item_value(nana::treebox::item_proxy i)
-{
-    i.value(nullptr);
-    return true;
-}
 
 SceneGraphPanel::SceneGraphPanel(const nana::window& wd) : panel<false>{ wd }
 {
@@ -50,7 +45,7 @@ void SceneGraphPanel::finalize()
 {
     // treebox clear 並不會清掉 item 裡掛入的物件
     auto item = m_sceneGraphTree->first();
-    if (!item.empty()) item.visit_recursively(clear_item_value);
+    if (!item.empty()) item.visit_recursively(clearTreeItemValue);
     while (!item.empty())
     {
         item = m_sceneGraphTree->erase(item);
@@ -72,7 +67,7 @@ void SceneGraphPanel::unsubscribeHandlers()
 void SceneGraphPanel::refreshSceneGraphTree(const std::vector<std::shared_ptr<Enigma::SceneGraph::Spatial>>& flattened_scene)
 {
     auto item = m_sceneGraphTree->first();
-    if (!item.empty()) item.visit_recursively(clear_item_value);
+    if (!item.empty()) item.visit_recursively(clearTreeItemValue);
     while (!item.empty())
     {
         item = m_sceneGraphTree->erase(item);
@@ -166,13 +161,3 @@ void SceneGraphPanel::refreshSceneGraphTree(const Enigma::Frameworks::ICommandPt
     refreshSceneGraphTree(cmd->getFlattenedSpatial());
 }
 
-std::string SceneGraphPanel::idToTreeViewKey(const Enigma::SceneGraph::SpatialId& id)
-{
-    // tree view key can't contain '/' or '\', it will be treated as path
-    auto key = id.name();
-    for (auto& c : key)
-    {
-        if ((c == '/') || (c == '\\')) c = '_';
-    }
-    return key;
-}

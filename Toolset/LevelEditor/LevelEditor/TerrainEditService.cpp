@@ -74,10 +74,10 @@ ServiceResult TerrainEditService::onInit()
     m_saveSplatTexture = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { saveSplatTexture(c); });
     CommandBus::subscribe(typeid(SaveTerrainSplatTexture), m_saveSplatTexture);
 
-    m_onSceneGraphBuilt = std::make_shared<EventSubscriber>([=](auto e) { onSceneGraphBuilt(e); });
-    EventPublisher::subscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
-    m_onTerrainPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { onTerrainPrimitiveBuilt(e); });
-    EventPublisher::subscribe(typeid(PawnPrimitiveBuilt), m_onTerrainPrimitiveBuilt);
+    //m_onSceneGraphBuilt = std::make_shared<EventSubscriber>([=](auto e) { onSceneGraphBuilt(e); });
+    //EventPublisher::subscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
+    //m_onTerrainPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { onTerrainPrimitiveBuilt(e); });
+    //EventPublisher::subscribe(typeid(PawnPrimitiveBuilt), m_onTerrainPrimitiveBuilt);
     m_onPickedSpatialChanged = std::make_shared<EventSubscriber>([=](auto e) { onPickedSpatialChanged(e); });
     EventPublisher::subscribe(typeid(PickedSpatialChanged), m_onPickedSpatialChanged);
 
@@ -104,10 +104,10 @@ ServiceResult TerrainEditService::onTerm()
     CommandBus::unsubscribe(typeid(SaveTerrainSplatTexture), m_saveSplatTexture);
     m_saveSplatTexture = nullptr;
 
-    EventPublisher::unsubscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
-    m_onSceneGraphBuilt = nullptr;
-    EventPublisher::unsubscribe(typeid(PawnPrimitiveBuilt), m_onTerrainPrimitiveBuilt);
-    m_onTerrainPrimitiveBuilt = nullptr;
+    //EventPublisher::unsubscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
+    //m_onSceneGraphBuilt = nullptr;
+    //EventPublisher::unsubscribe(typeid(PawnPrimitiveBuilt), m_onTerrainPrimitiveBuilt);
+    //m_onTerrainPrimitiveBuilt = nullptr;
     EventPublisher::unsubscribe(typeid(PickedSpatialChanged), m_onPickedSpatialChanged);
     m_onPickedSpatialChanged = nullptr;
 
@@ -423,7 +423,7 @@ void TerrainEditService::saveSplatTexture(const ICommandPtr& c)
     CommandBus::enqueue(std::make_shared<EnqueueSavingTexture>(m_pickedSplatTexture.lock(), m_savingSplatTextureFile));
 }
 
-void TerrainEditService::onSceneGraphBuilt(const IEventPtr& e)
+/*void TerrainEditService::onSceneGraphBuilt(const IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<FactorySceneGraphBuilt, IEvent>(e);
@@ -450,7 +450,7 @@ void TerrainEditService::onTerrainPrimitiveBuilt(const IEventPtr& e)
     std::string splat_texture_resouce_name = splat_texture->id().name();
     splat_texture->factoryDesc().ClaimAsResourceAsset(splat_texture_resouce_name, splat_texture_resouce_name + ".png", m_terrainPathId);
     m_splatTextures.insert_or_assign(terrain->id(), splat_texture);
-}
+}*/
 
 void TerrainEditService::onPickedSpatialChanged(const IEventPtr& e)
 {

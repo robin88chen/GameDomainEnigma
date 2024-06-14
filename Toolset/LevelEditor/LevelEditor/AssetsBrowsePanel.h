@@ -10,7 +10,8 @@
 
 #include <nana/gui/place.hpp>
 #include <nana/gui/widgets/panel.hpp>
-#include <nana/gui/widgets/listbox.hpp>
+#include <nana/gui/widgets/treebox.hpp>
+#include "Frameworks/EventSubscriber.h"
 
 namespace LevelEditor
 {
@@ -25,10 +26,24 @@ namespace LevelEditor
         void initialize(MainForm* main_form);
         void finalize();
 
+        void subscribeHandlers();
+        void unsubscribeHandlers();
+
+    protected:
+        void refreshWorldMapAssets();
+        void refreshTerrainAssets();
+        void refreshNodeAssets();
+
+        void onWorldMapCreated(const Enigma::Frameworks::IEventPtr& e);
+        void onSpatialConstituted(const Enigma::Frameworks::IEventPtr& e);
+
     protected:
         MainForm* m_mainForm;
         nana::place* m_place;
-        nana::listbox* m_assetsList;
+        nana::treebox* m_assetsTree;
+
+        Enigma::Frameworks::EventSubscriberPtr m_onWorldMapCreated;
+        Enigma::Frameworks::EventSubscriberPtr m_onSpatialConstituted;
     };
 }
 

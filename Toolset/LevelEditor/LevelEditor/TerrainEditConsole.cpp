@@ -43,10 +43,10 @@ ServiceResult TerrainEditConsole::onInit()
 {
     m_onEditorModeChanged = std::make_shared<EventSubscriber>([=](auto e) { onEditorModeChanged(e); });
     EventPublisher::subscribe(typeid(EditorModeChanged), m_onEditorModeChanged);
-    m_onSceneGraphBuilt = std::make_shared<EventSubscriber>([=](auto e) { onSceneGraphBuilt(e); });
-    EventPublisher::subscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
-    m_onPawnPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { onPawnPrimitiveBuilt(e); });
-    EventPublisher::subscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
+    //m_onSceneGraphBuilt = std::make_shared<EventSubscriber>([=](auto e) { onSceneGraphBuilt(e); });
+    //EventPublisher::subscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
+    //m_onPawnPrimitiveBuilt = std::make_shared<EventSubscriber>([=](auto e) { onPawnPrimitiveBuilt(e); });
+    //EventPublisher::subscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
 
     m_onTerrainBrushSizeChanged = std::make_shared<EventSubscriber>([=](auto e) { onTerrainBrushSizeChanged(e); });
     EventPublisher::subscribe(typeid(TerrainBrushSizeChanged), m_onTerrainBrushSizeChanged);
@@ -75,10 +75,10 @@ ServiceResult TerrainEditConsole::onTerm()
 {
     EventPublisher::unsubscribe(typeid(EditorModeChanged), m_onEditorModeChanged);
     m_onEditorModeChanged = nullptr;
-    EventPublisher::unsubscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
-    m_onSceneGraphBuilt = nullptr;
-    EventPublisher::unsubscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
-    m_onPawnPrimitiveBuilt = nullptr;
+    //EventPublisher::unsubscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
+    //m_onSceneGraphBuilt = nullptr;
+    //EventPublisher::unsubscribe(typeid(PawnPrimitiveBuilt), m_onPawnPrimitiveBuilt);
+    //m_onPawnPrimitiveBuilt = nullptr;
 
     EventPublisher::unsubscribe(typeid(TerrainBrushSizeChanged), m_onTerrainBrushSizeChanged);
     m_onTerrainBrushSizeChanged = nullptr;
@@ -181,7 +181,7 @@ void TerrainEditConsole::onEditorModeChanged(const IEventPtr& e)
     }
 }
 
-void TerrainEditConsole::onSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e)
+/*void TerrainEditConsole::onSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e)
 {
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<FactorySceneGraphBuilt, IEvent>(e);
@@ -202,7 +202,7 @@ void TerrainEditConsole::onPawnPrimitiveBuilt(const Enigma::Frameworks::IEventPt
     if (!ev) return;
     if (ev->pawn() != m_brush.lock()) return;
     CommandBus::enqueue(std::make_shared<Enigma::GameCommon::BindGBuffer>(ev->pawn()));
-}
+}*/
 
 void TerrainEditConsole::onTerrainBrushSizeChanged(const Enigma::Frameworks::IEventPtr& e)
 {

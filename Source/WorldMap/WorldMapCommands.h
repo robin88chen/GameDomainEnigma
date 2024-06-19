@@ -14,6 +14,7 @@
 #include "Terrain/TerrainPawn.h"
 #include "MathLib/Matrix4.h"
 #include "GameEngine/BoundingVolume.h"
+#include "WorldMap.h"
 
 namespace Enigma::WorldMap
 {
@@ -48,6 +49,18 @@ namespace Enigma::WorldMap
     protected:
         SceneGraph::SpatialId m_id;
         Engine::FactoryDesc m_factory_desc;
+    };
+    class PutWorldMap : public Frameworks::ICommand
+    {
+    public:
+        PutWorldMap(const WorldMapId& id, const std::shared_ptr<WorldMap>& world_map) : m_id(id), m_worldMap(world_map) {}
+
+        const WorldMapId& id() const { return m_id; }
+        const std::shared_ptr<WorldMap>& worldMap() const { return m_worldMap; }
+
+    protected:
+        WorldMapId m_id;
+        std::shared_ptr<WorldMap> m_worldMap;
     };
     class DeserializeWorldMap : public Frameworks::ICommand
     {

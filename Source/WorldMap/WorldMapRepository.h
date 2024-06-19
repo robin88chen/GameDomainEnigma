@@ -12,7 +12,7 @@
 #include "WorldMapId.h"
 #include "Frameworks/SystemService.h"
 #include "Frameworks/QuerySubscriber.h"
-#include "WorldMapPersistenceLevel.h"
+#include "Frameworks/CommandSubscriber.h"
 #include <memory>
 #include <unordered_map>
 #include <mutex>
@@ -39,12 +39,12 @@ namespace Enigma::WorldMap
 
         bool hasQuadTreeRoot(const QuadTreeRootId& id);
         std::shared_ptr<QuadTreeRoot> queryQuadTreeRoot(const QuadTreeRootId& id);
-        void putQuadTreeRoot(const QuadTreeRootId& id, const std::shared_ptr<QuadTreeRoot>& quad_tree_root, PersistenceLevel persistence_level);
+        void putQuadTreeRoot(const QuadTreeRootId& id, const std::shared_ptr<QuadTreeRoot>& quad_tree_root);
         void removeQuadTreeRoot(const QuadTreeRootId& id);
 
         bool hasWorldMap(const WorldMapId& id);
         std::shared_ptr<WorldMap> queryWorldMap(const WorldMapId& id);
-        void putWorldMap(const WorldMapId& id, const std::shared_ptr<WorldMap>& world_map, PersistenceLevel persistence_level);
+        void putWorldMap(const WorldMapId& id, const std::shared_ptr<WorldMap>& world_map);
         void removeWorldMap(const WorldMapId& id);
 
     protected:
@@ -57,6 +57,8 @@ namespace Enigma::WorldMap
         void requestWorldMapCreation(const Frameworks::IQueryPtr q);
         void requestWorldMapConstitution(const Frameworks::IQueryPtr q);
 
+        void putWorldMap(const Frameworks::ICommandPtr c);
+
     protected:
         Frameworks::QuerySubscriberPtr m_queryQuadTreeRoot;
         Frameworks::QuerySubscriberPtr m_hasQuadTreeRoot;
@@ -66,6 +68,8 @@ namespace Enigma::WorldMap
         Frameworks::QuerySubscriberPtr m_hasWorldMap;
         Frameworks::QuerySubscriberPtr m_requestWorldMapCreation;
         Frameworks::QuerySubscriberPtr m_requestWorldMapConstitution;
+
+        Frameworks::CommandSubscriberPtr m_putWorldMap;
 
         std::shared_ptr<WorldMapStoreMapper> m_storeMapper;
         std::unordered_map<QuadTreeRootId, std::shared_ptr<QuadTreeRoot>, QuadTreeRootId::hash> m_quadTreeRoots;

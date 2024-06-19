@@ -1,6 +1,7 @@
 ﻿#include "WorldMap.h"
 #include "QuadTreeRoot.h"
 #include "WorldMapDto.h"
+#include "SceneGraph/SceneGraphCommands.h"
 
 using namespace Enigma::WorldMap;
 using namespace Enigma::Engine;
@@ -60,4 +61,15 @@ std::shared_ptr<Enigma::SceneGraph::LazyNode> WorldMap::findFittingNode(const En
         if (node_id) return std::dynamic_pointer_cast<SceneGraph::LazyNode>(SceneGraph::Node::queryNode(node_id.value()));
     }
     return nullptr;
+}
+
+void WorldMap::putOutRegion()
+{
+    if (m_outRegionId.empty()) return;
+    std::shared_ptr<SceneGraph::Spatial> region = SceneGraph::Spatial::querySpatial(m_outRegionId);
+    if (!region) return;
+    std::make_shared<SceneGraph::PutSpatial>(m_outRegionId, region)->execute();
+    std::shared_ptr<SceneGraph::LazyNode> lazy_region = std::dynamic_pointer_cast<SceneGraph::LazyNode>(region);
+    if (!lazy_region) return;
+    std::make_shared<SceneGraph::PutLaziedContent>(m_outRegionId, lazy_region)->execute();
 }

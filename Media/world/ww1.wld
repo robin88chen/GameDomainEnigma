@@ -1,0 +1,24 @@
+[{
+        "Rtti": {
+            "Type": "FactoryDesc",
+            "Value": {
+                "InstanceType": 3,
+                "ResourceName": "",
+                "ResourceFilename": "",
+                "RttiName": "En.WorldMap.WorldMap",
+                "PrefabFilename": "world/ww1.wld@APK_PATH"
+            }
+        },
+        "QuadRootIds": {
+            "Type": "StringArray",
+            "Value": []
+        },
+        "ID": {
+            "Type": "String",
+            "Value": "world/ww1"
+        },
+        "OutRegionId": {
+            "Type": "StringArray",
+            "Value": ["world/ww1_map", "En.SceneGraph.PortalZoneNode"]
+        }
+    }]

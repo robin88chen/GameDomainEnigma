@@ -44,28 +44,24 @@ namespace Enigma::WorldMap
     class RequestWorldMapCreation : public Frameworks::Query<std::shared_ptr<WorldMap>>
     {
     public:
-        RequestWorldMapCreation(const WorldMapId& id, PersistenceLevel persistence_level) : m_id(id), m_persistenceLevel(persistence_level) {}
+        RequestWorldMapCreation(const WorldMapId& id) : m_id(id) {}
 
         const WorldMapId& id() const { return m_id; }
-        PersistenceLevel persistenceLevel() const { return m_persistenceLevel; }
 
     protected:
         WorldMapId m_id;
-        PersistenceLevel m_persistenceLevel;
     };
     class RequestWorldMapConstitution : public Frameworks::Query<std::shared_ptr<WorldMap>>
     {
     public:
-        RequestWorldMapConstitution(const WorldMapId& id, const Engine::GenericDto& dto, PersistenceLevel persistence_level) : m_id(id), m_dto(dto), m_persistenceLevel(persistence_level) {}
+        RequestWorldMapConstitution(const WorldMapId& id, const Engine::GenericDto& dto) : m_id(id), m_dto(dto) {}
 
         const WorldMapId& id() const { return m_id; }
         const Engine::GenericDto& dto() const { return m_dto; }
-        PersistenceLevel persistenceLevel() const { return m_persistenceLevel; }
 
     protected:
         WorldMapId m_id;
         Engine::GenericDto m_dto;
-        PersistenceLevel m_persistenceLevel;
     };
     //-------------- quad tree root repository operations --------------
     class QueryQuadTreeRoot : public Frameworks::Query<std::shared_ptr<QuadTreeRoot>>
@@ -91,28 +87,24 @@ namespace Enigma::WorldMap
     class RequestQuadTreeRootCreation : public Frameworks::Query<std::shared_ptr<QuadTreeRoot>>
     {
     public:
-        RequestQuadTreeRootCreation(const QuadTreeRootId& id, PersistenceLevel persistence_level) : m_id(id), m_persistenceLevel(persistence_level) {}
+        RequestQuadTreeRootCreation(const QuadTreeRootId& id) : m_id(id) {}
 
         const QuadTreeRootId& id() const { return m_id; }
-        PersistenceLevel persistenceLevel() const { return m_persistenceLevel; }
 
     protected:
         QuadTreeRootId m_id;
-        PersistenceLevel m_persistenceLevel;
     };
     class RequestQuadTreeRootConstitution : public Frameworks::Query<std::shared_ptr<QuadTreeRoot>>
     {
     public:
-        RequestQuadTreeRootConstitution(const QuadTreeRootId& id, const Engine::GenericDto& dto, PersistenceLevel persistence_level) : m_id(id), m_dto(dto), m_persistenceLevel(persistence_level) {}
+        RequestQuadTreeRootConstitution(const QuadTreeRootId& id, const Engine::GenericDto& dto) : m_id(id), m_dto(dto) {}
 
         const QuadTreeRootId& id() const { return m_id; }
         const Engine::GenericDto& dto() const { return m_dto; }
-        PersistenceLevel persistenceLevel() const { return m_persistenceLevel; }
 
     protected:
         QuadTreeRootId m_id;
         Engine::GenericDto m_dto;
-        PersistenceLevel m_persistenceLevel;
     };
     //-------------- fitting node operations --------------
     class QueryFittingNode : public Frameworks::Query<std::shared_ptr<SceneGraph::Node>>

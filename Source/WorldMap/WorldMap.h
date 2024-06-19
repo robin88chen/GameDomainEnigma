@@ -38,6 +38,8 @@ namespace Enigma::WorldMap
 
         std::shared_ptr<SceneGraph::LazyNode> findFittingNode(const Engine::BoundingVolume& bv_in_world);
 
+        void putOutRegion();
+
     protected:
         Engine::FactoryDesc m_factoryDesc;
         WorldMapId m_id;

@@ -18,7 +18,7 @@ void CreateEmptyWorldMap::execute()
     {
         world_map_dto.outRegionId(m_outside_region_id.value());
     }
-    auto world = std::make_shared<RequestWorldMapConstitution>(m_id, world_map_dto.toGenericDto(), PersistenceLevel::Store)->dispatch();
+    auto world = std::make_shared<RequestWorldMapConstitution>(m_id, world_map_dto.toGenericDto())->dispatch();
     if (world)
     {
         std::make_shared<WorldMapCreated>(m_id)->enqueue();

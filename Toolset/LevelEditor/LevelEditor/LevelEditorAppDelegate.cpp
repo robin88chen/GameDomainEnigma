@@ -227,7 +227,7 @@ void EditorAppDelegate::installEngine()
     m_inputHandler.lock()->RegisterKeyboardAsyncKey('W');
     m_sceneRenderer = m_graphicMain->getSystemServiceAs<SceneRendererService>();
     m_shadowMapService = m_graphicMain->getSystemServiceAs<ShadowMapService>();
-    m_graphicMain->getServiceManager()->registerSystemService(std::make_shared<WorldEditService>(m_graphicMain->getServiceManager()));
+    m_graphicMain->getServiceManager()->registerSystemService(std::make_shared<WorldEditService>(m_graphicMain->getServiceManager(), m_graphicMain->getSystemServiceAs<WorldMapRepository>()));
     m_graphicMain->getServiceManager()->registerSystemService(std::make_shared<TerrainEditService>(m_graphicMain->getServiceManager(), m_textureFileStoreMapper));
     m_graphicMain->getServiceManager()->registerSystemService(std::make_shared<LightEditService>(m_graphicMain->getServiceManager()));
     m_graphicMain->getServiceManager()->registerSystemService(std::make_shared<PawnEditService>(m_graphicMain->getServiceManager()));

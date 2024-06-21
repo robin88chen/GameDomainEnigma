@@ -12,6 +12,7 @@
 #include "GameEngine/BoundingVolume.h"
 #include "LightInfo.h"
 #include "SpatialRenderState.h"
+#include "SpatialId.h"
 
 namespace Enigma::SceneGraph
 {

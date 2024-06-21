@@ -32,6 +32,8 @@ namespace Enigma::SceneGraph
         Light& operator=(const Light&) = delete;
         Light& operator=(Light&&) = delete;
 
+        static std::shared_ptr<Light> create(const SpatialId& id, const LightInfo& light_info);
+        static std::shared_ptr<Light> constitute(const SpatialId& id, const Engine::GenericDto& dto);
         virtual Engine::GenericDto serializeDto() override;
 
         const LightInfo& info() const { return m_lightInfo; };

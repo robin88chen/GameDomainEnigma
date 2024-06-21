@@ -32,7 +32,8 @@ namespace LevelEditor
         virtual Enigma::Frameworks::ServiceResult onInit() override;
         virtual Enigma::Frameworks::ServiceResult onTerm() override;
 
-        const Enigma::SceneGraph::SpatialId& pickedSpatialId() const { return m_pickedSpatialId; }
+        Enigma::SceneGraph::SpatialId sceneRootId() const { return m_sceneRoot.expired() ? Enigma::SceneGraph::SpatialId() : m_sceneRoot.lock()->id(); }
+        Enigma::SceneGraph::SpatialId pickedSpatialId() const { return m_pickedSpatialId; }
     protected:
         void onGameCameraCreated(const Enigma::Frameworks::IEventPtr& e);
         void onSceneRootCreated(const Enigma::Frameworks::IEventPtr& e);

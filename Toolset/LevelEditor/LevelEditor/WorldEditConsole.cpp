@@ -1,7 +1,12 @@
 ﻿#include "WorldEditConsole.h"
-#include "WorldMapFileStoreMapper.h"
+#include "SceneGraph/SceneGraphQueries.h"
+#include "EditorUtilities.h"
+#include "WorldMap/WorldMapQueries.h"
 #include "WorldEditService.h"
 #include "WorldMap/WorldMapCommands.h"
+#include "LevelEditorQueries.h"
+#include "LevelEditorCommands.h"
+#include "SceneGraph/SceneGraphCommands.h"
 
 using namespace LevelEditor;
 using namespace Enigma::Frameworks;
@@ -35,5 +40,32 @@ void WorldEditConsole::saveWorldMap()
     auto world_map = world_edit_service->getWorldMap();
     if (!world_map) return;
     std::make_shared<Enigma::WorldMap::PutWorldMap>(world_map->id(), world_map)->execute();
+}
+
+void WorldEditConsole::loadWorldMap(const std::filesystem::path& filepath, const Enigma::SceneGraph::SpatialId& root_id)
+{
+    assert(!root_id.empty());
+    auto filename = filePathCombinePathID(filepath, m_mediaPathId);
+    if (filename.empty()) return;
+    filename = filename + "@" + m_mediaPathId;
+    auto world_map_id = std::make_shared<ResolveWorldId>(filename)->dispatch();
+    if (!world_map_id.has_value())
+    {
+        std::make_shared<OutputMessage>("can't resolve world map id from filename " + filename)->enqueue();
+        return;
+    }
+    auto world_map = std::make_shared<Enigma::WorldMap::QueryWorldMap>(world_map_id.value())->dispatch();
+    if (!world_map)
+    {
+        std::make_shared<OutputMessage>("can't load world map " + filename)->enqueue();
+        return;
+    }
+    auto out_region = std::make_shared<Enigma::SceneGraph::QuerySpatial>(world_map->outRegionId())->dispatch();
+    if (!out_region)
+    {
+        std::make_shared<OutputMessage>("can't load out region " + world_map->outRegionId().name())->enqueue();
+        return;
+    }
+    std::make_shared<Enigma::SceneGraph::AttachNodeChild>(root_id, out_region, Enigma::MathLib::Matrix4::IDENTITY)->enqueue();
 }
 

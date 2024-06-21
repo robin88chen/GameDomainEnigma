@@ -156,13 +156,13 @@ void MainForm::initMenu()
     m_menubar->scheme().body_highlight = UISchemeColors::HIGHLIGHT_BG;
     m_menubar->scheme().text_fgcolor = UISchemeColors::FOREGROUND;
     nana::menu& file_menu = m_menubar->push_back("&File");
-    file_menu.append("Load World Map", [this](auto item) { onLoadWorldCommand(item); });
-    file_menu.append_splitter();
     file_menu.append("Exit", [this](auto item) { onCloseCommand(item); });
 
     nana::menu& map_menu = m_menubar->push_back("&World Map");
     map_menu.append("Create New Map", [this](auto item) { onCreateWorldMapCommand(item); });
+    map_menu.append_splitter();
     map_menu.append("Save World Map", [this](auto item) { onSaveWorldCommand(item); });
+    map_menu.append("Load World Map", [this](auto item) { onLoadWorldCommand(item); });
 
     nana::menu& terrain_menu = m_menubar->push_back("&Terrain");
     terrain_menu.append("Add Terrain", [this](auto item) { onAddTerrainCommand(item); });
@@ -253,18 +253,15 @@ void MainForm::onCreateWorldMapCommand(const nana::menu::item_proxy& menu_item)
 
 void MainForm::onLoadWorldCommand(const nana::menu::item_proxy& menu_item)
 {
-    auto srv_mngr = Enigma::Controllers::GraphicMain::instance()->getServiceManager();
-    /*auto world = srv_mngr->getSystemServiceAs<WorldMapService>();
-
+    assert(!m_worldConsole.expired());
+    assert(!m_sceneConsole.expired());
+    Enigma::Frameworks::CommandBus::enqueue(std::make_shared<OutputMessage>("Load World File..."));
     nana::filebox fb(handle(), true);
     fb.add_filter({ {"World File(*.wld)", "*.wld"} }).title("Load World");
     if (auto paths = fb.show(); !paths.empty())
     {
-        if (!m_worldConsole.expired())
-        {
-            m_worldConsole.lock()->loadWorldMap(paths[0], m_appDelegate->appConfig()->portalManagementName());
-        }
-    }*/
+        m_worldConsole.lock()->loadWorldMap(paths[0], m_sceneConsole.lock()->sceneRootId());
+    }
 }
 
 void MainForm::onSaveWorldCommand(const nana::menu::item_proxy& menu_item)

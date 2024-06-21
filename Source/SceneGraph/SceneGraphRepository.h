@@ -51,6 +51,7 @@ namespace Enigma::SceneGraph
         GraphicCoordSys getCoordinateSystem();
 
         void registerSpatialFactory(const std::string& rtti, const SpatialCreator& creator, const SpatialConstitutor& constitutor);
+        void registerSpatialLightFactory(const std::string& rtti, const LightCreator& creator, const LightConstitutor& constitutor);
 
         /** query entities */
         bool hasCamera(const SpatialId& id);

@@ -27,6 +27,16 @@ Light::~Light()
     Frameworks::EventPublisher::enqueue(std::make_shared<LightInfoDeleted>(m_id, m_lightInfo.lightType()));
 }
 
+std::shared_ptr<Light> Light::create(const SpatialId& id, const LightInfo& light_info)
+{
+    return std::make_shared<Light>(id, light_info);
+}
+
+std::shared_ptr<Light> Light::constitute(const SpatialId& id, const Engine::GenericDto& dto)
+{
+    return std::make_shared<Light>(id, dto);
+}
+
 Enigma::Engine::GenericDto Light::serializeDto()
 {
     LightDto dto(serializeSpatialDto());

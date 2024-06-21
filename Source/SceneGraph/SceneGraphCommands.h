@@ -48,6 +48,31 @@ namespace Enigma::SceneGraph
     private:
         std::string m_rtti;
     };
+    class RegisterSpatialLightFactory : public Frameworks::ICommand
+    {
+    public:
+        RegisterSpatialLightFactory(const std::string& rtti, const LightCreator& creator, const LightConstitutor& constitutor)
+            : m_rtti(rtti), m_creator(creator), m_constitutor(constitutor) {}
+
+        const std::string& rttiName() const { return m_rtti; }
+        const LightCreator& creator() { return m_creator; }
+        const LightConstitutor& constitutor() { return m_constitutor; }
+
+    private:
+        std::string m_rtti;
+        LightCreator m_creator;
+        LightConstitutor m_constitutor;
+    };
+    class UnregisterSpatialLightFactory : public Frameworks::ICommand
+    {
+    public:
+        UnregisterSpatialLightFactory(const std::string& rtti) : m_rtti(rtti) {}
+
+        const std::string& rttiName() const { return m_rtti; }
+
+    private:
+        std::string m_rtti;
+    };
     //--------------------------- Repository operations ------------------------
     class PutSpatial : public Frameworks::ICommand
     {

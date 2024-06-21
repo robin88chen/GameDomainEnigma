@@ -8,6 +8,9 @@
 #ifndef WORLD_EDIT_CONSOLE_H
 #define WORLD_EDIT_CONSOLE_H
 
+#include <filesystem>
+#include <SceneGraph/SceneGraph.h>
+
 #include "Frameworks/SystemService.h"
 
 namespace LevelEditor
@@ -29,6 +32,7 @@ namespace LevelEditor
 
         //! ADR: 從使用者角度，這是存檔
         void saveWorldMap();
+        void loadWorldMap(const std::filesystem::path& filepath, const Enigma::SceneGraph::SpatialId& root_id);
 
         const std::string& worldRelativePath() const { return m_worldRelativePath; }
         const std::string& mediaPathId() const { return m_mediaPathId; }

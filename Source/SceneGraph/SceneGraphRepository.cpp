@@ -153,6 +153,12 @@ void SceneGraphRepository::registerSpatialFactory(const std::string& rtti, const
     m_factory->registerSpatialFactory(rtti, creator, constitutor);
 }
 
+void SceneGraphRepository::registerSpatialLightFactory(const std::string& rtti, const LightCreator& creator, const LightConstitutor& constitutor)
+{
+    assert(m_factory);
+    m_factory->registerLightFactory(rtti, creator, constitutor);
+}
+
 bool SceneGraphRepository::hasCamera(const SpatialId& id)
 {
     assert(m_storeMapper);
@@ -194,7 +200,15 @@ std::shared_ptr<Spatial> SceneGraphRepository::querySpatial(const SpatialId& id)
     if (it != m_spatials.end()) return it->second;
     auto dto = m_storeMapper->querySpatial(id);
     assert(dto.has_value());
-    auto spatial = m_factory->constituteSpatial(id, dto.value(), true);
+    std::shared_ptr<Spatial> spatial;
+    if (id.rtti().isDerived(Light::TYPE_RTTI))
+    {
+        spatial = m_factory->constituteLight(id, dto.value(), true);
+    }
+    else
+    {
+        spatial = m_factory->constituteSpatial(id, dto.value(), true);
+    }
     assert(spatial);
     m_spatials.insert_or_assign(id, spatial);
     return spatial;

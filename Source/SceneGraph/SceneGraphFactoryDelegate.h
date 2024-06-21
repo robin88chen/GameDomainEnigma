@@ -27,6 +27,7 @@ namespace Enigma::SceneGraph
     using SpatialCreator = std::function<std::shared_ptr<Spatial>(const SpatialId& id)>;
     using SpatialConstitutor = std::function<std::shared_ptr<Spatial>(const SpatialId& id, const Engine::GenericDto& dto)>;
     using LightCreator = std::function<std::shared_ptr<Light>(const SpatialId& id, const LightInfo& info)>;
+    using LightConstitutor = std::function<std::shared_ptr<Light>(const SpatialId& id, const Engine::GenericDto& dto)>;
 }
 
 #endif // SCENE_GRAPH_FACTORY_DELEGATE_H

@@ -14,7 +14,7 @@
 #include "MathLib/Ray3.h"
 #include "Frameworks/EventSubscriber.h"
 #include "Frameworks/CommandSubscriber.h"
-#include "SceneGraph/CameraFrustumDtos.h"
+#include "SceneGraph/CameraDtos.h"
 
 namespace Enigma::GameCommon
 {

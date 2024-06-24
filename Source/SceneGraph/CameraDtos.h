@@ -1,12 +1,12 @@
 ﻿/*********************************************************************
- * \file   CameraFrustumDtos.h
+ * \file   CameraDtos.h
  * \brief
  *
  * \author Lancelot 'Robin' Chen
  * \date   December 2022
  *********************************************************************/
-#ifndef _CAMERA_FRUSTUM_DTOS_H
-#define _CAMERA_FRUSTUM_DTOS_H
+#ifndef _CAMERA_DTOS_H
+#define _CAMERA_DTOS_H
 
 #include "SceneGraphRepository.h"
 #include "GameEngine/GenericDto.h"
@@ -100,4 +100,4 @@ namespace Enigma::SceneGraph
     };
 }
 
-#endif // _CAMERA_FRUSTUM_DTOS_H
+#endif // _CAMERA_DTOS_H

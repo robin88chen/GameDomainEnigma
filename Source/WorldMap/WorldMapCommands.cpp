@@ -3,7 +3,7 @@
 #include "WorldMapQueries.h"
 #include "WorldMapEvents.h"
 #include "SceneGraph/PortalCommands.h"
-#include "SceneGraph/SceneGraphAssemblers.h"
+#include "SceneGraph/PortalAssemblers.h"
 #include "SceneGraph/SceneGraphCommands.h"
 #include "SceneGraph/PortalZoneNode.h"
 

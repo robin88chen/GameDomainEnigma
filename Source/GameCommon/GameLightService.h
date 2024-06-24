@@ -15,6 +15,7 @@
 #include "SceneGraph/Node.h"
 #include <unordered_set>
 
+ //! ADR : 要拔掉 game light, 只抓 light 相關, game light 有點多餘
 namespace Enigma::SceneGraph
 {
     class Light;

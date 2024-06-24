@@ -1,5 +1,5 @@
 ﻿#include "LightInfo.h"
-#include "LightInfoDtos.h"
+#include "LightDtos.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::MathLib;

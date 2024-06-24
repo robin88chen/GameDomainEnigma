@@ -1,17 +1,17 @@
 ﻿/*********************************************************************
- * \file   LightInfoDtos.h
+ * \file   LightDtos.h
  * \brief  Light Info Policy
  *
  * \author Lancelot 'Robin' Chen
  * \date   October 2022
  *********************************************************************/
-#ifndef LIGHT_INFO_DTOS_H
-#define LIGHT_INFO_DTOS_H
+#ifndef LIGHT_DTOS_H
+#define LIGHT_DTOS_H
 
 #include "LightInfo.h"
+#include "SpatialDto.h"
 #include "MathLib/ColorRGBA.h"
 #include "MathLib/Vector3.h"
-#include "GameEngine/GenericDto.h"
 #include <optional>
 
 namespace Enigma::SceneGraph
@@ -52,6 +52,21 @@ namespace Enigma::SceneGraph
         float m_range;
         MathLib::Vector3 m_attenuation;
         bool m_isEnable;
+    };
+    class LightDto : public SpatialDto
+    {
+    public:
+        LightDto();
+        LightDto(const SpatialDto& spatial_dto);
+        LightDto(const Engine::GenericDto& dto);
+
+        [[nodiscard]] Engine::GenericDto lightInfo() const { return m_lightInfo; }
+        Engine::GenericDto& lightInfo() { return m_lightInfo; }
+
+        Engine::GenericDto toGenericDto() const;
+
+    protected:
+        Engine::GenericDto m_lightInfo;
     };
 }
 

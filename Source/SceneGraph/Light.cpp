@@ -1,9 +1,8 @@
 ﻿#include "Light.h"
 #include "LightInfo.h"
-#include "LightInfoDtos.h"
+#include "LightDtos.h"
 #include "SceneGraphErrors.h"
 #include "SceneGraphEvents.h"
-#include "SceneGraphDtos.h"
 #include "Frameworks/EventPublisher.h"
 
 using namespace Enigma::SceneGraph;

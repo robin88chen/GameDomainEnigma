@@ -3,8 +3,7 @@
 #include "SceneGraphErrors.h"
 #include "MathLib/MathAlgorithm.h"
 #include "MathLib/MathGlobal.h"
-#include "CameraFrustumDtos.h"
-#include "CameraFrustumEvents.h"
+#include "CameraDtos.h"
 #include "Frameworks/EventPublisher.h"
 
 using namespace Enigma::SceneGraph;

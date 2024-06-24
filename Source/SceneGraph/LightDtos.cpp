@@ -1,4 +1,5 @@
-﻿#include "LightInfoDtos.h"
+﻿#include "LightDtos.h"
+#include "Light.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Engine;
@@ -10,6 +11,7 @@ static std::string TOKEN_LIGHT_DIRECTION = "LightDirection";
 static std::string TOKEN_LIGHT_RANGE = "LightRange";
 static std::string TOKEN_LIGHT_ATTENUATION = "LightAttenuation";
 static std::string TOKEN_LIGHT_ENABLE = "LightIsEnable";
+static std::string TOKEN_LIGHT_INFO = "LightInfo";
 
 LightInfoDto::LightInfoDto()
 {
@@ -41,5 +43,29 @@ GenericDto LightInfoDto::toGenericDto()
     dto.addOrUpdate(TOKEN_LIGHT_RANGE, m_range);
     dto.addOrUpdate(TOKEN_LIGHT_ATTENUATION, m_attenuation);
     dto.addOrUpdate(TOKEN_LIGHT_ENABLE, m_isEnable);
+    return dto;
+}
+
+LightDto::LightDto() : SpatialDto()
+{
+    m_factoryDesc = FactoryDesc(Light::TYPE_RTTI.getName());
+}
+
+LightDto::LightDto(const SpatialDto& spatial_dto) : SpatialDto(spatial_dto)
+{
+    assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), Light::TYPE_RTTI.getName()));
+}
+
+LightDto::LightDto(const Engine::GenericDto& dto) : SpatialDto(dto)
+{
+    assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), Light::TYPE_RTTI.getName()));
+    if (auto v = dto.tryGetValue<GenericDto>(TOKEN_LIGHT_INFO)) m_lightInfo = v.value();
+}
+
+GenericDto LightDto::toGenericDto() const
+{
+    GenericDto dto = SpatialDto::toGenericDto();
+    dto.addOrUpdate(TOKEN_LIGHT_INFO, m_lightInfo);
+
     return dto;
 }

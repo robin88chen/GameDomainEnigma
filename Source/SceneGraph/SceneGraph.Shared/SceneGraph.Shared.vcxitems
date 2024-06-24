@@ -15,8 +15,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Camera.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\CameraAssemblers.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\CameraFrustumCommands.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\CameraFrustumDtos.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\CameraDtos.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\CameraFrustumEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ContainingPortalZoneFinder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Culler.h" />
@@ -29,11 +30,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Light.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightInfo.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightInfoTraversal.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightInfoDtos.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightDtos.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\NodalSceneGraph.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Node.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Pawn.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Portal.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalAssemblers.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalDtos.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalManagementNode.h" />
@@ -57,6 +59,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneNonLazyFlattenTraversal.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneTraveler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Spatial.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialAssembler.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialId.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialLightInfoQuery.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialRenderState.h" />
@@ -65,7 +69,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Camera.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\CameraFrustumDtos.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\CameraAssemblers.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\CameraDtos.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ContainingPortalZoneFinder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Culler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EnumDerivedSpatials.cpp" />
@@ -76,12 +81,13 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Frustum.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Light.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightInfo.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightInfoDtos.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightDtos.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightInfoTraversal.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\NodalSceneGraph.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Node.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Pawn.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Portal.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalAssemblers.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalDtos.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalManagementNode.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalSceneGraph.cpp" />
@@ -97,6 +103,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphRepository.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneNonLazyFlattenTraversal.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Spatial.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialAssembler.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialId.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialLightInfoQuery.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\VisibilityManagedNode.cpp" />

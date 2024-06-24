@@ -1,4 +1,4 @@
-﻿#include "CameraFrustumDtos.h"
+﻿#include "CameraDtos.h"
 #include "Camera.h"
 #include "MathLib/MathGlobal.h"
 

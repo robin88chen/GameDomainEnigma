@@ -1,6 +1,6 @@
 ﻿#include "Camera.h"
 #include "SceneGraphErrors.h"
-#include "CameraFrustumDtos.h"
+#include "CameraDtos.h"
 #include "Frustum.h"
 #include "CameraFrustumEvents.h"
 #include "MathLib/Ray3.h"

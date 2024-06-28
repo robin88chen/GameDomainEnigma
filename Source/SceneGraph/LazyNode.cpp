@@ -85,7 +85,7 @@ LazyNodeDto LazyNode::serializeLazyNodeAsLaziness()
     LazyNodeDto lazy_node_dto = LazyNodeDto(NodeDto(serializeSpatialDto()));  // this won't serialize children, that's we want
     FactoryDesc factory_desc = m_factoryDesc;
     factory_desc.ClaimAsDeferred(); // serialize as deferred
-    lazy_node_dto.factoryDesc() = factory_desc;
+    lazy_node_dto.factoryDesc(factory_desc);
     return lazy_node_dto;
 }
 Enigma::Engine::GenericDtoCollection LazyNode::serializeFlattenedTree()

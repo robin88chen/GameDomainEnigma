@@ -1,7 +1,7 @@
 ﻿#include "LightInfoTraversal.h"
 #include "SpatialLightInfoQuery.h"
 #include "Light.h"
-#include "SceneGraphEvents.h"
+#include "LightEvents.h"
 #include "SceneGraphQueries.h"
 #include "SceneGraphErrors.h"
 #include "Frameworks/EventPublisher.h"

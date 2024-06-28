@@ -26,23 +26,23 @@ namespace Enigma::SceneGraph
         LightInfoDto& operator=(const LightInfoDto&) = default;
         LightInfoDto& operator=(LightInfoDto&&) = default;
 
-        LightInfo::LightType& LightType() { return m_type; }
-        [[nodiscard]] LightInfo::LightType LightType() const { return m_type; }
-        MathLib::ColorRGBA& Color() { return m_color; }
-        [[nodiscard]] MathLib::ColorRGBA Color() const { return m_color; }
-        MathLib::Vector3& Position() { return m_position; }
-        [[nodiscard]] MathLib::Vector3 Position() const { return m_position; }
-        MathLib::Vector3& direction() { return m_direction; }
+        void lightType(LightInfo::LightType type) { m_type = type; }
+        [[nodiscard]] LightInfo::LightType lightType() const { return m_type; }
+        void color(const MathLib::ColorRGBA& c) { m_color = c; }
+        [[nodiscard]] MathLib::ColorRGBA color() const { return m_color; }
+        void position(const MathLib::Vector3& pos) { m_position = pos; }
+        [[nodiscard]] MathLib::Vector3 position() const { return m_position; }
+        void direction(const MathLib::Vector3& dir) { m_direction = dir; }
         [[nodiscard]] MathLib::Vector3 direction() const { return m_direction; }
-        float& Range() { return m_range; }
-        [[nodiscard]] float Range() const { return m_range; }
-        MathLib::Vector3& Attenuation() { return m_attenuation; }
-        [[nodiscard]] MathLib::Vector3 Attenuation() const { return m_attenuation; }
-        bool& isEnable() { return m_isEnable; }
+        void range(float r) { m_range = r; }
+        [[nodiscard]] float range() const { return m_range; }
+        void attenuation(const MathLib::Vector3& att) { m_attenuation = att; }
+        [[nodiscard]] MathLib::Vector3 attenuation() const { return m_attenuation; }
+        void isEnable(bool enable) { m_isEnable = enable; }
         [[nodiscard]] bool isEnable() const { return m_isEnable; }
 
         static LightInfoDto fromGenericDto(const Engine::GenericDto& dto);
-        Engine::GenericDto toGenericDto();
+        Engine::GenericDto toGenericDto() const;
 
     private:
         LightInfo::LightType m_type;
@@ -61,7 +61,7 @@ namespace Enigma::SceneGraph
         LightDto(const Engine::GenericDto& dto);
 
         [[nodiscard]] Engine::GenericDto lightInfo() const { return m_lightInfo; }
-        Engine::GenericDto& lightInfo() { return m_lightInfo; }
+        void lightInfo(const Engine::GenericDto& dto) { m_lightInfo = dto; }
 
         Engine::GenericDto toGenericDto() const;
 

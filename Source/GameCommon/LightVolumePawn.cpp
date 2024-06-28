@@ -1,6 +1,7 @@
 ﻿#include "LightVolumePawn.h"
 #include "Renderables/MeshPrimitive.h"
 #include "GameCommonErrors.h"
+#include "LightingMeshQueries.h"
 #include "LightingPawnDto.h"
 
 using namespace Enigma::GameCommon;
@@ -20,7 +21,15 @@ LightVolumePawn::LightVolumePawn(const SpatialId& id) : LightingPawn(id), m_isCa
 
 LightVolumePawn::LightVolumePawn(const SpatialId& id, const Engine::GenericDto& o) : LightingPawn(id, o)
 {
+    if ((!m_primitive) && (!m_hostLight.expired()))
+    {
+        LightingPawnDto dto(o);
+        if ((m_hostLight.lock()->info().lightType() == LightInfo::LightType::Point) && (dto.primitiveId().has_value()))
+        {
+            m_primitive = std::make_shared<RequestPointLightMeshAssembly>(dto.primitiveId().value(), m_hostLight.lock()->getLightRange())->dispatch();
+        }
 
+    }
 }
 
 LightVolumePawn::~LightVolumePawn()
@@ -41,7 +50,7 @@ std::shared_ptr<LightVolumePawn> LightVolumePawn::constitute(const SceneGraph::S
 GenericDto LightVolumePawn::serializeDto()
 {
     LightingPawnDto dto(SerializePawnDto());
-    if (getHostLight()) dto.hostLightId() = getHostLight()->id();
+    if (getHostLight()) dto.hostLightId(getHostLight()->id());
     return dto.toGenericDto();
 }
 

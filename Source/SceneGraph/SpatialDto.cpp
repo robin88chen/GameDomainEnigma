@@ -28,19 +28,19 @@ SpatialDto::SpatialDto() : m_factoryDesc(Spatial::TYPE_RTTI.getName()), m_isTopL
 
 SpatialDto::SpatialDto(const Engine::GenericDto& dto) : m_factoryDesc(Spatial::TYPE_RTTI.getName()), m_isTopLevel(false), m_graphDepth(0), m_cullingMode(0), m_spatialFlag(0), m_notifyFlag(0)
 {
-    factoryDesc() = dto.getRtti();
+    m_factoryDesc = dto.getRtti();
     m_isTopLevel = dto.isTopLevel();
-    if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_ID)) id() = SpatialId(v.value());
-    if (auto v = dto.tryGetValue<std::string>(TOKEN_PARENT_NAME)) parentName() = v.value();
-    if (auto v = dto.tryGetValue<Matrix4>(TOKEN_LOCAL_TRANSFORM)) localTransform() = v.value();
-    if (auto v = dto.tryGetValue<Matrix4>(TOKEN_WORLD_TRANSFORM)) worldTransform() = v.value();
-    if (auto v = dto.tryGetValue<unsigned int>(TOKEN_GRAPH_DEPTH)) graphDepth() = v.value();
-    if (auto v = dto.tryGetValue<GenericDto>(TOKEN_MODEL_BOUND)) modelBound() = v.value();
-    if (auto v = dto.tryGetValue<GenericDto>(TOKEN_WORLD_BOUND)) worldBound() = v.value();
-    if (auto v = dto.tryGetValue<unsigned int>(TOKEN_CULLING_MODE)) cullingMode() = v.value();
-    if (auto v = dto.tryGetValue<unsigned int>(TOKEN_SPATIAL_FLAG)) spatialFlag() = v.value();
-    if (auto v = dto.tryGetValue<unsigned int>(TOKEN_NOTIFY_FLAG)) notifyFlag() = v.value();
-    if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_PARENT_ID)) parentId() = SpatialId(v.value());
+    if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_ID)) m_id = SpatialId(v.value());
+    if (auto v = dto.tryGetValue<std::string>(TOKEN_PARENT_NAME)) m_parentName = v.value();
+    if (auto v = dto.tryGetValue<Matrix4>(TOKEN_LOCAL_TRANSFORM)) m_localTransform = v.value();
+    if (auto v = dto.tryGetValue<Matrix4>(TOKEN_WORLD_TRANSFORM)) m_worldTransform = v.value();
+    if (auto v = dto.tryGetValue<unsigned int>(TOKEN_GRAPH_DEPTH)) m_graphDepth = v.value();
+    if (auto v = dto.tryGetValue<GenericDto>(TOKEN_MODEL_BOUND)) m_modelBound = v.value();
+    if (auto v = dto.tryGetValue<GenericDto>(TOKEN_WORLD_BOUND)) m_worldBound = v.value();
+    if (auto v = dto.tryGetValue<unsigned int>(TOKEN_CULLING_MODE)) m_cullingMode = v.value();
+    if (auto v = dto.tryGetValue<unsigned int>(TOKEN_SPATIAL_FLAG)) m_spatialFlag = v.value();
+    if (auto v = dto.tryGetValue<unsigned int>(TOKEN_NOTIFY_FLAG)) m_notifyFlag = v.value();
+    if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_PARENT_ID)) m_parentId = SpatialId(v.value());
 }
 
 GenericDto SpatialDto::toGenericDto() const

@@ -23,17 +23,17 @@ LightInfoDto::LightInfoDto()
 LightInfoDto LightInfoDto::fromGenericDto(const GenericDto& dto)
 {
     LightInfoDto light_dto;
-    if (auto v = dto.tryGetValue<unsigned>(TOKEN_LIGHT_TYPE)) light_dto.LightType() = static_cast<LightInfo::LightType>(v.value());
-    if (auto v = dto.tryGetValue<MathLib::ColorRGBA>(TOKEN_LIGHT_COLOR)) light_dto.Color() = v.value();
-    if (auto v = dto.tryGetValue<MathLib::Vector3>(TOKEN_LIGHT_POSITION)) light_dto.Position() = v.value();
-    if (auto v = dto.tryGetValue<MathLib::Vector3>(TOKEN_LIGHT_DIRECTION)) light_dto.direction() = v.value();
-    if (auto v = dto.tryGetValue<float>(TOKEN_LIGHT_RANGE)) light_dto.Range() = v.value();
-    if (auto v = dto.tryGetValue<MathLib::Vector3>(TOKEN_LIGHT_ATTENUATION)) light_dto.Attenuation() = v.value();
-    if (auto v = dto.tryGetValue<bool>(TOKEN_LIGHT_ENABLE)) light_dto.isEnable() = v.value();
+    if (auto v = dto.tryGetValue<unsigned>(TOKEN_LIGHT_TYPE)) light_dto.lightType(static_cast<LightInfo::LightType>(v.value()));
+    if (auto v = dto.tryGetValue<MathLib::ColorRGBA>(TOKEN_LIGHT_COLOR)) light_dto.color(v.value());
+    if (auto v = dto.tryGetValue<MathLib::Vector3>(TOKEN_LIGHT_POSITION)) light_dto.position(v.value());
+    if (auto v = dto.tryGetValue<MathLib::Vector3>(TOKEN_LIGHT_DIRECTION)) light_dto.direction(v.value());
+    if (auto v = dto.tryGetValue<float>(TOKEN_LIGHT_RANGE)) light_dto.range(v.value());
+    if (auto v = dto.tryGetValue<MathLib::Vector3>(TOKEN_LIGHT_ATTENUATION)) light_dto.attenuation(v.value());
+    if (auto v = dto.tryGetValue<bool>(TOKEN_LIGHT_ENABLE)) light_dto.isEnable(v.value());
     return light_dto;
 }
 
-GenericDto LightInfoDto::toGenericDto()
+GenericDto LightInfoDto::toGenericDto() const
 {
     GenericDto dto;
     dto.addOrUpdate(TOKEN_LIGHT_TYPE, static_cast<unsigned int>(m_type));

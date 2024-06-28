@@ -22,31 +22,31 @@ namespace Enigma::SceneGraph
         SpatialDto(const Engine::GenericDto& dto);
 
         [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
-        Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
+        void factoryDesc(const Engine::FactoryDesc& fd) { m_factoryDesc = fd; }
         [[nodiscard]] bool isTopLevel() const { return m_isTopLevel; }
-        bool& isTopLevel() { return m_isTopLevel; }
-        SpatialId& id() { return m_id; }
+        void isTopLevel(bool is_top) { m_isTopLevel = is_top; }
+        void id(const SpatialId& id) { m_id = id; }
         [[nodiscard]] const SpatialId& id() const { return m_id; }
         const std::string& parentName() const { return m_parentName; }
-        std::string& parentName() { return m_parentName; }
-        [[nodiscard]] MathLib::Matrix4 localTransform() const { return m_localTransform; }
-        MathLib::Matrix4& localTransform() { return m_localTransform; }
-        [[nodiscard]] MathLib::Matrix4 worldTransform() const { return m_worldTransform; }
-        MathLib::Matrix4& worldTransform() { return m_worldTransform; }
+        void parentName(const std::string& name) { m_parentName = name; }
+        [[nodiscard]] const MathLib::Matrix4& localTransform() const { return m_localTransform; }
+        void localTransform(const MathLib::Matrix4& mx) { m_localTransform = mx; }
+        [[nodiscard]] const MathLib::Matrix4& worldTransform() const { return m_worldTransform; }
+        void worldTransform(const MathLib::Matrix4& mx) { m_worldTransform = mx; }
         [[nodiscard]] unsigned int graphDepth() const { return m_graphDepth; }
-        unsigned int& graphDepth() { return m_graphDepth; }
-        [[nodiscard]] Engine::GenericDto modelBound() const { return m_modelBound; }
-        Engine::GenericDto& modelBound() { return m_modelBound; }
-        [[nodiscard]] Engine::GenericDto worldBound() const { return m_worldBound; }
-        Engine::GenericDto& worldBound() { return m_worldBound; }
+        void graphDepth(unsigned d) { m_graphDepth = d; }
+        [[nodiscard]] const Engine::GenericDto& modelBound() const { return m_modelBound; }
+        void modelBound(const Engine::GenericDto& b) { m_modelBound = b; }
+        [[nodiscard]] const Engine::GenericDto& worldBound() const { return m_worldBound; }
+        void worldBound(const Engine::GenericDto& b) { m_worldBound = b; }
         [[nodiscard]] unsigned int cullingMode() const { return m_cullingMode; }
-        unsigned int& cullingMode() { return m_cullingMode; }
+        void cullingMode(unsigned m) { m_cullingMode = m; }
         [[nodiscard]] unsigned int spatialFlag() const { return m_spatialFlag; }
-        unsigned int& spatialFlag() { return m_spatialFlag; }
+        void spatialFlag(unsigned s) { m_spatialFlag = s; }
         [[nodiscard]] unsigned int notifyFlag() const { return m_notifyFlag; }
-        unsigned int& notifyFlag() { return m_notifyFlag; }
+        void notifyFlag(unsigned n) { m_notifyFlag = n; }
         [[nodiscard]] const std::optional<SpatialId>& parentId() const { return m_parentId; }
-        std::optional<SpatialId>& parentId() { return m_parentId; }
+        void parentId(const SpatialId& id) { m_parentId = id; }
 
         Engine::GenericDto toGenericDto() const;
 

@@ -17,7 +17,7 @@ LightingPawn::LightingPawn(const SpatialId& id) : Pawn(id)
 
 LightingPawn::LightingPawn(const SpatialId& id, const Engine::GenericDto& o) : Pawn(id, o)
 {
-    LightingPawnDto dto = LightingPawnDto::fromGenericDto(o);
+    LightingPawnDto dto(o);
     m_hostLight = std::dynamic_pointer_cast<Light>(std::make_shared<QuerySpatial>(dto.hostLightId())->dispatch());
 }
 

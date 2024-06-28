@@ -28,6 +28,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LazyNode.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Frustum.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Light.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightAssemblers.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightInfo.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightInfoTraversal.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightDtos.h" />
@@ -80,6 +82,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LazyNode.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Frustum.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Light.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightAssemblers.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightInfo.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightDtos.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightInfoTraversal.cpp" />

@@ -2,7 +2,7 @@
 #include "Frameworks/ExtentTypesDefine.h"
 #include "FileSystem/FileSystem.h"
 #include "Gateways/DtoJsonGateway.h"
-#include "SceneGraph/CameraFrustumDtos.h"
+#include "SceneGraph/CameraDtos.h"
 #include <cassert>
 
 using namespace LevelEditor;

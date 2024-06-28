@@ -9,7 +9,6 @@
 #define SCENE_GRAPH_EVENTS_H
 
 #include "Frameworks/Event.h"
-#include "LightInfo.h"
 #include "Spatial.h"
 #include <memory>
 #include <system_error>
@@ -75,53 +74,6 @@ namespace Enigma::SceneGraph
         SpatialId m_childId;
         NotifyCode m_code;
     };
-    //------------------------- Light Info Events --------------------------
-    class LightInfoEvent : public Frameworks::IEvent
-    {
-    public:
-        LightInfoEvent(const std::shared_ptr<Light>& lit) : m_light(lit) {};
-
-        std::shared_ptr<Light> light() { return m_light.lock(); }
-    protected:
-        std::weak_ptr<Light> m_light;
-    };
-    class LightInfoCreated : public LightInfoEvent
-    {
-    public:
-        LightInfoCreated(const std::shared_ptr<Light>& lit) : LightInfoEvent(lit) {}
-    };
-    class LightInfoDeleted : public LightInfoEvent
-    {
-    public:
-        LightInfoDeleted(const SpatialId& id, LightInfo::LightType light_type) : LightInfoEvent(nullptr),
-            m_lightId(id), m_lightType{ light_type } {}
-
-        const SpatialId& lightId() { return m_lightId; }
-        LightInfo::LightType lightType() const { return m_lightType; }
-    protected:
-        SpatialId m_lightId;
-        LightInfo::LightType m_lightType;
-    };
-    class LightInfoUpdated : public LightInfoEvent
-    {
-    public:
-        enum class NotifyCode
-        {
-            Color,
-            Position,
-            Direction,
-            Range,
-            Attenuation,
-            Enable,
-        };
-    public:
-        LightInfoUpdated(const std::shared_ptr<Light>& lit, NotifyCode code) : LightInfoEvent(lit),
-            m_notifyCode{ code } {}
-
-        NotifyCode notifyCode() const { return m_notifyCode; }
-    protected:
-        NotifyCode m_notifyCode;
-    };
     //------------ visibility manage ------------
     class VisibilityChanged : public Frameworks::IEvent
     {
@@ -140,8 +92,9 @@ namespace Enigma::SceneGraph
     class SpatialCreated : public Frameworks::IEvent
     {
     public:
-        SpatialCreated(const SpatialId& id, const std::shared_ptr<Spatial>& spatial) : m_id(id), m_spatial(spatial) {};
+        SpatialCreated(const SpatialId& id, const std::shared_ptr<Spatial>& spatial) : m_id(id), m_spatial(spatial) {}
         const SpatialId& id() const { return m_id; }
+        const Frameworks::Rtti& rtti() const { return m_id.rtti(); }
         std::shared_ptr<Spatial> spatial() { return m_spatial; }
 
     protected:
@@ -164,6 +117,7 @@ namespace Enigma::SceneGraph
     public:
         SpatialConstituted(const SpatialId& id, const std::shared_ptr<Spatial>& spatial, bool is_persisted) : m_id(id), m_spatial(spatial), m_isPersisted(is_persisted) {};
         const SpatialId& id() const { return m_id; }
+        const Frameworks::Rtti& rtti() const { return m_id.rtti(); }
         std::shared_ptr<Spatial> spatial() { return m_spatial; }
         bool isPersisted() const { return m_isPersisted; }
 

@@ -213,6 +213,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalAssemblers.h">
       <Filter>Portal System\Dtos</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightAssemblers.h">
+      <Filter>DTO &amp; Assemblers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightEvents.h">
+      <Filter>Events</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp">
@@ -337,6 +343,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalAssemblers.cpp">
       <Filter>Portal System\Dtos</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightAssemblers.cpp">
+      <Filter>DTO &amp; Assemblers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

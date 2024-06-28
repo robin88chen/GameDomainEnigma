@@ -44,7 +44,8 @@ namespace Enigma::SceneGraph
         NodeDto(const Engine::GenericDto& dto);
 
         const std::vector<ChildDto>& children() const { return m_children; }
-        std::vector<ChildDto>& children() { return m_children; }
+        void children(const std::vector<ChildDto>& children) { m_children = children; }
+        void pushChild(const ChildDto& child) { m_children.push_back(child); }
 
         Engine::GenericDto toGenericDto() const;
 
@@ -64,7 +65,7 @@ namespace Enigma::SceneGraph
         PawnDto(const Engine::GenericDto& dto);
 
         [[nodiscard]] const std::optional<Primitives::PrimitiveId>& primitiveId() const { return m_primitiveId; }
-        std::optional<Primitives::PrimitiveId>& primitiveId() { return m_primitiveId; }
+        void primitiveId(const Primitives::PrimitiveId& primitive_id) { m_primitiveId = primitive_id; }
 
         Engine::GenericDto toGenericDto() const;
 

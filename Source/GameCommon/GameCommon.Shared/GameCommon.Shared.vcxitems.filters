@@ -99,9 +99,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameSceneCommands.h">
       <Filter>GameScene</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GameLightEvents.h">
-      <Filter>GameLight</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightingPawn.h">
       <Filter>DeferredRenderer\LightingPawn</Filter>
     </ClInclude>
@@ -125,6 +122,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClipMapAssembler.h">
       <Filter>AnimationClipMap</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightingMeshQueries.h">
+      <Filter>DeferredRenderer\LightingPawn</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

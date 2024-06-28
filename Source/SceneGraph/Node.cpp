@@ -75,11 +75,11 @@ NodeDto Node::serializeNodeDto()
         if (!child) continue;
         if (child->persistenceLevel() == PersistenceLevel::Store)
         {
-            dto.children().emplace_back(child->id());
+            dto.pushChild({ child->id() });
         }
         else
         {
-            dto.children().emplace_back(child->id(), child->serializeDto());
+            dto.pushChild({ child->id(), child->serializeDto() });
         }
     }
     return dto;

@@ -13,7 +13,7 @@
 #include "Renderables/MeshPrimitive.h"
 #include "Frameworks/EventSubscriber.h"
 #include "SceneGraph/Light.h"
-#include "SceneGraph/SceneGraphEvents.h"
+#include "SceneGraph/LightEvents.h"
 #include "SceneGraph/SceneGraphRepository.h"
 #include "Frameworks/CommandSubscriber.h"
 #include "GameEngine/EffectTextureMapAssembler.h"
@@ -66,11 +66,19 @@ namespace Enigma::GameCommon
         void onGameCameraUpdated(const Frameworks::IEventPtr& e);
         void onSceneGraphChanged(const Frameworks::IEventPtr& e);
 
-        void onGameLightCreated(const Frameworks::IEventPtr& e);
+        void onLightCreatedOrConstituted(const Frameworks::IEventPtr& e);
         void onLightInfoDeleted(const Frameworks::IEventPtr& e);
         void onLightInfoUpdated(const Frameworks::IEventPtr& e);
 
+        void requestAmbientLightMeshAssembly(const Frameworks::IQueryPtr& q);
+        void requestSunLightMeshAssembly(const Frameworks::IQueryPtr& q);
+        void requestPointLightMeshAssembly(const Frameworks::IQueryPtr& q);
+
         void completeLightingPawnBuilt(const SceneGraph::SpatialId& lit_id, const std::shared_ptr<LightingPawn>& lighting_pawn);
+
+        std::shared_ptr<Renderables::MeshPrimitive> assembleAmbientLightMesh(const Primitives::PrimitiveId& mesh_id);
+        std::shared_ptr<Renderables::MeshPrimitive> assembleSunLightMesh(const Primitives::PrimitiveId& mesh_id);
+        std::shared_ptr<Renderables::MeshPrimitive> assemblePointLightMesh(const Primitives::PrimitiveId& mesh_id, float sphere_radius);
 
         std::shared_ptr<LightingPawn> findLightingPawn(const SceneGraph::SpatialId& lit_id);
 
@@ -94,9 +102,14 @@ namespace Enigma::GameCommon
         Frameworks::EventSubscriberPtr m_onGameCameraUpdated;
         Frameworks::EventSubscriberPtr m_onSceneGraphChanged;
 
-        Frameworks::EventSubscriberPtr m_onGameLightCreated;
+        Frameworks::EventSubscriberPtr m_onLightCreated;
+        Frameworks::EventSubscriberPtr m_onLightConstituted;
         Frameworks::EventSubscriberPtr m_onLightInfoDeleted;
         Frameworks::EventSubscriberPtr m_onLightInfoUpdated;
+
+        Frameworks::QuerySubscriberPtr m_requestAmbientLightMeshAssembly;
+        Frameworks::QuerySubscriberPtr m_requestSunLightMeshAssembly;
+        Frameworks::QuerySubscriberPtr m_requestPointLightMeshAssembly;
     };
 }
 #endif // DEFERRED_RENDERER_SERVICE_H

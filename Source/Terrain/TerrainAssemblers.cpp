@@ -115,8 +115,8 @@ Enigma::Engine::GenericDto TerrainPrimitiveAssembler::toGenericDto() const
 TerrainPawnAssembler::TerrainPawnAssembler(const SpatialId& id) : m_pawnAssembler(id)
 {
     m_id = id;
-    m_dto.id() = id;
-    m_dto.factoryDesc() = Engine::FactoryDesc(TerrainPawn::TYPE_RTTI.getName());
+    m_dto.id(id);
+    m_dto.factoryDesc(Engine::FactoryDesc(TerrainPawn::TYPE_RTTI.getName()));
     m_pawnAssembler.factory(m_dto.factoryDesc());
 }
 PawnAssembler& TerrainPawnAssembler::pawn()
@@ -126,14 +126,16 @@ PawnAssembler& TerrainPawnAssembler::pawn()
 
 TerrainPawnAssembler& TerrainPawnAssembler::factory(const Engine::FactoryDesc& factory)
 {
-    m_dto.factoryDesc() = factory;
+    m_dto.factoryDesc(factory);
     m_pawnAssembler.factory(factory);
     return *this;
 }
 
 TerrainPawnAssembler& TerrainPawnAssembler::asNative(const std::string& file_at_path)
 {
-    m_dto.factoryDesc().ClaimAsNative(file_at_path);
+    auto fd = m_dto.factoryDesc();
+    fd.ClaimAsNative(file_at_path);
+    m_dto.factoryDesc(fd);
     m_pawnAssembler.factory(m_dto.factoryDesc());
     return *this;
 }
@@ -141,8 +143,8 @@ TerrainPawnAssembler& TerrainPawnAssembler::asNative(const std::string& file_at_
 TerrainPawnDto TerrainPawnAssembler::dto() const
 {
     TerrainPawnDto pawn_dto(m_pawnAssembler.toGenericDto());
-    pawn_dto.id() = m_dto.id();
-    pawn_dto.factoryDesc() = m_dto.factoryDesc();
+    pawn_dto.id(m_dto.id());
+    pawn_dto.factoryDesc(m_dto.factoryDesc());
     return pawn_dto;
 }
 

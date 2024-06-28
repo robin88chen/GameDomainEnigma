@@ -14,8 +14,8 @@ using namespace Enigma::SceneGraph;
 PawnAssembler::PawnAssembler(const SpatialId& id) : m_spatialAssembler(id)
 {
     m_id = id;
-    m_dto.id() = id;
-    m_dto.factoryDesc() = Engine::FactoryDesc(Pawn::TYPE_RTTI.getName());
+    m_dto.id(id);
+    m_dto.factoryDesc(Engine::FactoryDesc(Pawn::TYPE_RTTI.getName()));
     m_spatialAssembler.factory(m_dto.factoryDesc());
 }
 
@@ -26,20 +26,22 @@ SpatialAssembler& PawnAssembler::spatial()
 
 PawnAssembler& PawnAssembler::factory(const Engine::FactoryDesc& factory)
 {
-    m_dto.factoryDesc() = factory;
+    m_dto.factoryDesc(factory);
     m_spatialAssembler.factory(factory);
     return *this;
 }
 
 PawnAssembler& PawnAssembler::primitive(const Primitives::PrimitiveId& primitive_id)
 {
-    m_dto.primitiveId() = primitive_id;
+    m_dto.primitiveId(primitive_id);
     return *this;
 }
 
 PawnAssembler& PawnAssembler::asNative(const std::string& file_at_path)
 {
-    m_dto.factoryDesc().ClaimAsNative(file_at_path);
+    auto fd = m_dto.factoryDesc();
+    fd.ClaimAsNative(file_at_path);
+    m_dto.factoryDesc(fd);
     m_spatialAssembler.factory(m_dto.factoryDesc());
     return *this;
 }
@@ -47,9 +49,9 @@ PawnAssembler& PawnAssembler::asNative(const std::string& file_at_path)
 PawnDto PawnAssembler::toPawnDto() const
 {
     PawnDto pawn_dto(m_spatialAssembler.toGenericDto());
-    pawn_dto.id() = m_dto.id();
-    pawn_dto.primitiveId() = m_dto.primitiveId();
-    pawn_dto.factoryDesc() = m_dto.factoryDesc();
+    pawn_dto.id(m_dto.id());
+    if (m_dto.primitiveId().has_value()) pawn_dto.primitiveId(m_dto.primitiveId().value());
+    pawn_dto.factoryDesc(m_dto.factoryDesc());
     return pawn_dto;
 }
 
@@ -66,8 +68,8 @@ std::shared_ptr<Pawn> PawnAssembler::constitute()
 NodeAssembler::NodeAssembler(const SpatialId& id) : m_spatialAssembler(id)
 {
     m_id = id;
-    m_dto.id() = id;
-    m_dto.factoryDesc() = Engine::FactoryDesc(Node::TYPE_RTTI.getName());
+    m_dto.id(id);
+    m_dto.factoryDesc(Engine::FactoryDesc(Node::TYPE_RTTI.getName()));
     m_spatialAssembler.factory(m_dto.factoryDesc());
 }
 
@@ -78,40 +80,42 @@ SpatialAssembler& NodeAssembler::spatial()
 
 NodeAssembler& NodeAssembler::factory(const Engine::FactoryDesc& factory)
 {
-    m_dto.factoryDesc() = factory;
+    m_dto.factoryDesc(factory);
     m_spatialAssembler.factory(factory);
     return *this;
 }
 
 NodeAssembler& NodeAssembler::child(const SpatialId& child_id)
 {
-    m_dto.children().emplace_back(child_id);
+    m_dto.pushChild({ child_id });
     return *this;
 }
 
 NodeAssembler& NodeAssembler::child(const SpatialId& child_id, const Engine::GenericDto& child_dto)
 {
-    m_dto.children().emplace_back(child_id, child_dto);
+    m_dto.pushChild({ child_id, child_dto });
     return *this;
 }
 
 NodeAssembler& NodeAssembler::child(const SpatialId& child_id, const SpatialAssembler* child)
 {
-    m_dto.children().emplace_back(child_id);
+    m_dto.pushChild({ child_id });
     m_children.push_back(const_cast<SpatialAssembler*>(child));
     return *this;
 }
 
 NodeAssembler& NodeAssembler::child(const SpatialId& child_id, const NodeAssembler* child)
 {
-    m_dto.children().emplace_back(child_id);
+    m_dto.pushChild({ child_id });
     m_childNodes.push_back(const_cast<NodeAssembler*>(child));
     return *this;
 }
 
 NodeAssembler& NodeAssembler::asNative(const std::string& file_at_path)
 {
-    m_dto.factoryDesc().ClaimAsNative(file_at_path);
+    auto fd = m_dto.factoryDesc();
+    fd.ClaimAsNative(file_at_path);
+    m_dto.factoryDesc(fd);
     m_spatialAssembler.factory(m_dto.factoryDesc());
     return *this;
 }
@@ -120,9 +124,9 @@ NodeDto NodeAssembler::toNodeDto() const
 {
     const_cast<NodeAssembler*>(this)->consistChildrenLocationBounding();
     NodeDto node_dto(m_spatialAssembler.toGenericDto());
-    node_dto.id() = m_dto.id();
-    node_dto.factoryDesc() = m_dto.factoryDesc();
-    node_dto.children() = m_dto.children();
+    node_dto.id(m_dto.id());
+    node_dto.factoryDesc(m_dto.factoryDesc());
+    node_dto.children(m_dto.children());
     return node_dto;
 }
 
@@ -163,8 +167,8 @@ std::shared_ptr<Node> NodeAssembler::constitute()
 LazyNodeAssembler::LazyNodeAssembler(const SpatialId& id) : m_nodeAssembler(id)
 {
     m_id = id;
-    m_dto.id() = id;
-    m_dto.factoryDesc() = Engine::FactoryDesc(LazyNode::TYPE_RTTI.getName());
+    m_dto.id(id);
+    m_dto.factoryDesc(Engine::FactoryDesc(LazyNode::TYPE_RTTI.getName()));
     m_nodeAssembler.factory(m_dto.factoryDesc());
 }
 
@@ -175,14 +179,16 @@ NodeAssembler& LazyNodeAssembler::node()
 
 LazyNodeAssembler& LazyNodeAssembler::factory(const Engine::FactoryDesc& factory)
 {
-    m_dto.factoryDesc() = factory;
+    m_dto.factoryDesc(factory);
     m_nodeAssembler.factory(factory);
     return *this;
 }
 
 LazyNodeAssembler& LazyNodeAssembler::asDeferred(const std::string& filename, const std::string& path_id)
 {
-    m_dto.factoryDesc().ClaimAsDeferred(filename, path_id);
+    auto fd = m_dto.factoryDesc();
+    fd.ClaimAsDeferred(filename, path_id);
+    m_dto.factoryDesc(fd);
     m_nodeAssembler.factory(m_dto.factoryDesc());
     return *this;
 }
@@ -190,8 +196,8 @@ LazyNodeAssembler& LazyNodeAssembler::asDeferred(const std::string& filename, co
 LazyNodeDto LazyNodeAssembler::toHydratedDto() const
 {
     LazyNodeDto lazy_node_dto(m_nodeAssembler.toGenericDto());
-    lazy_node_dto.id() = m_dto.id();
-    lazy_node_dto.factoryDesc() = m_dto.factoryDesc();
+    lazy_node_dto.id(m_dto.id());
+    lazy_node_dto.factoryDesc(m_dto.factoryDesc());
     return lazy_node_dto;
 }
 
@@ -208,9 +214,9 @@ std::shared_ptr<LazyNode> LazyNodeAssembler::constituteHydrated()
 LazyNodeDto LazyNodeAssembler::toDeHydratedDto() const
 {
     LazyNodeDto lazy_node_dto(m_nodeAssembler.toGenericDto());
-    lazy_node_dto.id() = m_dto.id();
-    lazy_node_dto.factoryDesc() = m_dto.factoryDesc();
-    lazy_node_dto.children().clear();
+    lazy_node_dto.id(m_dto.id());
+    lazy_node_dto.factoryDesc(m_dto.factoryDesc());
+    lazy_node_dto.children({});
     return lazy_node_dto;
 }
 
@@ -228,8 +234,8 @@ std::shared_ptr<LazyNode> LazyNodeAssembler::constituteDeHydrated()
 VisibilityManagedNodeAssembler::VisibilityManagedNodeAssembler(const SpatialId& id) : m_lazyNodeAssembler(id)
 {
     m_id = id;
-    m_dto.id() = id;
-    m_dto.factoryDesc() = Engine::FactoryDesc(VisibilityManagedNode::TYPE_RTTI.getName());
+    m_dto.id(id);
+    m_dto.factoryDesc(Engine::FactoryDesc(VisibilityManagedNode::TYPE_RTTI.getName()));
     m_lazyNodeAssembler.factory(m_dto.factoryDesc());
 }
 
@@ -240,14 +246,16 @@ LazyNodeAssembler& VisibilityManagedNodeAssembler::lazyNode()
 
 VisibilityManagedNodeAssembler& VisibilityManagedNodeAssembler::factory(const Engine::FactoryDesc& factory)
 {
-    m_dto.factoryDesc() = factory;
+    m_dto.factoryDesc(factory);
     m_lazyNodeAssembler.factory(factory);
     return *this;
 }
 
 VisibilityManagedNodeAssembler& VisibilityManagedNodeAssembler::asDeferred(const std::string& file_name, const std::string& path_id)
 {
-    m_dto.factoryDesc().ClaimAsDeferred(file_name, path_id);
+    auto fd = m_dto.factoryDesc();
+    fd.ClaimAsDeferred(file_name, path_id);
+    m_dto.factoryDesc(fd);
     m_lazyNodeAssembler.factory(m_dto.factoryDesc());
     return *this;
 }
@@ -255,8 +263,8 @@ VisibilityManagedNodeAssembler& VisibilityManagedNodeAssembler::asDeferred(const
 VisibilityManagedNodeDto VisibilityManagedNodeAssembler::toHydratedDto() const
 {
     VisibilityManagedNodeDto visi_node_dto(m_lazyNodeAssembler.toHydratedDto());
-    visi_node_dto.id() = m_dto.id();
-    visi_node_dto.factoryDesc() = m_dto.factoryDesc();
+    visi_node_dto.id(m_dto.id());
+    visi_node_dto.factoryDesc(m_dto.factoryDesc());
     return visi_node_dto;
 }
 
@@ -268,8 +276,8 @@ Enigma::Engine::GenericDto VisibilityManagedNodeAssembler::toHydratedGenericDto(
 VisibilityManagedNodeDto VisibilityManagedNodeAssembler::toDeHydratedDto() const
 {
     VisibilityManagedNodeDto visi_node_dto(m_lazyNodeAssembler.toDeHydratedDto());
-    visi_node_dto.id() = m_dto.id();
-    visi_node_dto.factoryDesc() = m_dto.factoryDesc();
+    visi_node_dto.id(m_dto.id());
+    visi_node_dto.factoryDesc(m_dto.factoryDesc());
     return visi_node_dto;
 }
 

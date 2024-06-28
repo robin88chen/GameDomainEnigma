@@ -9,8 +9,8 @@ using namespace Enigma::SceneGraph;
 PortalAssembler::PortalAssembler(const SpatialId& id) : m_spatialAssembler(id)
 {
     m_id = id;
-    m_dto.id() = id;
-    m_dto.factoryDesc() = Engine::FactoryDesc(Portal::TYPE_RTTI.getName());
+    m_dto.id(id);
+    m_dto.factoryDesc(Engine::FactoryDesc(Portal::TYPE_RTTI.getName()));
     m_spatialAssembler.factory(m_dto.factoryDesc());
 }
 
@@ -21,7 +21,7 @@ SpatialAssembler& PortalAssembler::spatial()
 
 PortalAssembler& PortalAssembler::factory(const Engine::FactoryDesc& factory)
 {
-    m_dto.factoryDesc() = factory;
+    m_dto.factoryDesc(factory);
     m_spatialAssembler.factory(factory);
     return *this;
 }
@@ -40,7 +40,9 @@ PortalAssembler& PortalAssembler::isOpen(bool is_open)
 
 PortalAssembler& PortalAssembler::asNative(const std::string& file_at_path)
 {
-    m_dto.factoryDesc().ClaimAsNative(file_at_path);
+    auto fd = m_dto.factoryDesc();
+    fd.ClaimAsNative(file_at_path);
+    m_dto.factoryDesc(fd);
     m_spatialAssembler.factory(m_dto.factoryDesc());
     return *this;
 }
@@ -48,8 +50,8 @@ PortalAssembler& PortalAssembler::asNative(const std::string& file_at_path)
 PortalDto PortalAssembler::toPortalDto() const
 {
     PortalDto portal_dto(m_spatialAssembler.toGenericDto());
-    portal_dto.id() = m_dto.id();
-    portal_dto.factoryDesc() = m_dto.factoryDesc();
+    portal_dto.id(m_dto.id());
+    portal_dto.factoryDesc(m_dto.factoryDesc());
     portal_dto.adjacentZoneNodeId(m_dto.adjacentZoneNodeId());
     portal_dto.isOpen(m_dto.isOpen());
     return portal_dto;
@@ -68,8 +70,8 @@ std::shared_ptr<Portal> PortalAssembler::constitute()
 PortalZoneNodeAssembler::PortalZoneNodeAssembler(const SpatialId& id) : m_lazyNodeAssembler(id)
 {
     m_id = id;
-    m_dto.id() = id;
-    m_dto.factoryDesc() = Engine::FactoryDesc(PortalZoneNode::TYPE_RTTI.getName());
+    m_dto.id(id);
+    m_dto.factoryDesc(Engine::FactoryDesc(PortalZoneNode::TYPE_RTTI.getName()));
     m_lazyNodeAssembler.factory(m_dto.factoryDesc());
 }
 
@@ -80,7 +82,7 @@ LazyNodeAssembler& PortalZoneNodeAssembler::lazyNode()
 
 PortalZoneNodeAssembler& PortalZoneNodeAssembler::factory(const Engine::FactoryDesc& factory)
 {
-    m_dto.factoryDesc() = factory;
+    m_dto.factoryDesc(factory);
     m_lazyNodeAssembler.factory(factory);
     return *this;
 }
@@ -93,7 +95,9 @@ PortalZoneNodeAssembler& PortalZoneNodeAssembler::portalParentId(const SpatialId
 
 PortalZoneNodeAssembler& PortalZoneNodeAssembler::asDeferred(const std::string& filename, const std::string& path_id)
 {
-    m_dto.factoryDesc().ClaimAsDeferred(filename, path_id);
+    auto fd = m_dto.factoryDesc();
+    fd.ClaimAsDeferred(filename, path_id);
+    m_dto.factoryDesc(fd);
     m_lazyNodeAssembler.factory(m_dto.factoryDesc());
     return *this;
 }
@@ -101,8 +105,8 @@ PortalZoneNodeAssembler& PortalZoneNodeAssembler::asDeferred(const std::string& 
 PortalZoneNodeDto PortalZoneNodeAssembler::toHydratedDto() const
 {
     PortalZoneNodeDto portal_zone_node_dto(m_lazyNodeAssembler.toHydratedDto());
-    portal_zone_node_dto.id() = m_dto.id();
-    portal_zone_node_dto.factoryDesc() = m_dto.factoryDesc();
+    portal_zone_node_dto.id(m_dto.id());
+    portal_zone_node_dto.factoryDesc(m_dto.factoryDesc());
     portal_zone_node_dto.portalParentId(m_dto.portalParentId());
     return portal_zone_node_dto;
 }
@@ -120,8 +124,8 @@ std::shared_ptr<PortalZoneNode> PortalZoneNodeAssembler::constituteHydrated()
 PortalZoneNodeDto PortalZoneNodeAssembler::toDeHydratedDto() const
 {
     PortalZoneNodeDto portal_zone_node_dto(m_lazyNodeAssembler.toDeHydratedDto());
-    portal_zone_node_dto.id() = m_dto.id();
-    portal_zone_node_dto.factoryDesc() = m_dto.factoryDesc();
+    portal_zone_node_dto.id(m_dto.id());
+    portal_zone_node_dto.factoryDesc(m_dto.factoryDesc());
     portal_zone_node_dto.portalParentId(m_dto.portalParentId());
     return portal_zone_node_dto;
 }
@@ -139,8 +143,8 @@ std::shared_ptr<PortalZoneNode> PortalZoneNodeAssembler::constituteDeHydrated()
 PortalManagementNodeAssembler::PortalManagementNodeAssembler(const SpatialId& id) : m_nodeAssembler(id)
 {
     m_id = id;
-    m_dto.id() = id;
-    m_dto.factoryDesc() = Engine::FactoryDesc(PortalManagementNode::TYPE_RTTI.getName());
+    m_dto.id(id);
+    m_dto.factoryDesc(Engine::FactoryDesc(PortalManagementNode::TYPE_RTTI.getName()));
     m_nodeAssembler.factory(m_dto.factoryDesc());
 }
 
@@ -151,14 +155,16 @@ NodeAssembler& PortalManagementNodeAssembler::node()
 
 PortalManagementNodeAssembler& PortalManagementNodeAssembler::factory(const Engine::FactoryDesc& factory)
 {
-    m_dto.factoryDesc() = factory;
+    m_dto.factoryDesc(factory);
     m_nodeAssembler.factory(factory);
     return *this;
 }
 
 PortalManagementNodeAssembler& PortalManagementNodeAssembler::asNative(const std::string& file_at_path)
 {
-    m_dto.factoryDesc().ClaimAsNative(file_at_path);
+    auto fd = m_dto.factoryDesc();
+    fd.ClaimAsNative(file_at_path);
+    m_dto.factoryDesc(fd);
     m_nodeAssembler.factory(m_dto.factoryDesc());
     return *this;
 }
@@ -172,8 +178,8 @@ PortalManagementNodeAssembler& PortalManagementNodeAssembler::outsideZoneNodeId(
 PortalManagementNodeDto PortalManagementNodeAssembler::toPortalManagementNodeDto() const
 {
     PortalManagementNodeDto portal_management_node_dto(m_nodeAssembler.toNodeDto());
-    portal_management_node_dto.id() = m_dto.id();
-    portal_management_node_dto.factoryDesc() = m_dto.factoryDesc();
+    portal_management_node_dto.id(m_dto.id());
+    portal_management_node_dto.factoryDesc(m_dto.factoryDesc());
     if (m_dto.outsideZoneNodeId()) portal_management_node_dto.outsideZoneNodeId(m_dto.outsideZoneNodeId().value());
     return portal_management_node_dto;
 }

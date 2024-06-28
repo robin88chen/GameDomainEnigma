@@ -3,7 +3,6 @@
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/EventPublisher.h"
 #include "GameLightCommands.h"
-#include "GameLightEvents.h"
 #include "SceneGraph/Light.h"
 #include "GameSceneCommands.h"
 #include "GameSceneEvents.h"
@@ -242,7 +241,7 @@ void GameLightService::onSceneNodeChildAttached(const IEventPtr& e)
     if (!light) return;
     if (const auto it = m_pendingLightIds.find(light->id()); it != m_pendingLightIds.end())
     {
-        EventPublisher::enqueue(std::make_shared<GameLightCreated>(light));
+        //EventPublisher::enqueue(std::make_shared<GameLightCreated>(light));
         m_pendingLightIds.erase(it);
     }
 }
@@ -255,7 +254,7 @@ void GameLightService::onAttachSceneNodeChildFailed(const IEventPtr& e)
     auto child_id = ev->childId();
     if (auto it = m_pendingLightIds.find(child_id); it != m_pendingLightIds.end())
     {
-        EventPublisher::enqueue(std::make_shared<CreateGameLightFailed>(child_id, ev->error()));
+        //EventPublisher::enqueue(std::make_shared<CreateGameLightFailed>(child_id, ev->error()));
         m_pendingLightIds.erase(it);
     }
 }

@@ -40,7 +40,7 @@
 #include "FileStorage/EffectMaterialSourceFileStoreMapper.h"
 #include "Controllers/ControllerEvents.h"
 #include "GameCommon/GameSceneCommands.h"
-#include "SceneGraph/SceneGraphAssemblers.h"
+#include "SceneGraph/PortalAssemblers.h"
 #include "GameCommon/GameLightCommands.h"
 #include "GeometryDataFileStoreMapper.h"
 #include "SceneGraphFileStoreMapper.h"

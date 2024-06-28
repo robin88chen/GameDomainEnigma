@@ -1,5 +1,6 @@
 ﻿#include "LightQuadPawn.h"
 #include "GameCommonErrors.h"
+#include "LightingMeshQueries.h"
 #include "SceneGraph/Light.h"
 #include "SceneGraph/LightInfo.h"
 #include "LightingPawnDto.h"
@@ -17,6 +18,18 @@ LightQuadPawn::LightQuadPawn(const SpatialId& id) : LightingPawn(id)
 
 LightQuadPawn::LightQuadPawn(const SpatialId& id, const Engine::GenericDto& o) : LightingPawn(id, o)
 {
+    if ((!m_primitive) && (!m_hostLight.expired()))
+    {
+        LightingPawnDto dto(o);
+        if ((m_hostLight.lock()->info().lightType() == LightInfo::LightType::Ambient) && dto.primitiveId().has_value())
+        {
+            m_primitive = std::make_shared<RequestAmbientLightMeshAssembly>(dto.primitiveId().value())->dispatch();
+        }
+        else if ((m_hostLight.lock()->info().lightType() == LightInfo::LightType::SunLight) && dto.primitiveId().has_value())
+        {
+            m_primitive = std::make_shared<RequestSunLightMeshAssembly>(dto.primitiveId().value())->dispatch();
+        }
+    }
 }
 
 LightQuadPawn::~LightQuadPawn()
@@ -36,7 +49,7 @@ std::shared_ptr<LightQuadPawn> LightQuadPawn::constitute(const SceneGraph::Spati
 GenericDto LightQuadPawn::serializeDto()
 {
     LightingPawnDto dto(SerializePawnDto());
-    if (getHostLight()) dto.hostLightId() = getHostLight()->id();
+    if (getHostLight()) dto.hostLightId(getHostLight()->id());
     return dto.toGenericDto();
 }
 

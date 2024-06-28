@@ -83,18 +83,18 @@ std::shared_ptr<Spatial> Spatial::querySpatial(const SpatialId& id)
 SpatialDto Spatial::serializeSpatialDto()
 {
     SpatialDto dto;
-    dto.factoryDesc() = m_factoryDesc;
+    dto.factoryDesc(m_factoryDesc);
     //dto.name() = m_name;
-    dto.id() = m_id;
-    if (m_parent) dto.parentName() = m_parent.value().name();
+    dto.id(m_id);
+    if (m_parent) dto.parentName(m_parent.value().name());
     //dto.graphDepth() = m_graphDepth;
-    dto.cullingMode() = static_cast<unsigned int>(m_cullingMode);
-    dto.spatialFlag() = static_cast<unsigned int>(m_spatialFlags.to_ulong());
-    dto.notifyFlag() = static_cast<unsigned int>(m_notifyFlags.to_ulong());
-    dto.localTransform() = m_mxLocalTransform;
-    dto.worldTransform() = m_mxWorldTransform;
-    dto.modelBound() = m_modelBound.serializeDto().toGenericDto();
-    dto.worldBound() = m_worldBound.serializeDto().toGenericDto();
+    dto.cullingMode(static_cast<unsigned int>(m_cullingMode));
+    dto.spatialFlag(static_cast<unsigned int>(m_spatialFlags.to_ulong()));
+    dto.notifyFlag(static_cast<unsigned int>(m_notifyFlags.to_ulong()));
+    dto.localTransform(m_mxLocalTransform);
+    dto.worldTransform(m_mxWorldTransform);
+    dto.modelBound(m_modelBound.serializeDto().toGenericDto());
+    dto.worldBound(m_worldBound.serializeDto().toGenericDto());
     return dto;
 }
 

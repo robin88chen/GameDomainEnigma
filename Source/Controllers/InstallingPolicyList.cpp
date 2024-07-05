@@ -34,7 +34,6 @@ constexpr std::uint16_t OrderOfDefaultRendererInstalling = 50;
 constexpr std::uint16_t OrderOfInputHandlerInstalling = 60;
 
 constexpr std::uint16_t OrderOfGameCameraInstalling = 500;
-constexpr std::uint16_t OrderOfGameLightInstalling = 500;
 constexpr std::uint16_t OrderOfGameSceneInstalling = 510;
 
 constexpr std::uint16_t OrderOfSceneRendererInstalling = 600;
@@ -80,7 +79,6 @@ void InstallingPolicyList::makeOrderMap()
     m_orderMap[typeid(WorldMap::WorldMapInstallingPolicy)] = OrderOfWorldMapInstalling;
     m_orderMap[typeid(InputHandlers::InputHandlerInstallingPolicy)] = OrderOfInputHandlerInstalling;
     m_orderMap[typeid(GameCommon::GameCameraInstallingPolicy)] = OrderOfGameCameraInstalling;
-    m_orderMap[typeid(GameCommon::GameLightInstallingPolicy)] = OrderOfGameLightInstalling;
     m_orderMap[typeid(GameCommon::GameSceneInstallingPolicy)] = OrderOfGameSceneInstalling;
     m_orderMap[typeid(GameCommon::SceneRendererInstallingPolicy)] = OrderOfSceneRendererInstalling;
     m_orderMap[typeid(GameCommon::DeferredRendererInstallingPolicy)] = OrderOfSceneRendererInstalling;

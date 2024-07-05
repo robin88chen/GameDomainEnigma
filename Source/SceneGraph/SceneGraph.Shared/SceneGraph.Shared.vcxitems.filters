@@ -219,6 +219,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightEvents.h">
       <Filter>Events</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightCommands.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp">
@@ -346,6 +349,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightAssemblers.cpp">
       <Filter>DTO &amp; Assemblers</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightCommands.cpp">
+      <Filter>Commands</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -215,11 +215,10 @@ void EditorAppDelegate::installEngine()
     m_worldMapFileStoreMapper = std::make_shared<WorldMapFileStoreMapper>("world_map.db.txt@" + mediaPathId, "quad_root.db.txt@" + mediaPathId, std::make_shared<DtoJsonGateway>());
     auto world_map_policy = std::make_shared<WorldMapInstallingPolicy>(m_worldMapFileStoreMapper);
     auto terrain_policy = std::make_shared<TerrainInstallingPolicy>();
-    auto game_light_policy = std::make_shared<GameLightInstallingPolicy>();
     auto shadow_map_config = std::make_shared<ShadowMapServiceConfiguration>();
     auto shadow_map_policy = std::make_shared<ShadowMapInstallingPolicy>("shadowmap_renderer", "shadowmap_target", shadow_map_config);
     auto animated_pawn_policy = std::make_shared<AnimatedPawnInstallingPolicy>();
-    m_graphicMain->installRenderEngine({ creating_policy, engine_policy, render_sys_policy, deferred_renderer_policy, animator_policy, scene_graph_policy, input_handler_policy, game_camera_policy, world_map_policy, game_scene_policy, terrain_policy, game_light_policy, shadow_map_policy, animated_pawn_policy, geometry_policy, primitive_policy, renderables_policy, effect_material_source_policy, texture_policy });
+    m_graphicMain->installRenderEngine({ creating_policy, engine_policy, render_sys_policy, deferred_renderer_policy, animator_policy, scene_graph_policy, input_handler_policy, game_camera_policy, world_map_policy, game_scene_policy, terrain_policy, shadow_map_policy, animated_pawn_policy, geometry_policy, primitive_policy, renderables_policy, effect_material_source_policy, texture_policy });
     m_inputHandler = input_handler_policy->GetInputHandler();
     m_inputHandler.lock()->RegisterKeyboardAsyncKey('A');
     m_inputHandler.lock()->RegisterKeyboardAsyncKey('D');

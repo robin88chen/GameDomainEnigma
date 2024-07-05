@@ -2,7 +2,6 @@
 #include "Frameworks/ServiceManager.h"
 #include "GameCameraService.h"
 #include "GameSceneService.h"
-#include "GameLightService.h"
 #include "SceneGraph/SceneGraphRepository.h"
 #include "Frameworks/CommandBus.h"
 #include "SceneGraph/SceneGraphCommands.h"
@@ -25,21 +24,6 @@ error GameCameraInstallingPolicy::shutdown(Frameworks::ServiceManager* service_m
 {
     assert(service_manager);
     service_manager->shutdownSystemService(GameCameraService::TYPE_RTTI);
-    return error();
-}
-
-error GameLightInstallingPolicy::install(Frameworks::ServiceManager* service_manager)
-{
-    assert(service_manager);
-    auto light_service = std::make_shared<GameLightService>(service_manager);
-    service_manager->registerSystemService(light_service);
-    return error();
-}
-
-error GameLightInstallingPolicy::shutdown(Frameworks::ServiceManager* service_manager)
-{
-    assert(service_manager);
-    service_manager->shutdownSystemService(GameLightService::TYPE_RTTI);
     return error();
 }
 

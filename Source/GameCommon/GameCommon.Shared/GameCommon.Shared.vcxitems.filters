@@ -81,9 +81,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClipMapEvents.h">
       <Filter>AnimationClipMap</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GameLightService.h">
-      <Filter>GameLight</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameLightCommands.h">
       <Filter>GameLight</Filter>
     </ClInclude>
@@ -164,9 +161,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatedPawnDto.cpp">
       <Filter>AnimatedPawn</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\GameLightService.cpp">
-      <Filter>GameLight</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\DeferredRendererService.cpp">
       <Filter>DeferredRenderer</Filter>
     </ClCompile>
@@ -193,6 +187,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationClipMapAssembler.cpp">
       <Filter>AnimationClipMap</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GameLightCommands.cpp">
+      <Filter>GameLight</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

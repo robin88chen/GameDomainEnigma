@@ -23,17 +23,20 @@ namespace LevelEditor
         void unsubscribeHandlers();
 
         std::optional<Enigma::SceneGraph::SpatialId> spatialId(const std::string& spatial_name) const;
-        std::vector<Enigma::SceneGraph::SpatialId> NodeIds() const;
+        std::vector<Enigma::SceneGraph::SpatialId> nodeIds() const;
+        std::vector<Enigma::SceneGraph::SpatialId> terrainIds() const;
 
     protected:
         bool isSpatialNameDuplicated(const std::string& spatial_name) const;
 
         void isSpatialNameDuplicated(const Enigma::Frameworks::IQueryPtr& q);
         void queryNodeIds(const Enigma::Frameworks::IQueryPtr& q);
+        void queryTerrainIds(const Enigma::Frameworks::IQueryPtr& q);
 
     protected:
         Enigma::Frameworks::QuerySubscriberPtr m_isSpatialNameDuplicated;
         Enigma::Frameworks::QuerySubscriberPtr m_queryNodeIds;
+        Enigma::Frameworks::QuerySubscriberPtr m_queryTerrainIds;
     };
 }
 

@@ -29,6 +29,9 @@ namespace LevelEditor
         void subscribeHandlers();
         void unsubscribeHandlers();
 
+        nana::treebox* getAssetsTree() const { return m_assetsTree; }
+        bool isAssetHovered() const;
+
     protected:
         void refreshWorldMapAssets();
         void refreshTerrainAssets();

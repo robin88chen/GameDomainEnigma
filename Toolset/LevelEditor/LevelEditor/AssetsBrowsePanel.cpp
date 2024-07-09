@@ -82,6 +82,14 @@ void AssetsBrowsePanel::unsubscribeHandlers()
     m_onSpatialConstituted = nullptr;
 }
 
+bool AssetsBrowsePanel::isAssetHovered() const
+{
+    auto item = m_assetsTree->hovered(true);
+    if (item.empty()) return false;
+    if (item.key() == WORLD_ASSETS_KEY || item.key() == TERRAIN_ASSETS_KEY || item.key() == NODE_ASSETS_KEY) return false;
+    return true;
+}
+
 void AssetsBrowsePanel::refreshWorldMapAssets()
 {
     auto item = m_assetsTree->find(WORLD_ASSETS_KEY);
@@ -103,13 +111,13 @@ void AssetsBrowsePanel::refreshTerrainAssets()
     if (!item.empty()) item.visit_recursively(clearTreeItemValue);
     item.clear();
 
-    /*auto terrain_assets = std::make_shared<QueryTerrainIds>()->dispatch();
+    auto terrain_assets = std::make_shared<QueryTerrainIds>()->dispatch();
     if (terrain_assets.empty()) return;
     for (const auto& asset : terrain_assets)
     {
         auto item = m_assetsTree->insert(TERRAIN_ASSETS_KEY + "/" + idToTreeViewKey(asset), asset.name());
         item->value(asset);
-    }*/
+    }
 }
 
 void AssetsBrowsePanel::refreshNodeAssets()

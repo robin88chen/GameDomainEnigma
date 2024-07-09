@@ -32,6 +32,8 @@ namespace LevelEditor
         void subscribeHandlers();
         void unsubscribeHandlers();
 
+        nana::treebox* getSceneGraphTree() const { return m_sceneGraphTree; }
+
     private:
         void onSceneGraphTreeSelected(const nana::arg_treebox& arg);
 

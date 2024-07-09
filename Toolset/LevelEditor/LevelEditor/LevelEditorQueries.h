@@ -72,6 +72,11 @@ namespace LevelEditor
     public:
         QueryNodeIds() = default;
     };
+    class QueryTerrainIds : public Enigma::Frameworks::Query<std::vector<Enigma::SceneGraph::SpatialId>>
+    {
+    public:
+        QueryTerrainIds() = default;
+    };
 }
 
 #endif // LEVEL_EDITOR_QUERIES_H

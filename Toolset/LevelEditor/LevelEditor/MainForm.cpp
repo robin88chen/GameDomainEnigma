@@ -148,6 +148,35 @@ void MainForm::finalizeGraphics()
     if (m_appDelegate) m_appDelegate->finalize();
 }
 
+void MainForm::bindAssetToSceneGraphDragdrop()
+{
+    m_assetToSceneGraphDragDrop = menew nana::simple_dragdrop{ *getAssetsTree() };
+    m_assetToSceneGraphDragDrop->condition([this] { return isAssetHovered(); });
+    m_assetToSceneGraphDragDrop->make_drop(*getSceneGraphTree(), [this] { dropAssetToScene(); });
+}
+
+nana::treebox* MainForm::getAssetsTree() const
+{
+    assert(m_assetsBrowsePanel);
+    return m_assetsBrowsePanel->getAssetsTree();
+}
+
+bool MainForm::isAssetHovered() const
+{
+    assert(m_assetsBrowsePanel);
+    return m_assetsBrowsePanel->isAssetHovered();
+}
+
+nana::treebox* MainForm::getSceneGraphTree() const
+{
+    assert(m_sceneGraphPanel);
+    return m_sceneGraphPanel->getSceneGraphTree();
+}
+
+void MainForm::dropAssetToScene()
+{
+}
+
 void MainForm::initMenu()
 {
     m_menubar = menew nana::menubar{ *this };

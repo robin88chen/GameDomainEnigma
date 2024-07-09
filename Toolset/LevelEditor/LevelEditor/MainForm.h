@@ -14,6 +14,8 @@
 #include "nana/gui/timer.hpp"
 #include "nana/gui/widgets/toolbar.hpp"
 #include "nana/gui/widgets/label.hpp"
+#include "nana/gui/widgets/treebox.hpp"
+#include "nana/gui/dragdrop.hpp"
 #include "EditorModes.h"
 
 namespace LevelEditor
@@ -61,6 +63,8 @@ namespace LevelEditor
         RenderPanel* getRenderPanel() { return m_renderPanel; }
         SpatialInspectorPanel* getSpatialInspectorPanel() { return m_spatialInspectorPanel; }
 
+        void bindAssetToSceneGraphDragdrop();
+
         inline static std::string DataKey = "LevelEditor::MainForm";
     private:
         void initMenu();
@@ -93,6 +97,11 @@ namespace LevelEditor
         void onGodModeChanged(bool enabled);
         void finalizeGraphics();
 
+        nana::treebox* getAssetsTree() const;
+        bool isAssetHovered() const;
+        nana::treebox* getSceneGraphTree() const;
+        void dropAssetToScene();
+
     private:
         nana::menubar* m_menubar;
         nana::tabbar<int>* m_tabbar;
@@ -106,6 +115,8 @@ namespace LevelEditor
         SpatialInspectorPanel* m_spatialInspectorPanel;
         TerrainToolPanel* m_terrainToolPanel;
         OutputPanel* m_outputPanel;
+
+        nana::simple_dragdrop* m_assetToSceneGraphDragDrop;
 
         std::weak_ptr<WorldEditConsole> m_worldConsole;
         std::weak_ptr<TerrainEditConsole> m_terrainConsole;

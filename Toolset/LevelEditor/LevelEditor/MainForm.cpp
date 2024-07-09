@@ -53,6 +53,7 @@ MainForm::MainForm() : nana::form()
     m_terrainToolPanel = nullptr;
     m_outputPanel = nullptr;
     m_editorMode = EditorMode::cursor;
+    m_assetToSceneGraphDragDrop = nullptr;
 }
 
 MainForm::~MainForm()
@@ -69,6 +70,7 @@ MainForm::~MainForm()
     SAFE_DELETE(m_appDelegate);
     SAFE_DELETE(m_terrainToolPanel);
     SAFE_DELETE(m_outputPanel);
+    SAFE_DELETE(m_assetToSceneGraphDragDrop);
 }
 
 void MainForm::initSubPanels()

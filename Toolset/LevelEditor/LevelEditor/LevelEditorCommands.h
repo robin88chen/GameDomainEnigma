@@ -13,6 +13,7 @@
 #include "GameEngine/TextureId.h"
 #include "GameEngine/GenericDto.h"
 #include "TerrainEditService.h"
+#include "AssetIdCombo.h"
 #include <vector>
 
 namespace LevelEditor
@@ -80,7 +81,18 @@ namespace LevelEditor
     protected:
         std::string m_worldName;
     };
+    //--------------------------------------------------------------------------------
+    class DropAssetToSceneGraph : public Enigma::Frameworks::ICommand
+    {
+    public:
+        DropAssetToSceneGraph(const AssetIdCombo& asset_id, const Enigma::SceneGraph::SpatialId& target_id) : m_assetId(asset_id), m_targetId(target_id) {}
 
+        const AssetIdCombo& assetId() const { return m_assetId; }
+        const Enigma::SceneGraph::SpatialId& targetId() const { return m_targetId; }
+    protected:
+        AssetIdCombo m_assetId;
+        Enigma::SceneGraph::SpatialId m_targetId;
+    };
     //--------------------------------------------------------------------------------
     class MoveUpTerrainVertex : public Enigma::Frameworks::ICommand
     {

@@ -1,4 +1,7 @@
 ﻿#include "EditorSceneConsole.h"
+#include "SceneGraph/SceneGraphCommands.h"
+#include "WorldMap/WorldMap.h"
+#include "WorldMap/WorldMapQueries.h"
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/EventPublisher.h"
 #include "InputHandlers/MouseInputEvents.h"
@@ -7,9 +10,9 @@
 #include "GameCommon/GameSceneEvents.h"
 #include "GameCommon/GameCameraEvents.h"
 #include "GameCommon/GameCameraCommands.h"
-#include "GameCommon/GameSceneEvents.h"
 #include "ScenePicker.h"
 #include "LevelEditorEvents.h"
+#include "LevelEditorCommands.h"
 
 using namespace LevelEditor;
 using namespace Enigma::Frameworks;
@@ -17,10 +20,12 @@ using namespace Enigma::InputHandlers;
 using namespace Enigma::Renderer;
 using namespace Enigma::GameCommon;
 using namespace Enigma::MathLib;
+using namespace Enigma::SceneGraph;
+using namespace Enigma::WorldMap;
 
 Rtti EditorSceneConsole::TYPE_RTTI{ "LevelEditor.EditorSceneConsole", &ISystemService::TYPE_RTTI };
 
-EditorSceneConsole::EditorSceneConsole(Enigma::Frameworks::ServiceManager* srv_mngr) : ISystemService(srv_mngr)
+EditorSceneConsole::EditorSceneConsole(ServiceManager* srv_mngr) : ISystemService(srv_mngr)
 {
     m_needTick = false;
 }
@@ -29,7 +34,7 @@ EditorSceneConsole::~EditorSceneConsole()
 {
 }
 
-Enigma::Frameworks::ServiceResult EditorSceneConsole::onInit()
+ServiceResult EditorSceneConsole::onInit()
 {
     m_onGameCameraCreated = std::make_shared<EventSubscriber>([=](auto e) { onGameCameraCreated(e); });
     EventPublisher::subscribe(typeid(GameCameraCreated), m_onGameCameraCreated);
@@ -50,10 +55,13 @@ Enigma::Frameworks::ServiceResult EditorSceneConsole::onInit()
     m_onKeyboardAsyncKeyPressed = std::make_shared<EventSubscriber>([=](auto e) { onKeyboardAsyncKeyPressed(e); });
     EventPublisher::subscribe(typeid(WinKeyboardAsyncPressed), m_onKeyboardAsyncKeyPressed);
 
+    m_dropAssetToSceneGraph = std::make_shared<CommandSubscriber>([=](auto c) { dropAssetToSceneGraph(c); });
+    CommandBus::subscribe(typeid(DropAssetToSceneGraph), m_dropAssetToSceneGraph);
+
     return ServiceResult::Complete;
 }
 
-Enigma::Frameworks::ServiceResult EditorSceneConsole::onTerm()
+ServiceResult EditorSceneConsole::onTerm()
 {
     EventPublisher::unsubscribe(typeid(GameCameraCreated), m_onGameCameraCreated);
     m_onGameCameraCreated = nullptr;
@@ -74,18 +82,21 @@ Enigma::Frameworks::ServiceResult EditorSceneConsole::onTerm()
     EventPublisher::unsubscribe(typeid(WinKeyboardAsyncPressed), m_onKeyboardAsyncKeyPressed);
     m_onKeyboardAsyncKeyPressed = nullptr;
 
+    CommandBus::unsubscribe(typeid(DropAssetToSceneGraph), m_dropAssetToSceneGraph);
+    m_dropAssetToSceneGraph = nullptr;
+
     return ServiceResult::Complete;
 }
 
-void EditorSceneConsole::onGameCameraCreated(const Enigma::Frameworks::IEventPtr& e)
+void EditorSceneConsole::onGameCameraCreated(const IEventPtr& e)
 {
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<Enigma::GameCommon::GameCameraCreated, IEvent>(e);
+    auto ev = std::dynamic_pointer_cast<GameCameraCreated, IEvent>(e);
     if (!ev) return;
     m_camera = ev->GetCamera();
 }
 
-void EditorSceneConsole::onSceneRootCreated(const Enigma::Frameworks::IEventPtr& e)
+void EditorSceneConsole::onSceneRootCreated(const IEventPtr& e)
 {
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<PortalSceneRootCreated, IEvent>(e);
@@ -93,15 +104,15 @@ void EditorSceneConsole::onSceneRootCreated(const Enigma::Frameworks::IEventPtr&
     m_sceneRoot = ev->root();
 }
 
-void EditorSceneConsole::onTargetViewportChanged(const Enigma::Frameworks::IEventPtr& e)
+void EditorSceneConsole::onTargetViewportChanged(const IEventPtr& e)
 {
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<Enigma::Renderer::TargetViewPortChanged, IEvent>(e);
+    auto ev = std::dynamic_pointer_cast<TargetViewPortChanged, IEvent>(e);
     if (!ev) return;
     m_targetViewport = ev->viewPort();
 }
 
-void EditorSceneConsole::onPickedSpatialChanged(const Enigma::Frameworks::IEventPtr& e)
+void EditorSceneConsole::onPickedSpatialChanged(const IEventPtr& e)
 {
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<PickedSpatialChanged, IEvent>(e);
@@ -110,13 +121,13 @@ void EditorSceneConsole::onPickedSpatialChanged(const Enigma::Frameworks::IEvent
     m_pickedSpatialId = ev->id();
 }
 
-void EditorSceneConsole::onMouseMoved(const Enigma::Frameworks::IEventPtr& e)
+void EditorSceneConsole::onMouseMoved(const IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<MouseMoved>(e);
     if (!ev) return;
     auto clipping_pos = m_targetViewport.ViewportPositionToClippingPosition(
-        Enigma::MathLib::Vector2(static_cast<float>(ev->m_param.m_x), static_cast<float>(ev->m_param.m_y)));
+        Vector2(static_cast<float>(ev->m_param.m_x), static_cast<float>(ev->m_param.m_y)));
     auto [pickedPawn, picked_pos] = pickingOnSceneView(clipping_pos);
     if (pickedPawn)
     {
@@ -124,13 +135,13 @@ void EditorSceneConsole::onMouseMoved(const Enigma::Frameworks::IEventPtr& e)
     }
 }
 
-void EditorSceneConsole::onMouseLeftButtonDown(const Enigma::Frameworks::IEventPtr& e)
+void EditorSceneConsole::onMouseLeftButtonDown(const IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<MouseLeftButtonDown>(e);
     if (!ev) return;
     auto clipping_pos = m_targetViewport.ViewportPositionToClippingPosition(
-        Enigma::MathLib::Vector2(static_cast<float>(ev->m_param.m_x), static_cast<float>(ev->m_param.m_y)));
+        Vector2(static_cast<float>(ev->m_param.m_x), static_cast<float>(ev->m_param.m_y)));
     auto [pickedPawn, picked_pos] = pickingOnSceneView(clipping_pos);
     if (pickedPawn)
     {
@@ -138,13 +149,13 @@ void EditorSceneConsole::onMouseLeftButtonDown(const Enigma::Frameworks::IEventP
     }
 }
 
-void EditorSceneConsole::onMouseLeftButtonUp(const Enigma::Frameworks::IEventPtr& e)
+void EditorSceneConsole::onMouseLeftButtonUp(const IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<MouseLeftButtonUp>(e);
     if (!ev) return;
     auto clipping_pos = m_targetViewport.ViewportPositionToClippingPosition(
-        Enigma::MathLib::Vector2(static_cast<float>(ev->m_param.m_x), static_cast<float>(ev->m_param.m_y)));
+        Vector2(static_cast<float>(ev->m_param.m_x), static_cast<float>(ev->m_param.m_y)));
     auto [pickedPawn, picked_pos] = pickingOnSceneView(clipping_pos);
     if (pickedPawn)
     {
@@ -152,13 +163,13 @@ void EditorSceneConsole::onMouseLeftButtonUp(const Enigma::Frameworks::IEventPtr
     }
 }
 
-void EditorSceneConsole::onMouseLeftDragged(const Enigma::Frameworks::IEventPtr& e)
+void EditorSceneConsole::onMouseLeftDragged(const IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<MouseLeftButtonDrag>(e);
     if (!ev) return;
     auto clipping_pos = m_targetViewport.ViewportPositionToClippingPosition(
-        Enigma::MathLib::Vector2(static_cast<float>(ev->m_param.m_x), static_cast<float>(ev->m_param.m_y)));
+        Vector2(static_cast<float>(ev->m_param.m_x), static_cast<float>(ev->m_param.m_y)));
     auto [pickedPawn, picked_pos] = pickingOnSceneView(clipping_pos);
     if (pickedPawn)
     {
@@ -166,7 +177,7 @@ void EditorSceneConsole::onMouseLeftDragged(const Enigma::Frameworks::IEventPtr&
     }
 }
 
-void EditorSceneConsole::onKeyboardAsyncKeyPressed(const Enigma::Frameworks::IEventPtr& e)
+void EditorSceneConsole::onKeyboardAsyncKeyPressed(const IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<WinKeyboardAsyncPressed>(e);
@@ -189,9 +200,47 @@ void EditorSceneConsole::onKeyboardAsyncKeyPressed(const Enigma::Frameworks::IEv
     }
 }
 
-std::tuple<std::shared_ptr<Enigma::SceneGraph::Pawn>, Enigma::MathLib::Vector3> EditorSceneConsole::pickingOnSceneView(const Enigma::MathLib::Vector2& clip_pos)
+void EditorSceneConsole::dropAssetToSceneGraph(const ICommandPtr& c)
 {
-    if (m_camera.expired()) return { nullptr, Enigma::MathLib::Vector3::ZERO };
+    if (!c) return;
+    const auto cmd = std::dynamic_pointer_cast<DropAssetToSceneGraph>(c);
+    if (!cmd) return;
+    AssetIdCombo asset_id = cmd->assetId();
+    SpatialId scene_graph_id = cmd->targetId();
+    if (asset_id.isSpatialId())
+    {
+        if (asset_id.getSpatialId() == scene_graph_id)
+        {
+            CommandBus::enqueue(std::make_shared<OutputMessage>("Cannot Drop Spatial Asset to Itself"));
+            return;
+        }
+        CommandBus::enqueue(std::make_shared<OutputMessage>("Drop Spatial Asset " + asset_id.getSpatialId().name() + " to Scene Graph " + scene_graph_id.name()));
+        std::shared_ptr<Spatial> child = Spatial::querySpatial(asset_id.getSpatialId());
+        CommandBus::enqueue(std::make_shared<AttachNodeChild>(scene_graph_id, child, child->getLocalTransform()));
+    }
+    else if (asset_id.isWorldMapId())
+    {
+        std::shared_ptr<WorldMap> world_map = std::make_shared<QueryWorldMap>(asset_id.getWorldMapId())->dispatch();
+        assert(world_map);
+        if (world_map->outRegionId().empty())
+        {
+            CommandBus::enqueue(std::make_shared<OutputMessage>("World Map Asset " + asset_id.getWorldMapId().name() + " has no Region"));
+            return;
+        }
+        if (world_map->outRegionId() == scene_graph_id)
+        {
+            CommandBus::enqueue(std::make_shared<OutputMessage>("Cannot Drop World Map Asset to Itself"));
+            return;
+        }
+        CommandBus::enqueue(std::make_shared<OutputMessage>("Drop World Map Asset " + asset_id.getWorldMapId().name() + " to Scene Graph " + scene_graph_id.name()));
+        std::shared_ptr<Spatial> child = Spatial::querySpatial(world_map->outRegionId());
+        CommandBus::enqueue(std::make_shared<AttachNodeChild>(scene_graph_id, child, child->getLocalTransform()));
+    }
+}
+
+std::tuple<std::shared_ptr<Pawn>, Vector3> EditorSceneConsole::pickingOnSceneView(const Vector2& clip_pos)
+{
+    if (m_camera.expired()) return { nullptr, Vector3::ZERO };
     if (m_sceneRoot.expired()) return { nullptr, Vector3::ZERO };
 
     m_scenePicker.setAssociatedCamera(m_camera.lock());
@@ -204,14 +253,14 @@ std::tuple<std::shared_ptr<Enigma::SceneGraph::Pawn>, Enigma::MathLib::Vector3> 
         return { nullptr, Vector3::ZERO };
     }
 
-    std::shared_ptr<Enigma::SceneGraph::Pawn> pickedPawn = nullptr;
+    std::shared_ptr<Pawn> pickedPawn = nullptr;
     Vector3 picked_pos;
     for (unsigned int i = 0; i < count; i++)
     {
         auto pick_record = m_scenePicker.getPickRecord(i);
         if (!pick_record) continue;
         if (pick_record->m_spatial.expired()) continue;
-        pickedPawn = std::dynamic_pointer_cast<Enigma::SceneGraph::Pawn, Enigma::SceneGraph::Spatial>(pick_record->m_spatial.lock());
+        pickedPawn = std::dynamic_pointer_cast<Pawn, Spatial>(pick_record->m_spatial.lock());
         picked_pos = pick_record->m_vecIntersection;
         if (pickedPawn) break;
     }

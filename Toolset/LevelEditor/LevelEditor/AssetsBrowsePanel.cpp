@@ -90,6 +90,29 @@ bool AssetsBrowsePanel::isAssetHovered() const
     return true;
 }
 
+AssetIdCombo AssetsBrowsePanel::getSelectedAssetId() const
+{
+    auto item = m_assetsTree->selected();
+    if (item.empty()) return AssetIdCombo{};
+    if (item.key() == WORLD_ASSETS_KEY || item.key() == TERRAIN_ASSETS_KEY || item.key() == NODE_ASSETS_KEY) return AssetIdCombo{};
+    if (item.key().find_first_of(WORLD_ASSETS_KEY) == 0)
+    {
+        auto world_map_id = item.value<Enigma::WorldMap::WorldMapId>();
+        return AssetIdCombo{ world_map_id };
+    }
+    else if (item.key().find_first_of(TERRAIN_ASSETS_KEY) == 0)
+    {
+        auto terrain_id = item.value<Enigma::SceneGraph::SpatialId>();
+        return AssetIdCombo{ terrain_id };
+    }
+    else if (item.key().find_first_of(NODE_ASSETS_KEY) == 0)
+    {
+        auto node_id = item.value<Enigma::SceneGraph::SpatialId>();
+        return AssetIdCombo{ node_id };
+    }
+    return AssetIdCombo{};
+}
+
 void AssetsBrowsePanel::refreshWorldMapAssets()
 {
     auto item = m_assetsTree->find(WORLD_ASSETS_KEY);
@@ -100,7 +123,7 @@ void AssetsBrowsePanel::refreshWorldMapAssets()
     if (world_assets.empty()) return;
     for (const auto& asset : world_assets)
     {
-        auto item = m_assetsTree->insert(WORLD_ASSETS_KEY + "/" + idToTreeViewKey(asset), asset.name());
+        auto item = m_assetsTree->insert(makeWorldMapAssetKey(asset), asset.name());
         item->value(asset);
     }
 }
@@ -115,7 +138,7 @@ void AssetsBrowsePanel::refreshTerrainAssets()
     if (terrain_assets.empty()) return;
     for (const auto& asset : terrain_assets)
     {
-        auto item = m_assetsTree->insert(TERRAIN_ASSETS_KEY + "/" + idToTreeViewKey(asset), asset.name());
+        auto item = m_assetsTree->insert(makeTerrainAssetKey(asset), asset.name());
         item->value(asset);
     }
 }
@@ -130,7 +153,7 @@ void AssetsBrowsePanel::refreshNodeAssets()
     if (node_assets.empty()) return;
     for (const auto& asset : node_assets)
     {
-        auto item = m_assetsTree->insert(NODE_ASSETS_KEY + "/" + idToTreeViewKey(asset), asset.name());
+        auto item = m_assetsTree->insert(makeNodeAssetKey(asset), asset.name());
         item->value(asset);
     }
 }
@@ -159,3 +182,17 @@ void AssetsBrowsePanel::onSpatialConstituted(const Enigma::Frameworks::IEventPtr
     }
 }
 
+std::string AssetsBrowsePanel::makeWorldMapAssetKey(const Enigma::WorldMap::WorldMapId& world_map_id) const
+{
+    return WORLD_ASSETS_KEY + "/" + WORLD_ASSETS_KEY + "_" + idToTreeViewKey(world_map_id);
+}
+
+std::string AssetsBrowsePanel::makeTerrainAssetKey(const Enigma::SceneGraph::SpatialId& spatial_id) const
+{
+    return TERRAIN_ASSETS_KEY + "/" + TERRAIN_ASSETS_KEY + "_" + idToTreeViewKey(spatial_id);
+}
+
+std::string AssetsBrowsePanel::makeNodeAssetKey(const Enigma::SceneGraph::SpatialId& spatial_id) const
+{
+    return NODE_ASSETS_KEY + "/" + NODE_ASSETS_KEY + "_" + idToTreeViewKey(spatial_id);
+}

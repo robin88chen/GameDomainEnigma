@@ -1,4 +1,7 @@
 ﻿#include "SceneGraphPanel.h"
+
+#include <SceneGraph/Node.h>
+
 #include "EditorUtilities.h"
 #include "Platforms/MemoryMacro.h"
 #include "SchemeColorDef.h"
@@ -142,6 +145,24 @@ void SceneGraphPanel::refreshSceneGraphTree(const std::vector<std::shared_ptr<En
         }
         ++iter;
     }
+}
+
+std::optional<Enigma::SceneGraph::SpatialId> SceneGraphPanel::getSelectedSpatialId() const
+{
+    auto selected = m_sceneGraphTree->selected();
+    if (selected.empty()) return std::nullopt;
+    const auto& spatial = selected.value<std::shared_ptr<Enigma::SceneGraph::Spatial>>();
+    if (!spatial) return std::nullopt;
+    return spatial->id();
+}
+
+bool SceneGraphPanel::hasDropTargetNodeSelected() const
+{
+    auto selected = m_sceneGraphTree->selected();
+    if (selected.empty()) return false;
+    const auto& spatial = selected.value<std::shared_ptr<Enigma::SceneGraph::Spatial>>();
+    if (!spatial) return false;
+    return spatial->id().rtti().isDerived(Enigma::SceneGraph::Node::TYPE_RTTI);
 }
 
 void SceneGraphPanel::onSceneGraphTreeSelected(const nana::arg_treebox& arg)

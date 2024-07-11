@@ -33,6 +33,8 @@ namespace LevelEditor
         void unsubscribeHandlers();
 
         nana::treebox* getSceneGraphTree() const { return m_sceneGraphTree; }
+        std::optional<Enigma::SceneGraph::SpatialId> getSelectedSpatialId() const;
+        bool hasDropTargetNodeSelected() const;
 
     private:
         void onSceneGraphTreeSelected(const nana::arg_treebox& arg);

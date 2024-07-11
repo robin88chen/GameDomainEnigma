@@ -14,7 +14,6 @@
 #include "PawnEditConsole.h"
 #include "PawnEditService.h"
 #include "RenderPanel.h"
-#include "SceneGraphFileStoreMapper.h"
 #include "SceneGraphPanel.h"
 #include "AssetsBrowsePanel.h"
 #include "SchemeColorDef.h"
@@ -153,7 +152,7 @@ void MainForm::finalizeGraphics()
 void MainForm::bindAssetToSceneGraphDragdrop()
 {
     m_assetToSceneGraphDragDrop = menew nana::simple_dragdrop{ *getAssetsTree() };
-    m_assetToSceneGraphDragDrop->condition([this] { return isAssetHovered(); });
+    m_assetToSceneGraphDragDrop->condition([this] { return isAssetHovered() && hasDropTargetNodeSelected(); });
     m_assetToSceneGraphDragDrop->make_drop(*getSceneGraphTree(), [this] { dropAssetToScene(); });
 }
 
@@ -177,6 +176,20 @@ nana::treebox* MainForm::getSceneGraphTree() const
 
 void MainForm::dropAssetToScene()
 {
+    auto asset_id = m_assetsBrowsePanel->getSelectedAssetId();
+    auto scene_graph_id = m_sceneGraphPanel->getSelectedSpatialId();
+    if (!scene_graph_id)
+    {
+        Enigma::Frameworks::CommandBus::enqueue(std::make_shared<OutputMessage>("No Scene Graph Node Selected"));
+        return;
+    }
+    Enigma::Frameworks::CommandBus::enqueue(std::make_shared<DropAssetToSceneGraph>(asset_id, scene_graph_id.value()));
+}
+
+bool MainForm::hasDropTargetNodeSelected() const
+{
+    assert(m_sceneGraphPanel);
+    return m_sceneGraphPanel->hasDropTargetNodeSelected();
 }
 
 void MainForm::initMenu()

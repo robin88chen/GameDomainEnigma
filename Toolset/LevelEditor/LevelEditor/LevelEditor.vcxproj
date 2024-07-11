@@ -176,6 +176,7 @@
   <ItemGroup>
     <ClInclude Include="AddTerrainDialog.h" />
     <ClInclude Include="AppConfiguration.h" />
+    <ClInclude Include="AssetIdCombo.h" />
     <ClInclude Include="AssetsBrowsePanel.h" />
     <ClInclude Include="CreateNewWorldDlg.h" />
     <ClInclude Include="EditorModes.h" />

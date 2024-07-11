@@ -101,6 +101,7 @@ namespace LevelEditor
         bool isAssetHovered() const;
         nana::treebox* getSceneGraphTree() const;
         void dropAssetToScene();
+        bool hasDropTargetNodeSelected() const;
 
     private:
         nana::menubar* m_menubar;

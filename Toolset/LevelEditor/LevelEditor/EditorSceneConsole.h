@@ -10,6 +10,7 @@
 
 #include "Frameworks/ServiceManager.h"
 #include "Frameworks/EventSubscriber.h"
+#include "Frameworks/CommandSubscriber.h"
 #include "GraphicKernel/TargetViewPort.h"
 #include "SceneGraph/Pawn.h"
 #include "SceneGraph/Camera.h"
@@ -48,6 +49,8 @@ namespace LevelEditor
 
         void onKeyboardAsyncKeyPressed(const Enigma::Frameworks::IEventPtr& e);
 
+        void dropAssetToSceneGraph(const Enigma::Frameworks::ICommandPtr& c);
+
         std::tuple<std::shared_ptr<Enigma::SceneGraph::Pawn>, Enigma::MathLib::Vector3> pickingOnSceneView(const Enigma::MathLib::Vector2& clip_pos);
 
     protected:
@@ -63,6 +66,8 @@ namespace LevelEditor
         Enigma::Frameworks::EventSubscriberPtr m_onMouseLeftDragged;
 
         Enigma::Frameworks::EventSubscriberPtr m_onKeyboardAsyncKeyPressed;
+
+        Enigma::Frameworks::CommandSubscriberPtr m_dropAssetToSceneGraph;
 
         std::weak_ptr<Enigma::SceneGraph::Camera> m_camera;
         std::weak_ptr<Enigma::SceneGraph::Node> m_sceneRoot;

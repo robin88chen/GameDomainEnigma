@@ -253,6 +253,9 @@
     <ClInclude Include="AssetsBrowsePanel.h">
       <Filter>Forms</Filter>
     </ClInclude>
+    <ClInclude Include="AssetIdCombo.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.editorconfig" />

@@ -12,6 +12,7 @@
 #include <nana/gui/widgets/panel.hpp>
 #include <nana/gui/widgets/treebox.hpp>
 #include "Frameworks/EventSubscriber.h"
+#include "AssetIdCombo.h"
 
 namespace LevelEditor
 {
@@ -32,6 +33,8 @@ namespace LevelEditor
         nana::treebox* getAssetsTree() const { return m_assetsTree; }
         bool isAssetHovered() const;
 
+        AssetIdCombo getSelectedAssetId() const;
+
     protected:
         void refreshWorldMapAssets();
         void refreshTerrainAssets();
@@ -39,6 +42,10 @@ namespace LevelEditor
 
         void onWorldMapCreated(const Enigma::Frameworks::IEventPtr& e);
         void onSpatialConstituted(const Enigma::Frameworks::IEventPtr& e);
+
+        std::string makeWorldMapAssetKey(const Enigma::WorldMap::WorldMapId& world_map_id) const;
+        std::string makeTerrainAssetKey(const Enigma::SceneGraph::SpatialId& spatial_id) const;
+        std::string makeNodeAssetKey(const Enigma::SceneGraph::SpatialId& spatial_id) const;
 
     protected:
         MainForm* m_mainForm;

@@ -27,6 +27,7 @@ AnimationAssetRepository::AnimationAssetRepository(ServiceManager* srv_manager, 
 
 AnimationAssetRepository::~AnimationAssetRepository()
 {
+    assert(m_animationAssets.empty());
     SAFE_DELETE(m_factory);
     m_animationAssets.clear();
 }
@@ -45,6 +46,8 @@ ServiceResult AnimationAssetRepository::onInit()
     CommandBus::subscribe(typeid(RemoveAnimationAsset), m_removeAnimationAsset);
     m_putAnimationAsset = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { putAnimationAsset(c); });
     CommandBus::subscribe(typeid(PutAnimationAsset), m_putAnimationAsset);
+    m_releaseAnimationAsset = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { releaseAnimationAsset(c); });
+    CommandBus::subscribe(typeid(ReleaseAnimationAsset), m_releaseAnimationAsset);
 
     m_storeMapper->connect();
     return ServiceResult::Complete;
@@ -63,6 +66,8 @@ ServiceResult AnimationAssetRepository::onTerm()
     m_removeAnimationAsset = nullptr;
     CommandBus::unsubscribe(typeid(PutAnimationAsset), m_putAnimationAsset);
     m_putAnimationAsset = nullptr;
+    CommandBus::unsubscribe(typeid(ReleaseAnimationAsset), m_releaseAnimationAsset);
+    m_releaseAnimationAsset = nullptr;
 
     m_storeMapper->disconnect();
     return ServiceResult::Complete;
@@ -132,6 +137,14 @@ void AnimationAssetRepository::putAnimationAsset(const AnimationAssetId& id, con
     }
 }
 
+void AnimationAssetRepository::releaseAnimationAsset(const AnimationAssetId& id)
+{
+    if (!hasAnimationAsset(id)) return;
+    std::lock_guard locker{ m_animationAssetLock };
+    m_animationAssets.erase(id);
+    EventPublisher::enqueue(std::make_shared<AnimationAssetReleased>(id));
+}
+
 void AnimationAssetRepository::queryAnimationAsset(const IQueryPtr& q)
 {
     if (!q) return;
@@ -189,4 +202,12 @@ void AnimationAssetRepository::putAnimationAsset(const ICommandPtr& c)
     const auto cmd = std::dynamic_pointer_cast<PutAnimationAsset>(c);
     if (!cmd) return;
     putAnimationAsset(cmd->id(), cmd->animation());
+}
+
+void AnimationAssetRepository::releaseAnimationAsset(const ICommandPtr& c)
+{
+    if (!c) return;
+    const auto cmd = std::dynamic_pointer_cast<ReleaseAnimationAsset>(c);
+    if (!cmd) return;
+    releaseAnimationAsset(cmd->id());
 }

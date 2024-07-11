@@ -42,6 +42,7 @@ namespace Enigma::Animators
         std::shared_ptr<Animator> queryAnimator(const AnimatorId& id);
         void removeAnimator(const AnimatorId& id);
         void putAnimator(const AnimatorId& id, const std::shared_ptr<Animator>& animator);
+        void releaseAnimator(const AnimatorId& id);
 
     protected:
         void queryAnimator(const Frameworks::IQueryPtr& q);
@@ -50,6 +51,7 @@ namespace Enigma::Animators
         void requestAnimatorConstitution(const Frameworks::IQueryPtr& r);
         void putAnimator(const Frameworks::ICommandPtr& c);
         void removeAnimator(const Frameworks::ICommandPtr& c);
+        void releaseAnimator(const Frameworks::ICommandPtr& c);
 
     protected:
         std::shared_ptr<AnimatorStoreMapper> m_storeMapper;
@@ -65,6 +67,7 @@ namespace Enigma::Animators
 
         Frameworks::CommandSubscriberPtr m_putAnimator;
         Frameworks::CommandSubscriberPtr m_removeAnimator;
+        Frameworks::CommandSubscriberPtr m_releaseAnimator;
     };
 }
 

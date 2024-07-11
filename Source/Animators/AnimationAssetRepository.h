@@ -40,6 +40,7 @@ namespace Enigma::Animators
         std::shared_ptr<AnimationAsset> queryAnimationAsset(const AnimationAssetId& id);
         void removeAnimationAsset(const AnimationAssetId& id);
         void putAnimationAsset(const AnimationAssetId& id, const std::shared_ptr<AnimationAsset>& asset);
+        void releaseAnimationAsset(const AnimationAssetId& id);
 
     protected:
         void queryAnimationAsset(const Frameworks::IQueryPtr& q);
@@ -47,6 +48,7 @@ namespace Enigma::Animators
         void requestAnimationAssetConstitution(const Frameworks::IQueryPtr& r);
         void removeAnimationAsset(const Frameworks::ICommandPtr& c);
         void putAnimationAsset(const Frameworks::ICommandPtr& c);
+        void releaseAnimationAsset(const Frameworks::ICommandPtr& c);
 
     protected:
         std::shared_ptr<AnimationAssetStoreMapper> m_storeMapper;
@@ -59,6 +61,7 @@ namespace Enigma::Animators
         Frameworks::QuerySubscriberPtr m_requestAnimationAssetConstitution;
         Frameworks::CommandSubscriberPtr m_removeAnimationAsset;
         Frameworks::CommandSubscriberPtr m_putAnimationAsset;
+        Frameworks::CommandSubscriberPtr m_releaseAnimationAsset;
     };
 }
 

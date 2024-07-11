@@ -1,8 +1,6 @@
 ﻿#include "Primitive.h"
 #include "PrimitiveQueries.h"
-#include "Frameworks/QueryDispatcher.h"
-#include "Animators/AnimatorCommands.h"
-#include "Frameworks/CommandBus.h"
+#include "Animators/Animator.h"
 #include <cassert>
 
 using namespace Enigma::Primitives;
@@ -17,7 +15,7 @@ Primitive::Primitive(const PrimitiveId& id) : m_id(id), m_factoryDesc(Primitive:
 
 Primitive::~Primitive()
 {
-    Frameworks::CommandBus::enqueue(std::make_shared<Animators::RemoveAnimator>(m_animatorId));
+    Animators::Animator::releaseAnimator(m_animatorId);
 }
 
 std::shared_ptr<Primitive> Primitive::queryPrimitive(const PrimitiveId& id)

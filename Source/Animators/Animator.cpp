@@ -1,6 +1,7 @@
 ﻿#include "Animator.h"
 #include "AnimatorQueries.h"
 #include "Frameworks/QueryDispatcher.h"
+#include "AnimatorCommands.h"
 
 using namespace Enigma::Animators;
 
@@ -20,4 +21,9 @@ std::shared_ptr<Animator> Animator::queryAnimator(const AnimatorId& id)
 {
     assert(id.rtti().isDerived(Animator::TYPE_RTTI));
     return std::make_shared<QueryAnimator>(id)->dispatch();
+}
+
+void Animator::releaseAnimator(const AnimatorId& id)
+{
+    std::make_shared<ReleaseAnimator>(id)->enqueue();
 }

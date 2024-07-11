@@ -63,6 +63,7 @@ ModelPrimitiveAnimator::ModelPrimitiveAnimator(const Animators::AnimatorId& id, 
 
 ModelPrimitiveAnimator::~ModelPrimitiveAnimator()
 {
+    if (m_animationAsset) AnimationAsset::releaseAnimationAsset(m_animationAsset->id());
     m_animationAsset = nullptr;
     m_meshNodeMapping.clear();
     m_skinAnimOperators.clear();

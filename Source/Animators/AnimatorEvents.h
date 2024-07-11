@@ -61,6 +61,14 @@ namespace Enigma::Animators
         AnimatorId m_id;
         std::error_code m_error;
     };
+    class AnimatorRemoved : public Frameworks::IEvent
+    {
+    public:
+        AnimatorRemoved(const AnimatorId& id) : m_id(id) {};
+        const AnimatorId& id() { return m_id; }
+    private:
+        AnimatorId m_id;
+    };
     class RemoveAnimatorFailed : public Frameworks::IEvent
     {
     public:
@@ -72,11 +80,37 @@ namespace Enigma::Animators
         AnimatorId m_id;
         std::error_code m_error;
     };
+    class AnimatorPut : public Frameworks::IEvent
+    {
+    public:
+        AnimatorPut(const AnimatorId& id) : m_id(id) {};
+        const AnimatorId& id() { return m_id; }
+    private:
+        AnimatorId m_id;
+    };
     class PutAnimatorFailed : public Frameworks::IEvent
     {
     public:
         PutAnimatorFailed(const AnimatorId& id, std::error_code er) :
             m_id(id), m_error(er) {};
+        const AnimatorId& id() { return m_id; }
+        std::error_code error() const { return m_error; }
+    private:
+        AnimatorId m_id;
+        std::error_code m_error;
+    };
+    class AnimatorReleased : public Frameworks::IEvent
+    {
+    public:
+        AnimatorReleased(const AnimatorId& id) : m_id(id) {};
+        const AnimatorId& id() { return m_id; }
+    private:
+        AnimatorId m_id;
+    };
+    class ReleaseAnimatorFailed : public Frameworks::IEvent
+    {
+    public:
+        ReleaseAnimatorFailed(const AnimatorId& id, std::error_code er) : m_id(id), m_error(er) {};
         const AnimatorId& id() { return m_id; }
         std::error_code error() const { return m_error; }
     private:

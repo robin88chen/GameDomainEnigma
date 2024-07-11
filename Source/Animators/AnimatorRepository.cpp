@@ -28,6 +28,7 @@ AnimatorRepository::AnimatorRepository(Frameworks::ServiceManager* srv_manager, 
 
 AnimatorRepository::~AnimatorRepository()
 {
+    assert(m_animators.empty());
     SAFE_DELETE(m_factory);
     m_animators.clear();
 }
@@ -49,6 +50,8 @@ ServiceResult AnimatorRepository::onInit()
     CommandBus::subscribe(typeid(PutAnimator), m_putAnimator);
     m_removeAnimator = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { removeAnimator(c); });
     CommandBus::subscribe(typeid(RemoveAnimator), m_removeAnimator);
+    m_releaseAnimator = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { releaseAnimator(c); });
+    CommandBus::subscribe(typeid(ReleaseAnimator), m_releaseAnimator);
 
     m_storeMapper->connect();
     return ServiceResult::Complete;
@@ -73,6 +76,8 @@ ServiceResult AnimatorRepository::onTerm()
     m_putAnimator = nullptr;
     CommandBus::unsubscribe(typeid(RemoveAnimator), m_removeAnimator);
     m_removeAnimator = nullptr;
+    CommandBus::unsubscribe(typeid(ReleaseAnimator), m_releaseAnimator);
+    m_releaseAnimator = nullptr;
 
     return ServiceResult::Complete;
 }
@@ -124,6 +129,10 @@ void AnimatorRepository::removeAnimator(const AnimatorId& id)
         Platforms::Debug::ErrorPrintf("remove animator %s failed : %s\n", id.name().c_str(), er.message().c_str());
         EventPublisher::enqueue(std::make_shared<RemoveAnimatorFailed>(id, er));
     }
+    else
+    {
+        EventPublisher::enqueue(std::make_shared<AnimatorRemoved>(id));
+    }
 }
 
 void AnimatorRepository::putAnimator(const AnimatorId& id, const std::shared_ptr<Animator>& animator)
@@ -137,6 +146,18 @@ void AnimatorRepository::putAnimator(const AnimatorId& id, const std::shared_ptr
         Platforms::Debug::ErrorPrintf("put animator %s failed : %s\n", id.name().c_str(), er.message().c_str());
         EventPublisher::enqueue(std::make_shared<PutAnimatorFailed>(id, er));
     }
+    else
+    {
+        EventPublisher::enqueue(std::make_shared<AnimatorPut>(id));
+    }
+}
+
+void AnimatorRepository::releaseAnimator(const AnimatorId& id)
+{
+    if (!hasAnimator(id)) return;
+    std::lock_guard locker{ m_animatorLock };
+    m_animators.erase(id);
+    EventPublisher::enqueue(std::make_shared<AnimatorReleased>(id));
 }
 
 void AnimatorRepository::queryAnimator(const Frameworks::IQueryPtr& q)
@@ -206,4 +227,11 @@ void AnimatorRepository::removeAnimator(const Frameworks::ICommandPtr& c)
     removeAnimator(cmd->id());
 }
 
+void AnimatorRepository::releaseAnimator(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    const auto cmd = std::dynamic_pointer_cast<ReleaseAnimator, ICommand>(c);
+    if (!cmd) return;
+    releaseAnimator(cmd->id());
+}
 

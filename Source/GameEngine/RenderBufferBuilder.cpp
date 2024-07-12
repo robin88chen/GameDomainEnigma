@@ -6,34 +6,33 @@
 #include "GraphicKernel/GraphicCommands.h"
 #include "GraphicKernel/GraphicEvents.h"
 #include "Platforms/PlatformLayer.h"
-#include <cassert>
-
 #include "EngineErrors.h"
 #include "GraphicKernel/IGraphicAPI.h"
+#include <cassert>
 
 using namespace Enigma::Engine;
 
 RenderBufferBuilder::RenderBufferBuilder(RenderBufferRepository* host)
 {
     m_hostRepository = host;
-    m_onVertexBufferCreated = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnVertexBufferCreated(e); });
+    m_onVertexBufferCreated = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->onVertexBufferCreated(e); });
     Frameworks::EventPublisher::subscribe(typeid(Graphics::DeviceVertexBufferCreated), m_onVertexBufferCreated);
-    m_onVertexBufferUpdated = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnVertexBufferUpdated(e); });
+    m_onVertexBufferUpdated = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->onVertexBufferUpdated(e); });
     Frameworks::EventPublisher::subscribe(typeid(Graphics::VertexBufferResourceUpdated), m_onVertexBufferUpdated);
 
-    m_onIndexBufferCreated = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnIndexBufferCreated(e); });
+    m_onIndexBufferCreated = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->onIndexBufferCreated(e); });
     Frameworks::EventPublisher::subscribe(typeid(Graphics::DeviceIndexBufferCreated), m_onIndexBufferCreated);
-    m_onIndexBufferUpdated = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnIndexBufferUpdated(e); });
+    m_onIndexBufferUpdated = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->onIndexBufferUpdated(e); });
     Frameworks::EventPublisher::subscribe(typeid(Graphics::IndexBufferResourceUpdated), m_onIndexBufferUpdated);
 
-    m_onVertexBufferUpdateFailed = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnBufferUpdateFailed(e); });
+    m_onVertexBufferUpdateFailed = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->onBufferUpdateFailed(e); });
     Frameworks::EventPublisher::subscribe(typeid(Graphics::VertexBufferUpdateFailed), m_onVertexBufferUpdateFailed);
-    m_onIndexBufferUpdateFailed = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnBufferUpdateFailed(e); });
+    m_onIndexBufferUpdateFailed = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->onBufferUpdateFailed(e); });
     Frameworks::EventPublisher::subscribe(typeid(Graphics::IndexBufferUpdateFailed), m_onIndexBufferUpdateFailed);
 
-    m_onVertexBufferBuilt = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnBufferBuilt(e); });
+    m_onVertexBufferBuilt = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->onBufferBuilt(e); });
     Frameworks::EventPublisher::subscribe(typeid(VertexBufferBuilt), m_onVertexBufferBuilt);
-    m_onIndexBufferBuilt = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->OnBufferBuilt(e); });
+    m_onIndexBufferBuilt = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { this->onBufferBuilt(e); });
     Frameworks::EventPublisher::subscribe(typeid(IndexBufferBuilt), m_onIndexBufferBuilt);
 }
 
@@ -60,7 +59,7 @@ RenderBufferBuilder::~RenderBufferBuilder()
     m_onIndexBufferBuilt = nullptr;
 }
 
-void RenderBufferBuilder::BuildRenderBuffer(const RenderBufferPolicy& policy)
+void RenderBufferBuilder::buildRenderBuffer(const RenderBufferPolicy& policy)
 {
     assert(m_hostRepository);
 
@@ -68,10 +67,10 @@ void RenderBufferBuilder::BuildRenderBuffer(const RenderBufferPolicy& policy)
     m_indexBuffer = nullptr;
 
     m_policy = policy;
-    if (m_hostRepository->HasRenderBuffer(m_policy.m_signature))
+    if (m_hostRepository->hasRenderBuffer(m_policy.m_signature))
     {
         Frameworks::EventPublisher::enqueue(std::make_shared<RenderBufferBuilt>(m_policy.m_renderBufferName, m_policy.m_signature,
-            m_hostRepository->QueryRenderBuffer(m_policy.m_signature)));
+            m_hostRepository->queryRenderBuffer(m_policy.m_signature)));
     }
     else
     {
@@ -82,7 +81,7 @@ void RenderBufferBuilder::BuildRenderBuffer(const RenderBufferPolicy& policy)
     }
 }
 
-void RenderBufferBuilder::OnVertexBufferCreated(const Frameworks::IEventPtr& e)
+void RenderBufferBuilder::onVertexBufferCreated(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<Graphics::DeviceVertexBufferCreated, Frameworks::IEvent>(e);
@@ -107,7 +106,7 @@ void RenderBufferBuilder::OnVertexBufferCreated(const Frameworks::IEventPtr& e)
     }
 }
 
-void RenderBufferBuilder::OnVertexBufferUpdated(const Frameworks::IEventPtr& e)
+void RenderBufferBuilder::onVertexBufferUpdated(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<Graphics::VertexBufferResourceUpdated, Frameworks::IEvent>(e);
@@ -117,7 +116,7 @@ void RenderBufferBuilder::OnVertexBufferUpdated(const Frameworks::IEventPtr& e)
     Frameworks::EventPublisher::enqueue(std::make_shared<VertexBufferBuilt>(m_policy.m_vtxBufferName));
 }
 
-void RenderBufferBuilder::OnIndexBufferCreated(const Frameworks::IEventPtr& e)
+void RenderBufferBuilder::onIndexBufferCreated(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<Graphics::DeviceIndexBufferCreated, Frameworks::IEvent>(e);
@@ -142,7 +141,7 @@ void RenderBufferBuilder::OnIndexBufferCreated(const Frameworks::IEventPtr& e)
     }
 }
 
-void RenderBufferBuilder::OnIndexBufferUpdated(const Frameworks::IEventPtr& e)
+void RenderBufferBuilder::onIndexBufferUpdated(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<Graphics::IndexBufferResourceUpdated, Frameworks::IEvent>(e);
@@ -152,7 +151,7 @@ void RenderBufferBuilder::OnIndexBufferUpdated(const Frameworks::IEventPtr& e)
     Frameworks::EventPublisher::enqueue(std::make_shared<IndexBufferBuilt>(m_policy.m_idxBufferName));
 }
 
-void RenderBufferBuilder::OnBufferUpdateFailed(const Frameworks::IEventPtr& e)
+void RenderBufferBuilder::onBufferUpdateFailed(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
     auto ev_vtx_fail = std::dynamic_pointer_cast<Graphics::VertexBufferUpdateFailed, Frameworks::IEvent>(e);
@@ -171,19 +170,19 @@ void RenderBufferBuilder::OnBufferUpdateFailed(const Frameworks::IEventPtr& e)
     }
 }
 
-void RenderBufferBuilder::OnBufferBuilt(const Frameworks::IEventPtr& e)
+void RenderBufferBuilder::onBufferBuilt(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
     auto ev_vtx = std::dynamic_pointer_cast<VertexBufferBuilt, Frameworks::IEvent>(e);
     if (ev_vtx)
     {
-        if (ev_vtx->GetBufferName() != m_policy.m_vtxBufferName) return;
+        if (ev_vtx->bufferName() != m_policy.m_vtxBufferName) return;
         m_vertexBuffer = Graphics::IGraphicAPI::instance()->GetGraphicAsset<Graphics::IVertexBufferPtr>(m_policy.m_vtxBufferName);
     }
     auto ev_idx = std::dynamic_pointer_cast<IndexBufferBuilt, Frameworks::IEvent>(e);
     if (ev_idx)
     {
-        if (ev_idx->GetBufferName() != m_policy.m_idxBufferName) return;
+        if (ev_idx->bufferName() != m_policy.m_idxBufferName) return;
         m_indexBuffer = Graphics::IGraphicAPI::instance()->GetGraphicAsset<Graphics::IIndexBufferPtr>(m_policy.m_idxBufferName);
     }
     if ((m_vertexBuffer) && (m_indexBuffer))

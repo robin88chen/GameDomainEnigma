@@ -17,7 +17,7 @@ using namespace Enigma::Renderables;
 error TerrainInstallingPolicy::install(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
-    //Frameworks::CommandBus::enqueue(std::make_shared<SceneGraph::RegisterSpatialDtoFactory>(TerrainPawn::TYPE_RTTI.getName(),
+    //Frameworks::CommandBus::enqueue(std::make_shared<SceneGraph::RegisterSpatialDtoFactory>(TerrainPawn::TYPE_RTTI.name(),
       //  [](auto o) { return new TerrainPawn(o); }));
     auto geometry_repository = service_manager->getSystemServiceAs<Enigma::Geometries::GeometryRepository>();
     assert(geometry_repository);
@@ -36,7 +36,7 @@ error TerrainInstallingPolicy::install(Frameworks::ServiceManager* service_manag
 error TerrainInstallingPolicy::shutdown(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
-    //Frameworks::CommandBus::enqueue(std::make_shared<SceneGraph::UnRegisterSpatialDtoFactory>(TerrainPawn::TYPE_RTTI.getName()));
+    //Frameworks::CommandBus::enqueue(std::make_shared<SceneGraph::UnRegisterSpatialDtoFactory>(TerrainPawn::TYPE_RTTI.name()));
     Frameworks::CommandBus::enqueue(std::make_shared<Enigma::Geometries::UnRegisterGeometryFactory>(TerrainGeometry::TYPE_RTTI.getName()));
     return ErrorCode::ok;
 }

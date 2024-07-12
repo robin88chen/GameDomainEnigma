@@ -231,7 +231,7 @@ TriangleListDto TriangleListDto::fromGenericDto(const Engine::GenericDto& dto)
 GenericDto TriangleListDto::toGenericDto() const
 {
     GenericDto dto = GeometryDataDto::toGenericDto();
-    //dto.addRtti(FactoryDesc(TriangleList::TYPE_RTTI.getName()));
+    //dto.addRtti(FactoryDesc(TriangleList::TYPE_RTTI.name()));
 
     return dto;
 }

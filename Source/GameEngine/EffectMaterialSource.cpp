@@ -83,7 +83,7 @@ void EffectMaterialSource::duplicatedEffectDeleter(EffectMaterial* effect)
     if (m_duplicateCount == 0)
     {
         //! ADR : shader 比較耗時，先不做釋放, not test yet
-        Platforms::Debug::Printf("Effect Material %s has zero duplication", m_id.name().c_str());
+        Platforms::Debug::Printf("Effect Material %s has zero duplication\n", m_id.name().c_str());
         //std::make_shared<ReleaseEffectMaterial>(m_id)->enqueue();
     }
 }

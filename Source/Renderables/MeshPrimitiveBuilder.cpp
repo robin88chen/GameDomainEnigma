@@ -72,7 +72,7 @@ void MeshPrimitiveBuilder::hydrateMeshPrimitive(const std::shared_ptr<MeshPrimit
     m_builtPrimitive->lazyStatus().changeStatus(LazyStatus::Status::Loading);
     RenderBufferPolicy buffer;
     buffer.m_signature = m_builtGeometry->makeRenderBufferSignature();
-    buffer.m_renderBufferName = buffer.m_signature.getName();
+    buffer.m_renderBufferName = buffer.m_signature.name();
     buffer.m_vtxBufferName = buffer.m_renderBufferName + ".vtx";
     buffer.m_idxBufferName = buffer.m_renderBufferName + ".idx";
     buffer.m_sizeofVertex = m_builtGeometry->sizeofVertex();
@@ -95,7 +95,7 @@ void MeshPrimitiveBuilder::onRenderBufferBuilt(const Frameworks::IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<RenderBufferBuilt, IEvent>(e);
     if (!ev) return;
-    if (ev->name() != m_builtGeometry->makeRenderBufferSignature().getName()) return;
+    if (ev->name() != m_builtGeometry->makeRenderBufferSignature().name()) return;
     m_builtRenderBuffer = ev->buffer();
     std::dynamic_pointer_cast<MeshPrimitive>(m_builtPrimitive)->linkGeometryData(m_builtGeometry, m_builtRenderBuffer);
     bool all_effect_ready = true;
@@ -142,7 +142,7 @@ void MeshPrimitiveBuilder::onBuildRenderBufferFailed(const Frameworks::IEventPtr
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<BuildRenderBufferFailed, IEvent>(e);
     if (!ev) return;
-    if (ev->name() != m_builtGeometry->makeRenderBufferSignature().getName()) return;
+    if (ev->name() != m_builtGeometry->makeRenderBufferSignature().name()) return;
     failMeshHydration(ev->error());
 }
 

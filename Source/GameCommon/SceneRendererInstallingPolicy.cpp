@@ -51,8 +51,8 @@ error DeferredRendererInstallingPolicy::install(Frameworks::ServiceManager* serv
 error DeferredRendererInstallingPolicy::shutdown(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
-    //Frameworks::CommandBus::enqueue(std::make_shared<SceneGraph::UnRegisterSpatialDtoFactory>(LightVolumePawn::TYPE_RTTI.getName()));
-    //Frameworks::CommandBus::enqueue(std::make_shared<SceneGraph::UnRegisterSpatialDtoFactory>(LightQuadPawn::TYPE_RTTI.getName()));
+    //Frameworks::CommandBus::enqueue(std::make_shared<SceneGraph::UnRegisterSpatialDtoFactory>(LightVolumePawn::TYPE_RTTI.name()));
+    //Frameworks::CommandBus::enqueue(std::make_shared<SceneGraph::UnRegisterSpatialDtoFactory>(LightQuadPawn::TYPE_RTTI.name()));
     service_manager->removeHashAsService(SceneRendererService::TYPE_RTTI);
     service_manager->shutdownSystemService(DeferredRendererService::TYPE_RTTI);
     return error();

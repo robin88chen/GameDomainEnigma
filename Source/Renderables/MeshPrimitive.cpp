@@ -166,7 +166,7 @@ error MeshPrimitive::updateRenderBuffer()
 {
     assert(m_geometry);
     if (!m_renderBuffer) return ErrorCode::nullRenderBuffer;
-    const error er = m_renderBuffer->UpdateVertex(m_geometry->getVertexMemory(), m_geometry->getIndexMemory());
+    const error er = m_renderBuffer->updateVertex(m_geometry->getVertexMemory(), m_geometry->getIndexMemory());
     return er;
 }
 
@@ -177,7 +177,7 @@ error MeshPrimitive::rangedUpdateRenderBuffer(unsigned vtx_offset, unsigned vtx_
     if (!m_renderBuffer) return ErrorCode::nullRenderBuffer;
     std::optional<IIndexBuffer::ranged_buffer> idx_memory;
     if (idx_count && idx_offset) idx_memory = m_geometry->getRangedIndexMemory(idx_offset.value(), idx_count.value());
-    const error er = m_renderBuffer->RangedUpdateVertex(m_geometry->getRangedVertexMemory(vtx_offset, vtx_count), idx_memory);
+    const error er = m_renderBuffer->rangedUpdateVertex(m_geometry->getRangedVertexMemory(vtx_offset, vtx_count), idx_memory);
     return er;
 }
 

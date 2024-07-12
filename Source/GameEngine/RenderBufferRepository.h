@@ -40,20 +40,20 @@ namespace Enigma::Engine
         virtual Frameworks::ServiceResult onTick() override;
         virtual Frameworks::ServiceResult onTerm() override;
 
-        error BuildRenderBuffer(const RenderBufferPolicy& policy);
+        error buildRenderBuffer(const RenderBufferPolicy& policy);
 
-        bool HasRenderBuffer(const RenderBufferSignature& signature);
-        std::shared_ptr<RenderBuffer> QueryRenderBuffer(const RenderBufferSignature& signature);
+        bool hasRenderBuffer(const RenderBufferSignature& signature);
+        std::shared_ptr<RenderBuffer> queryRenderBuffer(const RenderBufferSignature& signature);
 
     private:
-        void OnRenderBufferBuilt(const Frameworks::IEventPtr& e);
-        void OnBuildRenderBufferFailed(const Frameworks::IEventPtr& e);
-        void DoBuildingRenderBuffer(const Frameworks::ICommandPtr& c);
+        void onRenderBufferBuilt(const Frameworks::IEventPtr& e);
+        void onBuildRenderBufferFailed(const Frameworks::IEventPtr& e);
+        void buildRenderBuffer(const Frameworks::ICommandPtr& c);
 
     private:
         Frameworks::EventSubscriberPtr m_onRenderBufferBuilt;
         Frameworks::EventSubscriberPtr m_onBuildRenderBufferFailed;
-        Frameworks::CommandSubscriberPtr m_doBuildingRenderBuffer;
+        Frameworks::CommandSubscriberPtr m_buildRenderBuffer;
 
         using RenderBufferMap = std::unordered_map<RenderBufferSignature, std::weak_ptr<RenderBuffer>, RenderBufferSignature::_signature_hasher>;
 

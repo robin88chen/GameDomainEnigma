@@ -18,6 +18,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolumeDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoxBV.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DeviceCreatingPolicy.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingQueue.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMapAssembler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialId.h" />

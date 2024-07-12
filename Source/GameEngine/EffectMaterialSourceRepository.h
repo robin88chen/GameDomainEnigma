@@ -11,6 +11,7 @@
 #include "Frameworks/SystemService.h"
 #include "Frameworks/ServiceManager.h"
 #include "Frameworks/QuerySubscriber.h"
+#include "Frameworks/CommandSubscriber.h"
 #include "EffectMaterialId.h"
 #include <unordered_map>
 #include <mutex>
@@ -43,6 +44,7 @@ namespace Enigma::Engine
 
     private:
         void queryEffectMaterial(const Frameworks::IQueryPtr& q);
+        void releaseEffectMaterial(const Frameworks::ICommandPtr& c);
 
     private:
         std::shared_ptr<EffectMaterialSourceStoreMapper> m_storeMapper;
@@ -53,6 +55,7 @@ namespace Enigma::Engine
         std::recursive_mutex m_sourceMapLock;
 
         Frameworks::QuerySubscriberPtr m_queryEffectMaterial;
+        Frameworks::CommandSubscriberPtr m_releaseEffectMaterial;
     };
 }
 

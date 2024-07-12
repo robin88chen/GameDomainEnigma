@@ -3,6 +3,8 @@
 #include "EffectEvents.h"
 #include "Frameworks/EventPublisher.h"
 #include "Platforms/MemoryMacro.h"
+#include "EffectCommands.h"
+#include "Platforms/PlatformLayerUtilities.h"
 #include <cassert>
 
 using namespace Enigma::Engine;
@@ -78,4 +80,10 @@ void EffectMaterialSource::duplicatedEffectDeleter(EffectMaterial* effect)
         m_duplicateCount--;
     }
     delete effect;
+    if (m_duplicateCount == 0)
+    {
+        //! ADR : shader 比較耗時，先不做釋放, not test yet
+        Platforms::Debug::Printf("Effect Material %s has zero duplication", m_id.name().c_str());
+        //std::make_shared<ReleaseEffectMaterial>(m_id)->enqueue();
+    }
 }

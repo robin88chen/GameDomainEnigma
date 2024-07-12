@@ -79,7 +79,7 @@ void PawnListPanel::onLoadPawn(nana::menu::item_proxy& item)
     if (m_pawnList->selected().empty()) return;
     const auto selected = m_pawnList->selected().front();
     const auto name = m_pawnList->at(selected).text(0);
-    Enigma::Frameworks::CommandBus::post(std::make_shared<LoadAnimatedPawn>(name));
+    Enigma::Frameworks::CommandBus::enqueue(std::make_shared<LoadAnimatedPawn>(name));
 }
 
 void PawnListPanel::onRemovePawn(nana::menu::item_proxy& item)
@@ -87,5 +87,5 @@ void PawnListPanel::onRemovePawn(nana::menu::item_proxy& item)
     if (m_pawnList->selected().empty()) return;
     const auto selected = m_pawnList->selected().front();
     const auto name = m_pawnList->at(selected).text(0);
-    Enigma::Frameworks::CommandBus::post(std::make_shared<RemoveAnimatedPawn>(name));
+    Enigma::Frameworks::CommandBus::enqueue(std::make_shared<RemoveAnimatedPawn>(name));
 }

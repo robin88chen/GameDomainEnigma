@@ -1,14 +1,12 @@
 ﻿#include "ViewerSceneGraphFileStoreMapper.h"
-
-#include <Renderables/ModelPrimitive.h>
-
+#include "Renderables/ModelPrimitive.h"
 #include "GameCommon/AnimatedPawn.h"
 #include "ViewerQueries.h"
 #include "Frameworks/QueryDispatcher.h"
 
 using namespace EnigmaViewer;
 
-ViewerSceneGraphFileStoreMapper::ViewerSceneGraphFileStoreMapper(const std::string& mapper_filename, const std::string& lazied_mapper_filename, const std::shared_ptr<Enigma::Gateways::IDtoGateway>& gateway) : SceneGraphFileStoreMapper(mapper_filename, lazied_mapper_filename, gateway)
+ViewerSceneGraphFileStoreMapper::ViewerSceneGraphFileStoreMapper(const std::string& mapper_filename, const std::string& lazied_mapper_filename, const std::shared_ptr<Enigma::Gateways::IDtoGateway>& gateway) : SceneGraphFileStoreMapper(mapper_filename, lazied_mapper_filename, "lazy_", gateway)
 {
 }
 

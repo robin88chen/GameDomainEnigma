@@ -45,7 +45,7 @@ void CreateNewPawnDlg::onOkButton(const nana::arg_click& arg)
 {
     if (m_nameInputBox->text().empty() || m_modelSelectBox->option() == nana::npos)
     {
-        Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Empty pawn name / model name"));
+        Enigma::Frameworks::CommandBus::enqueue(std::make_shared<OutputMessage>("Empty pawn name / model name"));
         return;
     }
     auto pawn_name = "pawns/" + m_nameInputBox->text();
@@ -53,17 +53,17 @@ void CreateNewPawnDlg::onOkButton(const nana::arg_click& arg)
     auto has_pawn = std::make_shared<HasAnimatedPawn>(pawn_name)->dispatch();
     if (has_pawn)
     {
-        Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Pawn already exists"));
+        Enigma::Frameworks::CommandBus::enqueue(std::make_shared<OutputMessage>("Pawn already exists"));
         return;
     }
     auto model_id = std::make_shared<ResolveModelId>(model_name)->dispatch();
     if (!model_id.has_value())
     {
-        Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Model not found"));
+        Enigma::Frameworks::CommandBus::enqueue(std::make_shared<OutputMessage>("Model not found"));
         return;
     }
 
-    Enigma::Frameworks::CommandBus::post(std::make_shared<CreateAnimatedPawn>(pawn_name, model_id.value()));
+    Enigma::Frameworks::CommandBus::enqueue(std::make_shared<CreateAnimatedPawn>(pawn_name, model_id.value()));
     close();
 }
 

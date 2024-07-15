@@ -39,6 +39,7 @@ Enigma::Frameworks::ServiceResult TextureRepository::onInit()
 
 Enigma::Frameworks::ServiceResult TextureRepository::onTerm()
 {
+    assert(m_textures.empty());
     assert(m_storeMapper);
     m_storeMapper->disconnect();
 
@@ -108,6 +109,10 @@ void TextureRepository::removeTexture(const TextureId& id)
         Platforms::Debug::ErrorPrintf("remove texture %s failed : %s\n", id.name().c_str(), er.message().c_str());
         Frameworks::EventPublisher::enqueue(std::make_shared<RemoveTextureFailed>(id, er));
     }
+    else
+    {
+        Frameworks::EventPublisher::enqueue(std::make_shared<TextureRemoved>(id));
+    }
 }
 
 void TextureRepository::putTexture(const TextureId& id, const std::shared_ptr<Texture>& texture)
@@ -121,6 +126,18 @@ void TextureRepository::putTexture(const TextureId& id, const std::shared_ptr<Te
         Platforms::Debug::ErrorPrintf("put primitive %s failed : %s\n", id.name().c_str(), er.message().c_str());
         Frameworks::EventPublisher::enqueue(std::make_shared<PutTextureFailed>(id, er));
     }
+    else
+    {
+        Frameworks::EventPublisher::enqueue(std::make_shared<TexturePut>(id));
+    }
+}
+
+void TextureRepository::releaseTexture(const TextureId& id)
+{
+    if (!hasTexture(id)) return;
+    std::lock_guard locker{ m_textureMapLock };
+    m_textures.erase(id);
+    Frameworks::EventPublisher::enqueue(std::make_shared<TextureReleased>(id));
 }
 
 void TextureRepository::removeTexture(const Frameworks::ICommandPtr& c)
@@ -137,6 +154,14 @@ void TextureRepository::putTexture(const Frameworks::ICommandPtr& c)
     auto cmd = std::dynamic_pointer_cast<PutTexture>(c);
     if (!cmd) return;
     putTexture(cmd->id(), cmd->texture());
+}
+
+void TextureRepository::releaseTexture(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<ReleaseTexture>(c);
+    if (!cmd) return;
+    releaseTexture(cmd->id());
 }
 
 void TextureRepository::queryTexture(const Frameworks::IQueryPtr& q)

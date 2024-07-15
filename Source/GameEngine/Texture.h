@@ -34,6 +34,7 @@ namespace Enigma::Engine
         Texture& operator=(Texture&&) = delete;
 
         static std::shared_ptr<Texture> queryTexture(const TextureId& id);
+        static void releaseTexture(const TextureId& id);
 
         const TextureId& id() const { return m_id; }
 

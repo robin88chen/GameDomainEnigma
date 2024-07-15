@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   TimerService.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   January 2023
  *********************************************************************/
@@ -29,19 +29,19 @@ namespace Enigma::Engine
         virtual Frameworks::ServiceResult onTick() override;
         virtual Frameworks::ServiceResult onTerm() override;
 
-        const std::unique_ptr<Frameworks::Timer>& GetGameTimer() { return m_gameTimer; };
-        const std::unique_ptr<Frameworks::Timer>& GetRealLifeTimer() { return m_realLifeTimer; };
+        const std::unique_ptr<Frameworks::Timer>& getGameTimer() { return m_gameTimer; };
+        const std::unique_ptr<Frameworks::Timer>& getRealLifeTimer() { return m_realLifeTimer; };
 
-        /// speed up : scale > 1.0, slow down : scale < 1.0, pause : scale = 0.0 
-        void SetGameTimerScale(float scale);
+        /// speed up : scale > 1.0, slow down : scale < 1.0, pause : scale = 0.0
+        void setGameTimerScale(float scale);
         /// time step ( in seconds ) for every frame
-        void SetGameTimerStep(bool enable, float step);
+        void setGameTimerStep(bool enable, float step);
 
-        void PauseGameTimer();
-        void ResumeGameTimer();
+        void pauseGameTimer();
+        void resumeGameTimer();
 
         /// reverse timer
-        void ReverseGameTimer();
+        void reverseGameTimer();
 
     protected:
         std::unique_ptr<Frameworks::Timer> m_gameTimer;

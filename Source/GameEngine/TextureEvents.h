@@ -129,6 +129,14 @@ namespace Enigma::Engine
         std::error_code m_error;
     };
     //---------------- Repository Events ----------------
+    class TextureRemoved : public Frameworks::IEvent
+    {
+    public:
+        TextureRemoved(const TextureId& id) : m_id(id) {};
+        const TextureId& id() { return m_id; }
+    private:
+        TextureId m_id;
+    };
     class RemoveTextureFailed : public Frameworks::IEvent
     {
     public:
@@ -140,10 +148,37 @@ namespace Enigma::Engine
         TextureId m_id;
         std::error_code m_error;
     };
+    class TexturePut : public Frameworks::IEvent
+    {
+    public:
+        TexturePut(const TextureId& id) : m_id(id) {}
+        const TextureId& id() { return m_id; }
+    private:
+        TextureId m_id;
+    };
     class PutTextureFailed : public Frameworks::IEvent
     {
     public:
         PutTextureFailed(const TextureId& id, std::error_code er) :
+            m_id(id), m_error(er) {};
+        const TextureId& id() { return m_id; }
+        std::error_code error() const { return m_error; }
+    private:
+        TextureId m_id;
+        std::error_code m_error;
+    };
+    class TextureReleased : public Frameworks::IEvent
+    {
+    public:
+        TextureReleased(const TextureId& id) : m_id(id) {}
+        const TextureId& id() { return m_id; }
+    private:
+        TextureId m_id;
+    };
+    class ReleaseTextureFailed : public Frameworks::IEvent
+    {
+    public:
+        ReleaseTextureFailed(const TextureId& id, std::error_code er) :
             m_id(id), m_error(er) {};
         const TextureId& id() { return m_id; }
         std::error_code error() const { return m_error; }

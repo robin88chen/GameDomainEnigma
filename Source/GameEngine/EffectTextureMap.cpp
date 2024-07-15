@@ -38,6 +38,13 @@ EffectTextureMap::EffectTextureMap(const SegmentEffectTextures& textures)
 
 EffectTextureMap::~EffectTextureMap()
 {
+    for (auto& eft : m_effectTextures)
+    {
+        if (auto& t = std::get<std::shared_ptr<Texture>>(eft); t)
+        {
+            Texture::releaseTexture(t->id());
+        }
+    }
     m_effectTextures.clear();
 }
 

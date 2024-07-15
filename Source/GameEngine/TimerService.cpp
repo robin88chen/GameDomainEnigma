@@ -43,27 +43,27 @@ ServiceResult TimerService::onTerm()
     return ServiceResult::Complete;
 }
 
-void TimerService::SetGameTimerScale(float scale)
+void TimerService::setGameTimerScale(float scale)
 {
     if (m_gameTimer) m_gameTimer->setScale(scale);
 }
 
-void TimerService::PauseGameTimer()
+void TimerService::pauseGameTimer()
 {
     if (m_gameTimer) m_gameTimer->pause();
 }
 
-void TimerService::ResumeGameTimer()
+void TimerService::resumeGameTimer()
 {
     if (m_gameTimer) m_gameTimer->resume();
 }
 
-void TimerService::ReverseGameTimer()
+void TimerService::reverseGameTimer()
 {
     if (m_gameTimer) m_gameTimer->setScale(-m_gameTimer->getScale());
 }
 
-void TimerService::SetGameTimerStep(bool enable, float step)
+void TimerService::setGameTimerStep(bool enable, float step)
 {
     if (m_gameTimer) m_gameTimer->setFrameStep(enable, step);
 }

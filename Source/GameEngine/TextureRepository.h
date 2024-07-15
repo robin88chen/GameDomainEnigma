@@ -43,6 +43,7 @@ namespace Enigma::Engine
         std::shared_ptr<Texture> queryTexture(const TextureId& id);
         void removeTexture(const TextureId& id);
         void putTexture(const TextureId& id, const std::shared_ptr<Texture>& texture);
+        void releaseTexture(const TextureId& id);
 
     private:
         void registerHandlers();
@@ -50,6 +51,7 @@ namespace Enigma::Engine
 
         void removeTexture(const Frameworks::ICommandPtr& c);
         void putTexture(const Frameworks::ICommandPtr& c);
+        void releaseTexture(const Frameworks::ICommandPtr& c);
         void queryTexture(const Frameworks::IQueryPtr& q);
         void requestTextureConstitution(const Frameworks::IQueryPtr& q);
 
@@ -59,6 +61,7 @@ namespace Enigma::Engine
 
         Frameworks::CommandSubscriberPtr m_removeTexture;
         Frameworks::CommandSubscriberPtr m_putTexture;
+        Frameworks::CommandSubscriberPtr m_releaseTexture;
 
         Frameworks::QuerySubscriberPtr m_queryTexture;
         Frameworks::QuerySubscriberPtr m_requestTextureConstitution;

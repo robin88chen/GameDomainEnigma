@@ -35,6 +35,15 @@ namespace Enigma::Engine
     private:
         TextureId m_id;
     };
+    class ReleaseTexture : public Frameworks::ICommand
+    {
+    public:
+        ReleaseTexture(const TextureId& id) : m_id(id) {}
+        const TextureId& id() { return m_id; }
+
+    private:
+        TextureId m_id;
+    };
     class EnqueueSavingTexture : public Frameworks::ICommand
     {
     public:

@@ -122,14 +122,14 @@ void LazyNodeHydrationService::onVisibilityChanged(const Frameworks::IEventPtr& 
     if (ev->id().empty()) return;
     if (ev->isVisible())
     {
-        m_visibilityTimers.insert_or_assign(ev->id(), m_timer.lock()->GetGameTimer()->getTotalTime());
+        m_visibilityTimers.insert_or_assign(ev->id(), m_timer.lock()->getGameTimer()->getTotalTime());
     }
     else
     {
         auto it_vis = m_visibilityTimers.find(ev->id());
         if (it_vis != m_visibilityTimers.end())
         {
-            auto time = m_timer.lock()->GetGameTimer()->getTotalTime() - it_vis->second;
+            auto time = m_timer.lock()->getGameTimer()->getTotalTime() - it_vis->second;
             if ((time > MIN_KEEP_TIME) && (m_hydratingId != ev->id()))
             {
                 std::lock_guard locker{ m_waitingNodesLock };

@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   ShaderRepository.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   August 2022
  *********************************************************************/
@@ -33,6 +33,7 @@ namespace Enigma::Engine
 
     class ShaderBuilder;
 
+    //! ADR : 沒有StoreMapper, 只是可以重複使用 shader 資源
     class ShaderRepository : public Frameworks::ISystemService
     {
         DECLARE_EN_RTTI;
@@ -51,19 +52,19 @@ namespace Enigma::Engine
         /// On Term
         virtual Frameworks::ServiceResult onTerm() override;
 
-        error BuildShaderProgram(const ShaderProgramPolicy& policy);
+        error buildShaderProgram(const ShaderProgramPolicy& policy);
 
-        bool HasVertexShader(const std::string& name);
-        std::shared_ptr<Graphics::IVertexShader> QueryVertexShader(const std::string& name);
+        bool hasVertexShader(const std::string& name);
+        std::shared_ptr<Graphics::IVertexShader> queryVertexShader(const std::string& name);
 
-        bool HasVertexLayout(const std::string& name);
-        std::shared_ptr<Graphics::IVertexDeclaration> QueryVertexLayout(const std::string& name);
+        bool hasVertexLayout(const std::string& name);
+        std::shared_ptr<Graphics::IVertexDeclaration> queryVertexLayout(const std::string& name);
 
-        bool HasPixelShader(const std::string& name);
-        std::shared_ptr<Graphics::IPixelShader> QueryPixelShader(const std::string& name);
+        bool hasPixelShader(const std::string& name);
+        std::shared_ptr<Graphics::IPixelShader> queryPixelShader(const std::string& name);
 
-        bool HasShaderProgram(const std::string& name);
-        std::shared_ptr<Graphics::IShaderProgram> QueryShaderProgram(const std::string& name);
+        bool hasShaderProgram(const std::string& name);
+        std::shared_ptr<Graphics::IShaderProgram> queryShaderProgram(const std::string& name);
 
         using VertexShaderTable = std::unordered_map<std::string, std::weak_ptr<Graphics::IVertexShader>>;
         using VertexLayoutTable = std::unordered_map<std::string, std::weak_ptr<Graphics::IVertexDeclaration>>;
@@ -71,17 +72,17 @@ namespace Enigma::Engine
         using ShaderProgramTable = std::unordered_map<std::string, std::weak_ptr<Graphics::IShaderProgram>>;
 
         /** shader code file path ID */
-        static const std::string& GetShaderCodePathID();
+        static const std::string& getShaderCodePathID();
 
     protected:
-        void OnBuilderShaderProgramBuilt(const Frameworks::IEventPtr& e);
-        void OnBuildShaderProgramFailed(const Frameworks::IEventPtr& e);
-        void DoBuildingShaderProgram(const Frameworks::ICommandPtr& c);
+        void onBuilderShaderProgramBuilt(const Frameworks::IEventPtr& e);
+        void onBuildShaderProgramFailed(const Frameworks::IEventPtr& e);
+        void buildShaderProgram(const Frameworks::ICommandPtr& c);
 
     protected:
         Frameworks::EventSubscriberPtr m_onBuilderShaderProgramBuilt;
         Frameworks::EventSubscriberPtr m_onBuildShaderProgramFailed;
-        Frameworks::CommandSubscriberPtr m_doBuildingShaderProgram;
+        Frameworks::CommandSubscriberPtr m_buildShaderProgram;
 
         ShaderBuilder* m_builder;
         std::queue<ShaderProgramPolicy> m_policies;

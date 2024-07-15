@@ -25,12 +25,12 @@ namespace Enigma::Engine
         RenderLightingState& operator=(const RenderLightingState&) = default;
         RenderLightingState& operator=(RenderLightingState&&) = default;
 
-        void SetAmbientLightColor(const MathLib::ColorRGBA& color);
-        void SetSunLight(const MathLib::Vector3& dir, const MathLib::ColorRGBA& color);
-        void SetPointLightArray(const std::vector<MathLib::Vector4>& positions,
+        void setAmbientLightColor(const MathLib::ColorRGBA& color);
+        void setSunLight(const MathLib::Vector3& dir, const MathLib::ColorRGBA& color);
+        void setPointLightArray(const std::vector<MathLib::Vector4>& positions,
             const std::vector<MathLib::ColorRGBA>& colors, const std::vector<MathLib::Vector4>& attenuations);
 
-        void CommitState() const;
+        void commitState() const;
     protected:
         MathLib::ColorRGBA m_colorAmbient;
         MathLib::ColorRGBA m_colorSun;

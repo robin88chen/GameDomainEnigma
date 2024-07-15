@@ -62,11 +62,11 @@ SpatialRenderState LightInfoTraversal::queryLightingStateAt(const MathLib::Vecto
         switch ((*iter).m_lightInfo.lightType())
         {
         case LightInfo::LightType::Ambient:
-            lighting_state.SetAmbientLightColor((*iter).m_lightInfo.getLightColor());
+            lighting_state.setAmbientLightColor((*iter).m_lightInfo.getLightColor());
             break;
         case LightInfo::LightType::SunLight:
         case LightInfo::LightType::Directional:  //todo : if we want directional light, separate it from sun light
-            lighting_state.SetSunLight((*iter).m_lightInfo.getLightDirection(), (*iter).m_lightInfo.getLightColor());
+            lighting_state.setSunLight((*iter).m_lightInfo.getLightDirection(), (*iter).m_lightInfo.getLightColor());
             break;
         case LightInfo::LightType::Point:
         {

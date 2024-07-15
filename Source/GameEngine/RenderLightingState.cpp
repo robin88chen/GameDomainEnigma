@@ -15,18 +15,18 @@ RenderLightingState::~RenderLightingState()
 {
 }
 
-void RenderLightingState::SetAmbientLightColor(const MathLib::ColorRGBA& color)
+void RenderLightingState::setAmbientLightColor(const MathLib::ColorRGBA& color)
 {
     m_colorAmbient = color;
 }
 
-void RenderLightingState::SetSunLight(const MathLib::Vector3& dir, const MathLib::ColorRGBA& color)
+void RenderLightingState::setSunLight(const MathLib::Vector3& dir, const MathLib::ColorRGBA& color)
 {
     m_vecSunDir = dir;
     m_colorSun = color;
 }
 
-void RenderLightingState::SetPointLightArray(const std::vector<MathLib::Vector4>& positions,
+void RenderLightingState::setPointLightArray(const std::vector<MathLib::Vector4>& positions,
     const std::vector<MathLib::ColorRGBA>& colors, const std::vector<MathLib::Vector4>& attenuations)
 {
     m_lightPositions = positions;
@@ -34,7 +34,7 @@ void RenderLightingState::SetPointLightArray(const std::vector<MathLib::Vector4>
     m_lightAttenuations = attenuations;
 }
 
-void RenderLightingState::CommitState() const
+void RenderLightingState::commitState() const
 {
     MaterialVariableMap::useAmbientLightColor(m_colorAmbient);
     MaterialVariableMap::useSunLight(m_colorSun, m_vecSunDir);

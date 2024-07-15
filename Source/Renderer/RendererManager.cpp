@@ -110,9 +110,9 @@ error RendererManager::createRenderer(const std::string& name)
         stamp = stamp << 1;
     }
     m_accumulateRendererStamp |= stamp;
-    render->SetStampBitMask(stamp);
+    render->stampBitMask(stamp);
 
-    Frameworks::EventPublisher::enqueue(std::make_shared<RendererCreated>(render->getName(), render));
+    Frameworks::EventPublisher::enqueue(std::make_shared<RendererCreated>(render->name(), render));
 
     return ErrorCode::ok;
 }
@@ -138,9 +138,9 @@ error RendererManager::createCustomRenderer(const std::string& type_name, const 
         stamp = stamp << 1;
     }
     m_accumulateRendererStamp |= stamp;
-    render->SetStampBitMask(stamp);
+    render->stampBitMask(stamp);
 
-    Frameworks::EventPublisher::enqueue(std::make_shared<RendererCreated>(render->getName(), render));
+    Frameworks::EventPublisher::enqueue(std::make_shared<RendererCreated>(render->name(), render));
 
     return ErrorCode::ok;
 }
@@ -161,8 +161,8 @@ error RendererManager::insertRenderer(const std::string& name, const IRendererPt
         stamp = stamp << 1;
     }
     m_accumulateRendererStamp |= stamp;
-    renderer->SetStampBitMask(stamp);
-    Frameworks::EventPublisher::enqueue(std::make_shared<RendererCreated>(renderer->getName(), renderer));
+    renderer->stampBitMask(stamp);
+    Frameworks::EventPublisher::enqueue(std::make_shared<RendererCreated>(renderer->name(), renderer));
     return ErrorCode::ok;
 }
 
@@ -171,7 +171,7 @@ error RendererManager::destroyRenderer(const std::string& name)
     const IRendererPtr render = getRenderer(name);
     if (!render) return ErrorCode::rendererNotExist;
 
-    const unsigned int stamp = render->GetStampBitMask();
+    const unsigned int stamp = render->stampBitMask();
     m_accumulateRendererStamp &= (~stamp);
     m_renderers.erase(name);
 

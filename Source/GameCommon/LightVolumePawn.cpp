@@ -83,7 +83,7 @@ error LightVolumePawn::_updateSpatialRenderState()
     ColorRGBA colorLight(m_hostLight.lock()->info().getLightColor());
     Vector4 vecLightAtten(m_hostLight.lock()->info().getLightAttenuation(), 1.0f);
     RenderLightingState lighting_state;
-    lighting_state.SetPointLightArray({ vecLightPosRange }, { colorLight }, { vecLightAtten });
+    lighting_state.setPointLightArray({ vecLightPosRange }, { colorLight }, { vecLightAtten });
     m_spatialRenderState = SpatialRenderState(lighting_state);
 
     return ErrorCode::ok;

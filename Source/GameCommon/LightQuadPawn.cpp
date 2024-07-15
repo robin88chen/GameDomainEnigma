@@ -62,12 +62,12 @@ error LightQuadPawn::_updateSpatialRenderState()
     RenderLightingState lighting_state;
     if (m_hostLight.lock()->info().lightType() == LightInfo::LightType::Ambient)
     {
-        lighting_state.SetAmbientLightColor(colorLight);
+        lighting_state.setAmbientLightColor(colorLight);
     }
     else if (m_hostLight.lock()->info().lightType() == LightInfo::LightType::SunLight)
     {
         Vector3 lightDir = m_hostLight.lock()->info().getLightDirection();
-        lighting_state.SetSunLight(lightDir, colorLight);
+        lighting_state.setSunLight(lightDir, colorLight);
     }
     m_spatialRenderState = SpatialRenderState(lighting_state);
 

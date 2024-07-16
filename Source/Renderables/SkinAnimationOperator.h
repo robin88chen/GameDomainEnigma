@@ -35,6 +35,7 @@ namespace Enigma::Renderables
         void updateSkinMeshBoneMatrix(const Renderables::MeshNodeTree& mesh_node_tree);
 
         void onAttachingMeshNodeTree(const MeshNodeTree& mesh_node_tree);
+        void onDetachingMeshNodeTree();
 
     protected:
         std::shared_ptr<Renderables::SkinMeshPrimitive> cacheSkinMesh();

@@ -40,6 +40,11 @@ ModelPrimitive::ModelPrimitive(const PrimitiveId& id, const GenericDto& dto) : P
 
 ModelPrimitive::~ModelPrimitive()
 {
+    if (m_modelPrimitiveAnimator)
+    {
+        m_modelPrimitiveAnimator->onDetachingMeshNodeTree();
+        m_modelPrimitiveAnimator = nullptr;
+    }
     unregisterHandlers();
     m_meshPrimitiveIndexCache.clear();
 }
@@ -109,6 +114,11 @@ void ModelPrimitive::onMeshHydrated(const Frameworks::IEventPtr& e)
     {
         Frameworks::EventPublisher::enqueue(std::make_shared<RenderablePrimitiveHydrated>(m_id));
     }
+}
+
+std::shared_ptr<Animator> ModelPrimitive::getAnimator()
+{
+    return m_modelPrimitiveAnimator;
 }
 
 std::shared_ptr<MeshPrimitive> ModelPrimitive::getMeshPrimitive(unsigned cached_index)
@@ -277,10 +287,15 @@ void ModelPrimitive::selectVisualTechnique(const std::string& techniqueName)
 void ModelPrimitive::animatorId(const Animators::AnimatorId& animator_id)
 {
     if (m_animatorId == animator_id) return;
-    m_animatorId = animator_id == animator_id.origin() ? animator_id.next() : animator_id;
-    if (const auto animator = std::dynamic_pointer_cast<ModelPrimitiveAnimator>(Animators::Animator::queryAnimator(m_animatorId)))
+    if (m_modelPrimitiveAnimator)
     {
-        animator->onAttachingMeshNodeTree(m_id, m_nodeTree);
+        m_modelPrimitiveAnimator->onDetachingMeshNodeTree();
+        m_modelPrimitiveAnimator = nullptr;
+    }
+    m_animatorId = animator_id == animator_id.origin() ? animator_id.next() : animator_id;
+    if (m_modelPrimitiveAnimator = std::dynamic_pointer_cast<ModelPrimitiveAnimator>(Animators::Animator::queryAnimator(m_animatorId)); m_modelPrimitiveAnimator)
+    {
+        m_modelPrimitiveAnimator->onAttachingMeshNodeTree(m_id, m_nodeTree);
     }
 }
 

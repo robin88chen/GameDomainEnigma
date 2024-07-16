@@ -72,6 +72,12 @@ void SkinMeshPrimitive::updateBoneEffectMatrix(unsigned idx, const MathLib::Matr
     m_boneEffectMatrix[idx] = ref_mx;
 }
 
+void SkinMeshPrimitive::clearBoneMatrixArray()
+{
+    loosePrimitiveBoneMatrix();
+    m_boneEffectMatrix.clear();
+}
+
 void SkinMeshPrimitive::bindPrimitiveBoneMatrix()
 {
     if (m_effects.empty()) return;

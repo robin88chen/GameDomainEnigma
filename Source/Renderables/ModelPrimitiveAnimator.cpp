@@ -132,6 +132,17 @@ void ModelPrimitiveAnimator::onAttachingMeshNodeTree(const Primitives::Primitive
     }
 }
 
+void ModelPrimitiveAnimator::onDetachingMeshNodeTree()
+{
+    m_controlledPrimitiveId.reset();
+    m_meshNodeMapping.clear();
+    for (auto& op : m_skinAnimOperators)
+    {
+        op.onDetachingMeshNodeTree();
+    }
+    m_skinAnimOperators.clear();
+}
+
 void ModelPrimitiveAnimator::calculateMeshNodeMapping(const MeshNodeTree& mesh_node_tree)
 {
     const unsigned mesh_count = mesh_node_tree.getMeshNodeCount();

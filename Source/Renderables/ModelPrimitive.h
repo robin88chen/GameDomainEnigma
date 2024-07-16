@@ -24,6 +24,7 @@ namespace Enigma::Renderables
 {
     using error = std::error_code;
     class MeshPrimitive;
+    class ModelPrimitiveAnimator;
     class ModelPrimitive : public Primitives::Primitive
     {
         DECLARE_EN_RTTI;
@@ -84,10 +85,15 @@ namespace Enigma::Renderables
         void cacheMeshPrimitive();
 
         void onMeshHydrated(const Frameworks::IEventPtr& e);
+
+        virtual std::shared_ptr<Animators::Animator> getAnimator() override;
+
     protected:
         std::string m_name;
         MeshNodeTree m_nodeTree;
         std::vector<unsigned int> m_meshPrimitiveIndexCache;  ///< 記錄哪個index的mesh node擁有mesh primitive
+
+        std::shared_ptr<ModelPrimitiveAnimator> m_modelPrimitiveAnimator;
 
         Frameworks::EventSubscriberPtr m_onMeshHydrated;
     };

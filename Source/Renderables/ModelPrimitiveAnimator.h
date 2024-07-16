@@ -42,6 +42,7 @@ namespace Enigma::Renderables
         virtual void reset() override;
 
         void onAttachingMeshNodeTree(const Primitives::PrimitiveId& model_id, const MeshNodeTree& mesh_node_tree);
+        void onDetachingMeshNodeTree();
 
         /** get skin mesh animation operator,
                 model 中有多個 skin mesh, 每個 skin mesh 有一個 operator*/

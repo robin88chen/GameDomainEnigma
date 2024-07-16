@@ -36,7 +36,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryFactoryDelegate.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryId.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryInstallingPolicy.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryPersistenceLevel.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryRepository.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometrySegment.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrGeometryCache.h" />

@@ -3,7 +3,6 @@
 #include "EffectEvents.h"
 #include "Frameworks/EventPublisher.h"
 #include "Platforms/MemoryMacro.h"
-#include "EffectCommands.h"
 #include "Platforms/PlatformLayerUtilities.h"
 #include <cassert>
 

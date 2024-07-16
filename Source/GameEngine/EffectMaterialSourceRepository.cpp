@@ -5,7 +5,6 @@
 #include "EffectQueries.h"
 #include "Frameworks/QueryDispatcher.h"
 #include "Platforms/MemoryMacro.h"
-#include "EffectCommands.h"
 #include "Frameworks/CommandBus.h"
 #include <system_error>
 #include <cassert>
@@ -35,9 +34,6 @@ ServiceResult EffectMaterialSourceRepository::onInit()
     m_queryEffectMaterial = std::make_shared<QuerySubscriber>([=](const Frameworks::IQueryPtr& q) { queryEffectMaterial(q); });
     QueryDispatcher::subscribe(typeid(QueryEffectMaterial), m_queryEffectMaterial);
 
-    m_releaseEffectMaterial = std::make_shared<CommandSubscriber>([=](const Frameworks::ICommandPtr& c) { releaseEffectMaterial(c); });
-    CommandBus::subscribe(typeid(ReleaseEffectMaterial), m_releaseEffectMaterial);
-
     return ServiceResult::Complete;
 }
 
@@ -54,9 +50,6 @@ ServiceResult EffectMaterialSourceRepository::onTerm()
 
     QueryDispatcher::unsubscribe(typeid(QueryEffectMaterial), m_queryEffectMaterial);
     m_queryEffectMaterial = nullptr;
-
-    CommandBus::unsubscribe(typeid(ReleaseEffectMaterial), m_releaseEffectMaterial);
-    m_releaseEffectMaterial = nullptr;
 
     return ServiceResult::Complete;
 }
@@ -100,17 +93,3 @@ void EffectMaterialSourceRepository::queryEffectMaterial(const Frameworks::IQuer
     query->setResult(queryEffectMaterial(query->id()));
 }
 
-void EffectMaterialSourceRepository::releaseEffectMaterial(const Frameworks::ICommandPtr& c)
-{
-    assert(m_storeMapper);
-    auto cmd = std::dynamic_pointer_cast<ReleaseEffectMaterial, ICommand>(c);
-    assert(cmd);
-    releaseEffectMaterial(cmd->id());
-}
-
-void EffectMaterialSourceRepository::releaseEffectMaterial(const EffectMaterialId& id)
-{
-    assert(id.isSource());
-    std::lock_guard locker{ m_sourceMapLock };
-    m_sourceMaterials.erase(id);
-}

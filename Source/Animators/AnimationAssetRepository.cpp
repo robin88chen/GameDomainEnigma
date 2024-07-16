@@ -27,7 +27,7 @@ AnimationAssetRepository::AnimationAssetRepository(ServiceManager* srv_manager, 
 
 AnimationAssetRepository::~AnimationAssetRepository()
 {
-    assert(m_animationAssets.empty());
+    dumpRetainedAnimation();
     SAFE_DELETE(m_factory);
     m_animationAssets.clear();
 }
@@ -46,8 +46,6 @@ ServiceResult AnimationAssetRepository::onInit()
     CommandBus::subscribe(typeid(RemoveAnimationAsset), m_removeAnimationAsset);
     m_putAnimationAsset = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { putAnimationAsset(c); });
     CommandBus::subscribe(typeid(PutAnimationAsset), m_putAnimationAsset);
-    m_releaseAnimationAsset = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { releaseAnimationAsset(c); });
-    CommandBus::subscribe(typeid(ReleaseAnimationAsset), m_releaseAnimationAsset);
 
     m_storeMapper->connect();
     return ServiceResult::Complete;
@@ -66,8 +64,6 @@ ServiceResult AnimationAssetRepository::onTerm()
     m_removeAnimationAsset = nullptr;
     CommandBus::unsubscribe(typeid(PutAnimationAsset), m_putAnimationAsset);
     m_putAnimationAsset = nullptr;
-    CommandBus::unsubscribe(typeid(ReleaseAnimationAsset), m_releaseAnimationAsset);
-    m_releaseAnimationAsset = nullptr;
 
     m_storeMapper->disconnect();
     return ServiceResult::Complete;
@@ -84,7 +80,7 @@ bool AnimationAssetRepository::hasAnimationAsset(const AnimationAssetId& id)
     assert(m_storeMapper);
     std::lock_guard lock(m_animationAssetLock);
     const auto& it = m_animationAssets.find(id);
-    if (it != m_animationAssets.end()) return true;
+    if ((it != m_animationAssets.end()) && (!it->second.expired())) return true;
     return m_storeMapper->hasAnimationAsset(id);
 }
 
@@ -93,7 +89,7 @@ std::shared_ptr<AnimationAsset> AnimationAssetRepository::queryAnimationAsset(co
     if (!hasAnimationAsset(id)) return nullptr;
     std::lock_guard lock(m_animationAssetLock);
     const auto& it = m_animationAssets.find(id);
-    if (it != m_animationAssets.end()) return it->second;
+    if ((it != m_animationAssets.end()) && (!it->second.expired())) return it->second.lock();
     assert(m_factory);
     const auto dto = m_storeMapper->queryAnimationAsset(id);
     assert(dto.has_value());
@@ -135,14 +131,6 @@ void AnimationAssetRepository::putAnimationAsset(const AnimationAssetId& id, con
     {
         EventPublisher::enqueue(std::make_shared<AnimationAssetPut>(id));
     }
-}
-
-void AnimationAssetRepository::releaseAnimationAsset(const AnimationAssetId& id)
-{
-    if (!hasAnimationAsset(id)) return;
-    std::lock_guard locker{ m_animationAssetLock };
-    m_animationAssets.erase(id);
-    EventPublisher::enqueue(std::make_shared<AnimationAssetReleased>(id));
 }
 
 void AnimationAssetRepository::queryAnimationAsset(const IQueryPtr& q)
@@ -204,10 +192,14 @@ void AnimationAssetRepository::putAnimationAsset(const ICommandPtr& c)
     putAnimationAsset(cmd->id(), cmd->animation());
 }
 
-void AnimationAssetRepository::releaseAnimationAsset(const ICommandPtr& c)
+void AnimationAssetRepository::dumpRetainedAnimation()
 {
-    if (!c) return;
-    const auto cmd = std::dynamic_pointer_cast<ReleaseAnimationAsset>(c);
-    if (!cmd) return;
-    releaseAnimationAsset(cmd->id());
+    std::lock_guard lock(m_animationAssetLock);
+    for (const auto& [id, asset] : m_animationAssets)
+    {
+        if (auto ptr = asset.lock())
+        {
+            Platforms::Debug::Printf("retained animation asset %s\n", id.name().c_str());
+        }
+    }
 }

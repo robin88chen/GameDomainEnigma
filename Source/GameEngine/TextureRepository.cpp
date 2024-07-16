@@ -39,8 +39,8 @@ Enigma::Frameworks::ServiceResult TextureRepository::onInit()
 
 Enigma::Frameworks::ServiceResult TextureRepository::onTerm()
 {
-    assert(m_textures.empty());
     assert(m_storeMapper);
+    dumpRetainedTexture();
     m_storeMapper->disconnect();
 
     m_textures.clear();
@@ -54,8 +54,6 @@ void TextureRepository::registerHandlers()
     Frameworks::CommandBus::subscribe(typeid(RemoveTexture), m_removeTexture);
     m_putTexture = std::make_shared<Frameworks::CommandSubscriber>([=](const Frameworks::ICommandPtr& c) { putTexture(c); });
     Frameworks::CommandBus::subscribe(typeid(PutTexture), m_putTexture);
-    m_releaseTexture = std::make_shared<Frameworks::CommandSubscriber>([=](const Frameworks::ICommandPtr& c) { releaseTexture(c); });
-    Frameworks::CommandBus::subscribe(typeid(ReleaseTexture), m_releaseTexture);
 
     m_queryTexture = std::make_shared<Frameworks::QuerySubscriber>([=](const Frameworks::IQueryPtr& q) { queryTexture(q); });
     Frameworks::QueryDispatcher::subscribe(typeid(QueryTexture), m_queryTexture);
@@ -69,8 +67,6 @@ void TextureRepository::unregisterHandlers()
     m_removeTexture = nullptr;
     Frameworks::CommandBus::unsubscribe(typeid(PutTexture), m_putTexture);
     m_putTexture = nullptr;
-    Frameworks::CommandBus::unsubscribe(typeid(ReleaseTexture), m_releaseTexture);
-    m_releaseTexture = nullptr;
 
     Frameworks::QueryDispatcher::unsubscribe(typeid(QueryTexture), m_queryTexture);
     m_queryTexture = nullptr;
@@ -83,7 +79,7 @@ bool TextureRepository::hasTexture(const TextureId& id)
     assert(m_storeMapper);
     std::lock_guard locker{ m_textureMapLock };
     const auto it = m_textures.find(id);
-    if (it != m_textures.end()) return true;
+    if ((it != m_textures.end()) && (!it->second.expired())) return true;
     return m_storeMapper->hasTexture(id);
 }
 
@@ -92,7 +88,7 @@ std::shared_ptr<Texture> TextureRepository::queryTexture(const TextureId& id)
     if (!hasTexture(id)) return nullptr;
     std::lock_guard locker{ m_textureMapLock };
     auto it = m_textures.find(id);
-    if (it != m_textures.end()) return it->second;
+    if ((it != m_textures.end()) && (!it->second.expired())) return it->second.lock();
     assert(m_factory);
     const auto dto = m_storeMapper->queryTexture(id);
     assert(dto.has_value());
@@ -136,14 +132,6 @@ void TextureRepository::putTexture(const TextureId& id, const std::shared_ptr<Te
     }
 }
 
-void TextureRepository::releaseTexture(const TextureId& id)
-{
-    if (!hasTexture(id)) return;
-    std::lock_guard locker{ m_textureMapLock };
-    m_textures.erase(id);
-    Frameworks::EventPublisher::enqueue(std::make_shared<TextureReleased>(id));
-}
-
 void TextureRepository::removeTexture(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
@@ -158,14 +146,6 @@ void TextureRepository::putTexture(const Frameworks::ICommandPtr& c)
     auto cmd = std::dynamic_pointer_cast<PutTexture>(c);
     if (!cmd) return;
     putTexture(cmd->id(), cmd->texture());
-}
-
-void TextureRepository::releaseTexture(const Frameworks::ICommandPtr& c)
-{
-    if (!c) return;
-    auto cmd = std::dynamic_pointer_cast<ReleaseTexture>(c);
-    if (!cmd) return;
-    releaseTexture(cmd->id());
 }
 
 void TextureRepository::queryTexture(const Frameworks::IQueryPtr& q)
@@ -190,4 +170,16 @@ void TextureRepository::requestTextureConstitution(const Frameworks::IQueryPtr& 
     auto tex = m_factory->constitute(request->id(), request->dto(), false);
     request->setResult(tex);
     m_textures.insert_or_assign(request->id(), tex);
+}
+
+void TextureRepository::dumpRetainedTexture()
+{
+    std::lock_guard locker{ m_textureMapLock };
+    for (const auto& [id, tex] : m_textures)
+    {
+        if (auto ptr = tex.lock(); ptr)
+        {
+            Platforms::Debug::Printf("retained texture %s\n", id.name().c_str());
+        }
+    }
 }

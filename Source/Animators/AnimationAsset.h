@@ -32,7 +32,6 @@ namespace Enigma::Animators
         virtual Engine::GenericDto serializeDto() = 0;
 
         static std::shared_ptr<AnimationAsset> queryAnimationAsset(const AnimationAssetId& id);
-        static void releaseAnimationAsset(const AnimationAssetId& id);
 
         const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }

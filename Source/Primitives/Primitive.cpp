@@ -15,7 +15,6 @@ Primitive::Primitive(const PrimitiveId& id) : m_id(id), m_factoryDesc(Primitive:
 
 Primitive::~Primitive()
 {
-    Animators::Animator::releaseAnimator(m_animatorId);
 }
 
 std::shared_ptr<Primitive> Primitive::queryPrimitive(const PrimitiveId& id)

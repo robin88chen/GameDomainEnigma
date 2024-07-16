@@ -42,7 +42,6 @@ namespace Enigma::Animators
         std::shared_ptr<Animator> queryAnimator(const AnimatorId& id);
         void removeAnimator(const AnimatorId& id);
         void putAnimator(const AnimatorId& id, const std::shared_ptr<Animator>& animator);
-        void releaseAnimator(const AnimatorId& id);
 
     protected:
         void queryAnimator(const Frameworks::IQueryPtr& q);
@@ -51,13 +50,15 @@ namespace Enigma::Animators
         void requestAnimatorConstitution(const Frameworks::IQueryPtr& r);
         void putAnimator(const Frameworks::ICommandPtr& c);
         void removeAnimator(const Frameworks::ICommandPtr& c);
-        void releaseAnimator(const Frameworks::ICommandPtr& c);
+
+        void dumpRetainedAnimator();
 
     protected:
         std::shared_ptr<AnimatorStoreMapper> m_storeMapper;
         AnimatorFactory* m_factory;
 
-        std::unordered_map<AnimatorId, std::shared_ptr<Animator>, AnimatorId::hash> m_animators;
+        //! ADR: 在 repository 中，map 是存放已生成 asset 的 cache, 不擁有asset, 所以改用 weak_ptr 
+        std::unordered_map<AnimatorId, std::weak_ptr<Animator>, AnimatorId::hash> m_animators;
         std::recursive_mutex m_animatorLock;
 
         Frameworks::QuerySubscriberPtr m_queryAnimator;
@@ -67,7 +68,6 @@ namespace Enigma::Animators
 
         Frameworks::CommandSubscriberPtr m_putAnimator;
         Frameworks::CommandSubscriberPtr m_removeAnimator;
-        Frameworks::CommandSubscriberPtr m_releaseAnimator;
     };
 }
 

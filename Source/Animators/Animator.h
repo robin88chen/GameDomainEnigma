@@ -36,7 +36,6 @@ namespace Enigma::Animators
         Animator& operator=(Animator&&) noexcept = delete;
 
         static std::shared_ptr<Animator> queryAnimator(const AnimatorId& id);
-        static void releaseAnimator(const AnimatorId& id);
 
         const AnimatorId& id() const { return m_id; }
         virtual Engine::GenericDto serializeDto() const = 0;

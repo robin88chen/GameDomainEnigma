@@ -48,7 +48,6 @@ namespace Enigma::Geometries
         std::shared_ptr<GeometryData> queryGeometryData(const GeometryId& id);
         void removeGeometryData(const GeometryId& id);
         void putGeometryData(const GeometryId& id, const std::shared_ptr<GeometryData>& data);
-        void releaseGeometryData(const GeometryId& id);
 
     protected:
         void queryGeometryData(const Frameworks::IQueryPtr& q);
@@ -57,12 +56,14 @@ namespace Enigma::Geometries
 
         void putGeometryData(const Frameworks::ICommandPtr& c);
         void removeGeometryData(const Frameworks::ICommandPtr& c);
-        void releaseGeometryData(const Frameworks::ICommandPtr& c);
+
+        void dumpRetainedGeometry();
 
     protected:
         std::shared_ptr<GeometryDataStoreMapper> m_storeMapper;
         GeometryDataFactory* m_factory;
-        std::unordered_map<GeometryId, std::shared_ptr<GeometryData>, GeometryId::hash> m_geometries;
+        //! ADR: 在 repository 中，map 是存放已生成 asset 的 cache, 不擁有asset, 所以改用 weak_ptr
+        std::unordered_map<GeometryId, std::weak_ptr<GeometryData>, GeometryId::hash> m_geometries;
         std::recursive_mutex m_geometryLock;
 
         Frameworks::QuerySubscriberPtr m_queryGeometryData;
@@ -70,7 +71,6 @@ namespace Enigma::Geometries
         Frameworks::QuerySubscriberPtr m_requestGeometryConstitution;
         Frameworks::CommandSubscriberPtr m_putGeometryData;
         Frameworks::CommandSubscriberPtr m_removeGeometryData;
-        Frameworks::CommandSubscriberPtr m_releaseGeometryData;
     };
 }
 

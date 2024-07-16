@@ -37,16 +37,6 @@ namespace Enigma::Geometries
     protected:
         GeometryId m_id;
     };
-    class ReleaseGeometry : public Frameworks::ICommand
-    {
-    public:
-        ReleaseGeometry(const GeometryId& id) : m_id(id) {}
-
-        const GeometryId& id() { return m_id; }
-
-    protected:
-        GeometryId m_id;
-    };
 
     class RegisterGeometryFactory : public Frameworks::ICommand
     {

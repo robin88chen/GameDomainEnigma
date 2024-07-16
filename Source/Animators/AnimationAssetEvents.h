@@ -98,24 +98,6 @@ namespace Enigma::Animators
         AnimationAssetId m_id;
         std::error_code m_error;
     };
-    class AnimationAssetReleased : public Frameworks::IEvent
-    {
-    public:
-        AnimationAssetReleased(const AnimationAssetId& id) : m_id(id) {}
-        const AnimationAssetId& id() { return m_id; }
-    private:
-        AnimationAssetId m_id;
-    };
-    class ReleaseAnimationAssetFailed : public Frameworks::IEvent
-    {
-    public:
-        ReleaseAnimationAssetFailed(const AnimationAssetId& id, std::error_code er) : m_id(id), m_error(er) {};
-        const AnimationAssetId& id() { return m_id; }
-        std::error_code error() const { return m_error; }
-    private:
-        AnimationAssetId m_id;
-        std::error_code m_error;
-    };
 }
 
 #endif // ANIMATION_ASSET_EVENTS_H

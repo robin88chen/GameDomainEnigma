@@ -36,16 +36,6 @@ namespace Enigma::Animators
     protected:
         AnimatorId m_id;
     };
-    class ReleaseAnimator : public Frameworks::ICommand
-    {
-    public:
-        ReleaseAnimator(const AnimatorId& id) : m_id(id) {}
-
-        const AnimatorId& id() { return m_id; }
-
-    protected:
-        AnimatorId m_id;
-    };
 
     class RegisterAnimatorFactory : public Frameworks::ICommand
     {

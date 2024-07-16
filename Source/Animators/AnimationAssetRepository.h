@@ -40,7 +40,6 @@ namespace Enigma::Animators
         std::shared_ptr<AnimationAsset> queryAnimationAsset(const AnimationAssetId& id);
         void removeAnimationAsset(const AnimationAssetId& id);
         void putAnimationAsset(const AnimationAssetId& id, const std::shared_ptr<AnimationAsset>& asset);
-        void releaseAnimationAsset(const AnimationAssetId& id);
 
     protected:
         void queryAnimationAsset(const Frameworks::IQueryPtr& q);
@@ -48,12 +47,14 @@ namespace Enigma::Animators
         void requestAnimationAssetConstitution(const Frameworks::IQueryPtr& r);
         void removeAnimationAsset(const Frameworks::ICommandPtr& c);
         void putAnimationAsset(const Frameworks::ICommandPtr& c);
-        void releaseAnimationAsset(const Frameworks::ICommandPtr& c);
+
+        void dumpRetainedAnimation();
 
     protected:
         std::shared_ptr<AnimationAssetStoreMapper> m_storeMapper;
         AnimationAssetFactory* m_factory;
-        std::unordered_map<AnimationAssetId, std::shared_ptr<AnimationAsset>, AnimationAssetId::hash> m_animationAssets;
+        //! ADR: 在 repository 中，map 是存放已生成 asset 的 cache, 不擁有asset, 所以改用 weak_ptr 
+        std::unordered_map<AnimationAssetId, std::weak_ptr<AnimationAsset>, AnimationAssetId::hash> m_animationAssets;
         std::recursive_mutex m_animationAssetLock;
 
         Frameworks::QuerySubscriberPtr m_queryAnimationAsset;
@@ -61,7 +62,6 @@ namespace Enigma::Animators
         Frameworks::QuerySubscriberPtr m_requestAnimationAssetConstitution;
         Frameworks::CommandSubscriberPtr m_removeAnimationAsset;
         Frameworks::CommandSubscriberPtr m_putAnimationAsset;
-        Frameworks::CommandSubscriberPtr m_releaseAnimationAsset;
     };
 }
 

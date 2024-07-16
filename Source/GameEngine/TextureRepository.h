@@ -43,7 +43,6 @@ namespace Enigma::Engine
         std::shared_ptr<Texture> queryTexture(const TextureId& id);
         void removeTexture(const TextureId& id);
         void putTexture(const TextureId& id, const std::shared_ptr<Texture>& texture);
-        void releaseTexture(const TextureId& id);
 
     private:
         void registerHandlers();
@@ -51,9 +50,10 @@ namespace Enigma::Engine
 
         void removeTexture(const Frameworks::ICommandPtr& c);
         void putTexture(const Frameworks::ICommandPtr& c);
-        void releaseTexture(const Frameworks::ICommandPtr& c);
         void queryTexture(const Frameworks::IQueryPtr& q);
         void requestTextureConstitution(const Frameworks::IQueryPtr& q);
+
+        void dumpRetainedTexture();
 
     private:
         std::shared_ptr<TextureStoreMapper> m_storeMapper;
@@ -61,12 +61,12 @@ namespace Enigma::Engine
 
         Frameworks::CommandSubscriberPtr m_removeTexture;
         Frameworks::CommandSubscriberPtr m_putTexture;
-        Frameworks::CommandSubscriberPtr m_releaseTexture;
 
         Frameworks::QuerySubscriberPtr m_queryTexture;
         Frameworks::QuerySubscriberPtr m_requestTextureConstitution;
 
-        using TextureMap = std::unordered_map<TextureId, std::shared_ptr<Texture>, TextureId::hash>;
+        //! ADR: 在 repository 中，map 是存放已生成 asset 的 cache, 不擁有asset, 所以改用 weak_ptr
+        using TextureMap = std::unordered_map<TextureId, std::weak_ptr<Texture>, TextureId::hash>;
         TextureMap m_textures;
         std::recursive_mutex m_textureMapLock;
     };

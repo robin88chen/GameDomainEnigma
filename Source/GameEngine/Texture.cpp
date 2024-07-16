@@ -5,7 +5,6 @@
 #include "Texture.h"
 #include "TextureDto.h"
 #include "TextureQueries.h"
-#include "TextureCommands.h"
 #include "Frameworks/QueryDispatcher.h"
 #include <cassert>
 
@@ -55,11 +54,6 @@ std::shared_ptr<Texture> Texture::queryTexture(const TextureId& id)
     auto query = std::make_shared<QueryTexture>(id);
     QueryDispatcher::dispatch(query);
     return query->getResult();
-}
-
-void Texture::releaseTexture(const TextureId& id)
-{
-    std::make_shared<ReleaseTexture>(id)->enqueue();
 }
 
 GenericDto Texture::serializeDto() const

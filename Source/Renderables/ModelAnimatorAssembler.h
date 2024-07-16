@@ -12,7 +12,6 @@
 #include "Animators/AnimationAssetId.h"
 #include "ModelAnimatorDtos.h"
 #include "Primitives/PrimitiveId.h"
-#include "Animators/AnimatorPersistenceLevel.h"
 
 namespace Enigma::Renderables
 {

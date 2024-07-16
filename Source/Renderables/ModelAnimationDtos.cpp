@@ -36,7 +36,7 @@ ModelAnimationAssetDto::ModelAnimationAssetDto() : AnimationAssetDto()
 ModelAnimationAssetDto::ModelAnimationAssetDto(const GenericDto& dto) : AnimationAssetDto()
 {
     m_factoryDesc = dto.getRtti();
-    if (const auto v = dto.tryGetValue<std::string>(TOKEN_ID)) id() = v.value();
+    if (const auto v = dto.tryGetValue<std::string>(TOKEN_ID)) id(v.value());
     if (const auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_MESH_NODE_NAMES)) meshNodeNames() = v.value();
     if (const auto v = dto.tryGetValue<GenericDtoCollection>(TOKEN_TIME_SRTS)) timeSRTs() = v.value();
 }

@@ -125,9 +125,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorStoreMapper.h">
       <Filter>Animators</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorPersistenceLevel.h">
-      <Filter>Animators</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorFactoryDelegate.h">
       <Filter>Animation Assets</Filter>
     </ClInclude>

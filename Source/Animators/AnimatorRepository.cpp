@@ -28,7 +28,7 @@ AnimatorRepository::AnimatorRepository(Frameworks::ServiceManager* srv_manager, 
 
 AnimatorRepository::~AnimatorRepository()
 {
-    assert(m_animators.empty());
+    dumpRetainedAnimator();
     SAFE_DELETE(m_factory);
     m_animators.clear();
 }
@@ -50,8 +50,6 @@ ServiceResult AnimatorRepository::onInit()
     CommandBus::subscribe(typeid(PutAnimator), m_putAnimator);
     m_removeAnimator = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { removeAnimator(c); });
     CommandBus::subscribe(typeid(RemoveAnimator), m_removeAnimator);
-    m_releaseAnimator = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { releaseAnimator(c); });
-    CommandBus::subscribe(typeid(ReleaseAnimator), m_releaseAnimator);
 
     m_storeMapper->connect();
     return ServiceResult::Complete;
@@ -76,8 +74,6 @@ ServiceResult AnimatorRepository::onTerm()
     m_putAnimator = nullptr;
     CommandBus::unsubscribe(typeid(RemoveAnimator), m_removeAnimator);
     m_removeAnimator = nullptr;
-    CommandBus::unsubscribe(typeid(ReleaseAnimator), m_releaseAnimator);
-    m_releaseAnimator = nullptr;
 
     return ServiceResult::Complete;
 }
@@ -99,7 +95,7 @@ bool AnimatorRepository::hasAnimator(const AnimatorId& id)
     assert(m_storeMapper);
     std::lock_guard locker{ m_animatorLock };
     const auto it = m_animators.find(id);
-    if (it != m_animators.end()) return true;
+    if ((it != m_animators.end()) && (!it->second.expired())) return true;
     return m_storeMapper->hasAnimator(id.origin());
 }
 
@@ -108,7 +104,7 @@ std::shared_ptr<Animator> AnimatorRepository::queryAnimator(const AnimatorId& id
     if (!hasAnimator(id)) return nullptr;
     std::lock_guard locker{ m_animatorLock };
     auto it = m_animators.find(id);
-    if (it != m_animators.end()) return it->second;
+    if ((it != m_animators.end()) && (!it->second.expired())) return it->second.lock();
     assert(m_factory);
     const auto dto = m_storeMapper->queryAnimator(id.origin());
     assert(dto.has_value());
@@ -123,6 +119,7 @@ void AnimatorRepository::removeAnimator(const AnimatorId& id)
     if (!hasAnimator(id)) return;
     std::lock_guard locker{ m_animatorLock };
     m_animators.erase(id);
+    if (id != id.origin()) return;  // only remove origin animator from store
     error er = m_storeMapper->removeAnimator(id.origin());
     if (er)
     {
@@ -150,14 +147,6 @@ void AnimatorRepository::putAnimator(const AnimatorId& id, const std::shared_ptr
     {
         EventPublisher::enqueue(std::make_shared<AnimatorPut>(id));
     }
-}
-
-void AnimatorRepository::releaseAnimator(const AnimatorId& id)
-{
-    if (!hasAnimator(id)) return;
-    std::lock_guard locker{ m_animatorLock };
-    m_animators.erase(id);
-    EventPublisher::enqueue(std::make_shared<AnimatorReleased>(id));
 }
 
 void AnimatorRepository::queryAnimator(const Frameworks::IQueryPtr& q)
@@ -227,11 +216,15 @@ void AnimatorRepository::removeAnimator(const Frameworks::ICommandPtr& c)
     removeAnimator(cmd->id());
 }
 
-void AnimatorRepository::releaseAnimator(const Frameworks::ICommandPtr& c)
+void AnimatorRepository::dumpRetainedAnimator()
 {
-    if (!c) return;
-    const auto cmd = std::dynamic_pointer_cast<ReleaseAnimator, ICommand>(c);
-    if (!cmd) return;
-    releaseAnimator(cmd->id());
+    std::lock_guard locker{ m_animatorLock };
+    for (const auto& [id, animator] : m_animators)
+    {
+        if (auto ptr = animator.lock())
+        {
+            Platforms::Debug::Printf("retained animator %s\n", id.name().c_str());
+        }
+    }
 }
 

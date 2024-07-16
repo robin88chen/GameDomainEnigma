@@ -99,6 +99,25 @@ namespace Enigma::Geometries
         GeometryId m_id;
         std::error_code m_error;
     };
+    class GeometryReleased : public Frameworks::IEvent
+    {
+    public:
+        GeometryReleased(const GeometryId& id) : m_id(id) {};
+        const GeometryId& id() { return m_id; }
+    private:
+        GeometryId m_id;
+    };
+    class ReleaseGeometryFailed : public Frameworks::IEvent
+    {
+    public:
+        ReleaseGeometryFailed(const GeometryId& id, std::error_code er) :
+            m_id(id), m_error(er) {}
+        const GeometryId& id() { return m_id; }
+        std::error_code error() const { return m_error; }
+    private:
+        GeometryId m_id;
+        std::error_code m_error;
+    };
 }
 
 #endif // _GEOMETRY_DATA_EVENTS_H

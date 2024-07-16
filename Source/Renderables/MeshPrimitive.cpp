@@ -295,6 +295,7 @@ void MeshPrimitive::createRenderElements()
 
 void MeshPrimitive::cleanupGeometry()
 {
+    if (m_geometry) Geometries::GeometryData::releaseGeometryData(m_geometry->id());
     m_elements.clear();
     m_geometry = nullptr;
     m_renderBuffer = nullptr;

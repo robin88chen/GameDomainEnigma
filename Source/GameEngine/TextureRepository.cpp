@@ -54,6 +54,8 @@ void TextureRepository::registerHandlers()
     Frameworks::CommandBus::subscribe(typeid(RemoveTexture), m_removeTexture);
     m_putTexture = std::make_shared<Frameworks::CommandSubscriber>([=](const Frameworks::ICommandPtr& c) { putTexture(c); });
     Frameworks::CommandBus::subscribe(typeid(PutTexture), m_putTexture);
+    m_releaseTexture = std::make_shared<Frameworks::CommandSubscriber>([=](const Frameworks::ICommandPtr& c) { releaseTexture(c); });
+    Frameworks::CommandBus::subscribe(typeid(ReleaseTexture), m_releaseTexture);
 
     m_queryTexture = std::make_shared<Frameworks::QuerySubscriber>([=](const Frameworks::IQueryPtr& q) { queryTexture(q); });
     Frameworks::QueryDispatcher::subscribe(typeid(QueryTexture), m_queryTexture);
@@ -67,6 +69,8 @@ void TextureRepository::unregisterHandlers()
     m_removeTexture = nullptr;
     Frameworks::CommandBus::unsubscribe(typeid(PutTexture), m_putTexture);
     m_putTexture = nullptr;
+    Frameworks::CommandBus::unsubscribe(typeid(ReleaseTexture), m_releaseTexture);
+    m_releaseTexture = nullptr;
 
     Frameworks::QueryDispatcher::unsubscribe(typeid(QueryTexture), m_queryTexture);
     m_queryTexture = nullptr;

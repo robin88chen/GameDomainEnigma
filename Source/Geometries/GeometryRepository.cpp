@@ -48,6 +48,8 @@ ServiceResult GeometryRepository::onInit()
     CommandBus::subscribe(typeid(PutGeometry), m_putGeometryData);
     m_removeGeometryData = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { return this->removeGeometryData(c); });
     CommandBus::subscribe(typeid(RemoveGeometry), m_removeGeometryData);
+    m_releaseGeometryData = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { return this->releaseGeometryData(c); });
+    CommandBus::subscribe(typeid(ReleaseGeometry), m_releaseGeometryData);
 
     m_storeMapper->connect();
 
@@ -70,6 +72,8 @@ ServiceResult GeometryRepository::onTerm()
     m_putGeometryData = nullptr;
     CommandBus::unsubscribe(typeid(RemoveGeometry), m_removeGeometryData);
     m_removeGeometryData = nullptr;
+    CommandBus::unsubscribe(typeid(ReleaseGeometry), m_releaseGeometryData);
+    m_releaseGeometryData = nullptr;
 
     return Frameworks::ServiceResult::Complete;
 }
@@ -163,6 +167,14 @@ void GeometryRepository::removeGeometryData(const Frameworks::ICommandPtr& c)
     removeGeometryData(cmd->id());
 }
 
+void GeometryRepository::releaseGeometryData(const Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    const auto cmd = std::dynamic_pointer_cast<ReleaseGeometry>(c);
+    if (!cmd) return;
+    releaseGeometryData(cmd->id());
+}
+
 void GeometryRepository::removeGeometryData(const GeometryId& id)
 {
     if (!hasGeometryData(id)) return;
@@ -194,4 +206,12 @@ void GeometryRepository::putGeometryData(const GeometryId& id, const std::shared
     {
         EventPublisher::enqueue(std::make_shared<GeometryPut>(id));
     }
+}
+
+void GeometryRepository::releaseGeometryData(const GeometryId& id)
+{
+    if (!hasGeometryData(id)) return;
+    std::lock_guard locker{ m_geometryLock };
+    m_geometries.erase(id);
+    EventPublisher::enqueue(std::make_shared<GeometryReleased>(id));
 }

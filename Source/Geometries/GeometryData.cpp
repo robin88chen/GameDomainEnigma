@@ -3,6 +3,7 @@
 #include "Platforms/PlatformLayer.h"
 #include "MathLib/ContainmentBox3.h"
 #include "GeometryDataQueries.h"
+#include "GeometryCommands.h"
 #include "Frameworks/QueryDispatcher.h"
 #include <cassert>
 
@@ -38,6 +39,11 @@ GeometryData::~GeometryData()
 std::shared_ptr<GeometryData> GeometryData::queryGeometryData(const GeometryId& id)
 {
     return std::make_shared<QueryGeometryData>(id)->dispatch();
+}
+
+void GeometryData::releaseGeometryData(const GeometryId& id)
+{
+    std::make_shared<ReleaseGeometry>(id)->enqueue();
 }
 
 GenericDto GeometryData::serializeDto() const

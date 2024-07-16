@@ -79,6 +79,8 @@ namespace Enigma::Renderables
         std::optional<unsigned> findBuildingEffectIndex(const Engine::EffectMaterialId& id);
         std::optional<std::tuple<unsigned, unsigned>> findLoadingTextureIndex(const Engine::TextureId& id);
 
+        void cleanupBuildingMeta();
+
     protected:
         Primitives::PrimitiveId m_buildingId;
         std::optional<MeshPrimitiveDto> m_buildingDto;

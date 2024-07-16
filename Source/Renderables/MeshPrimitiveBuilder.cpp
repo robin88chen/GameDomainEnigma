@@ -61,6 +61,8 @@ MeshPrimitiveBuilder::~MeshPrimitiveBuilder()
 
 void MeshPrimitiveBuilder::hydrateMeshPrimitive(const std::shared_ptr<MeshPrimitive>& mesh, const Engine::GenericDto& dto)
 {
+    Platforms::Debug::Printf("hydrating mesh primitive %s\n", mesh->id().name().c_str());
+    cleanupBuildingMeta();
     m_buildingDto = MeshPrimitiveDto(dto);
     m_metaDto = std::make_unique<MeshPrimitiveMetaDto>(m_buildingDto.value());
     m_metaDto->replaceDuplicatedEffects(mesh);
@@ -149,7 +151,6 @@ void MeshPrimitiveBuilder::onBuildRenderBufferFailed(const Frameworks::IEventPtr
 void MeshPrimitiveBuilder::onEffectMaterialHydrated(const Frameworks::IEventPtr& e)
 {
     //? 發生奇怪的bug, 兩個 dto 是 empty, 卻沒有return, 一路走到 found_idx 出錯, ev的 id 與 builtEffects 也不符
-    //todo 先在 fail 時把資料清乾淨看看
     Platforms::Debug::Printf("on effect material hydrated of mesh %s\n", m_buildingId.name().c_str());
     if (!m_metaDto) return;
     if (!m_buildingDto) return;
@@ -157,6 +158,7 @@ void MeshPrimitiveBuilder::onEffectMaterialHydrated(const Frameworks::IEventPtr&
     const auto ev = std::dynamic_pointer_cast<EffectMaterialHydrated>(e);
     if (!ev) return;
     Platforms::Debug::Printf("on effect material hydrated of mesh %s, and material %s\n", m_buildingId.name().c_str(), ev->id().name().c_str());
+    //todo 真正原因: render buffer 比 material 晚完成，所以這時候 builtEffects 還是空的，index 就出錯了
     const std::optional<unsigned> found_idx = findBuildingEffectIndex(ev->id());
     if (!found_idx) return;
     if (m_builtEffects[found_idx.value()]->lazyStatus().isReady())
@@ -229,19 +231,15 @@ void MeshPrimitiveBuilder::tryCompletingMesh()
     m_builtPrimitive->lazyStatus().changeStatus(LazyStatus::Status::Ready);
     EventPublisher::enqueue(std::make_shared<MeshPrimitiveHydrated>(m_buildingId, m_buildingId.name(), m_builtPrimitive));
 
-    m_buildingDto = std::nullopt;
-    m_metaDto = nullptr;
+    Platforms::Debug::Printf("mesh primitive %s build completed\n", m_buildingId.name().c_str());
+    cleanupBuildingMeta();
 }
 
 void MeshPrimitiveBuilder::failMeshHydration(const std::error_code er)
 {
     Platforms::Debug::ErrorPrintf("mesh primitive %s build failed : %s\n", m_buildingId.name().c_str(), er.message().c_str());
-    m_buildingDto = std::nullopt;
-    m_metaDto = nullptr;
-    m_builtEffects.clear();
-    m_builtTextures.clear();
     EventPublisher::enqueue(std::make_shared<HydrateMeshPrimitiveFailed>(m_buildingId, m_buildingId.name(), er));
-    m_buildingId = Primitives::PrimitiveId();
+    cleanupBuildingMeta();
 }
 
 std::optional<unsigned> MeshPrimitiveBuilder::findBuildingEffectIndex(const EffectMaterialId& id)
@@ -249,7 +247,7 @@ std::optional<unsigned> MeshPrimitiveBuilder::findBuildingEffectIndex(const Effe
     assert(m_metaDto);
     for (unsigned i = 0; i < m_metaDto->effects().size(); i++)
     {
-        if ((m_metaDto->effects()[i] == id) && (m_builtEffects[i] != nullptr)) return i;
+        if ((m_metaDto->effects()[i] == id) && (m_builtEffects.size() > i) && (m_builtEffects[i] != nullptr)) return i;
     }
     return std::nullopt;
 }
@@ -268,4 +266,16 @@ std::optional<std::tuple<unsigned, unsigned>> MeshPrimitiveBuilder::findLoadingT
         }
     }
     return std::nullopt;
+}
+
+void MeshPrimitiveBuilder::cleanupBuildingMeta()
+{
+    m_builtRenderBuffer = nullptr;
+    m_builtGeometry = nullptr;
+    m_builtPrimitive = nullptr;
+    m_buildingDto = std::nullopt;
+    m_metaDto = nullptr;
+    m_builtEffects.clear();
+    m_builtTextures.clear();
+    m_buildingId = Primitives::PrimitiveId();
 }

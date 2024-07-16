@@ -166,6 +166,7 @@ void GeometryRepository::removeGeometryData(const Frameworks::ICommandPtr& c)
 
 void GeometryRepository::dumpRetainedGeometry()
 {
+    Platforms::Debug::Printf("dump retained geometry\n");
     std::lock_guard locker{ m_geometryLock };
     for (const auto& [id, geo] : m_geometries)
     {

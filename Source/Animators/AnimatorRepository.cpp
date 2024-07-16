@@ -218,6 +218,7 @@ void AnimatorRepository::removeAnimator(const Frameworks::ICommandPtr& c)
 
 void AnimatorRepository::dumpRetainedAnimator()
 {
+    Platforms::Debug::Printf("dump retained animator\n");
     std::lock_guard locker{ m_animatorLock };
     for (const auto& [id, animator] : m_animators)
     {

@@ -174,6 +174,7 @@ void TextureRepository::requestTextureConstitution(const Frameworks::IQueryPtr& 
 
 void TextureRepository::dumpRetainedTexture()
 {
+    Platforms::Debug::Printf("dump retained texture\n");
     std::lock_guard locker{ m_textureMapLock };
     for (const auto& [id, tex] : m_textures)
     {

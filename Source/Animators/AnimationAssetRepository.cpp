@@ -194,6 +194,7 @@ void AnimationAssetRepository::putAnimationAsset(const ICommandPtr& c)
 
 void AnimationAssetRepository::dumpRetainedAnimation()
 {
+    Platforms::Debug::Printf("dump retained animation asset\n");
     std::lock_guard lock(m_animationAssetLock);
     for (const auto& [id, asset] : m_animationAssets)
     {

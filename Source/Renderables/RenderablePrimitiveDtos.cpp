@@ -7,7 +7,6 @@
 #include "MeshNodeTree.h"
 #include "ModelPrimitive.h"
 #include "SkinMeshPrimitive.h"
-#include "GameEngine/GenericPolicy.h"
 #include <cassert>
 
 using namespace Enigma::Renderables;

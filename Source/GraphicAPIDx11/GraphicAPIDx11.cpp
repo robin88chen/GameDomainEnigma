@@ -68,6 +68,7 @@ error GraphicAPIDx11::createDevice(const Graphics::DeviceRequiredBits& rqb, void
 
     error er = m_creator->CreateWindowedDevice(m_adapter, m_swapChain, &m_d3dDevice, &m_d3dDeviceContext);
     if (er) return er;
+    CoInitializeEx(nullptr, COINIT_MULTITHREADED); // for WIC Texture load, must initialize COM in used thread
     AddDebugInfoFilter();
     return er;
 }
@@ -75,6 +76,7 @@ error GraphicAPIDx11::createDevice(const Graphics::DeviceRequiredBits& rqb, void
 error GraphicAPIDx11::cleanupDevice()
 {
     Platforms::Debug::Printf("cleanup device in thread %d\n", std::this_thread::get_id());
+    CoUninitialize();
     m_stash->clear();
     CleanupDeviceObjects();
 

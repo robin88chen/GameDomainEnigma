@@ -7,7 +7,7 @@
 
 int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char*, int nShowCmd)
 {
-    CoInitialize(nullptr);
+    OleInitialize(nullptr);
     meInitMemoryCheck();
     //_CrtSetBreakAlloc(10545);
     LevelEditor::MainForm form;
@@ -21,5 +21,6 @@ int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char*, int n
 
     nana::exec();
 
+    OleUninitialize();
     return 0;
 }

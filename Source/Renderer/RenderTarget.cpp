@@ -439,6 +439,7 @@ void RenderTarget::onHydrateTextureFailed(const Frameworks::IEventPtr& e)
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<Engine::HydrateTextureFailed>(e);
     if (!ev) return;
+    if (!m_renderTargetTexture) return;
     if (ev->id() != m_renderTargetTexture->id()) return;
     Frameworks::EventPublisher::enqueue(std::make_shared<CreateRenderTargetTextureFailed>(ev->id().name(), ev->error()));
 }

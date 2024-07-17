@@ -102,7 +102,7 @@ void EditorAppDelegate::initialize(IGraphicAPI::APIVersion api_ver, IGraphicAPI:
 
     menew GraphicAPIDx11(useAsyncDevice);
 
-    CoInitializeEx(NULL, COINIT_MULTITHREADED);  // for WIC Texture Loader
+    //CoInitializeEx(NULL, COINIT_MULTITHREADED);  // for WIC Texture Loader
 
     installEngine();
 }
@@ -124,7 +124,7 @@ void EditorAppDelegate::finalize()
     }
     delete FileSystem::FileSystem::instance();
 
-    CoUninitialize();
+    //CoUninitialize();
 }
 
 void EditorAppDelegate::initializeMountPaths()

@@ -57,6 +57,7 @@ ServiceResult PrimitiveRepository::onInit()
 ServiceResult PrimitiveRepository::onTerm()
 {
     assert(m_storeMapper);
+    dumpRetainedPrimitives();
     m_storeMapper->disconnect();
     m_primitives.clear();
 
@@ -88,7 +89,7 @@ bool PrimitiveRepository::hasPrimitive(const PrimitiveId& id)
     assert(m_storeMapper);
     std::lock_guard locker{ m_primitiveLock };
     const auto it = m_primitives.find(id);
-    if (it != m_primitives.end()) return true;
+    if ((it != m_primitives.end()) && (!it->second.expired())) return true;
     return m_storeMapper->hasPrimitive(id.origin());
 }
 
@@ -97,7 +98,7 @@ std::shared_ptr<Primitive> PrimitiveRepository::queryPrimitive(const PrimitiveId
     if (!hasPrimitive(id)) return nullptr;
     std::lock_guard locker{ m_primitiveLock };
     auto it = m_primitives.find(id);
-    if (it != m_primitives.end()) return it->second;
+    if ((it != m_primitives.end()) && (!it->second.expired())) return it->second.lock();
     assert(m_factory);
     const auto dto = m_storeMapper->queryPrimitive(id.origin());
     assert(dto.has_value());
@@ -212,4 +213,14 @@ void PrimitiveRepository::removePrimitive(const ICommandPtr& c)
     const auto cmd = std::dynamic_pointer_cast<RemovePrimitive>(c);
     if (!cmd) return;
     removePrimitive(cmd->id());
+}
+
+void PrimitiveRepository::dumpRetainedPrimitives()
+{
+    Platforms::Debug::Printf("dump retained primitives\n");
+    for (const auto& [id, prim] : m_primitives)
+    {
+        if (prim.expired()) continue;
+        Platforms::Debug::Printf("primitive %s\n", id.name().c_str());
+    }
 }

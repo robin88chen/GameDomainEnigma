@@ -52,9 +52,13 @@ ServiceResult SceneGraphRepository::onInit()
 }
 ServiceResult SceneGraphRepository::onTerm()
 {
+    dumpRetainedCameras();
+    dumpRetainedSpatials();
+
     m_storeMapper->disconnect();
 
     m_cameras.clear();
+    m_spatials.clear();
 
     return ServiceResult::Complete;
 }
@@ -162,18 +166,15 @@ void SceneGraphRepository::registerSpatialLightFactory(const std::string& rtti, 
 bool SceneGraphRepository::hasCamera(const SpatialId& id)
 {
     assert(m_storeMapper);
-    std::lock_guard locker{ m_cameraMapLock };
-    auto it = m_cameras.find(id);
-    if (it != m_cameras.end()) return true;
+    if (findCachedCamera(id)) return true;
     return m_storeMapper->hasCamera(id);
 }
 
 std::shared_ptr<Camera> SceneGraphRepository::queryCamera(const SpatialId& id)
 {
     if (!hasCamera(id)) return nullptr;
+    if (auto camera = findCachedCamera(id); camera) return camera;
     std::lock_guard locker{ m_cameraMapLock };
-    auto it = m_cameras.find(id);
-    if (it != m_cameras.end()) return it->second;
     auto dto = m_storeMapper->queryCamera(id);
     assert(dto.has_value());
     auto camera = m_factory->constituteCamera(id, dto.value(), true);
@@ -186,18 +187,15 @@ bool SceneGraphRepository::hasSpatial(const SpatialId& id)
 {
     assert(m_storeMapper);
     assert(id.rtti().isDerived(Spatial::TYPE_RTTI));
-    std::lock_guard locker{ m_spatialMapLock };
-    auto it = m_spatials.find(id);
-    if (it != m_spatials.end()) return true;
+    if (findCachedSpatial(id)) return true;
     return m_storeMapper->hasSpatial(id);
 }
 
 std::shared_ptr<Spatial> SceneGraphRepository::querySpatial(const SpatialId& id)
 {
     if (!hasSpatial(id)) return nullptr;
+    if (auto spatial = findCachedSpatial(id); spatial) return spatial;
     std::lock_guard locker{ m_spatialMapLock };
-    auto it = m_spatials.find(id);
-    if (it != m_spatials.end()) return it->second;
     auto dto = m_storeMapper->querySpatial(id);
     assert(dto.has_value());
     std::shared_ptr<Spatial> spatial;
@@ -224,9 +222,7 @@ bool SceneGraphRepository::hasLaziedContent(const SpatialId& id)
 Enigma::MathLib::Matrix4 SceneGraphRepository::queryWorldTransform(const SpatialId& id)
 {
     if (!hasSpatial(id)) return MathLib::Matrix4::ZERO;
-    std::lock_guard locker{ m_spatialMapLock };
-    auto it = m_spatials.find(id);
-    if (it != m_spatials.end()) return it->second->getWorldTransform();
+    if (auto spatial = querySpatial(id); spatial) return spatial->getWorldTransform();
     auto dto = m_storeMapper->querySpatial(id);
     assert(dto.has_value());
     SpatialDto spatial_dto = SpatialDto(dto.value());
@@ -236,9 +232,7 @@ Enigma::MathLib::Matrix4 SceneGraphRepository::queryWorldTransform(const Spatial
 Enigma::Engine::BoundingVolume SceneGraphRepository::queryModelBound(const SpatialId& id)
 {
     if (!hasSpatial(id)) return BoundingVolume{};
-    std::lock_guard locker{ m_spatialMapLock };
-    auto it = m_spatials.find(id);
-    if (it != m_spatials.end()) return it->second->getModelBound();
+    if (auto spatial = querySpatial(id); spatial) return spatial->getModelBound();
     auto dto = m_storeMapper->querySpatial(id);
     assert(dto.has_value());
     SpatialDto spatial_dto = SpatialDto(dto.value());
@@ -250,9 +244,7 @@ Enigma::Engine::BoundingVolume SceneGraphRepository::queryModelBound(const Spati
 
 std::shared_ptr<Spatial> SceneGraphRepository::queryRunningSpatial(const SpatialId& id)
 {
-    std::lock_guard locker{ m_spatialMapLock };
-    if (auto it = m_spatials.find(id); it != m_spatials.end()) return it->second;
-    return nullptr;
+    return findCachedSpatial(id);
 }
 
 void SceneGraphRepository::queryCamera(const IQueryPtr& q)
@@ -567,4 +559,43 @@ void SceneGraphRepository::removeLaziedContent(const Frameworks::ICommandPtr& c)
     assert(cmd);
     removeLaziedContent(cmd->id());
 }
+
+std::shared_ptr<Camera> SceneGraphRepository::findCachedCamera(const SpatialId& id)
+{
+    std::lock_guard locker{ m_cameraMapLock };
+    auto it = m_cameras.find(id);
+    if ((it != m_cameras.end()) && (!it->second.expired())) return it->second.lock();
+    return nullptr;
+}
+
+std::shared_ptr<Spatial> SceneGraphRepository::findCachedSpatial(const SpatialId& id)
+{
+    std::lock_guard locker{ m_spatialMapLock };
+    auto it = m_spatials.find(id);
+    if ((it != m_spatials.end()) && (!it->second.expired())) return it->second.lock();
+    return nullptr;
+}
+
+void SceneGraphRepository::dumpRetainedCameras()
+{
+    Platforms::Debug::Printf("Dumping retained cameras\n");
+    std::lock_guard locker{ m_cameraMapLock };
+    for (auto& [id, camera] : m_cameras)
+    {
+        if (camera.expired()) continue;
+        Platforms::Debug::Printf("Camera %s is retained\n", id.name().c_str());
+    }
+}
+
+void SceneGraphRepository::dumpRetainedSpatials()
+{
+    Platforms::Debug::Printf("Dumping retained spatials\n");
+    std::lock_guard locker{ m_spatialMapLock };
+    for (auto& [id, spatial] : m_spatials)
+    {
+        if (spatial.expired()) continue;
+        Platforms::Debug::Printf("Spatial %s of %s is retained\n", id.name().c_str(), id.rtti().getName().c_str());
+    }
+}
+
 

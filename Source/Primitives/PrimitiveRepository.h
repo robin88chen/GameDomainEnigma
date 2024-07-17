@@ -53,11 +53,14 @@ namespace Enigma::Primitives
         void putPrimitive(const Frameworks::ICommandPtr& c);
         void removePrimitive(const Frameworks::ICommandPtr& c);
 
+        void dumpRetainedPrimitives();
+
     protected:
         std::shared_ptr<PrimitiveStoreMapper> m_storeMapper;
         PrimitiveFactory* m_factory;
 
-        std::unordered_map<PrimitiveId, std::shared_ptr<Primitive>, PrimitiveId::hash> m_primitives;
+        //! ADR: 在 repository 中，map 是存放已生成 asset 的 cache, 不擁有asset, 所以改用 weak_ptr 
+        std::unordered_map<PrimitiveId, std::weak_ptr<Primitive>, PrimitiveId::hash> m_primitives;
         std::recursive_mutex m_primitiveLock;
 
         Frameworks::QuerySubscriberPtr m_queryPrimitive;

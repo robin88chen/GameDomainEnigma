@@ -14,7 +14,6 @@
 #include "GameEngine/EffectMaterialId.h"
 #include "GameEngine/EffectTextureMapAssembler.h"
 #include "Animators/AnimatorId.h"
-#include "Primitives/PrimitivePersistenceLevel.h"
 
 namespace Enigma::Renderables
 {

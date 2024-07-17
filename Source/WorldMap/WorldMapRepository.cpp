@@ -8,6 +8,7 @@
 #include "Frameworks/QueryDispatcher.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/CommandBus.h"
+#include "Platforms/PlatformLayer.h"
 
 using namespace Enigma::WorldMap;
 using namespace Enigma::Frameworks;
@@ -53,6 +54,9 @@ ServiceResult WorldMapRepository::onInit()
 
 ServiceResult WorldMapRepository::onTerm()
 {
+    dumpRetainedQuadTrees();
+    dumpRetainedWorldMaps();
+
     QueryDispatcher::unsubscribe(typeid(QueryQuadTreeRoot), m_queryQuadTreeRoot);
     m_queryQuadTreeRoot = nullptr;
     QueryDispatcher::unsubscribe(typeid(HasQuadTreeRoot), m_hasQuadTreeRoot);
@@ -84,7 +88,7 @@ bool WorldMapRepository::hasQuadTreeRoot(const QuadTreeRootId& id)
     assert(m_storeMapper);
     std::lock_guard locker{ m_quadTreeRootLock };
     auto it = m_quadTreeRoots.find(id);
-    if (it != m_quadTreeRoots.end()) return true;
+    if ((it != m_quadTreeRoots.end()) && (!it->second.expired())) return true;
     return m_storeMapper->hasQuadTreeRoot(id);
 }
 
@@ -93,11 +97,11 @@ std::shared_ptr<QuadTreeRoot> WorldMapRepository::queryQuadTreeRoot(const QuadTr
     assert(m_storeMapper);
     std::lock_guard locker{ m_quadTreeRootLock };
     auto it = m_quadTreeRoots.find(id);
-    if (it != m_quadTreeRoots.end()) return it->second;
+    if ((it != m_quadTreeRoots.end()) && (!it->second.expired())) return it->second.lock();
     auto dto = m_storeMapper->queryQuadTreeRoot(id);
     if (!dto) return nullptr;
     auto quadTreeRoot = std::make_shared<QuadTreeRoot>(id, *dto);
-    m_quadTreeRoots[id] = quadTreeRoot;
+    m_quadTreeRoots.insert_or_assign(id, quadTreeRoot);
     return quadTreeRoot;
 }
 
@@ -140,7 +144,7 @@ bool WorldMapRepository::hasWorldMap(const WorldMapId& id)
     assert(m_storeMapper);
     std::lock_guard locker{ m_worldMapLock };
     auto it = m_worldMaps.find(id);
-    if (it != m_worldMaps.end()) return true;
+    if ((it != m_worldMaps.end()) && (!it->second.expired())) return true;
     return m_storeMapper->hasWorldMap(id);
 }
 
@@ -149,11 +153,11 @@ std::shared_ptr<WorldMap> WorldMapRepository::queryWorldMap(const WorldMapId& id
     assert(m_storeMapper);
     std::lock_guard locker{ m_worldMapLock };
     auto it = m_worldMaps.find(id);
-    if (it != m_worldMaps.end()) return it->second;
+    if ((it != m_worldMaps.end()) && (!it->second.expired())) return it->second.lock();
     auto dto = m_storeMapper->queryWorldMap(id);
     if (!dto) return nullptr;
     auto worldMap = std::make_shared<WorldMap>(id, *dto);
-    m_worldMaps[id] = worldMap;
+    m_worldMaps.insert_or_assign(id, worldMap);
     return worldMap;
 }
 
@@ -285,3 +289,26 @@ void WorldMapRepository::putWorldMap(const Frameworks::ICommandPtr c)
     assert(command);
     putWorldMap(command->id(), command->worldMap());
 }
+
+void WorldMapRepository::dumpRetainedQuadTrees()
+{
+    Platforms::Debug::Printf("Dumping retained Quad Tree roots\n");
+    std::lock_guard locker{ m_quadTreeRootLock };
+    for (auto& [id, quadTreeRoot] : m_quadTreeRoots)
+    {
+        if (quadTreeRoot.expired()) continue;
+        Platforms::Debug::Printf("Quad Tree root %s is retained\n", id.name().c_str());
+    }
+}
+
+void WorldMapRepository::dumpRetainedWorldMaps()
+{
+    Platforms::Debug::Printf("Dumping retained World Maps\n");
+    std::lock_guard locker{ m_worldMapLock };
+    for (auto& [id, worldMap] : m_worldMaps)
+    {
+        if (worldMap.expired()) continue;
+        Platforms::Debug::Printf("World Map %s is retained\n", id.name().c_str());
+    }
+}
+

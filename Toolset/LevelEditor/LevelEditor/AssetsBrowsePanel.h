@@ -46,6 +46,7 @@ namespace LevelEditor
 
         void onWorldMapCreated(const Enigma::Frameworks::IEventPtr& e);
         void onSpatialConstituted(const Enigma::Frameworks::IEventPtr& e);
+        void onWorldMapRemoved(const Enigma::Frameworks::IEventPtr& e);
         void onSpatialRemoved(const Enigma::Frameworks::IEventPtr& e);
 
         std::string makeWorldMapAssetKey(const Enigma::WorldMap::WorldMapId& world_map_id) const;
@@ -62,6 +63,7 @@ namespace LevelEditor
 
         Enigma::Frameworks::EventSubscriberPtr m_onWorldMapCreated;
         Enigma::Frameworks::EventSubscriberPtr m_onSpatialConstituted;
+        Enigma::Frameworks::EventSubscriberPtr m_onWorldMapRemoved;
         Enigma::Frameworks::EventSubscriberPtr m_onSpatialRemoved;
     };
 }

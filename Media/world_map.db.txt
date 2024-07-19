@@ -1,1 +1,0 @@
-world/ww1,world/ww1.wld@APK_PATH

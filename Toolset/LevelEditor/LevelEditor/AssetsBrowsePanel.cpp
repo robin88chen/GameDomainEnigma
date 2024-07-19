@@ -74,6 +74,8 @@ void AssetsBrowsePanel::subscribeHandlers()
     Enigma::Frameworks::EventPublisher::subscribe(typeid(Enigma::WorldMap::WorldMapCreated), m_onWorldMapCreated);
     m_onSpatialConstituted = std::make_shared<Enigma::Frameworks::EventSubscriber>([=](const Enigma::Frameworks::IEventPtr& e) { onSpatialConstituted(e); });
     Enigma::Frameworks::EventPublisher::subscribe(typeid(Enigma::SceneGraph::SpatialConstituted), m_onSpatialConstituted);
+    m_onWorldMapRemoved = std::make_shared<Enigma::Frameworks::EventSubscriber>([=](const Enigma::Frameworks::IEventPtr& e) { onWorldMapRemoved(e); });
+    Enigma::Frameworks::EventPublisher::subscribe(typeid(Enigma::WorldMap::WorldMapRemoved), m_onWorldMapRemoved);
     m_onSpatialRemoved = std::make_shared<Enigma::Frameworks::EventSubscriber>([=](const Enigma::Frameworks::IEventPtr& e) { onSpatialRemoved(e); });
     Enigma::Frameworks::EventPublisher::subscribe(typeid(Enigma::SceneGraph::SpatialRemoved), m_onSpatialRemoved);
 
@@ -88,6 +90,8 @@ void AssetsBrowsePanel::unsubscribeHandlers()
     m_onWorldMapCreated = nullptr;
     Enigma::Frameworks::EventPublisher::unsubscribe(typeid(Enigma::SceneGraph::SpatialConstituted), m_onSpatialConstituted);
     m_onSpatialConstituted = nullptr;
+    Enigma::Frameworks::EventPublisher::unsubscribe(typeid(Enigma::WorldMap::WorldMapRemoved), m_onWorldMapRemoved);
+    m_onWorldMapRemoved = nullptr;
     Enigma::Frameworks::EventPublisher::unsubscribe(typeid(Enigma::SceneGraph::SpatialRemoved), m_onSpatialRemoved);
     m_onSpatialRemoved = nullptr;
 }
@@ -186,7 +190,7 @@ void AssetsBrowsePanel::onRemoveAsset(nana::menu::item_proxy& item)
     if (selected.key().find_first_of(WORLD_ASSETS_KEY) == 0)
     {
         auto world_map_id = selected.value<Enigma::WorldMap::WorldMapId>();
-        //Enigma::Frameworks::EventPublisher::publish(std::make_shared<Enigma::WorldMap::WorldMapRemoved>(world_map_id));
+        std::make_shared<Enigma::WorldMap::RemoveWorldMap>(world_map_id)->enqueue();
     }
     else if (selected.key().find_first_of(TERRAIN_ASSETS_KEY) == 0)
     {
@@ -196,7 +200,7 @@ void AssetsBrowsePanel::onRemoveAsset(nana::menu::item_proxy& item)
     else if (selected.key().find_first_of(NODE_ASSETS_KEY) == 0)
     {
         auto node_id = selected.value<Enigma::SceneGraph::SpatialId>();
-        //Enigma::Frameworks::EventPublisher::publish(std::make_shared<Enigma::SceneGraph::SpatialRemoved>(node_id));
+        std::make_shared<Enigma::SceneGraph::RemoveSpatial>(node_id)->enqueue();
     }
 }
 
@@ -222,6 +226,14 @@ void AssetsBrowsePanel::onSpatialConstituted(const Enigma::Frameworks::IEventPtr
     {
         refreshTerrainAssets();
     }
+}
+
+void AssetsBrowsePanel::onWorldMapRemoved(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    auto ev = std::dynamic_pointer_cast<Enigma::WorldMap::WorldMapRemoved>(e);
+    if (!ev) return;
+    refreshWorldMapAssets();
 }
 
 void AssetsBrowsePanel::onSpatialRemoved(const Enigma::Frameworks::IEventPtr& e)

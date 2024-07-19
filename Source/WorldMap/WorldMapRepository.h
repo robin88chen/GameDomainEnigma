@@ -58,6 +58,7 @@ namespace Enigma::WorldMap
         void requestWorldMapConstitution(const Frameworks::IQueryPtr q);
 
         void putWorldMap(const Frameworks::ICommandPtr c);
+        void removeWorldMap(const Frameworks::ICommandPtr c);
 
         void dumpRetainedQuadTrees();
         void dumpRetainedWorldMaps();
@@ -73,6 +74,7 @@ namespace Enigma::WorldMap
         Frameworks::QuerySubscriberPtr m_requestWorldMapConstitution;
 
         Frameworks::CommandSubscriberPtr m_putWorldMap;
+        Frameworks::CommandSubscriberPtr m_removeWorldMap;
 
         std::shared_ptr<WorldMapStoreMapper> m_storeMapper;
         std::unordered_map<QuadTreeRootId, std::weak_ptr<QuadTreeRoot>, QuadTreeRootId::hash> m_quadTreeRoots;

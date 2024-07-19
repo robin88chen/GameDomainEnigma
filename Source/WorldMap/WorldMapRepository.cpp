@@ -48,6 +48,8 @@ ServiceResult WorldMapRepository::onInit()
 
     m_putWorldMap = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { putWorldMap(c); });
     CommandBus::subscribe(typeid(PutWorldMap), m_putWorldMap);
+    m_removeWorldMap = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { removeWorldMap(c); });
+    CommandBus::subscribe(typeid(RemoveWorldMap), m_removeWorldMap);
 
     return ServiceResult::Complete;
 }
@@ -77,6 +79,8 @@ ServiceResult WorldMapRepository::onTerm()
 
     CommandBus::unsubscribe(typeid(PutWorldMap), m_putWorldMap);
     m_putWorldMap = nullptr;
+    CommandBus::unsubscribe(typeid(RemoveWorldMap), m_removeWorldMap);
+    m_removeWorldMap = nullptr;
 
     m_storeMapper->disconnect();
 
@@ -288,6 +292,13 @@ void WorldMapRepository::putWorldMap(const Frameworks::ICommandPtr c)
     auto command = std::dynamic_pointer_cast<PutWorldMap>(c);
     assert(command);
     putWorldMap(command->id(), command->worldMap());
+}
+
+void WorldMapRepository::removeWorldMap(const Frameworks::ICommandPtr c)
+{
+    auto command = std::dynamic_pointer_cast<RemoveWorldMap>(c);
+    assert(command);
+    removeWorldMap(command->id());
 }
 
 void WorldMapRepository::dumpRetainedQuadTrees()

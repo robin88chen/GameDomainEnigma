@@ -62,6 +62,15 @@ namespace Enigma::WorldMap
         WorldMapId m_id;
         std::shared_ptr<WorldMap> m_worldMap;
     };
+    class RemoveWorldMap : public Frameworks::ICommand
+    {
+    public:
+        RemoveWorldMap(const WorldMapId& id) : m_id(id) {}
+        const WorldMapId& id() const { return m_id; }
+    protected:
+        WorldMapId m_id;
+    };
+
     class DeserializeWorldMap : public Frameworks::ICommand
     {
     public:

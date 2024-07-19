@@ -222,7 +222,7 @@ bool SceneGraphRepository::hasLaziedContent(const SpatialId& id)
 Enigma::MathLib::Matrix4 SceneGraphRepository::queryWorldTransform(const SpatialId& id)
 {
     if (!hasSpatial(id)) return MathLib::Matrix4::ZERO;
-    if (auto spatial = querySpatial(id); spatial) return spatial->getWorldTransform();
+    if (auto spatial = findCachedSpatial(id); spatial) return spatial->getWorldTransform();
     auto dto = m_storeMapper->querySpatial(id);
     assert(dto.has_value());
     SpatialDto spatial_dto = SpatialDto(dto.value());
@@ -232,7 +232,7 @@ Enigma::MathLib::Matrix4 SceneGraphRepository::queryWorldTransform(const Spatial
 Enigma::Engine::BoundingVolume SceneGraphRepository::queryModelBound(const SpatialId& id)
 {
     if (!hasSpatial(id)) return BoundingVolume{};
-    if (auto spatial = querySpatial(id); spatial) return spatial->getModelBound();
+    if (auto spatial = findCachedSpatial(id); spatial) return spatial->getModelBound();
     auto dto = m_storeMapper->querySpatial(id);
     assert(dto.has_value());
     SpatialDto spatial_dto = SpatialDto(dto.value());
@@ -360,7 +360,7 @@ void SceneGraphRepository::putLaziedContent(const std::shared_ptr<LazyNode>& laz
 void SceneGraphRepository::removeSpatial(const SpatialId& id)
 {
     if (!hasSpatial(id)) return;
-    if (const auto spatial = querySpatial(id)) spatial->persistenceLevel(PersistenceLevel::None);
+    if (const auto spatial = findCachedSpatial(id)) spatial->persistenceLevel(PersistenceLevel::None);
     std::lock_guard locker{ m_spatialMapLock };
     m_spatials.erase(id);
     auto er = m_storeMapper->removeSpatial(id);
@@ -527,10 +527,10 @@ void SceneGraphRepository::putLaziedContent(const Frameworks::ICommandPtr& c)
 
 void SceneGraphRepository::hydrateLazyNode(const SpatialId& id)
 {
-    auto lazy_node = std::dynamic_pointer_cast<LazyNode>(querySpatial(id));
+    auto lazy_node = std::dynamic_pointer_cast<LazyNode>(findCachedSpatial(id));
     if (!lazy_node)
     {
-        EventPublisher::enqueue(std::make_shared<LazyNodeHydrationFailed>(id, ErrorCode::nodeNotFound));
+        EventPublisher::enqueue(std::make_shared<LazyNodeHydrationFailed>(id, ErrorCode::runningSpatialNotFound));
         return;
     }
     if (!lazy_node->lazyStatus().isInQueue()) return;

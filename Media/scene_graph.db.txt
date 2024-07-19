@@ -1,8 +1,5 @@
-terrain/ww1,En.Terrain.TerrainPawn,terrain/ww1.terrain@APK_PATH
 world/ww1_amb,En.SceneGraph.Light,world/ww1_amb.light@APK_PATH
-world/editor_camera,En.SceneGraph.Camera,world/editor_camera.cam@APK_PATH
 world/editor_portalmanagement,En.SceneGraph.PortalManagementNode,world/editor_portalmanagement.node@APK_PATH
-terrain/ww2,En.Terrain.TerrainPawn,terrain/ww2.terrain@APK_PATH
-world/ww1_map,En.SceneGraph.PortalZoneNode,world/ww1_map.node@APK_PATH
+world/editor_camera,En.SceneGraph.Camera,world/editor_camera.cam@APK_PATH
 world/ww1_sun,En.SceneGraph.Light,world/ww1_sun.light@APK_PATH
-terrain/ww1_terrain,En.Terrain.TerrainPawn,terrain/ww1_terrain.terrain@APK_PATH
+world/ww1_map,En.SceneGraph.PortalZoneNode,world/ww1_map.node@APK_PATH

@@ -29,6 +29,7 @@ PackageContent::~PackageContent()
 
 std::optional<std::vector<unsigned char>> PackageContent::read(size_t offset, size_t size_request)
 {
+    assert(size_request > 0);
     Platforms::Debug::Printf("Read File in thread %d\n", std::this_thread::get_id());
     if (!IsValidContent()) return std::nullopt;
     if (m_cacheBuffer.empty())

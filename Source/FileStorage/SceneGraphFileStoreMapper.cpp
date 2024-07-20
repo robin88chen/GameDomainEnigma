@@ -28,6 +28,7 @@ std::error_code SceneGraphFileStoreMapper::SpatialFileMap::connect()
     FileSystem::IFilePtr mapper_file = FileSystem::FileSystem::instance()->openFile(m_filename, FileSystem::read | FileSystem::binary);
     if (!mapper_file) return FileSystem::ErrorCode::ok;
     auto file_size = mapper_file->size();
+    if (file_size == 0) return FileSystem::ErrorCode::ok;
     auto content = mapper_file->read(0, file_size);
     FileSystem::FileSystem::instance()->closeFile(mapper_file);
     if (!content) return FileSystem::ErrorCode::readFail;

@@ -35,6 +35,7 @@ AndroidAsset::~AndroidAsset()
 
 std::optional<std::vector<unsigned char>> AndroidAsset::read(size_t offset, size_t size_request)
 {
+    assert(size_request > 0);
     std::lock_guard<std::mutex> asset_locker{ m_allAssetLocker };
     Debug::Printf("Read File %s, %d in thread %d\n", m_filename.c_str(), (long)m_aasset, std::this_thread::get_id());
     if (!m_aasset)

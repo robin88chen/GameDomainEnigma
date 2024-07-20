@@ -128,6 +128,7 @@ std::error_code WorldMapFileStoreMapper::connectWorldMapperFile()
     FileSystem::IFilePtr world_mapper_file = FileSystem::FileSystem::instance()->openFile(m_worldMapperFilename, FileSystem::read | FileSystem::binary);
     if (!world_mapper_file) return FileSystem::ErrorCode::ok;
     auto file_size = world_mapper_file->size();
+    if (file_size == 0) return FileSystem::ErrorCode::ok;
     auto content = world_mapper_file->read(0, file_size);
     FileSystem::FileSystem::instance()->closeFile(world_mapper_file);
     if (!content) return FileSystem::ErrorCode::readFail;
@@ -142,6 +143,7 @@ std::error_code WorldMapFileStoreMapper::connectQuadRootMapperFile()
     FileSystem::IFilePtr quad_root_mapper_file = FileSystem::FileSystem::instance()->openFile(m_quadRootMapperFilename, FileSystem::read | FileSystem::binary);
     if (!quad_root_mapper_file) return FileSystem::ErrorCode::ok;
     auto file_size = quad_root_mapper_file->size();
+    if (file_size == 0) return FileSystem::ErrorCode::ok;
     auto content = quad_root_mapper_file->read(0, file_size);
     FileSystem::FileSystem::instance()->closeFile(quad_root_mapper_file);
     if (!content) return FileSystem::ErrorCode::readFail;

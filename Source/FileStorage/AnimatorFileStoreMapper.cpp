@@ -33,6 +33,11 @@ std::error_code AnimatorFileStoreMapper::connect()
         return FileSystem::ErrorCode::ok;
     }
     auto file_size = mapper_file->size();
+    if (file_size == 0)
+    {
+        m_has_connected = true;
+        return FileSystem::ErrorCode::ok;
+    }
     auto content = mapper_file->read(0, file_size);
     FileSystem::FileSystem::instance()->closeFile(mapper_file);
     if (!content) return FileSystem::ErrorCode::readFail;

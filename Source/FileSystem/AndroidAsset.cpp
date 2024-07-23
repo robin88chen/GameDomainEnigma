@@ -35,12 +35,16 @@ AndroidAsset::~AndroidAsset()
 
 std::optional<std::vector<unsigned char>> AndroidAsset::read(size_t offset, size_t size_request)
 {
-    assert(size_request > 0);
     std::lock_guard<std::mutex> asset_locker{ m_allAssetLocker };
     Debug::Printf("Read File %s, %d in thread %d\n", m_filename.c_str(), (long)m_aasset, std::this_thread::get_id());
     if (!m_aasset)
     {
         makeErrorCode(ErrorCode::nullAndroidAsset);
+        return std::nullopt;
+    }
+    if (size_request == 0)
+    {
+        makeErrorCode(ErrorCode::zeroReadSize);
         return std::nullopt;
     }
     size_t file_length = AAsset_getLength(m_aasset);

@@ -73,6 +73,8 @@ ServiceResult TerrainEditService::onInit()
     CommandBus::subscribe(typeid(PaintTerrainTextureLayer), m_paintTerrainLayer);
     m_saveSplatTexture = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { saveSplatTexture(c); });
     CommandBus::subscribe(typeid(SaveTerrainSplatTexture), m_saveSplatTexture);
+    m_savePickedTerrain = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { savePickedTerrain(c); });
+    CommandBus::subscribe(typeid(SavePickedTerrain), m_savePickedTerrain);
 
     //m_onSceneGraphBuilt = std::make_shared<EventSubscriber>([=](auto e) { onSceneGraphBuilt(e); });
     //EventPublisher::subscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
@@ -103,6 +105,8 @@ ServiceResult TerrainEditService::onTerm()
     m_paintTerrainLayer = nullptr;
     CommandBus::unsubscribe(typeid(SaveTerrainSplatTexture), m_saveSplatTexture);
     m_saveSplatTexture = nullptr;
+    CommandBus::unsubscribe(typeid(SavePickedTerrain), m_savePickedTerrain);
+    m_savePickedTerrain = nullptr;
 
     //EventPublisher::unsubscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
     //m_onSceneGraphBuilt = nullptr;
@@ -421,6 +425,12 @@ void TerrainEditService::saveSplatTexture(const ICommandPtr& c)
     }
     m_savingSplatTextureFile = FileSystem::instance()->openFile(m_pickedSplatTexture.lock()->factoryDesc().GetResourceFilename(), write | openAlways | binary);
     CommandBus::enqueue(std::make_shared<EnqueueSavingTexture>(m_pickedSplatTexture.lock(), m_savingSplatTextureFile));
+}
+
+void TerrainEditService::savePickedTerrain(const Enigma::Frameworks::ICommandPtr& c)
+{
+    if (m_pickedTerrain.expired()) return;
+    std::make_shared<PutSpatial>(m_pickedTerrain.lock()->id(), m_pickedTerrain.lock())->enqueue();
 }
 
 /*void TerrainEditService::onSceneGraphBuilt(const IEventPtr& e)

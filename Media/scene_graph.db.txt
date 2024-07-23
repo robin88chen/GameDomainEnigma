@@ -1,4 +1,11 @@
-world/ww1_amb,En.SceneGraph.Light,world/ww1_amb.light@APK_PATH
-world/editor_camera,En.SceneGraph.Camera,world/editor_camera.cam@APK_PATH
 world/editor_portalmanagement,En.SceneGraph.PortalManagementNode,world/editor_portalmanagement.node@APK_PATH
+world/editor_camera,En.SceneGraph.Camera,world/editor_camera.cam@APK_PATH
+world/ww1_amb,En.SceneGraph.Light,world/ww1_amb.light@APK_PATH
+ww2_amb,En.SceneGraph.Light,ww2_amb.light@APK_PATH
 world/ww1_sun,En.SceneGraph.Light,world/ww1_sun.light@APK_PATH
+ww3_amb,En.SceneGraph.Light,ww3_amb.light@APK_PATH
+ww3_sun,En.SceneGraph.Light,ww3_sun.light@APK_PATH
+ww1_amb,En.SceneGraph.Light,ww1_amb.light@APK_PATH
+world/ww1_map,En.SceneGraph.PortalZoneNode,world/ww1_map.node@APK_PATH
+world/ww2_map,En.SceneGraph.PortalZoneNode,world/ww2_map.node@APK_PATH
+world/ww3_map,En.SceneGraph.PortalZoneNode,world/ww3_map.node@APK_PATH

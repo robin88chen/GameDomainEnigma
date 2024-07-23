@@ -5,9 +5,9 @@
 #include "Culler.h"
 #include "Camera.h"
 #include "ContainingPortalZoneFinder.h"
-#include "GameEngine/LinkageResolver.h"
 #include "Platforms/PlatformLayer.h"
 #include "PortalCommands.h"
+#include "PortalEvents.h"
 #include "Frameworks/CommandBus.h"
 
 using namespace Enigma::SceneGraph;
@@ -18,6 +18,7 @@ DEFINE_RTTI(SceneGraph, PortalManagementNode, Node);
 
 PortalManagementNode::PortalManagementNode(const SpatialId& id) : Node(id)
 {
+    m_outsideZone = nullptr;
     m_factoryDesc = FactoryDesc(TYPE_RTTI.getName());
     m_attachOutsideZone = std::make_shared<Frameworks::CommandSubscriber>([=](const Frameworks::ICommandPtr& c) { attachOutsideZone(c); });
     Frameworks::CommandBus::subscribe(typeid(AttachPortalOutsideZone), m_attachOutsideZone);
@@ -25,6 +26,7 @@ PortalManagementNode::PortalManagementNode(const SpatialId& id) : Node(id)
 
 PortalManagementNode::PortalManagementNode(const SpatialId& id, const Engine::GenericDto& o) : Node(id, o)
 {
+    m_outsideZone = nullptr;
     PortalManagementNodeDto dto{ o };
     if (dto.outsideZoneNodeId()) m_outsideZoneId = dto.outsideZoneNodeId().value();
     m_attachOutsideZone = std::make_shared<Frameworks::CommandSubscriber>([=](const Frameworks::ICommandPtr& c) { attachOutsideZone(c); });
@@ -35,6 +37,8 @@ PortalManagementNode::~PortalManagementNode()
 {
     Frameworks::CommandBus::unsubscribe(typeid(AttachPortalOutsideZone), m_attachOutsideZone);
     m_attachOutsideZone = nullptr;
+
+    m_outsideZone = nullptr;
 }
 
 std::shared_ptr<PortalManagementNode> PortalManagementNode::create(const SpatialId& id)
@@ -58,7 +62,9 @@ void PortalManagementNode::attachOutsideZone(const std::shared_ptr<PortalZoneNod
 {
     if (!node) return;
     m_outsideZoneId = node->id();
+    m_outsideZone = node;
     node->setPortalParent(m_id);
+    std::make_shared<OutsideZoneAttached>(m_id, m_outsideZoneId)->enqueue();
 }
 
 error PortalManagementNode::onCullingVisible(Culler* culler, bool noCull)
@@ -85,7 +91,7 @@ error PortalManagementNode::onCullingVisible(Culler* culler, bool noCull)
             startZone = zone_finder.GetContainingZone();
             if (startZone) m_cachedStartZone = startZone;
         }
-        if (!startZone) startZone = cachedOutsideZone();
+        if (!startZone) startZone = outsideZone();
         if (startZone)
         {
             er = startZone->cullVisibleSet(culler, noCull);
@@ -112,12 +118,13 @@ void PortalManagementNode::attachOutsideZone(const Frameworks::ICommandPtr& c)
     attachOutsideZone(cmd->GetZone());
 }
 
-std::shared_ptr<PortalZoneNode> PortalManagementNode::cachedOutsideZone()
+std::shared_ptr<PortalZoneNode> PortalManagementNode::outsideZone()
 {
     if (m_outsideZoneId.empty()) return nullptr;
-    if ((m_cachedOutsideZone.expired()) || (m_cachedOutsideZone.lock()->id() != m_outsideZoneId))
+    if (!m_outsideZone)
     {
-        m_cachedOutsideZone = std::dynamic_pointer_cast<PortalZoneNode>(Node::queryNode(m_outsideZoneId));
+        auto outside_zone = std::dynamic_pointer_cast<PortalZoneNode>(Node::queryNode(m_outsideZoneId));
+        if (outside_zone) attachOutsideZone(outside_zone);
     }
-    return m_cachedOutsideZone.lock();
+    return m_outsideZone;
 }

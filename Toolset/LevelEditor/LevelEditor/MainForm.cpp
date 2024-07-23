@@ -210,6 +210,7 @@ void MainForm::initMenu()
 
     nana::menu& terrain_menu = m_menubar->push_back("&Terrain");
     terrain_menu.append("Add Terrain", [this](auto item) { onAddTerrainCommand(item); });
+    terrain_menu.append("Save Terrain", [this](auto item) { onSaveTerrainCommand(item); });
 
     nana::menu& light_menu = m_menubar->push_back("&Light");
     light_menu.append("Add Ambient Light", [this](auto item) { onAddAmbientLightCommand(item); });
@@ -318,6 +319,14 @@ void MainForm::onSaveWorldCommand(const nana::menu::item_proxy& menu_item)
 void MainForm::onAddTerrainCommand(const nana::menu::item_proxy& menu_item)
 {
     nana::API::modal_window(AddTerrainDialog(*this, m_terrainConsole.lock()));
+}
+
+void MainForm::onSaveTerrainCommand(const nana::menu::item_proxy& menu_item)
+{
+    assert(!m_terrainConsole.expired());
+    Enigma::Frameworks::CommandBus::enqueue(std::make_shared<OutputMessage>("Save Terrain File..."));
+    Enigma::Frameworks::CommandBus::enqueue(std::make_shared<SavePickedTerrain>());
+    Enigma::Frameworks::CommandBus::enqueue(std::make_shared<SaveTerrainSplatTexture>(m_terrainConsole.lock()->terrainPath()));
 }
 
 void MainForm::onAddAmbientLightCommand(const nana::menu::item_proxy& menu_item)

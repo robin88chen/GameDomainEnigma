@@ -34,11 +34,15 @@ StdioFile::~StdioFile()
 
 std::optional<std::vector<unsigned char>> StdioFile::read(size_t offset, size_t size_request)
 {
-    assert(size_request > 0);
     Debug::Printf("Read File in thread %d\n", std::this_thread::get_id());
     if ((!m_file) || (!m_file.is_open()))
     {
         makeErrorCode(ErrorCode::fileStatusError);
+        return std::nullopt;
+    }
+    if (size_request == 0)
+    {
+        makeErrorCode(ErrorCode::zeroReadSize);
         return std::nullopt;
     }
 
@@ -72,7 +76,6 @@ std::optional<std::vector<unsigned char>> StdioFile::read(size_t offset, size_t 
 
 size_t StdioFile::write(size_t offset, const std::vector<unsigned char>& in_buff)
 {
-    assert(in_buff.size() > 0);
     Debug::Printf("Write File in thread %d\n", std::this_thread::get_id());
     if ((!m_file) || (!m_file.is_open()))
     {

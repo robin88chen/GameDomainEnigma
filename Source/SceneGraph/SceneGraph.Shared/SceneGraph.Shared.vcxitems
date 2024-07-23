@@ -41,6 +41,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalAssemblers.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalDtos.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalManagementNode.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalSceneGraph.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalZoneNode.h" />
@@ -58,6 +59,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphPersistenceLevel.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphQueries.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphRepository.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphRepositoryPendingStash.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphStoreMapper.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneNonLazyFlattenTraversal.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneTraveler.h" />
@@ -106,6 +108,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphInstallingPolicy.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraph.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphRepository.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphRepositoryPendingStash.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneNonLazyFlattenTraversal.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Spatial.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialAssembler.cpp" />

@@ -45,6 +45,7 @@ namespace LevelEditor
         void moveUpTerrainVertex(const Enigma::Frameworks::ICommandPtr& c);
         void paintTerrainLayer(const Enigma::Frameworks::ICommandPtr& c);
         void saveSplatTexture(const Enigma::Frameworks::ICommandPtr& c); // service 有 splat texture, 所以由 service 來存
+        void savePickedTerrain(const Enigma::Frameworks::ICommandPtr& c);
 
         //void onSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
         //void onTerrainPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
@@ -77,6 +78,7 @@ namespace LevelEditor
         Enigma::Frameworks::CommandSubscriberPtr m_moveUpTerrainVertex;
         Enigma::Frameworks::CommandSubscriberPtr m_paintTerrainLayer;
         Enigma::Frameworks::CommandSubscriberPtr m_saveSplatTexture;
+        Enigma::Frameworks::CommandSubscriberPtr m_savePickedTerrain;
 
         //Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
         //Enigma::Frameworks::EventSubscriberPtr m_onTerrainPrimitiveBuilt;

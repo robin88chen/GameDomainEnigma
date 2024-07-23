@@ -145,6 +145,11 @@ namespace LevelEditor
     protected:
         std::string m_pathId;
     };
+    class SavePickedTerrain : public Enigma::Frameworks::ICommand
+    {
+    public:
+        SavePickedTerrain() = default;
+    };
 }
 
 #endif // LEVEL_EDITOR_COMMANDS_H

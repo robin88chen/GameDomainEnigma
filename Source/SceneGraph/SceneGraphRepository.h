@@ -25,6 +25,7 @@ namespace Enigma::SceneGraph
 {
     class SceneGraphStoreMapper;
     class SceneGraphFactory;
+    class SceneGraphRepositoryPendingStash;
     class Spatial;
     class Camera;
     class Node;
@@ -74,6 +75,8 @@ namespace Enigma::SceneGraph
         void removeSpatial(const SpatialId& id);
         void removeLaziedContent(const SpatialId& id);
 
+        void removePendingSpatialAsSceneRoot(const SpatialId& id);
+
     private:
         void registerHandlers();
         void unregisterHandlers();
@@ -115,6 +118,9 @@ namespace Enigma::SceneGraph
         //! ADR: 在 repository 中，map 是存放已生成 asset 的 cache, 不擁有asset, 所以改用 weak_ptr
         std::unordered_map<SpatialId, std::weak_ptr<Spatial>, SpatialId::hash> m_spatials;
         std::recursive_mutex m_spatialMapLock;
+
+        //! ADR: 新生成的 spatial 暫存在 stash, 加入 scene graph 後移出, 先這樣, 要再想一下, 有點怪
+        SceneGraphRepositoryPendingStash* m_pendingStash;
 
         Frameworks::QuerySubscriberPtr m_queryCamera;
         Frameworks::QuerySubscriberPtr m_requestCameraCreation;

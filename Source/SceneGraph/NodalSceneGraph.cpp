@@ -24,6 +24,7 @@ error NodalSceneGraph::createRoot(const SpatialId& scene_root_id)
     m_root = Node::queryNode(scene_root_id);
     if (!m_root) return ErrorCode::sceneRepositoryFailed;
     m_root->setLocalTransform(Matrix4::IDENTITY);
+    m_sceneGraphRepository.lock()->removePendingSpatialAsSceneRoot(scene_root_id);
     return ErrorCode::ok;
 }
 

@@ -10,7 +10,7 @@
                 "ResourceName": "",
                 "ResourceFilename": "",
                 "RttiName": "En.SceneGraph.PortalZoneNode",
-                "PrefabFilename": "world/ww1_map.node@APK_PATH"
+                "PrefabFilename": "world/ww2_map.node@APK_PATH"
             }
         },
         "ModelBound": {
@@ -32,7 +32,7 @@
         },
         "Id": {
             "Type": "StringArray",
-            "Value": ["world/ww1_map", "En.SceneGraph.PortalZoneNode"]
+            "Value": ["world/ww2_map", "En.SceneGraph.PortalZoneNode"]
         },
         "WorldTransform": {
             "Type": "Matrix4",

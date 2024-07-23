@@ -254,10 +254,10 @@ namespace Enigma::SceneGraph
         SpatialId m_nodeId;
         std::weak_ptr<Spatial> m_child;
     };
-    class AttachNodeChildFailed : public Frameworks::IEvent
+    class NodeChildAttachmentFailed : public Frameworks::IEvent
     {
     public:
-        AttachNodeChildFailed(const SpatialId& node_id, const SpatialId& child_id, std::error_code er) : m_nodeId(node_id), m_childId(child_id), m_error(er) {}
+        NodeChildAttachmentFailed(const SpatialId& node_id, const SpatialId& child_id, std::error_code er) : m_nodeId(node_id), m_childId(child_id), m_error(er) {}
 
         const SpatialId& nodeId() const { return m_nodeId; }
         const SpatialId& childId() const { return m_childId; }
@@ -280,10 +280,10 @@ namespace Enigma::SceneGraph
         SpatialId m_nodeId;
         SpatialId m_childId;
     };
-    class DetachNodeChildFailed : public Frameworks::IEvent
+    class NodeChildDetachmentFailed : public Frameworks::IEvent
     {
     public:
-        DetachNodeChildFailed(const SpatialId& node_id, const SpatialId& child_id, std::error_code er) : m_nodeId(node_id), m_childId(child_id), m_error(er) {}
+        NodeChildDetachmentFailed(const SpatialId& node_id, const SpatialId& child_id, std::error_code er) : m_nodeId(node_id), m_childId(child_id), m_error(er) {}
 
         const SpatialId& nodeId() const { return m_nodeId; }
         const SpatialId& childId() const { return m_childId; }

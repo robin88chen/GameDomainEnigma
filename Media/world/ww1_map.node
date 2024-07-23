@@ -34,10 +34,6 @@
             "Type": "StringArray",
             "Value": ["world/ww1_map", "En.SceneGraph.PortalZoneNode"]
         },
-        "ParentName": {
-            "Type": "String",
-            "Value": "world/editor_portalmanagement"
-        },
         "WorldTransform": {
             "Type": "Matrix4",
             "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
@@ -66,9 +62,5 @@
         "Children": {
             "Type": "DataObjectArray",
             "Value": []
-        },
-        "PortalParentID": {
-            "Type": "StringArray",
-            "Value": ["world/editor_portalmanagement", "En.SceneGraph.PortalManagementNode"]
         }
     }]

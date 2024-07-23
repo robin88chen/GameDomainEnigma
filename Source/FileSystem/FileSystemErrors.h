@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   FileSystemErrors.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   May 2022
  *********************************************************************/
@@ -24,6 +24,7 @@ namespace Enigma::FileSystem
         expiredPackage,
         emptyAssetKey,
         emptyWriteBuffer,
+        zeroReadSize,
         zeroSizeContent,
         readOffsetError,
         readFail,

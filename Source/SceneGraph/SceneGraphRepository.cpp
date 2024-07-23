@@ -1,6 +1,7 @@
 ﻿#include "SceneGraphRepository.h"
 #include "SceneGraphStoreMapper.h"
 #include "SceneGraphFactory.h"
+#include "SceneGraphRepositoryPendingStash.h"
 #include "SpatialId.h"
 #include "Camera.h"
 #include "Frustum.h"
@@ -35,6 +36,7 @@ SceneGraphRepository::SceneGraphRepository(Frameworks::ServiceManager* srv_mngr,
     m_handSystem = GraphicCoordSys::LeftHand;
     m_storeMapper = store_mapper;
     m_factory = menew SceneGraphFactory();
+    m_pendingStash = menew SceneGraphRepositoryPendingStash();
     m_needTick = false;
     registerHandlers();
 }
@@ -43,11 +45,13 @@ SceneGraphRepository::~SceneGraphRepository()
 {
     unregisterHandlers();
     SAFE_DELETE(m_factory);
+    SAFE_DELETE(m_pendingStash);
 }
 
 ServiceResult SceneGraphRepository::onInit()
 {
     m_storeMapper->connect();
+    if (m_pendingStash) m_pendingStash->registerHandlers();
     return ServiceResult::Complete;
 }
 ServiceResult SceneGraphRepository::onTerm()
@@ -56,6 +60,7 @@ ServiceResult SceneGraphRepository::onTerm()
     dumpRetainedSpatials();
 
     m_storeMapper->disconnect();
+    if (m_pendingStash) m_pendingStash->unregisterHandlers();
 
     m_cameras.clear();
     m_spatials.clear();
@@ -208,6 +213,7 @@ std::shared_ptr<Spatial> SceneGraphRepository::querySpatial(const SpatialId& id)
         spatial = m_factory->constituteSpatial(id, dto.value(), true);
     }
     assert(spatial);
+    m_pendingStash->insertPendingSpatial(id, spatial);
     m_spatials.insert_or_assign(id, spatial);
     return spatial;
 }
@@ -443,6 +449,7 @@ void SceneGraphRepository::requestSpatialCreation(const Frameworks::IQueryPtr& r
     assert(spatial);
     std::lock_guard locker{ m_spatialMapLock };
     spatial->persistenceLevel(PersistenceLevel::Repository);
+    if (m_pendingStash) m_pendingStash->insertPendingSpatial(request->id(), spatial);
     m_spatials.insert_or_assign(request->id(), spatial);
     request->setResult(spatial);
 }
@@ -462,6 +469,7 @@ void SceneGraphRepository::requestSpatialConstitution(const Frameworks::IQueryPt
     assert(spatial);
     std::lock_guard locker{ m_spatialMapLock };
     spatial->persistenceLevel(PersistenceLevel::Repository);
+    if (m_pendingStash) m_pendingStash->insertPendingSpatial(request->id(), spatial);
     m_spatials.insert_or_assign(request->id(), spatial);
     request->setResult(spatial);
 }
@@ -481,6 +489,7 @@ void SceneGraphRepository::requestLightCreation(const Frameworks::IQueryPtr& r)
     assert(light);
     std::lock_guard locker{ m_spatialMapLock };
     light->persistenceLevel(PersistenceLevel::Repository);
+    if (m_pendingStash) m_pendingStash->insertPendingSpatial(request->id(), light);
     m_spatials.insert_or_assign(request->id(), light);
     request->setResult(light);
 }
@@ -574,6 +583,11 @@ std::shared_ptr<Spatial> SceneGraphRepository::findCachedSpatial(const SpatialId
     auto it = m_spatials.find(id);
     if ((it != m_spatials.end()) && (!it->second.expired())) return it->second.lock();
     return nullptr;
+}
+
+void SceneGraphRepository::removePendingSpatialAsSceneRoot(const SpatialId& id)
+{
+    if (m_pendingStash) m_pendingStash->removePendingSpatialAsSceneRoot(id);
 }
 
 void SceneGraphRepository::dumpRetainedCameras()

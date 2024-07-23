@@ -38,8 +38,8 @@ namespace Enigma::SceneGraph
 
         virtual Engine::GenericDto serializeDto() override;
 
-        void setAdjacentZone(const SpatialId& id);
-        std::shared_ptr<PortalZoneNode> getAdjacentZone();
+        void adjacentZone(const std::shared_ptr<PortalZoneNode>& zone);
+        std::shared_ptr<PortalZoneNode> adjacentZone();
 
         /// Portal Open & Close, Closed Portal 就像關起來的門
         bool isOpen() const { return m_isOpen; };
@@ -61,7 +61,7 @@ namespace Enigma::SceneGraph
 
     protected:
         SpatialId m_adjacentZoneId;
-        std::weak_ptr<PortalZoneNode> m_adjacentPortalZone;
+        std::shared_ptr<PortalZoneNode> m_adjacentPortalZone;
         bool m_isOpen;
 
         enum class ZoneLoadStatus

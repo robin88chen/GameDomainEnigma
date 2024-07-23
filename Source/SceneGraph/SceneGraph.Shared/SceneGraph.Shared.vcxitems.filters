@@ -222,6 +222,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightCommands.h">
       <Filter>Commands</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphRepositoryPendingStash.h">
+      <Filter>Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalEvents.h">
+      <Filter>Events</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp">
@@ -352,6 +358,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightCommands.cpp">
       <Filter>Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphRepositoryPendingStash.cpp">
+      <Filter>Repository</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

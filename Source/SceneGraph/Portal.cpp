@@ -6,6 +6,7 @@
 #include "Camera.h"
 #include "SceneGraphQueries.h"
 #include "Platforms/PlatformLayerUtilities.h"
+#include "PortalEvents.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::MathLib;
@@ -22,6 +23,7 @@ DEFINE_RTTI(SceneGraph, Portal, Spatial);
 
 Portal::Portal(const SpatialId& id) : Spatial(id)
 {
+    m_adjacentPortalZone = nullptr;
     m_factoryDesc = FactoryDesc(Portal::TYPE_RTTI.getName());
     m_isOpen = false;
     m_zoneLoadStatus = ZoneLoadStatus::None;
@@ -29,6 +31,7 @@ Portal::Portal(const SpatialId& id) : Spatial(id)
 
 Portal::Portal(const SpatialId& id, const Engine::GenericDto& o) : Spatial(id, o)
 {
+    m_adjacentPortalZone = nullptr;
     PortalDto dto{ o };
     m_isOpen = dto.isOpen();
     m_adjacentZoneId = dto.adjacentZoneNodeId();
@@ -63,36 +66,29 @@ Enigma::Engine::GenericDto Portal::serializeDto()
     return dto.toGenericDto();
 }
 
-void Portal::setAdjacentZone(const SpatialId& id)
+void Portal::adjacentZone(const std::shared_ptr<PortalZoneNode>& zone)
 {
-    m_adjacentZoneId = id;
-    if (auto zone = getAdjacentZone())
-    {
-        zone->setPortalParent(m_id);
-    }
+    if (!zone) return;
+    m_adjacentZoneId = zone->id();
+    zone->setPortalParent(m_id);
+    m_zoneLoadStatus = ZoneLoadStatus::Done;
+    std::make_shared<PortalZoneAttached>(m_id, m_adjacentZoneId)->enqueue();
 }
 
-std::shared_ptr<PortalZoneNode> Portal::getAdjacentZone()
+std::shared_ptr<PortalZoneNode> Portal::adjacentZone()
 {
-    if ((m_adjacentPortalZone.expired()) || (m_adjacentPortalZone.lock()->id() != m_adjacentZoneId))
+    if (m_adjacentZoneId.empty()) return nullptr;
+    if (!m_adjacentPortalZone)
     {
-        m_zoneLoadStatus = ZoneLoadStatus::None;
-        if (!m_adjacentZoneId.empty())
-        {
-            m_adjacentPortalZone = std::dynamic_pointer_cast<PortalZoneNode>(Node::queryNode(m_adjacentZoneId));
-            if (!m_adjacentPortalZone.expired()) m_zoneLoadStatus = ZoneLoadStatus::Done;
-        }
-        else
-        {
-            m_adjacentPortalZone.reset();
-        }
+        auto zone = std::dynamic_pointer_cast<PortalZoneNode>(Node::queryNode(m_adjacentZoneId));
+        if (zone) adjacentZone(zone);
     }
-    return m_adjacentPortalZone.lock();
+    return m_adjacentPortalZone;
 }
 
 error Portal::onCullingVisible(Culler* culler, bool noCull)
 {
-    const auto zone = getAdjacentZone();
+    const auto zone = adjacentZone();
     if (!zone) return ErrorCode::ok;
 
     error er = zone->cullVisibleSet(culler, noCull);
@@ -107,7 +103,7 @@ error Portal::cullVisibleSet(Culler* culler, bool noCull)
     if (FATAL_LOG_EXPR((!culler) || (!culler->GetCamera()))) return ErrorCode::nullCullerCamera;
 
     if (!m_isOpen) return ErrorCode::ok;
-    const auto zone = getAdjacentZone();
+    const auto zone = adjacentZone();
     if (!zone) return ErrorCode::ok;
 
     const bool isPortalPass = culler->IsVisible(&m_vecPortalQuadWorldPos[0], PORTAL_VERTEX_COUNT, true);
@@ -141,7 +137,7 @@ SceneTraveler::TravelResult Portal::visitBy(SceneTraveler* traveler)
     SceneTraveler::TravelResult res = traveler->travelTo(thisSpatial());
     if (res != SceneTraveler::TravelResult::Continue) return res;  // don't go sub-tree
 
-    if (const auto zone = getAdjacentZone())
+    if (const auto zone = adjacentZone())
     {
         res = zone->visitBy(traveler);
     }

@@ -6,11 +6,11 @@
         "Rtti": {
             "Type": "FactoryDesc",
             "Value": {
-                "InstanceType": 2,
+                "InstanceType": 3,
                 "ResourceName": "",
                 "ResourceFilename": "",
-                "RttiName": "En.SceneGraph.PortalZoneNode",
-                "PrefabFilename": "world/ww1_map.node@APK_PATH"
+                "RttiName": "En.SceneGraph.Light",
+                "PrefabFilename": "ww3_amb.light@APK_PATH"
             }
         },
         "ModelBound": {
@@ -32,7 +32,7 @@
         },
         "Id": {
             "Type": "StringArray",
-            "Value": ["world/ww1_map", "En.SceneGraph.PortalZoneNode"]
+            "Value": ["ww3_amb", "En.SceneGraph.Light"]
         },
         "WorldTransform": {
             "Type": "Matrix4",
@@ -59,8 +59,8 @@
             "Type": "Uint32",
             "Value": 31
         },
-        "Children": {
-            "Type": "DataObjectArray",
-            "Value": []
+        "LightInfo": {
+            "Type": "DataObject",
+            "Value": null
         }
     }]

@@ -228,6 +228,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalEvents.h">
       <Filter>Events</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\OutRegionNode.h">
+      <Filter>Portal System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp">
@@ -361,6 +364,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphRepositoryPendingStash.cpp">
       <Filter>Repository</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\OutRegionNode.cpp">
+      <Filter>Portal System</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

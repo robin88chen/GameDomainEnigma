@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   PortalCommands.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   July 2023
  *********************************************************************/
@@ -12,17 +12,17 @@
 
 namespace Enigma::SceneGraph
 {
-    class PortalZoneNode;
+    class OutRegionNode;
 
-    class AttachPortalOutsideZone : public Frameworks::ICommand
+    class AttachManagementOutsideRegion : public Frameworks::ICommand
     {
     public:
-        AttachPortalOutsideZone(const std::shared_ptr<PortalZoneNode>& outside_node) : m_zone(outside_node) {}
+        AttachManagementOutsideRegion(const std::shared_ptr<OutRegionNode>& outside_region) : m_node(outside_region) {}
 
-        const std::shared_ptr<PortalZoneNode>& GetZone() { return m_zone; }
+        const std::shared_ptr<OutRegionNode>& getRegion() { return m_node; }
 
     protected:
-        std::shared_ptr<PortalZoneNode> m_zone;
+        std::shared_ptr<OutRegionNode> m_node;
     };
 
 }

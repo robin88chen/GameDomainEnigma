@@ -8,6 +8,7 @@
 #ifndef PORTALASSEMBLERS_H
 #define PORTALASSEMBLERS_H
 
+#include "OutRegionNode.h"
 #include "SceneGraphAssemblers.h"
 #include "PortalDtos.h"
 
@@ -66,6 +67,32 @@ namespace Enigma::SceneGraph
         PortalZoneNodeDto m_dto;
     };
 
+    class OutRegionNodeAssembler
+    {
+    public:
+        OutRegionNodeAssembler(const SpatialId& id);
+
+        const SpatialId& id() const { return m_id; }
+
+        LazyNodeAssembler& lazyNode();
+
+        OutRegionNodeAssembler& factory(const Engine::FactoryDesc& factory);
+        OutRegionNodeAssembler& ownerManagementId(const SpatialId& owner_id);
+        OutRegionNodeAssembler& asDeferred(const std::string& file_name, const std::string& path_id);
+
+        Engine::GenericDto toHydratedGenericDto() const;
+        OutRegionNodeDto toHydratedDto() const;
+        std::shared_ptr<OutRegionNode> constituteHydrated();
+        Engine::GenericDto toDeHydratedGenericDto() const;
+        OutRegionNodeDto toDeHydratedDto() const;
+        std::shared_ptr<OutRegionNode> constituteDeHydrated();
+
+    private:
+        SpatialId m_id;
+        LazyNodeAssembler m_lazyNodeAssembler;
+        OutRegionNodeDto m_dto;
+    };
+
     class PortalManagementNodeAssembler
     {
     public:
@@ -76,7 +103,7 @@ namespace Enigma::SceneGraph
         NodeAssembler& node();
 
         PortalManagementNodeAssembler& factory(const Engine::FactoryDesc& factory);
-        PortalManagementNodeAssembler& outsideZoneNodeId(const SpatialId& outside_zone_node_id);
+        PortalManagementNodeAssembler& outsideRegionId(const SpatialId& outside_region_id);
         PortalManagementNodeAssembler& asNative(const std::string& file_at_path);
 
         Engine::GenericDto toGenericDto() const;

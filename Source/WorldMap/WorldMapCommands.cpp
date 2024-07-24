@@ -27,11 +27,11 @@ void CreateEmptyWorldMap::execute()
 
 void CreateWorldMapOutsideRegion::execute()
 {
-    SceneGraph::PortalZoneNodeAssembler region_assembler(m_id);
+    SceneGraph::OutRegionNodeAssembler region_assembler(m_id);
     region_assembler.factory(m_factory_desc);
     auto region = region_assembler.constituteDeHydrated();
     std::make_shared<SceneGraph::PutSpatial>(m_id, region)->execute();
     region->hydrate(region_assembler.toHydratedGenericDto());
     std::make_shared<SceneGraph::PutLaziedContent>(m_id, region)->execute();
-    std::make_shared<SceneGraph::AttachPortalOutsideZone>(region)->enqueue();
+    std::make_shared<SceneGraph::AttachManagementOutsideRegion>(region)->enqueue();
 }

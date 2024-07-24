@@ -14,31 +14,31 @@
 
 namespace Enigma::SceneGraph
 {
-    class OutsideZoneAttached : public Frameworks::IEvent
+    class OutsideRegionAttached : public Frameworks::IEvent
     {
     public:
-        OutsideZoneAttached(const SpatialId& managementNodeId, const SpatialId& zoneId)
-            : m_managementNodeId(managementNodeId), m_zoneId(zoneId) {}
+        OutsideRegionAttached(const SpatialId& managementNodeId, const SpatialId& regionId)
+            : m_managementNodeId(managementNodeId), m_regionId(regionId) {}
 
         const SpatialId& managementNodeId() const { return m_managementNodeId; }
-        const SpatialId& zoneId() const { return m_zoneId; }
+        const SpatialId& regionId() const { return m_regionId; }
 
     protected:
         SpatialId m_managementNodeId;
-        SpatialId m_zoneId;
+        SpatialId m_regionId;
     };
-    class OutsideZoneAttachmentFailed : public Frameworks::IEvent
+    class OutsideRegionAttachmentFailed : public Frameworks::IEvent
     {
     public:
-        OutsideZoneAttachmentFailed(const SpatialId& managementNodeId, const SpatialId& zoneId, std::error_code error)
-            : m_managementNodeId(managementNodeId), m_zoneId(zoneId), m_error(error) {}
+        OutsideRegionAttachmentFailed(const SpatialId& managementNodeId, const SpatialId& regionId, std::error_code error)
+            : m_managementNodeId(managementNodeId), m_regionId(regionId), m_error(error) {}
         const SpatialId& managementNodeId() const { return m_managementNodeId; }
-        const SpatialId& zoneId() const { return m_zoneId; }
+        const SpatialId& regionId() const { return m_regionId; }
         std::error_code error() const { return m_error; }
 
     protected:
         SpatialId m_managementNodeId;
-        SpatialId m_zoneId;
+        SpatialId m_regionId;
         std::error_code m_error;
     };
     class PortalZoneAttached : public Frameworks::IEvent

@@ -17,6 +17,7 @@
 
 namespace Enigma::SceneGraph
 {
+    class OutRegionNode;
     class PortalZoneNode;
 
     class PortalManagementNode : public Node
@@ -36,21 +37,21 @@ namespace Enigma::SceneGraph
 
         virtual Engine::GenericDto serializeDto() override;
 
-        void attachOutsideZone(const std::shared_ptr<PortalZoneNode>& node);
+        void attachOutsideRegion(const std::shared_ptr<OutRegionNode>& node);
 
         /** on cull visible, used by culler, for compute visible set, find start zone, then go to portal culling procedure  */
         virtual error onCullingVisible(Culler* culler, bool noCull) override;
 
     protected:
-        void attachOutsideZone(const Frameworks::ICommandPtr& c);
-        std::shared_ptr<PortalZoneNode> outsideZone();
+        void attachOutsideRegion(const Frameworks::ICommandPtr& c);
+        std::shared_ptr<OutRegionNode> outsideRegion();
 
     protected:
-        SpatialId m_outsideZoneId;
-        std::shared_ptr<PortalZoneNode> m_outsideZone;
+        SpatialId m_outsideRegionId;
+        std::shared_ptr<OutRegionNode> m_outsideRegion;
         std::weak_ptr<PortalZoneNode> m_cachedStartZone;
 
-        Frameworks::CommandSubscriberPtr m_attachOutsideZone;
+        Frameworks::CommandSubscriberPtr m_attachOutsideRegion;
     };
 }
 

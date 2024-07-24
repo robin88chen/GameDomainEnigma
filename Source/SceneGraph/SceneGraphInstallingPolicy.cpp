@@ -12,6 +12,7 @@
 #include "PortalManagementNode.h"
 #include "Portal.h"
 #include "PortalZoneNode.h"
+#include "OutRegionNode.h"
 #include "Light.h"
 #include <cassert>
 
@@ -30,6 +31,7 @@ error SceneGraphInstallingPolicy::install(Frameworks::ServiceManager* service_ma
     scene_graph_repository->registerSpatialFactory(PortalManagementNode::TYPE_RTTI.getName(), PortalManagementNode::create, PortalManagementNode::constitute);
     scene_graph_repository->registerSpatialFactory(Portal::TYPE_RTTI.getName(), Portal::create, Portal::constitute);
     scene_graph_repository->registerSpatialFactory(PortalZoneNode::TYPE_RTTI.getName(), PortalZoneNode::create, PortalZoneNode::constitute);
+    scene_graph_repository->registerSpatialFactory(OutRegionNode::TYPE_RTTI.getName(), OutRegionNode::create, OutRegionNode::constitute);
     scene_graph_repository->registerSpatialLightFactory(Light::TYPE_RTTI.getName(), Light::create, Light::constitute);
     service_manager->registerSystemService(scene_graph_repository);
     service_manager->registerSystemService(std::make_shared<LazyNodeHydrationService>(service_manager, scene_graph_repository, timer));

@@ -31,8 +31,6 @@ namespace Enigma::SceneGraph
     class Node;
     class Portal;
     class LazyNode;
-    class PortalZoneNode;
-    class PortalZoneNodeDto;
 
     class SceneGraphRepository : public Frameworks::ISystemService
     {

@@ -70,7 +70,7 @@ void Portal::adjacentZone(const std::shared_ptr<PortalZoneNode>& zone)
 {
     if (!zone) return;
     m_adjacentZoneId = zone->id();
-    zone->setPortalParent(m_id);
+    zone->parentPortal(m_id);
     m_zoneLoadStatus = ZoneLoadStatus::Done;
     std::make_shared<PortalZoneAttached>(m_id, m_adjacentZoneId)->enqueue();
 }

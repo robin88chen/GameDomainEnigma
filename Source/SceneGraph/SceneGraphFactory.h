@@ -46,6 +46,7 @@ namespace Enigma::SceneGraph
         void registerLightFactory(const Frameworks::ICommandPtr& c);
         void unregisterLightFactory(const Frameworks::ICommandPtr& c);
 
+        void reattachOwnership(const std::shared_ptr<Spatial>& spatial);
     protected:
         std::unordered_map<std::string, SpatialCreator> m_creators; // rtti name -> creator
         std::unordered_map<std::string, SpatialConstitutor> m_constitutors; // rtti name -> constitutor

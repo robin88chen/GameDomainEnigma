@@ -94,6 +94,7 @@ namespace Enigma::SceneGraph
         //@{
         void linkParent(const std::optional<SpatialId>& parent);
         std::shared_ptr<Spatial> getParent() const;
+        const std::optional<SpatialId>& getParentId() const { return m_parent; }
         unsigned int getGraphDepth() { return m_graphDepth; }
         void detachFromParent();  ///< parent should not call this function, it will be recursive forever!!
         //@}

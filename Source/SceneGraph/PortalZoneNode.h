@@ -36,10 +36,11 @@ namespace Enigma::SceneGraph
 
         virtual error onCullingVisible(Culler* culler, bool noCull) override;
 
-        virtual void setPortalParent(const SpatialId& id);
+        void parentPortal(const SpatialId& id);
+        const std::optional<SpatialId>& parentPortal() const;
 
     protected:
-        SpatialId m_portalParentId; // either portal or portal management node
+        std::optional<SpatialId> m_portalParentId; // either portal or portal management node
         bool m_hasTraversed;
     };
     using PortalZoneNodePtr = std::shared_ptr<PortalZoneNode>;

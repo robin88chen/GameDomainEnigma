@@ -36,14 +36,14 @@ std::shared_ptr<OutRegionNode> OutRegionNode::constitute(const SpatialId& id, co
 Enigma::Engine::GenericDto OutRegionNode::serializeDto()
 {
     OutRegionNodeDto dto = OutRegionNodeDto(LazyNode::serializeLazyNodeAsLaziness());
-    dto.ownerManagementId(m_ownerManagementId);
+    if (m_ownerManagementId.has_value()) dto.ownerManagementId(m_ownerManagementId.value());
     return dto.toGenericDto();
 }
 
 Enigma::Engine::GenericDto OutRegionNode::serializeLaziedContent()
 {
     OutRegionNodeDto dto = OutRegionNodeDto(LazyNodeDto(Node::serializeNodeDto()));
-    dto.ownerManagementId(m_ownerManagementId);
+    if (m_ownerManagementId.has_value()) dto.ownerManagementId(m_ownerManagementId.value());
     return dto.toGenericDto();
 }
 
@@ -82,4 +82,9 @@ error OutRegionNode::onCullingVisible(Culler* culler, bool noCull)
 void OutRegionNode::ownerManagementNode(const SpatialId& id)
 {
     m_ownerManagementId = id;
+}
+
+const std::optional<SpatialId>& OutRegionNode::ownerManagementNode() const
+{
+    return m_ownerManagementId;
 }

@@ -34,9 +34,10 @@ namespace Enigma::SceneGraph
         virtual error onCullingVisible(Culler* culler, bool noCull) override;
 
         void ownerManagementNode(const SpatialId& id);
+        const std::optional<SpatialId>& ownerManagementNode() const;
 
     protected:
-        SpatialId m_ownerManagementId;
+        std::optional<SpatialId> m_ownerManagementId;
         bool m_hasTraversed;
     };
 }

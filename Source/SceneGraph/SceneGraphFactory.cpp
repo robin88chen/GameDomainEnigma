@@ -5,13 +5,12 @@
 #include "CameraFrustumCommands.h"
 #include "SceneGraphCommands.h"
 #include "CameraFrustumEvents.h"
-#include "SceneGraphDtos.h"
 #include "SceneGraphEvents.h"
 #include "SceneGraphErrors.h"
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/EventPublisher.h"
-#include "Frameworks/QueryDispatcher.h"
 #include "Platforms/PlatformLayer.h"
+#include "SceneGraphOwnership.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Frameworks;
@@ -74,6 +73,7 @@ std::shared_ptr<Spatial> SceneGraphFactory::createSpatial(const SpatialId& id)
         return nullptr;
     }
     auto spatial = creator->second(id);
+    reattachOwnership(spatial);
     EventPublisher::enqueue(std::make_shared<SpatialCreated>(id, spatial));
     return spatial;
 }
@@ -88,6 +88,7 @@ std::shared_ptr <Spatial> SceneGraphFactory::constituteSpatial(const SpatialId& 
         return nullptr;
     }
     auto spatial = constitutor->second(id, dto);
+    reattachOwnership(spatial);
     EventPublisher::enqueue(std::make_shared<SpatialConstituted>(id, spatial, is_persisted));
     return spatial;
 }
@@ -103,6 +104,7 @@ std::shared_ptr<Light> SceneGraphFactory::createLight(const SpatialId& id, const
         return nullptr;
     }
     auto light = creator->second(id, info);
+    reattachOwnership(light);
     EventPublisher::enqueue(std::make_shared<SpatialCreated>(id, light));
     return light;
 }
@@ -118,6 +120,7 @@ std::shared_ptr<Light> SceneGraphFactory::constituteLight(const SpatialId& id, c
         return nullptr;
     }
     auto light = constitutor->second(id, dto);
+    reattachOwnership(light);
     EventPublisher::enqueue(std::make_shared<SpatialConstituted>(id, light, is_persisted));
     return light;
 }
@@ -196,4 +199,14 @@ void SceneGraphFactory::unregisterLightFactory(const Frameworks::ICommandPtr& c)
     auto cmd = std::dynamic_pointer_cast<UnregisterSpatialLightFactory>(c);
     if (!cmd) return;
     unregisterLightFactory(cmd->rttiName());
+}
+
+void SceneGraphFactory::reattachOwnership(const std::shared_ptr<Spatial>& spatial)
+{
+    auto owner = Ownership::getAssignedOwner(spatial);
+    if ((owner) && (!owner.value().empty()))
+    {
+        error er = Ownership::attachOwnership(owner.value(), spatial);
+        assert(!er);
+    }
 }

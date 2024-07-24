@@ -42,14 +42,14 @@ std::shared_ptr<PortalZoneNode> PortalZoneNode::constitute(const SpatialId& id, 
 GenericDto PortalZoneNode::serializeDto()
 {
     PortalZoneNodeDto dto = PortalZoneNodeDto(LazyNode::serializeLazyNodeAsLaziness());
-    dto.portalParentId(m_portalParentId);
+    if (m_portalParentId.has_value()) dto.portalParentId(m_portalParentId.value());
     return dto.toGenericDto();
 }
 
 GenericDto PortalZoneNode::serializeLaziedContent()
 {
     PortalZoneNodeDto dto = PortalZoneNodeDto(LazyNodeDto(Node::serializeNodeDto()));
-    dto.portalParentId(m_portalParentId);
+    if (m_portalParentId.has_value()) dto.portalParentId(m_portalParentId.value());
     return dto.toGenericDto();
 }
 
@@ -85,7 +85,12 @@ error PortalZoneNode::onCullingVisible(Culler* culler, bool noCull)
     return er;
 }
 
-void PortalZoneNode::setPortalParent(const SpatialId& id)
+void PortalZoneNode::parentPortal(const SpatialId& id)
 {
     m_portalParentId = id;
+}
+
+const std::optional<SpatialId>& PortalZoneNode::parentPortal() const
+{
+    return m_portalParentId;
 }

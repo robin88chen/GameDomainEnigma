@@ -1,3 +1,0 @@
-world/ww1,world/ww1.wld@APK_PATH
-world/ww2,world/ww2.wld@APK_PATH
-world/ww3,world/ww3.wld@APK_PATH

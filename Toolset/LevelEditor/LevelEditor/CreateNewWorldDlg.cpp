@@ -9,7 +9,7 @@
 #include "Platforms/PlatformLayer.h"
 #include "Platforms/MemoryMacro.h"
 #include "WorldEditConsole.h"
-#include "SceneGraph/PortalZoneNode.h"
+#include "SceneGraph/OutRegionNode.h"
 #include "SceneGraph/SceneGraphAssemblers.h"
 #include "SceneGraph/SceneGraphCommands.h"
 #include "GameCommon/GameSceneCommands.h"
@@ -111,7 +111,7 @@ Enigma::SceneGraph::SpatialId CreateNewWorldDlg::outsideRegionFromInput()
 {
     assert(!m_worldEditor.expired());
     std::string region_name = m_regionNameInputBox->text();
-    SceneGraph::SpatialId region_id = SceneGraph::SpatialId(m_worldEditor.lock()->worldRelativePath() + "/" + region_name, SceneGraph::PortalZoneNode::TYPE_RTTI);
+    SceneGraph::SpatialId region_id = SceneGraph::SpatialId(m_worldEditor.lock()->worldRelativePath() + "/" + region_name, SceneGraph::OutRegionNode::TYPE_RTTI);
     return region_id;
 }
 

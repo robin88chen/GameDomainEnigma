@@ -14,11 +14,12 @@ WorldEditService::WorldEditService(ServiceManager* srv_mngr, const std::shared_p
 {
     m_worldMapRepository = world_map_repository;
     m_needTick = false;
+    m_worldMap = nullptr;
 }
 
 WorldEditService::~WorldEditService()
 {
-
+    m_worldMap = nullptr;
 }
 
 ServiceResult WorldEditService::onInit()
@@ -27,26 +28,29 @@ ServiceResult WorldEditService::onInit()
     EventPublisher::subscribe(typeid(Enigma::WorldMap::WorldMapConstituted), m_onWorldMapConstituted);
     m_onWorldMapCreated = std::make_shared<EventSubscriber>([=](const IEventPtr& e) { onWorldMapCreatedOrConstituted(e); });
     EventPublisher::subscribe(typeid(Enigma::WorldMap::WorldMapCreated), m_onWorldMapCreated);
+    m_onWorldMapRemoved = std::make_shared<EventSubscriber>([=](const IEventPtr& e) { onWorldMapRemoved(e); });
+    EventPublisher::subscribe(typeid(Enigma::WorldMap::WorldMapRemoved), m_onWorldMapRemoved);
 
     return ServiceResult::Complete;
 }
 
 ServiceResult WorldEditService::onTerm()
 {
-    m_worldMap.reset();
+    m_worldMap = nullptr;
     m_worldMapRepository.reset();
     EventPublisher::unsubscribe(typeid(Enigma::WorldMap::WorldMapConstituted), m_onWorldMapConstituted);
     m_onWorldMapConstituted = nullptr;
     EventPublisher::unsubscribe(typeid(Enigma::WorldMap::WorldMapCreated), m_onWorldMapCreated);
     m_onWorldMapCreated = nullptr;
+    EventPublisher::unsubscribe(typeid(Enigma::WorldMap::WorldMapRemoved), m_onWorldMapRemoved);
+    m_onWorldMapRemoved = nullptr;
 
     return ServiceResult::Complete;
 }
 
 std::shared_ptr<Enigma::WorldMap::WorldMap> WorldEditService::getWorldMap() const
 {
-    if (m_worldMap.expired()) return nullptr;
-    return m_worldMap.lock();
+    return m_worldMap;
 }
 
 std::tuple<Enigma::Engine::GenericDto, std::vector<Enigma::Engine::GenericDtoCollection>> WorldEditService::serializeWorldMapAndNodeGraphs(const std::string& path_id) const
@@ -78,10 +82,24 @@ void WorldEditService::onWorldMapCreatedOrConstituted(const Enigma::Frameworks::
     if (!e) return;
     if (auto ev = std::static_pointer_cast<Enigma::WorldMap::WorldMapConstituted>(e))
     {
-        m_worldMap = m_worldMapRepository.lock()->queryWorldMap(ev->id());
+        m_worldMap = ev->map();
     }
     else if (auto ev = std::static_pointer_cast<Enigma::WorldMap::WorldMapCreated>(e))
     {
-        m_worldMap = m_worldMapRepository.lock()->queryWorldMap(ev->id());
+        m_worldMap = ev->map();
+    }
+}
+
+void WorldEditService::onWorldMapRemoved(const Enigma::Frameworks::IEventPtr& e)
+{
+    if (m_worldMapRepository.expired()) return;
+    if (!m_worldMap) return;
+    if (!e) return;
+    if (auto ev = std::static_pointer_cast<Enigma::WorldMap::WorldMapRemoved>(e))
+    {
+        if (m_worldMap->id() == ev->id())
+        {
+            m_worldMap = nullptr;
+        }
     }
 }

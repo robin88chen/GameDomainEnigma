@@ -9,13 +9,16 @@
 #include "Terrain/TerrainPawn.h"
 #include "WorldMap/WorldMapCommands.h"
 #include "SceneGraph/SceneGraphCommands.h"
+#include "SceneGraph/Light.h"
 
 const std::string WORLD_ASSETS_KEY("World_Assets");
 const std::string WORLD_ASSETS_NAME("Worlds :");
-const std::string TERRAIN_ASSETS_KEY("Terrain_Assets");
-const std::string TERRAIN_ASSETS_NAME("Terrains :");
+const std::string PAWN_ASSETS_KEY("Pawn_Assets");
+const std::string PAWN_ASSETS_NAME("Pawns :");
 const std::string NODE_ASSETS_KEY("Node_Assets");
 const std::string NODE_ASSETS_NAME("Nodes :");
+const std::string LIGHT_ASSETS_KEY("Light_Assets");
+const std::string LIGHT_ASSETS_NAME("Lights :");
 
 using namespace LevelEditor;
 AssetsBrowsePanel::AssetsBrowsePanel(const nana::window& wd) : panel<false>{ wd }
@@ -44,8 +47,9 @@ void AssetsBrowsePanel::initialize(MainForm* main_form)
     m_assetsTree->scheme().item_bg_selected_and_highlighted = UISchemeColors::BACKGROUND;
     m_assetsTree->scheme().item_fg_selected_and_highlighted = UISchemeColors::FOREGROUND;
     m_assetsTree->insert(WORLD_ASSETS_KEY, WORLD_ASSETS_NAME);
-    m_assetsTree->insert(TERRAIN_ASSETS_KEY, TERRAIN_ASSETS_NAME);
+    m_assetsTree->insert(PAWN_ASSETS_KEY, PAWN_ASSETS_NAME);
     m_assetsTree->insert(NODE_ASSETS_KEY, NODE_ASSETS_NAME);
+    m_assetsTree->insert(LIGHT_ASSETS_KEY, LIGHT_ASSETS_NAME);
     m_assetsTree->events().mouse_down([this](const nana::arg_mouse& arg) { this->onAssetsTreeMouseDown(arg); });
     (*m_place)["asset_tree"] << *m_assetsTree;
 
@@ -60,7 +64,7 @@ void AssetsBrowsePanel::finalize()
     auto item = m_assetsTree->find(WORLD_ASSETS_KEY);
     if (!item.empty()) item.visit_recursively(clearTreeItemValue);
     item.clear();
-    item = m_assetsTree->find(TERRAIN_ASSETS_KEY);
+    item = m_assetsTree->find(PAWN_ASSETS_KEY);
     if (!item.empty()) item.visit_recursively(clearTreeItemValue);
     item.clear();
     item = m_assetsTree->find(NODE_ASSETS_KEY);
@@ -80,8 +84,9 @@ void AssetsBrowsePanel::subscribeHandlers()
     Enigma::Frameworks::EventPublisher::subscribe(typeid(Enigma::SceneGraph::SpatialRemoved), m_onSpatialRemoved);
 
     refreshWorldMapAssets();
-    refreshTerrainAssets();
+    refreshPawnAssets();
     refreshNodeAssets();
+    refreshLightAssets();
 }
 
 void AssetsBrowsePanel::unsubscribeHandlers()
@@ -114,15 +119,20 @@ AssetIdCombo AssetsBrowsePanel::getSelectedAssetId() const
         auto world_map_id = item.value<Enigma::WorldMap::WorldMapId>();
         return AssetIdCombo{ world_map_id };
     }
-    else if (item.key().find_first_of(TERRAIN_ASSETS_KEY) == 0)
+    else if (item.key().find_first_of(PAWN_ASSETS_KEY) == 0)
     {
-        auto terrain_id = item.value<Enigma::SceneGraph::SpatialId>();
-        return AssetIdCombo{ terrain_id };
+        auto pawn_id = item.value<Enigma::SceneGraph::SpatialId>();
+        return AssetIdCombo{ pawn_id };
     }
     else if (item.key().find_first_of(NODE_ASSETS_KEY) == 0)
     {
         auto node_id = item.value<Enigma::SceneGraph::SpatialId>();
         return AssetIdCombo{ node_id };
+    }
+    else if (item.key().find_first_of(LIGHT_ASSETS_KEY) == 0)
+    {
+        auto light_id = item.value<Enigma::SceneGraph::SpatialId>();
+        return AssetIdCombo{ light_id };
     }
     return AssetIdCombo{};
 }
@@ -142,17 +152,17 @@ void AssetsBrowsePanel::refreshWorldMapAssets()
     }
 }
 
-void AssetsBrowsePanel::refreshTerrainAssets()
+void AssetsBrowsePanel::refreshPawnAssets()
 {
-    auto item = m_assetsTree->find(TERRAIN_ASSETS_KEY);
+    auto item = m_assetsTree->find(PAWN_ASSETS_KEY);
     if (!item.empty()) item.visit_recursively(clearTreeItemValue);
     item.clear();
 
-    auto terrain_assets = std::make_shared<QueryTerrainIds>()->dispatch();
-    if (terrain_assets.empty()) return;
-    for (const auto& asset : terrain_assets)
+    auto pawn_assets = std::make_shared<QueryPawnIds>()->dispatch();
+    if (pawn_assets.empty()) return;
+    for (const auto& asset : pawn_assets)
     {
-        auto item = m_assetsTree->insert(makeTerrainAssetKey(asset), asset.name());
+        auto item = m_assetsTree->insert(makePawnAssetKey(asset), asset.name());
         item->value(asset);
     }
 }
@@ -168,6 +178,21 @@ void AssetsBrowsePanel::refreshNodeAssets()
     for (const auto& asset : node_assets)
     {
         auto item = m_assetsTree->insert(makeNodeAssetKey(asset), asset.name());
+        item->value(asset);
+    }
+}
+
+void AssetsBrowsePanel::refreshLightAssets()
+{
+    auto item = m_assetsTree->find(LIGHT_ASSETS_KEY);
+    if (!item.empty()) item.visit_recursively(clearTreeItemValue);
+    item.clear();
+
+    auto light_assets = std::make_shared<QueryLightIds>()->dispatch();
+    if (light_assets.empty()) return;
+    for (const auto& asset : light_assets)
+    {
+        auto item = m_assetsTree->insert(makeLightAssetKey(asset), asset.name());
         item->value(asset);
     }
 }
@@ -192,15 +217,24 @@ void AssetsBrowsePanel::onRemoveAsset(nana::menu::item_proxy& item)
         auto world_map_id = selected.value<Enigma::WorldMap::WorldMapId>();
         std::make_shared<Enigma::WorldMap::RemoveWorldMap>(world_map_id)->enqueue();
     }
-    else if (selected.key().find_first_of(TERRAIN_ASSETS_KEY) == 0)
+    else if (selected.key().find_first_of(PAWN_ASSETS_KEY) == 0)
     {
-        auto terrain_id = selected.value<Enigma::SceneGraph::SpatialId>();
-        std::make_shared<Enigma::SceneGraph::RemoveSpatial>(terrain_id)->enqueue();
+        auto pawn_id = selected.value<Enigma::SceneGraph::SpatialId>();
+        std::make_shared<Enigma::SceneGraph::RemoveSpatial>(pawn_id)->enqueue();
     }
     else if (selected.key().find_first_of(NODE_ASSETS_KEY) == 0)
     {
         auto node_id = selected.value<Enigma::SceneGraph::SpatialId>();
         std::make_shared<Enigma::SceneGraph::RemoveSpatial>(node_id)->enqueue();
+        if (node_id.rtti().isDerived(Enigma::SceneGraph::LazyNode::TYPE_RTTI))
+        {
+            std::make_shared<Enigma::SceneGraph::RemoveLaziedContent>(node_id)->enqueue();
+        }
+    }
+    else if (selected.key().find_first_of(LIGHT_ASSETS_KEY) == 0)
+    {
+        auto light_id = selected.value<Enigma::SceneGraph::SpatialId>();
+        std::make_shared<Enigma::SceneGraph::RemoveSpatial>(light_id)->enqueue();
     }
 }
 
@@ -222,9 +256,13 @@ void AssetsBrowsePanel::onSpatialConstituted(const Enigma::Frameworks::IEventPtr
     {
         refreshNodeAssets();
     }
-    else if (ev->spatial()->typeInfo().isDerived(Enigma::Terrain::TerrainPawn::TYPE_RTTI))
+    else if (ev->spatial()->typeInfo().isDerived(Enigma::SceneGraph::Pawn::TYPE_RTTI))
     {
-        refreshTerrainAssets();
+        refreshPawnAssets();
+    }
+    else if (ev->spatial()->typeInfo().isDerived(Enigma::SceneGraph::Light::TYPE_RTTI))
+    {
+        refreshLightAssets();
     }
 }
 
@@ -245,9 +283,13 @@ void AssetsBrowsePanel::onSpatialRemoved(const Enigma::Frameworks::IEventPtr& e)
     {
         refreshNodeAssets();
     }
-    else if (ev->id().rtti().isDerived(Enigma::Terrain::TerrainPawn::TYPE_RTTI))
+    else if (ev->id().rtti().isDerived(Enigma::SceneGraph::Pawn::TYPE_RTTI))
     {
-        refreshTerrainAssets();
+        refreshPawnAssets();
+    }
+    else if (ev->id().rtti().isDerived(Enigma::SceneGraph::Light::TYPE_RTTI))
+    {
+        refreshLightAssets();
     }
 }
 
@@ -256,9 +298,9 @@ std::string AssetsBrowsePanel::makeWorldMapAssetKey(const Enigma::WorldMap::Worl
     return WORLD_ASSETS_KEY + "/" + WORLD_ASSETS_KEY + "_" + idToTreeViewKey(world_map_id);
 }
 
-std::string AssetsBrowsePanel::makeTerrainAssetKey(const Enigma::SceneGraph::SpatialId& spatial_id) const
+std::string AssetsBrowsePanel::makePawnAssetKey(const Enigma::SceneGraph::SpatialId& spatial_id) const
 {
-    return TERRAIN_ASSETS_KEY + "/" + TERRAIN_ASSETS_KEY + "_" + idToTreeViewKey(spatial_id);
+    return PAWN_ASSETS_KEY + "/" + PAWN_ASSETS_KEY + "_" + idToTreeViewKey(spatial_id);
 }
 
 std::string AssetsBrowsePanel::makeNodeAssetKey(const Enigma::SceneGraph::SpatialId& spatial_id) const
@@ -266,7 +308,13 @@ std::string AssetsBrowsePanel::makeNodeAssetKey(const Enigma::SceneGraph::Spatia
     return NODE_ASSETS_KEY + "/" + NODE_ASSETS_KEY + "_" + idToTreeViewKey(spatial_id);
 }
 
+std::string AssetsBrowsePanel::makeLightAssetKey(const Enigma::SceneGraph::SpatialId& spatial_id) const
+{
+    return LIGHT_ASSETS_KEY + "/" + LIGHT_ASSETS_KEY + "_" + idToTreeViewKey(spatial_id);
+}
+
 bool AssetsBrowsePanel::isRootItemOfAssets(const nana::treebox::item_proxy& item) const
 {
-    return item.key() == WORLD_ASSETS_KEY || item.key() == TERRAIN_ASSETS_KEY || item.key() == NODE_ASSETS_KEY;
+    return item.key() == WORLD_ASSETS_KEY || item.key() == PAWN_ASSETS_KEY || item.key() == NODE_ASSETS_KEY || item.key() == LIGHT_ASSETS_KEY;
 }
+

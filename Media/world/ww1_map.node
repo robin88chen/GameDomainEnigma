@@ -9,7 +9,7 @@
                 "InstanceType": 2,
                 "ResourceName": "",
                 "ResourceFilename": "",
-                "RttiName": "En.SceneGraph.PortalZoneNode",
+                "RttiName": "En.SceneGraph.OutRegionNode",
                 "PrefabFilename": "world/ww1_map.node@APK_PATH"
             }
         },
@@ -32,7 +32,11 @@
         },
         "Id": {
             "Type": "StringArray",
-            "Value": ["world/ww1_map", "En.SceneGraph.PortalZoneNode"]
+            "Value": ["world/ww1_map", "En.SceneGraph.OutRegionNode"]
+        },
+        "ParentName": {
+            "Type": "String",
+            "Value": "world/editor_portalmanagement"
         },
         "WorldTransform": {
             "Type": "Matrix4",
@@ -62,5 +66,9 @@
         "Children": {
             "Type": "DataObjectArray",
             "Value": []
+        },
+        "OwnerManagementID": {
+            "Type": "StringArray",
+            "Value": ["world/editor_portalmanagement", "En.SceneGraph.PortalManagementNode"]
         }
     }]

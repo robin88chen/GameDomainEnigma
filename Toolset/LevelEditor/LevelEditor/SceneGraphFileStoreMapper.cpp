@@ -2,7 +2,8 @@
 #include "LevelEditorQueries.h"
 #include "Frameworks/QueryDispatcher.h"
 #include "SceneGraph/Node.h"
-#include "Terrain/TerrainPawn.h"
+#include "SceneGraph/Pawn.h"
+#include "SceneGraph/Light.h"
 #include <algorithm>
 
 using namespace LevelEditor;
@@ -21,8 +22,10 @@ void SceneGraphFileStoreMapper::subscribeHandlers()
     Enigma::Frameworks::QueryDispatcher::subscribe(typeid(IsSpatialNameDuplicated), m_isSpatialNameDuplicated);
     m_queryNodeIds = std::make_shared<Enigma::Frameworks::QuerySubscriber>([=](const Enigma::Frameworks::IQueryPtr& q) { queryNodeIds(q); });
     Enigma::Frameworks::QueryDispatcher::subscribe(typeid(QueryNodeIds), m_queryNodeIds);
-    m_queryTerrainIds = std::make_shared<Enigma::Frameworks::QuerySubscriber>([=](const Enigma::Frameworks::IQueryPtr& q) { queryTerrainIds(q); });
-    Enigma::Frameworks::QueryDispatcher::subscribe(typeid(QueryTerrainIds), m_queryTerrainIds);
+    m_queryPawnIds = std::make_shared<Enigma::Frameworks::QuerySubscriber>([=](const Enigma::Frameworks::IQueryPtr& q) { queryPawnIds(q); });
+    Enigma::Frameworks::QueryDispatcher::subscribe(typeid(QueryPawnIds), m_queryPawnIds);
+    m_queryLightIds = std::make_shared<Enigma::Frameworks::QuerySubscriber>([=](const Enigma::Frameworks::IQueryPtr& q) { queryLightIds(q); });
+    Enigma::Frameworks::QueryDispatcher::subscribe(typeid(QueryLightIds), m_queryLightIds);
 }
 
 void SceneGraphFileStoreMapper::unsubscribeHandlers()
@@ -31,8 +34,10 @@ void SceneGraphFileStoreMapper::unsubscribeHandlers()
     m_isSpatialNameDuplicated = nullptr;
     Enigma::Frameworks::QueryDispatcher::unsubscribe(typeid(QueryNodeIds), m_queryNodeIds);
     m_queryNodeIds = nullptr;
-    Enigma::Frameworks::QueryDispatcher::unsubscribe(typeid(QueryTerrainIds), m_queryTerrainIds);
-    m_queryTerrainIds = nullptr;
+    Enigma::Frameworks::QueryDispatcher::unsubscribe(typeid(QueryPawnIds), m_queryPawnIds);
+    m_queryPawnIds = nullptr;
+    Enigma::Frameworks::QueryDispatcher::unsubscribe(typeid(QueryLightIds), m_queryLightIds);
+    m_queryLightIds = nullptr;
 }
 
 std::optional<Enigma::SceneGraph::SpatialId> SceneGraphFileStoreMapper::spatialId(const std::string& spatial_name) const
@@ -60,12 +65,25 @@ std::vector<Enigma::SceneGraph::SpatialId> SceneGraphFileStoreMapper::nodeIds() 
     return ids;
 }
 
-std::vector<Enigma::SceneGraph::SpatialId> SceneGraphFileStoreMapper::terrainIds() const
+std::vector<Enigma::SceneGraph::SpatialId> SceneGraphFileStoreMapper::pawnIds() const
 {
     std::vector<Enigma::SceneGraph::SpatialId> ids;
     for (const auto& [id, name] : m_spatialMap.map())
     {
-        if (id.rtti().isDerived(Enigma::Terrain::TerrainPawn::TYPE_RTTI))
+        if (id.rtti().isDerived(Enigma::SceneGraph::Pawn::TYPE_RTTI))
+        {
+            ids.push_back(id);
+        }
+    }
+    return ids;
+}
+
+std::vector<Enigma::SceneGraph::SpatialId> SceneGraphFileStoreMapper::lightIds() const
+{
+    std::vector<Enigma::SceneGraph::SpatialId> ids;
+    for (const auto& [id, name] : m_spatialMap.map())
+    {
+        if (id.rtti().isDerived(Enigma::SceneGraph::Light::TYPE_RTTI))
         {
             ids.push_back(id);
         }
@@ -93,9 +111,16 @@ void SceneGraphFileStoreMapper::queryNodeIds(const Enigma::Frameworks::IQueryPtr
     query->setResult(nodeIds());
 }
 
-void SceneGraphFileStoreMapper::queryTerrainIds(const Enigma::Frameworks::IQueryPtr& q)
+void SceneGraphFileStoreMapper::queryPawnIds(const Enigma::Frameworks::IQueryPtr& q)
 {
     if (!q) return;
-    auto query = std::dynamic_pointer_cast<QueryTerrainIds>(q);
-    query->setResult(terrainIds());
+    auto query = std::dynamic_pointer_cast<QueryPawnIds>(q);
+    query->setResult(pawnIds());
+}
+
+void SceneGraphFileStoreMapper::queryLightIds(const Enigma::Frameworks::IQueryPtr& q)
+{
+    if (!q) return;
+    auto query = std::dynamic_pointer_cast<QueryLightIds>(q);
+    query->setResult(lightIds());
 }

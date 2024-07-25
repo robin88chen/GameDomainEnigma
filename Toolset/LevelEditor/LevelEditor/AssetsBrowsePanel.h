@@ -38,8 +38,9 @@ namespace LevelEditor
 
     protected:
         void refreshWorldMapAssets();
-        void refreshTerrainAssets();
+        void refreshPawnAssets();
         void refreshNodeAssets();
+        void refreshLightAssets();
 
         void onAssetsTreeMouseDown(const nana::arg_mouse& arg);
         void onRemoveAsset(nana::menu::item_proxy& item);
@@ -50,8 +51,9 @@ namespace LevelEditor
         void onSpatialRemoved(const Enigma::Frameworks::IEventPtr& e);
 
         std::string makeWorldMapAssetKey(const Enigma::WorldMap::WorldMapId& world_map_id) const;
-        std::string makeTerrainAssetKey(const Enigma::SceneGraph::SpatialId& spatial_id) const;
+        std::string makePawnAssetKey(const Enigma::SceneGraph::SpatialId& spatial_id) const;
         std::string makeNodeAssetKey(const Enigma::SceneGraph::SpatialId& spatial_id) const;
+        std::string makeLightAssetKey(const Enigma::SceneGraph::SpatialId& spatial_id) const;
 
         bool isRootItemOfAssets(const nana::treebox::item_proxy& item) const;
 

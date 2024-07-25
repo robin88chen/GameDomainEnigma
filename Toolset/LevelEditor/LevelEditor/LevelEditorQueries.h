@@ -72,10 +72,15 @@ namespace LevelEditor
     public:
         QueryNodeIds() = default;
     };
-    class QueryTerrainIds : public Enigma::Frameworks::Query<std::vector<Enigma::SceneGraph::SpatialId>>
+    class QueryPawnIds : public Enigma::Frameworks::Query<std::vector<Enigma::SceneGraph::SpatialId>>
     {
     public:
-        QueryTerrainIds() = default;
+        QueryPawnIds() = default;
+    };
+    class QueryLightIds : public Enigma::Frameworks::Query<std::vector<Enigma::SceneGraph::SpatialId>>
+    {
+    public:
+        QueryLightIds() = default;
     };
 }
 

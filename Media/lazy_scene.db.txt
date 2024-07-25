@@ -1,3 +1,0 @@
-world/ww1_map,En.SceneGraph.PortalZoneNode,world/lazied_ww1_map.node@APK_PATH
-world/ww2_map,En.SceneGraph.PortalZoneNode,world/lazied_ww2_map.node@APK_PATH
-world/ww3_map,En.SceneGraph.PortalZoneNode,world/lazied_ww3_map.node@APK_PATH

@@ -44,16 +44,18 @@ namespace LevelEditor
 
     private:
         void onWorldMapCreatedOrConstituted(const Enigma::Frameworks::IEventPtr& e);
+        void onWorldMapRemoved(const Enigma::Frameworks::IEventPtr& e);
         //void OnAsyncKeyPressed(const Enigma::IMessagePtr& m);
         //void OnAsyncKeyReleased(const Enigma::IMessagePtr& m);
 
         //void OnEditorModeSelected(EditorModeSelectedMessage* msg);
     private:
         std::weak_ptr<Enigma::WorldMap::WorldMapRepository> m_worldMapRepository;
-        std::weak_ptr<Enigma::WorldMap::WorldMap> m_worldMap;
+        std::shared_ptr<Enigma::WorldMap::WorldMap> m_worldMap;
 
         Enigma::Frameworks::EventSubscriberPtr m_onWorldMapCreated;
         Enigma::Frameworks::EventSubscriberPtr m_onWorldMapConstituted;
+        Enigma::Frameworks::EventSubscriberPtr m_onWorldMapRemoved;
         //std::weak_ptr<Enigma::WorldMap::WorldMapService> m_worldMap;
         //Enigma::MessageSubscriberPtr m_onAsyncKeyPressed;
         //Enigma::MessageSubscriberPtr m_onAsyncKeyReleased;

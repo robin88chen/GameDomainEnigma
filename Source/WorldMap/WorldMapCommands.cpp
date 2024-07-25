@@ -21,7 +21,7 @@ void CreateEmptyWorldMap::execute()
     auto world = std::make_shared<RequestWorldMapConstitution>(m_id, world_map_dto.toGenericDto())->dispatch();
     if (world)
     {
-        std::make_shared<WorldMapCreated>(m_id)->enqueue();
+        std::make_shared<WorldMapCreated>(m_id, world)->enqueue();
     }
 }
 

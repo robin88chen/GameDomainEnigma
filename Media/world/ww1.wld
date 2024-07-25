@@ -19,6 +19,6 @@
         },
         "OutRegionId": {
             "Type": "StringArray",
-            "Value": ["world/ww1_map", "En.SceneGraph.PortalZoneNode"]
+            "Value": ["world/ww1_map", "En.SceneGraph.OutRegionNode"]
         }
     }]

@@ -56,6 +56,7 @@ GenericDto PortalZoneNode::serializeLaziedContent()
 GenericDto PortalZoneNode::serializeAsLaziness()
 {
     PortalZoneNodeDto dto = PortalZoneNodeDto(LazyNode::serializeLazyNodeAsLaziness());
+    if (m_portalParentId.has_value()) dto.portalParentId(m_portalParentId.value());
     return dto.toGenericDto();
 }
 

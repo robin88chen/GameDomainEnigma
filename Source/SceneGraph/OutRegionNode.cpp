@@ -50,6 +50,7 @@ Enigma::Engine::GenericDto OutRegionNode::serializeLaziedContent()
 Enigma::Engine::GenericDto OutRegionNode::serializeAsLaziness()
 {
     OutRegionNodeDto dto = OutRegionNodeDto(LazyNode::serializeLazyNodeAsLaziness());
+    if (m_ownerManagementId.has_value()) dto.ownerManagementId(m_ownerManagementId.value());
     return dto.toGenericDto();
 }
 

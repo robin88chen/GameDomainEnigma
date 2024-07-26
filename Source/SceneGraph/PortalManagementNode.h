@@ -41,6 +41,7 @@ namespace Enigma::SceneGraph
 
         /** on cull visible, used by culler, for compute visible set, find start zone, then go to portal culling procedure  */
         virtual error onCullingVisible(Culler* culler, bool noCull) override;
+        virtual SceneTraveler::TravelResult visitBy(SceneTraveler* traveler) override;
 
     protected:
         void attachOutsideRegion(const Frameworks::ICommandPtr& c);

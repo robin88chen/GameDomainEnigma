@@ -25,12 +25,14 @@ AssetsBrowsePanel::AssetsBrowsePanel(const nana::window& wd) : panel<false>{ wd 
 {
     m_place = nullptr;
     m_assetsTree = nullptr;
+    m_popupMenu = nullptr;
 }
 
 AssetsBrowsePanel::~AssetsBrowsePanel()
 {
     SAFE_DELETE(m_place);
     SAFE_DELETE(m_assetsTree);
+    SAFE_DELETE(m_popupMenu);
 }
 
 void AssetsBrowsePanel::initialize(MainForm* main_form)

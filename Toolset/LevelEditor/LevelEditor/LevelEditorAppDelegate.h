@@ -57,10 +57,14 @@ namespace LevelEditor
         void onRenderEngineInstalled(const Enigma::Frameworks::IEventPtr& e);
         void onSceneRootCreated(const Enigma::Frameworks::IEventPtr& e);
         void onSceneGraphChanged(const Enigma::Frameworks::IEventPtr& e);
+        void onOutsideRegionAttached(const Enigma::Frameworks::IEventPtr& e);
+        void onLazyNodeHydrated(const Enigma::Frameworks::IEventPtr& e);
         //void onWorldMapCreated(const Enigma::Frameworks::IEventPtr& e);
         //void onCreateWorldFailed(const Enigma::Frameworks::IEventPtr& e);
         //void onWorldMapDeserialized(const Enigma::Frameworks::IEventPtr& e);
         //void onDeserializeWorldMapFailed(const Enigma::Frameworks::IEventPtr& e);
+
+        void refreshSceneGraphPanel();
 
     protected:
         HWND m_hwnd;
@@ -87,6 +91,8 @@ namespace LevelEditor
         Enigma::Frameworks::EventSubscriberPtr m_onRenderEngineInstalled;
         Enigma::Frameworks::EventSubscriberPtr m_onSceneRootCreated;
         Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphChanged;
+        Enigma::Frameworks::EventSubscriberPtr m_onOutsideRegionAttached;
+        Enigma::Frameworks::EventSubscriberPtr m_onLazyNodeHydrated;
         //Enigma::Frameworks::EventSubscriberPtr m_onWorldMapCreated;
         //Enigma::Frameworks::EventSubscriberPtr m_onCreateWorldFailed;
         //Enigma::Frameworks::EventSubscriberPtr m_onWorldMapDeserialized;

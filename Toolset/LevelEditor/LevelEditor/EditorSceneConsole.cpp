@@ -1,5 +1,7 @@
 ﻿#include "EditorSceneConsole.h"
+#include "SceneGraph/OutRegionNode.h"
 #include "SceneGraph/SceneGraphCommands.h"
+#include "SceneGraph/PortalCommands.h"
 #include "WorldMap/WorldMap.h"
 #include "WorldMap/WorldMapQueries.h"
 #include "Frameworks/CommandBus.h"
@@ -216,7 +218,10 @@ void EditorSceneConsole::dropAssetToSceneGraph(const ICommandPtr& c)
         }
         CommandBus::enqueue(std::make_shared<OutputMessage>("Drop Spatial Asset " + asset_id.getSpatialId().name() + " to Scene Graph " + scene_graph_id.name()));
         std::shared_ptr<Spatial> child = Spatial::querySpatial(asset_id.getSpatialId());
-        CommandBus::enqueue(std::make_shared<AttachNodeChild>(scene_graph_id, child, child->getLocalTransform()));
+        if ((child) && (!child->getParentId()))
+        {
+            CommandBus::enqueue(std::make_shared<AttachNodeChild>(scene_graph_id, child, child->getLocalTransform()));
+        }
     }
     else if (asset_id.isWorldMapId())
     {
@@ -227,14 +232,17 @@ void EditorSceneConsole::dropAssetToSceneGraph(const ICommandPtr& c)
             CommandBus::enqueue(std::make_shared<OutputMessage>("World Map Asset " + asset_id.getWorldMapId().name() + " has no Region"));
             return;
         }
-        if (world_map->outRegionId() == scene_graph_id)
+        if (!scene_graph_id.rtti().isDerived(PortalManagementNode::TYPE_RTTI))
         {
-            CommandBus::enqueue(std::make_shared<OutputMessage>("Cannot Drop World Map Asset to Itself"));
+            CommandBus::enqueue(std::make_shared<OutputMessage>("Must Drop World Map Asset to Portal Management Node"));
             return;
         }
         CommandBus::enqueue(std::make_shared<OutputMessage>("Drop World Map Asset " + asset_id.getWorldMapId().name() + " to Scene Graph " + scene_graph_id.name()));
-        std::shared_ptr<Spatial> child = Spatial::querySpatial(world_map->outRegionId());
-        CommandBus::enqueue(std::make_shared<AttachNodeChild>(scene_graph_id, child, child->getLocalTransform()));
+        std::shared_ptr<OutRegionNode> child = std::dynamic_pointer_cast<OutRegionNode>(Spatial::querySpatial(world_map->outRegionId()));
+        if ((child) && (!child->ownerManagementNode()))
+        {
+            CommandBus::enqueue(std::make_shared<AttachManagementOutsideRegion>(child));
+        }
     }
 }
 

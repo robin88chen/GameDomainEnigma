@@ -18,6 +18,7 @@
 #include "WorldMap/WorldMapCommands.h"
 #include "Frameworks/CommandBus.h"
 #include "SceneGraph/SceneGraphEvents.h"
+#include "SceneGraph/PortalEvents.h"
 #include "Frameworks/EventPublisher.h"
 #include "GameCommon/GameSceneEvents.h"
 #include "SceneGraph/SceneFlattenTraversal.h"
@@ -169,6 +170,10 @@ void EditorAppDelegate::installEngine()
     EventPublisher::subscribe(typeid(PortalSceneRootCreated), m_onSceneRootCreated);
     m_onSceneGraphChanged = std::make_shared<EventSubscriber>([=](auto e) { onSceneGraphChanged(e); });
     EventPublisher::subscribe(typeid(SceneGraphChanged), m_onSceneGraphChanged);
+    m_onOutsideRegionAttached = std::make_shared<EventSubscriber>([=](auto e) { onOutsideRegionAttached(e); });
+    EventPublisher::subscribe(typeid(OutsideRegionAttached), m_onOutsideRegionAttached);
+    m_onLazyNodeHydrated = std::make_shared<EventSubscriber>([=](auto e) { onLazyNodeHydrated(e); });
+    EventPublisher::subscribe(typeid(LazyNodeHydrated), m_onLazyNodeHydrated);
     /*m_onWorldMapCreated = std::make_shared<EventSubscriber>([=](auto e) { onWorldMapCreated(e); });
     EventPublisher::subscribe(typeid(WorldMapCreated), m_onWorldMapCreated);
     m_onCreateWorldFailed = std::make_shared<EventSubscriber>([=](auto e) { onCreateWorldFailed(e); });
@@ -248,6 +253,10 @@ void EditorAppDelegate::shutdownEngine()
     m_onSceneRootCreated = nullptr;
     EventPublisher::unsubscribe(typeid(SceneGraphChanged), m_onSceneGraphChanged);
     m_onSceneGraphChanged = nullptr;
+    EventPublisher::unsubscribe(typeid(OutsideRegionAttached), m_onOutsideRegionAttached);
+    m_onOutsideRegionAttached = nullptr;
+    EventPublisher::unsubscribe(typeid(LazyNodeHydrated), m_onLazyNodeHydrated);
+    m_onLazyNodeHydrated = nullptr;
     //EventPublisher::unsubscribe(typeid(WorldMapCreated), m_onWorldMapCreated);
     //m_onWorldMapCreated = nullptr;
     //EventPublisher::unsubscribe(typeid(CreateWorldMapFailed), m_onCreateWorldFailed);
@@ -320,9 +329,7 @@ void EditorAppDelegate::onSceneRootCreated(const Enigma::Frameworks::IEventPtr& 
     if (!ev) return;
     CommandBus::enqueue(std::make_shared<OutputMessage>("portal scene root created : " + ev->root()->id().name()));
     m_sceneRoot = ev->root();
-    SceneFlattenTraversal traversal;
-    m_sceneRoot.lock()->visitBy(&traversal);
-    CommandBus::enqueue(std::make_shared<RefreshSceneGraph>(traversal.GetSpatials()));
+    refreshSceneGraphPanel();
 }
 
 void EditorAppDelegate::onSceneGraphChanged(const IEventPtr& e)
@@ -330,6 +337,29 @@ void EditorAppDelegate::onSceneGraphChanged(const IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<SceneGraphChanged, IEvent>(e);
     if (!ev) return;
+    refreshSceneGraphPanel();
+}
+
+void EditorAppDelegate::onOutsideRegionAttached(const IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<OutsideRegionAttached, IEvent>(e);
+    if (!ev) return;
+    CommandBus::enqueue(std::make_shared<OutputMessage>("outside region attached : " + ev->regionId().name()));
+    refreshSceneGraphPanel();
+}
+
+void EditorAppDelegate::onLazyNodeHydrated(const IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<LazyNodeHydrated, IEvent>(e);
+    if (!ev) return;
+    CommandBus::enqueue(std::make_shared<OutputMessage>("lazy node hydrated : " + ev->id().name()));
+    refreshSceneGraphPanel();
+}
+
+void EditorAppDelegate::refreshSceneGraphPanel()
+{
     if (m_sceneRoot.expired()) return;
     SceneFlattenTraversal traversal;
     m_sceneRoot.lock()->visitBy(&traversal);

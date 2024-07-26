@@ -116,6 +116,19 @@ error PortalManagementNode::onCullingVisible(Culler* culler, bool noCull)
     return er;
 }
 
+SceneTraveler::TravelResult PortalManagementNode::visitBy(SceneTraveler* traveler)
+{
+    SceneTraveler::TravelResult res = Node::visitBy(traveler);
+    if (res != SceneTraveler::TravelResult::Continue) return res;  // don't go sub-tree
+    if (auto out_region = outsideRegion())
+    {
+        res = m_outsideRegion->visitBy(traveler);
+        if (res == SceneTraveler::TravelResult::InterruptError) return res;
+        if (res == SceneTraveler::TravelResult::InterruptTargetFound) return res;
+    }
+    return res;
+}
+
 void PortalManagementNode::attachOutsideRegion(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;

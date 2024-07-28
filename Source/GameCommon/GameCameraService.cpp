@@ -1,6 +1,7 @@
 ﻿#include "Platforms/PlatformConfig.h"
 #include "GameCameraService.h"
 #include "GameCameraEvents.h"
+#include "GameCameraQueries.h"
 #include "SceneGraph/Camera.h"
 #include "SceneGraph/Frustum.h"
 #include "Frameworks/EventPublisher.h"
@@ -13,6 +14,7 @@
 #include "InputHandlers/GestureInputEvents.h"
 #include "SceneGraph/SceneGraphFactory.h"
 #include "SceneGraph/SceneGraphQueries.h"
+#include "Frameworks/QueryDispatcher.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::Frameworks;
@@ -65,6 +67,9 @@ ServiceResult GameCameraService::onInit()
     EventPublisher::subscribe(typeid(GestureScale), m_onGestureScale);
 #endif
 
+    m_queryPrimaryCamera = std::make_shared<QuerySubscriber>([=](auto q) { queryPrimaryCamera(q); });
+    QueryDispatcher::subscribe(typeid(QueryPrimaryCamera), m_queryPrimaryCamera);
+
     return ServiceResult::Complete;
 }
 
@@ -94,6 +99,9 @@ ServiceResult GameCameraService::onTerm()
     EventPublisher::unsubscribe(typeid(GestureScale), m_onGestureScale);
     m_onGestureScale = nullptr;
 #endif
+
+    QueryDispatcher::unsubscribe(typeid(QueryPrimaryCamera), m_queryPrimaryCamera);
+    m_queryPrimaryCamera = nullptr;
 
     m_primaryCamera = nullptr;
 
@@ -285,4 +293,12 @@ void GameCameraService::moveXZ(const Frameworks::ICommandPtr& c)
     const auto cmd = std::dynamic_pointer_cast<MoveCameraXZ, ICommand>(c);
     if (!cmd) return;
     moveXZ(cmd->GetMoveX(), cmd->GetMoveZ());
+}
+
+void GameCameraService::queryPrimaryCamera(const Frameworks::IQueryPtr& q)
+{
+    if (!q) return;
+    const auto query = std::dynamic_pointer_cast<QueryPrimaryCamera, IQuery>(q);
+    if (!query) return;
+    query->setResult(primaryCamera());
 }

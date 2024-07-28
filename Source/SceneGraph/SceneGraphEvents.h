@@ -54,26 +54,6 @@ namespace Enigma::SceneGraph
     public:
         SpatialVisibilityChanged(const SpatialId& id) : SceneGraphEvent(id) {};
     };
-    class SceneGraphChanged : public SceneGraphEvent
-    {
-    public:
-        enum class NotifyCode
-        {
-            Invalid = 0,
-            AttachChild,
-            DetachChild,
-            DeferredInstanced,
-        };
-    public:
-        SceneGraphChanged(const SpatialId& parent_id, const SpatialId& child_id, NotifyCode code)
-            : SceneGraphEvent(parent_id), m_childId(child_id), m_code(code) {};
-        const SpatialId& parentId() { return m_id; }
-        const SpatialId& childId() { return m_childId; }
-        const NotifyCode notifyCode() const { return m_code; }
-    protected:
-        SpatialId m_childId;
-        NotifyCode m_code;
-    };
     //------------ visibility manage ------------
     class VisibilityChanged : public Frameworks::IEvent
     {

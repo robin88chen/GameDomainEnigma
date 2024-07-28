@@ -10,6 +10,7 @@
 
 #include "SceneGraph/Pawn.h"
 #include "SceneGraph/Light.h"
+#include "Frameworks/EventSubscriber.h"
 
 namespace Enigma::GameCommon
 {
@@ -26,13 +27,19 @@ namespace Enigma::GameCommon
         LightingPawn& operator=(const LightingPawn&) = delete;
         LightingPawn& operator=(LightingPawn&&) = delete;
 
+        virtual void registerHandlers();
+        virtual void unregisterHandlers();
+
         void setHostLight(const std::shared_ptr<SceneGraph::Light>& light);
         std::shared_ptr<SceneGraph::Light> getHostLight() const { return m_hostLight.expired() ? nullptr : m_hostLight.lock(); }
 
     protected:
+        virtual void onLightInfoUpdated(const Frameworks::IEventPtr& e) = 0;
+
+    protected:
         std::weak_ptr<SceneGraph::Light> m_hostLight;
+        Frameworks::EventSubscriberPtr m_onLightInfoUpdated;
     };
 }
-
 
 #endif // LIGHTING_PAWN_H

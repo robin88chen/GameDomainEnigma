@@ -4,6 +4,7 @@
 #include "SceneGraph/Light.h"
 #include "SceneGraph/LightInfo.h"
 #include "LightingPawnDto.h"
+#include "SceneGraph/LightEvents.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::MathLib;
@@ -74,3 +75,16 @@ error LightQuadPawn::_updateSpatialRenderState()
     return ErrorCode::ok;
 }
 
+
+void LightQuadPawn::onLightInfoUpdated(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    auto ev = std::dynamic_pointer_cast<LightInfoUpdated>(e);
+    if (!ev) return;
+    if (getHostLight() == nullptr) return;
+    if (ev->light() != getHostLight()) return;
+    if ((ev->notifyCode() == LightInfoUpdated::NotifyCode::Color) || (ev->notifyCode() == LightInfoUpdated::NotifyCode::Direction))
+    {
+        notifySpatialRenderStateChanged();
+    }
+}

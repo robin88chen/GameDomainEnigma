@@ -32,6 +32,9 @@ namespace Enigma::GameCommon
 
         /// 影響的光源就是自己所帶的光源
         virtual error _updateSpatialRenderState() override;
+
+    protected:
+        virtual void onLightInfoUpdated(const Frameworks::IEventPtr& e) override;
     };
 }
 

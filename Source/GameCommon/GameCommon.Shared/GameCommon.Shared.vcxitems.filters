@@ -123,6 +123,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightingMeshQueries.h">
       <Filter>DeferredRenderer\LightingPawn</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightingPawnRepository.h">
+      <Filter>DeferredRenderer\LightingPawn</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCameraQueries.h">
+      <Filter>GameCamera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCameraService.cpp">
@@ -190,6 +196,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameLightCommands.cpp">
       <Filter>GameLight</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightingPawnRepository.cpp">
+      <Filter>DeferredRenderer\LightingPawn</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

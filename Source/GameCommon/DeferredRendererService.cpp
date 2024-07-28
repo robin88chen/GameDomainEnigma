@@ -23,6 +23,7 @@
 #include "Renderables/ModelPrimitive.h"
 #include "SceneGraph/SceneGraphQueries.h"
 #include "LightingMeshQueries.h"
+#include "LightingPawnRepository.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::Frameworks;
@@ -48,12 +49,14 @@ DeferredRendererService::DeferredRendererService(ServiceManager* mngr,
     m_configuration = configuration;
     LightVolumePawn::setDefaultVisualTech(m_configuration->visualTechniqueNameForCameraDefault());
     LightVolumePawn::setInsideVisualTech(m_configuration->visualTechniqueNameForCameraInside());
+
+    m_lightingPawns = nullptr;
 }
 
 DeferredRendererService::~DeferredRendererService()
 {
     m_configuration = nullptr;
-    m_lightingPawns.clear();
+    m_lightingPawns = nullptr;
 }
 
 ServiceResult DeferredRendererService::onInit()
@@ -62,10 +65,10 @@ ServiceResult DeferredRendererService::onInit()
     EventPublisher::subscribe(typeid(PrimaryRenderTargetCreated), m_onPrimaryRenderTargetCreated);
     m_onPrimaryRenderTargetResized = std::make_shared<EventSubscriber>([=](auto e) { onPrimaryRenderTargetResized(e); });
     EventPublisher::subscribe(typeid(RenderTargetResized), m_onPrimaryRenderTargetResized);
-    m_onGameCameraUpdated = std::make_shared<EventSubscriber>([=](auto e) { onGameCameraUpdated(e); });
-    EventPublisher::subscribe(typeid(GameCameraUpdated), m_onGameCameraUpdated);
-    m_onSceneGraphChanged = std::make_shared<EventSubscriber>([=](auto e) { onSceneGraphChanged(e); });
-    EventPublisher::subscribe(typeid(SceneGraphChanged), m_onSceneGraphChanged);
+    //m_onGameCameraUpdated = std::make_shared<EventSubscriber>([=](auto e) { onGameCameraUpdated(e); });
+    //EventPublisher::subscribe(typeid(GameCameraUpdated), m_onGameCameraUpdated);
+    //m_onSceneGraphChanged = std::make_shared<EventSubscriber>([=](auto e) { onSceneGraphChanged(e); });
+    //EventPublisher::subscribe(typeid(SceneGraphChanged), m_onSceneGraphChanged);
 
     m_onLightCreated = std::make_shared<EventSubscriber>([=](auto e) { onLightCreatedOrConstituted(e); });
     EventPublisher::subscribe(typeid(SpatialCreated), m_onLightCreated);
@@ -73,8 +76,8 @@ ServiceResult DeferredRendererService::onInit()
     EventPublisher::subscribe(typeid(SpatialConstituted), m_onLightConstituted);
     m_onLightInfoDeleted = std::make_shared<EventSubscriber>([=](auto e) { onLightInfoDeleted(e); });
     EventPublisher::subscribe(typeid(LightInfoDeleted), m_onLightInfoDeleted);
-    m_onLightInfoUpdated = std::make_shared<EventSubscriber>([=](auto e) { onLightInfoUpdated(e); });
-    EventPublisher::subscribe(typeid(LightInfoUpdated), m_onLightInfoUpdated);
+    //m_onLightInfoUpdated = std::make_shared<EventSubscriber>([=](auto e) { onLightInfoUpdated(e); });
+    //EventPublisher::subscribe(typeid(LightInfoUpdated), m_onLightInfoUpdated);
 
     m_requestAmbientLightMeshAssembly = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { requestAmbientLightMeshAssembly(q); });
     QueryDispatcher::subscribe(typeid(RequestAmbientLightMeshAssembly), m_requestAmbientLightMeshAssembly);
@@ -82,6 +85,9 @@ ServiceResult DeferredRendererService::onInit()
     QueryDispatcher::subscribe(typeid(RequestSunLightMeshAssembly), m_requestSunLightMeshAssembly);
     m_requestPointLightMeshAssembly = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { requestPointLightMeshAssembly(q); });
     QueryDispatcher::subscribe(typeid(RequestPointLightMeshAssembly), m_requestPointLightMeshAssembly);
+
+    m_lightingPawns = std::make_shared<LightingPawnRepository>();
+    m_lightingPawns->registerHandlers();
 
     return SceneRendererService::onInit();
 }
@@ -92,10 +98,10 @@ ServiceResult DeferredRendererService::onTerm()
     m_onPrimaryRenderTargetCreated = nullptr;
     EventPublisher::unsubscribe(typeid(RenderTargetResized), m_onPrimaryRenderTargetResized);
     m_onPrimaryRenderTargetResized = nullptr;
-    EventPublisher::unsubscribe(typeid(GameCameraUpdated), m_onGameCameraUpdated);
-    m_onGameCameraUpdated = nullptr;
-    EventPublisher::unsubscribe(typeid(SceneGraphChanged), m_onSceneGraphChanged);
-    m_onSceneGraphChanged = nullptr;
+    //EventPublisher::unsubscribe(typeid(GameCameraUpdated), m_onGameCameraUpdated);
+    //m_onGameCameraUpdated = nullptr;
+    //EventPublisher::unsubscribe(typeid(SceneGraphChanged), m_onSceneGraphChanged);
+    //m_onSceneGraphChanged = nullptr;
 
     EventPublisher::unsubscribe(typeid(SpatialCreated), m_onLightCreated);
     m_onLightCreated = nullptr;
@@ -103,8 +109,8 @@ ServiceResult DeferredRendererService::onTerm()
     m_onLightConstituted = nullptr;
     EventPublisher::unsubscribe(typeid(LightInfoDeleted), m_onLightInfoDeleted);
     m_onLightInfoDeleted = nullptr;
-    EventPublisher::unsubscribe(typeid(LightInfoUpdated), m_onLightInfoUpdated);
-    m_onLightInfoUpdated = nullptr;
+    //EventPublisher::unsubscribe(typeid(LightInfoUpdated), m_onLightInfoUpdated);
+    //m_onLightInfoUpdated = nullptr;
 
     QueryDispatcher::unsubscribe(typeid(RequestAmbientLightMeshAssembly), m_requestAmbientLightMeshAssembly);
     m_requestAmbientLightMeshAssembly = nullptr;
@@ -113,7 +119,8 @@ ServiceResult DeferredRendererService::onTerm()
     QueryDispatcher::unsubscribe(typeid(RequestPointLightMeshAssembly), m_requestPointLightMeshAssembly);
     m_requestPointLightMeshAssembly = nullptr;
 
-    m_lightingPawns.clear();
+    m_lightingPawns->unregisterHandlers();
+    m_lightingPawns = nullptr;
 
     return SceneRendererService::onTerm();
 }
@@ -197,7 +204,7 @@ void DeferredRendererService::onPrimaryRenderTargetResized(const IEventPtr& e)
     if ((!m_gBuffer.expired()) && (m_gBuffer.lock()->getDimension() != target->getDimension())) m_gBuffer.lock()->resize(target->getDimension());
 }
 
-void DeferredRendererService::onGameCameraUpdated(const IEventPtr& e)
+/*void DeferredRendererService::onGameCameraUpdated(const IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<GameCameraUpdated, IEvent>(e);
@@ -211,11 +218,11 @@ void DeferredRendererService::onGameCameraUpdated(const IEventPtr& e)
             checkLightVolumeBackfaceCulling(volume, ev->GetCamera());
         }
     }
-}
+}*/
 
 void DeferredRendererService::onSceneGraphChanged(const IEventPtr& e)
 {
-    if (!e) return;
+    /*if (!e) return;
     const auto ev = std::dynamic_pointer_cast<SceneGraphChanged, IEvent>(e);
     if (!ev) return;
     // 抓light entity 被 attach 的訊息來改變 light volume 的 parent
@@ -225,11 +232,12 @@ void DeferredRendererService::onSceneGraphChanged(const IEventPtr& e)
     if (!light) return;
     const auto lightPawn = findLightingPawn(light->id());
     auto parent_node = Node::queryNode(ev->parentId());
-    if (lightPawn) lightPawn->changeWorldPosition(lightPawn->getWorldPosition(), parent_node);
+    if (lightPawn) lightPawn->changeWorldPosition(lightPawn->getWorldPosition(), parent_node);*/
 }
 
 void DeferredRendererService::onLightCreatedOrConstituted(const IEventPtr& e)
 {
+    if (!m_lightingPawns) return;
     if (!e) return;
     std::shared_ptr<Light> light;
     if (auto ev = std::dynamic_pointer_cast<SpatialCreated, IEvent>(e))
@@ -254,15 +262,15 @@ void DeferredRendererService::onLightCreatedOrConstituted(const IEventPtr& e)
     }
     if (light->info().lightType() == LightInfo::LightType::Ambient)
     {
-        createAmbientLightQuad(light);
+        m_lightingPawns->createAmbientLightQuad(light);
     }
     else if (light->info().lightType() == LightInfo::LightType::SunLight)
     {
-        createSunLightQuad(light);
+        m_lightingPawns->createSunLightQuad(light);
     }
     else if (light->info().lightType() == LightInfo::LightType::Point)
     {
-        createPointLightVolume(light);
+        m_lightingPawns->createPointLightVolume(light);
     }
 }
 
@@ -271,14 +279,10 @@ void DeferredRendererService::onLightInfoDeleted(const IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<LightInfoDeleted, IEvent>(e);
     if (!ev) return;
-    SpatialId pawn_id;
-    if (auto pawn = findLightingPawn(ev->lightId())) pawn_id = pawn->id();
-
-    removeLightingPawn(ev->lightId());
-    CommandBus::enqueue(std::make_shared<DeleteSceneSpatial>(pawn_id));
+    m_lightingPawns->removeLightingPawn(ev->lightId());
 }
 
-void DeferredRendererService::onLightInfoUpdated(const IEventPtr& e)
+/*void DeferredRendererService::onLightInfoUpdated(const IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<LightInfoUpdated, IEvent>(e);
@@ -295,7 +299,7 @@ void DeferredRendererService::onLightInfoUpdated(const IEventPtr& e)
     {
         updatePointLightVolume(ev->light(), ev->notifyCode());
     }
-}
+}*/
 
 void DeferredRendererService::requestAmbientLightMeshAssembly(const Frameworks::IQueryPtr& q)
 {
@@ -321,13 +325,13 @@ void DeferredRendererService::requestPointLightMeshAssembly(const Frameworks::IQ
     point_query->setResult(assemblePointLightMesh(point_query->meshId(), point_query->sphereRadius()));
 }
 
-void DeferredRendererService::completeLightingPawnBuilt(const SpatialId& lit_id, const std::shared_ptr<LightingPawn>& lighting_pawn)
+/*void DeferredRendererService::completeLightingPawnBuilt(const SpatialId& lit_id, const std::shared_ptr<LightingPawn>& lighting_pawn)
 {
     if (!lighting_pawn) return;
     m_lightingPawns.insert_or_assign(lit_id, lighting_pawn);
     checkLightVolumeBackfaceCulling(lit_id);
     lighting_pawn->notifySpatialRenderStateChanged();
-}
+}*/
 
 std::shared_ptr<MeshPrimitive> DeferredRendererService::assembleAmbientLightMesh(const Primitives::PrimitiveId& mesh_id)
 {
@@ -377,7 +381,7 @@ std::shared_ptr<MeshPrimitive> DeferredRendererService::assemblePointLightMesh(c
     return std::dynamic_pointer_cast<MeshPrimitive>(vol_mesh);
 }
 
-void DeferredRendererService::createAmbientLightQuad(const std::shared_ptr<Light>& lit)
+/*void DeferredRendererService::createAmbientLightQuad(const std::shared_ptr<Light>& lit)
 {
     assert(lit);
     const auto amb_pawn_id = SpatialId(lit->id().name() + "_lit_quad", LightQuadPawn::TYPE_RTTI);
@@ -414,7 +418,7 @@ void DeferredRendererService::createSunLightQuad(const std::shared_ptr<Light>& l
     {
         PawnAssembler pawn_assembler(sun_pawn_id);
         pawn_assembler.spatial().topLevel(true);
-        pawn_assembler.primitive(sun_mesh_id)/*.spatialFlags(m_configuration->sunLightSpatialFlags())*/.factory(FactoryDesc(LightQuadPawn::TYPE_RTTI.getName()));
+        pawn_assembler.primitive(sun_mesh_id).factory(FactoryDesc(LightQuadPawn::TYPE_RTTI.getName()));
         LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_assembler.toPawnDto());
         lighting_pawn_dto.id(sun_pawn_id);
         lighting_pawn_dto.hostLightId(lit->id());
@@ -457,17 +461,17 @@ void DeferredRendererService::createPointLightVolume(const std::shared_ptr<Light
         }
         completeLightingPawnBuilt(lit->id(), std::dynamic_pointer_cast<LightingPawn>(lit_pawn));
     }
-}
+}*/
 
-void DeferredRendererService::removeLightingPawn(const SpatialId& lit_id)
+/*void DeferredRendererService::removeLightingPawn(const SpatialId& lit_id)
 {
     if (const auto it = m_lightingPawns.find(lit_id); it != m_lightingPawns.end())
     {
         m_lightingPawns.erase(it);
     }
-}
+}*/
 
-void DeferredRendererService::updateAmbientLightQuad(const std::shared_ptr<Light>& lit, LightInfoUpdated::NotifyCode notify)
+/*void DeferredRendererService::updateAmbientLightQuad(const std::shared_ptr<Light>& lit, LightInfoUpdated::NotifyCode notify)
 {
     assert(lit);
     if (notify != LightInfoUpdated::NotifyCode::Color) return;
@@ -506,7 +510,7 @@ void DeferredRendererService::updatePointLightVolume(const std::shared_ptr<Light
         pawn->notifySpatialRenderStateChanged();
     }
 
-    checkLightVolumeBackfaceCulling(lit->id());
+    //checkLightVolumeBackfaceCulling(lit->id());
 }
 
 void DeferredRendererService::updateSunLightQuad(const std::shared_ptr<Light>& lit, LightInfoUpdated::NotifyCode notify)
@@ -518,40 +522,40 @@ void DeferredRendererService::updateSunLightQuad(const std::shared_ptr<Light>& l
     {
         pawn->notifySpatialRenderStateChanged();
     }
-}
+}*/
 
 void DeferredRendererService::bindGBufferToPendingLights()
 {
     if (m_pendingLightsOfGBufferBind.empty()) return;
     for (const auto& light : m_pendingLightsOfGBufferBind)
     {
-        if (light.expired()) continue;
-        if (light.lock()->info().lightType() == LightInfo::LightType::Ambient)
+        if (!light) continue;
+        if (light->info().lightType() == LightInfo::LightType::Ambient)
         {
-            createAmbientLightQuad(light.lock());
+            m_lightingPawns->createAmbientLightQuad(light);
         }
-        else if (light.lock()->info().lightType() == LightInfo::LightType::SunLight)
+        else if (light->info().lightType() == LightInfo::LightType::SunLight)
         {
-            createSunLightQuad(light.lock());
+            m_lightingPawns->createSunLightQuad(light);
         }
-        else if (light.lock()->info().lightType() == LightInfo::LightType::Point)
+        else if (light->info().lightType() == LightInfo::LightType::Point)
         {
-            createPointLightVolume(light.lock());
+            m_lightingPawns->createPointLightVolume(light);
         }
     }
     m_pendingLightsOfGBufferBind.clear();
 }
 
-std::shared_ptr<LightingPawn> DeferredRendererService::findLightingPawn(const SpatialId& lit_id)
+/*std::shared_ptr<LightingPawn> DeferredRendererService::findLightingPawn(const SpatialId& lit_id)
 {
     if (const auto it = m_lightingPawns.find(lit_id); it != m_lightingPawns.end())
     {
         return it->second.lock();
     }
     return nullptr;
-}
+}*/
 
-void DeferredRendererService::checkLightVolumeBackfaceCulling(const SpatialId& lit_id)
+/*void DeferredRendererService::checkLightVolumeBackfaceCulling(const SpatialId& lit_id)
 {
     auto lit_vol = std::dynamic_pointer_cast<LightVolumePawn, LightingPawn>(findLightingPawn(lit_id));
     if (!lit_vol) return;
@@ -576,7 +580,7 @@ void DeferredRendererService::checkLightVolumeBackfaceCulling(const std::shared_
     {
         lit_vol->ToggleCameraInside(false);
     }
-}
+}*/
 
 EffectTextureMapAssembler DeferredRendererService::getGBufferTextureSemantics()
 {

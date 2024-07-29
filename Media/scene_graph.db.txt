@@ -1,2 +1,3 @@
 world/editor_portalmanagement,En.SceneGraph.PortalManagementNode,world/editor_portalmanagement.node@APK_PATH
 world/ww1_map,En.SceneGraph.OutRegionNode,world/ww1_map.node@APK_PATH
+ww1_amb,En.SceneGraph.Light,ww1_amb.light@APK_PATH

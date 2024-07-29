@@ -262,15 +262,15 @@ void DeferredRendererService::onLightCreatedOrConstituted(const IEventPtr& e)
     }
     if (light->info().lightType() == LightInfo::LightType::Ambient)
     {
-        m_lightingPawns->createAmbientLightQuad(light);
+        m_lightingPawns->createAmbientLightPawn(light);
     }
     else if (light->info().lightType() == LightInfo::LightType::SunLight)
     {
-        m_lightingPawns->createSunLightQuad(light);
+        m_lightingPawns->createSunLightPawn(light);
     }
     else if (light->info().lightType() == LightInfo::LightType::Point)
     {
-        m_lightingPawns->createPointLightVolume(light);
+        m_lightingPawns->createPointLightPawn(light);
     }
 }
 
@@ -532,15 +532,15 @@ void DeferredRendererService::bindGBufferToPendingLights()
         if (!light) continue;
         if (light->info().lightType() == LightInfo::LightType::Ambient)
         {
-            m_lightingPawns->createAmbientLightQuad(light);
+            m_lightingPawns->createAmbientLightPawn(light);
         }
         else if (light->info().lightType() == LightInfo::LightType::SunLight)
         {
-            m_lightingPawns->createSunLightQuad(light);
+            m_lightingPawns->createSunLightPawn(light);
         }
         else if (light->info().lightType() == LightInfo::LightType::Point)
         {
-            m_lightingPawns->createPointLightVolume(light);
+            m_lightingPawns->createPointLightPawn(light);
         }
     }
     m_pendingLightsOfGBufferBind.clear();

@@ -56,7 +56,7 @@ namespace LevelEditor
     protected:
         void onRenderEngineInstalled(const Enigma::Frameworks::IEventPtr& e);
         void onSceneRootCreated(const Enigma::Frameworks::IEventPtr& e);
-        void onSceneGraphChanged(const Enigma::Frameworks::IEventPtr& e);
+        void onNodeChildAttached(const Enigma::Frameworks::IEventPtr& e);
         void onOutsideRegionAttached(const Enigma::Frameworks::IEventPtr& e);
         void onLazyNodeHydrated(const Enigma::Frameworks::IEventPtr& e);
         //void onWorldMapCreated(const Enigma::Frameworks::IEventPtr& e);
@@ -90,7 +90,7 @@ namespace LevelEditor
 
         Enigma::Frameworks::EventSubscriberPtr m_onRenderEngineInstalled;
         Enigma::Frameworks::EventSubscriberPtr m_onSceneRootCreated;
-        Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphChanged;
+        Enigma::Frameworks::EventSubscriberPtr m_onNodeChildAttached;
         Enigma::Frameworks::EventSubscriberPtr m_onOutsideRegionAttached;
         Enigma::Frameworks::EventSubscriberPtr m_onLazyNodeHydrated;
         //Enigma::Frameworks::EventSubscriberPtr m_onWorldMapCreated;

@@ -7,11 +7,15 @@
 #include "SceneGraph/SceneGraphAssemblers.h"
 #include "SceneGraph/Node.h"
 #include "SceneGraph/SceneGraphCommands.h"
+#include "SceneGraph/SceneGraphEvents.h"
+#include "Frameworks/EventPublisher.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Renderables;
 using namespace Enigma::Engine;
+using namespace Enigma::MathLib;
+using namespace Enigma::Frameworks;
 
 LightingPawnRepository::LightingPawnRepository()
 {
@@ -25,15 +29,21 @@ LightingPawnRepository::~LightingPawnRepository()
 
 void LightingPawnRepository::registerHandlers()
 {
-
+    m_onLightAttached = std::make_shared<EventSubscriber>([=](auto e) { onLightAttached(e); });
+    EventPublisher::subscribe(typeid(NodeChildAttached), m_onLightAttached);
+    m_onLightAttachmentFailed = std::make_shared<EventSubscriber>([=](auto e) { onLightAttachmentFailed(e); });
+    EventPublisher::subscribe(typeid(NodeChildAttachmentFailed), m_onLightAttachmentFailed);
 }
 
 void LightingPawnRepository::unregisterHandlers()
 {
-
+    EventPublisher::unsubscribe(typeid(NodeChildAttached), m_onLightAttached);
+    m_onLightAttached = nullptr;
+    EventPublisher::unsubscribe(typeid(NodeChildAttachmentFailed), m_onLightAttachmentFailed);
+    m_onLightAttachmentFailed = nullptr;
 }
 
-void LightingPawnRepository::createAmbientLightQuad(const std::shared_ptr<Light>& lit)
+void LightingPawnRepository::createAmbientLightPawn(const std::shared_ptr<Light>& lit)
 {
     assert(lit);
     const auto amb_pawn_id = SpatialId(lit->id().name() + "_lit_quad", LightQuadPawn::TYPE_RTTI);
@@ -50,23 +60,10 @@ void LightingPawnRepository::createAmbientLightQuad(const std::shared_ptr<Light>
         auto pawn_dto = lighting_pawn_dto.toGenericDto();
         lit_pawn = std::dynamic_pointer_cast<LightingPawn>(std::make_shared<RequestSpatialConstitution>(amb_pawn_id, pawn_dto)->dispatch());
     }
-    if (lit_pawn)
-    {
-        lit_pawn->registerHandlers();
-        if (const auto parent = std::dynamic_pointer_cast<Node>(lit->getParent()))
-        {
-            parent->attachChild(lit_pawn, lit->getLocalTransform());
-            m_lightingPawns.insert_or_assign(lit->id(), lit_pawn);
-            lit_pawn->notifySpatialRenderStateChanged();
-        }
-        else
-        {
-            m_pendingLightPawnsOfAttachment.insert_or_assign(lit->id(), PendingLightPawn{ lit, std::dynamic_pointer_cast<LightingPawn>(lit_pawn) });
-        }
-    }
+    if (lit_pawn) tryCompleteLightPawnAttachment(lit, lit_pawn);
 }
 
-void LightingPawnRepository::createSunLightQuad(const std::shared_ptr<Light>& lit)
+void LightingPawnRepository::createSunLightPawn(const std::shared_ptr<Light>& lit)
 {
     assert(lit);
     const auto sun_mesh_id = Primitives::PrimitiveId(lit->id().name() + "_lit_quad", MeshPrimitive::TYPE_RTTI);
@@ -76,30 +73,17 @@ void LightingPawnRepository::createSunLightQuad(const std::shared_ptr<Light>& li
     {
         PawnAssembler pawn_assembler(sun_pawn_id);
         pawn_assembler.spatial().topLevel(true);
-        pawn_assembler.primitive(sun_mesh_id)/*.spatialFlags(m_configuration->sunLightSpatialFlags())*/.factory(FactoryDesc(LightQuadPawn::TYPE_RTTI.getName()));
+        pawn_assembler.primitive(sun_mesh_id).factory(FactoryDesc(LightQuadPawn::TYPE_RTTI.getName()));
         LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_assembler.toPawnDto());
         lighting_pawn_dto.id(sun_pawn_id);
         lighting_pawn_dto.hostLightId(lit->id());
         auto pawn_dto = lighting_pawn_dto.toGenericDto();
         lit_pawn = std::dynamic_pointer_cast<LightingPawn>(std::make_shared<RequestSpatialConstitution>(sun_pawn_id, pawn_dto)->dispatch());
     }
-    if (lit_pawn)
-    {
-        lit_pawn->registerHandlers();
-        if (const auto parent = std::dynamic_pointer_cast<Node>(lit->getParent()))
-        {
-            parent->attachChild(lit_pawn, lit->getLocalTransform());
-            m_lightingPawns.insert_or_assign(lit->id(), lit_pawn);
-            lit_pawn->notifySpatialRenderStateChanged();
-        }
-        else
-        {
-            m_pendingLightPawnsOfAttachment.insert_or_assign(lit->id(), PendingLightPawn{ lit, lit_pawn });
-        }
-    }
+    if (lit_pawn) tryCompleteLightPawnAttachment(lit, lit_pawn);
 }
 
-void LightingPawnRepository::createPointLightVolume(const std::shared_ptr<Light>& lit)
+void LightingPawnRepository::createPointLightPawn(const std::shared_ptr<Light>& lit)
 {
     assert(lit);
 
@@ -117,20 +101,7 @@ void LightingPawnRepository::createPointLightVolume(const std::shared_ptr<Light>
         auto pawn_dto = lighting_pawn_dto.toGenericDto();
         lit_pawn = std::dynamic_pointer_cast<LightingPawn>(std::make_shared<RequestSpatialConstitution>(vol_pawn_id, pawn_dto)->dispatch());
     }
-    if (lit_pawn)
-    {
-        lit_pawn->registerHandlers();
-        if (const auto parent = std::dynamic_pointer_cast<Node>(lit->getParent()))
-        {
-            parent->attachChild(lit_pawn, lit->getLocalTransform());
-            m_lightingPawns.insert_or_assign(lit->id(), lit_pawn);
-            lit_pawn->notifySpatialRenderStateChanged();
-        }
-        else
-        {
-            m_pendingLightPawnsOfAttachment.insert_or_assign(lit->id(), PendingLightPawn{ lit, lit_pawn });
-        }
-    }
+    if (lit_pawn) tryCompleteLightPawnAttachment(lit, lit_pawn);
 }
 
 void LightingPawnRepository::removeLightingPawn(const SpatialId& lit_id)
@@ -154,4 +125,56 @@ std::shared_ptr<LightingPawn> LightingPawnRepository::findLightingPawn(const Spa
         return it->second.lock();
     }
     return nullptr;
+}
+
+void LightingPawnRepository::onLightAttached(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<SceneGraph::NodeChildAttached>(e);
+    if ((!ev) || (!ev->child())) return;
+    if (!ev->child()->typeInfo().isDerived(Light::TYPE_RTTI)) return;
+    resolvePendingLightPawnAttachment(std::dynamic_pointer_cast<Light>(ev->child()));
+}
+
+void LightingPawnRepository::onLightAttachmentFailed(const Frameworks::IEventPtr& e)
+{
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<SceneGraph::NodeChildAttachmentFailed>(e);
+    if (!ev) return;
+    if (!ev->childId().rtti().isDerived(Light::TYPE_RTTI)) return;
+    if (const auto it = m_pendingLightPawnsOfAttachment.find(ev->childId()); it != m_pendingLightPawnsOfAttachment.end())
+    {
+        m_pendingLightPawnsOfAttachment.erase(it);
+    }
+}
+
+void LightingPawnRepository::tryCompleteLightPawnAttachment(const std::shared_ptr<SceneGraph::Light>& lit, const std::shared_ptr<LightingPawn>& lit_pawn)
+{
+    lit_pawn->registerHandlers();
+    if (const auto parent = std::dynamic_pointer_cast<Node>(lit->getParent()))
+    {
+        parent->attachChild(lit_pawn, lit->getLocalTransform());
+        m_lightingPawns.insert_or_assign(lit->id(), lit_pawn);
+        lit_pawn->notifySpatialRenderStateChanged();
+    }
+    else
+    {
+        m_pendingLightPawnsOfAttachment.insert_or_assign(lit->id(), PendingLightPawn{ lit, lit_pawn });
+    }
+}
+
+void LightingPawnRepository::resolvePendingLightPawnAttachment(const std::shared_ptr<SceneGraph::Light>& lit)
+{
+    assert(lit);
+    if (const auto it = m_pendingLightPawnsOfAttachment.find(lit->id()); it != m_pendingLightPawnsOfAttachment.end())
+    {
+        assert((it->second.light) && (it->second.light->id() == lit->id()) && (it->second.pawn));
+        if (const auto parent = std::dynamic_pointer_cast<Node>(lit->getParent()))
+        {
+            parent->attachChild(it->second.pawn, lit->getLocalTransform());
+            m_lightingPawns.insert_or_assign(lit->id(), it->second.pawn);
+            it->second.pawn->notifySpatialRenderStateChanged();
+            m_pendingLightPawnsOfAttachment.erase(it);
+        }
+    }
 }

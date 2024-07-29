@@ -75,13 +75,13 @@ namespace Enigma::GameCommon
         void requestSunLightMeshAssembly(const Frameworks::IQueryPtr& q);
         void requestPointLightMeshAssembly(const Frameworks::IQueryPtr& q);
 
-        void completeLightingPawnBuilt(const SceneGraph::SpatialId& lit_id, const std::shared_ptr<LightingPawn>& lighting_pawn);
+        //void completeLightingPawnBuilt(const SceneGraph::SpatialId& lit_id, const std::shared_ptr<LightingPawn>& /lighting_pawn);
 
         std::shared_ptr<Renderables::MeshPrimitive> assembleAmbientLightMesh(const Primitives::PrimitiveId& mesh_id);
         std::shared_ptr<Renderables::MeshPrimitive> assembleSunLightMesh(const Primitives::PrimitiveId& mesh_id);
         std::shared_ptr<Renderables::MeshPrimitive> assemblePointLightMesh(const Primitives::PrimitiveId& mesh_id, float sphere_radius);
 
-        std::shared_ptr<LightingPawn> findLightingPawn(const SceneGraph::SpatialId& lit_id);
+        //std::shared_ptr<LightingPawn> findLightingPawn(const SceneGraph::SpatialId& lit_id);
 
         //void checkLightVolumeBackfaceCulling(const SceneGraph::SpatialId& lit_id);
         //void checkLightVolumeBackfaceCulling(const std::shared_ptr<LightVolumePawn>& lit_vol, const std::shared_ptr<SceneGraph::Camera>& cam);
@@ -100,11 +100,6 @@ namespace Enigma::GameCommon
         Frameworks::EventSubscriberPtr m_onPrimaryRenderTargetCreated;
         Frameworks::EventSubscriberPtr m_onPrimaryRenderTargetResized;
         //Frameworks::EventSubscriberPtr m_onGameCameraUpdated;
-        Frameworks::EventSubscriberPtr m_onNodeChildAttached;
-        Frameworks::EventSubscriberPtr m_onNodeChildAttachmentFailed;;
-        Frameworks::EventSubscriberPtr m_onNodeChildDetached;
-        Frameworks::EventSubscriberPtr m_onNodeChildDetachmentFailed;
-        Frameworks::EventSubscriberPtr m_onSceneSpatialDeleted;
 
         Frameworks::EventSubscriberPtr m_onLightCreated;
         Frameworks::EventSubscriberPtr m_onLightConstituted;

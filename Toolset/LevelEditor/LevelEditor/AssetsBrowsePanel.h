@@ -46,7 +46,7 @@ namespace LevelEditor
         void onRemoveAsset(nana::menu::item_proxy& item);
 
         void onWorldMapCreated(const Enigma::Frameworks::IEventPtr& e);
-        void onSpatialConstituted(const Enigma::Frameworks::IEventPtr& e);
+        void onSpatialCreatedOrConstituted(const Enigma::Frameworks::IEventPtr& e);
         void onWorldMapRemoved(const Enigma::Frameworks::IEventPtr& e);
         void onSpatialRemoved(const Enigma::Frameworks::IEventPtr& e);
 
@@ -64,6 +64,7 @@ namespace LevelEditor
         nana::menu* m_popupMenu;
 
         Enigma::Frameworks::EventSubscriberPtr m_onWorldMapCreated;
+        Enigma::Frameworks::EventSubscriberPtr m_onSpatialCreated;
         Enigma::Frameworks::EventSubscriberPtr m_onSpatialConstituted;
         Enigma::Frameworks::EventSubscriberPtr m_onWorldMapRemoved;
         Enigma::Frameworks::EventSubscriberPtr m_onSpatialRemoved;

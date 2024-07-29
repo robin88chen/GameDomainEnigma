@@ -168,8 +168,8 @@ void EditorAppDelegate::installEngine()
     EventPublisher::subscribe(typeid(RenderEngineInstalled), m_onRenderEngineInstalled);
     m_onSceneRootCreated = std::make_shared<EventSubscriber>([=](auto e) { onSceneRootCreated(e); });
     EventPublisher::subscribe(typeid(PortalSceneRootCreated), m_onSceneRootCreated);
-    m_onSceneGraphChanged = std::make_shared<EventSubscriber>([=](auto e) { onSceneGraphChanged(e); });
-    EventPublisher::subscribe(typeid(SceneGraphChanged), m_onSceneGraphChanged);
+    m_onNodeChildAttached = std::make_shared<EventSubscriber>([=](auto e) { onNodeChildAttached(e); });
+    EventPublisher::subscribe(typeid(NodeChildAttached), m_onNodeChildAttached);
     m_onOutsideRegionAttached = std::make_shared<EventSubscriber>([=](auto e) { onOutsideRegionAttached(e); });
     EventPublisher::subscribe(typeid(OutsideRegionAttached), m_onOutsideRegionAttached);
     m_onLazyNodeHydrated = std::make_shared<EventSubscriber>([=](auto e) { onLazyNodeHydrated(e); });
@@ -251,8 +251,8 @@ void EditorAppDelegate::shutdownEngine()
     m_onRenderEngineInstalled = nullptr;
     EventPublisher::unsubscribe(typeid(PortalSceneRootCreated), m_onSceneRootCreated);
     m_onSceneRootCreated = nullptr;
-    EventPublisher::unsubscribe(typeid(SceneGraphChanged), m_onSceneGraphChanged);
-    m_onSceneGraphChanged = nullptr;
+    EventPublisher::unsubscribe(typeid(NodeChildAttached), m_onNodeChildAttached);
+    m_onNodeChildAttached = nullptr;
     EventPublisher::unsubscribe(typeid(OutsideRegionAttached), m_onOutsideRegionAttached);
     m_onOutsideRegionAttached = nullptr;
     EventPublisher::unsubscribe(typeid(LazyNodeHydrated), m_onLazyNodeHydrated);
@@ -332,10 +332,10 @@ void EditorAppDelegate::onSceneRootCreated(const Enigma::Frameworks::IEventPtr& 
     refreshSceneGraphPanel();
 }
 
-void EditorAppDelegate::onSceneGraphChanged(const IEventPtr& e)
+void EditorAppDelegate::onNodeChildAttached(const IEventPtr& e)
 {
     if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<SceneGraphChanged, IEvent>(e);
+    const auto ev = std::dynamic_pointer_cast<NodeChildAttached, IEvent>(e);
     if (!ev) return;
     refreshSceneGraphPanel();
 }

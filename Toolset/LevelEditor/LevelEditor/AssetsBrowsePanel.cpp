@@ -78,8 +78,10 @@ void AssetsBrowsePanel::subscribeHandlers()
 {
     m_onWorldMapCreated = std::make_shared<Enigma::Frameworks::EventSubscriber>([=](const Enigma::Frameworks::IEventPtr& e) { onWorldMapCreated(e); });
     Enigma::Frameworks::EventPublisher::subscribe(typeid(Enigma::WorldMap::WorldMapCreated), m_onWorldMapCreated);
-    m_onSpatialConstituted = std::make_shared<Enigma::Frameworks::EventSubscriber>([=](const Enigma::Frameworks::IEventPtr& e) { onSpatialConstituted(e); });
+    m_onSpatialConstituted = std::make_shared<Enigma::Frameworks::EventSubscriber>([=](const Enigma::Frameworks::IEventPtr& e) { onSpatialCreatedOrConstituted(e); });
     Enigma::Frameworks::EventPublisher::subscribe(typeid(Enigma::SceneGraph::SpatialConstituted), m_onSpatialConstituted);
+    m_onSpatialCreated = std::make_shared<Enigma::Frameworks::EventSubscriber>([=](const Enigma::Frameworks::IEventPtr& e) { onSpatialCreatedOrConstituted(e); });
+    Enigma::Frameworks::EventPublisher::subscribe(typeid(Enigma::SceneGraph::SpatialCreated), m_onSpatialCreated);
     m_onWorldMapRemoved = std::make_shared<Enigma::Frameworks::EventSubscriber>([=](const Enigma::Frameworks::IEventPtr& e) { onWorldMapRemoved(e); });
     Enigma::Frameworks::EventPublisher::subscribe(typeid(Enigma::WorldMap::WorldMapRemoved), m_onWorldMapRemoved);
     m_onSpatialRemoved = std::make_shared<Enigma::Frameworks::EventSubscriber>([=](const Enigma::Frameworks::IEventPtr& e) { onSpatialRemoved(e); });
@@ -97,6 +99,8 @@ void AssetsBrowsePanel::unsubscribeHandlers()
     m_onWorldMapCreated = nullptr;
     Enigma::Frameworks::EventPublisher::unsubscribe(typeid(Enigma::SceneGraph::SpatialConstituted), m_onSpatialConstituted);
     m_onSpatialConstituted = nullptr;
+    Enigma::Frameworks::EventPublisher::unsubscribe(typeid(Enigma::SceneGraph::SpatialCreated), m_onSpatialCreated);
+    m_onSpatialCreated = nullptr;
     Enigma::Frameworks::EventPublisher::unsubscribe(typeid(Enigma::WorldMap::WorldMapRemoved), m_onWorldMapRemoved);
     m_onWorldMapRemoved = nullptr;
     Enigma::Frameworks::EventPublisher::unsubscribe(typeid(Enigma::SceneGraph::SpatialRemoved), m_onSpatialRemoved);
@@ -248,21 +252,29 @@ void AssetsBrowsePanel::onWorldMapCreated(const Enigma::Frameworks::IEventPtr& e
     refreshWorldMapAssets();
 }
 
-void AssetsBrowsePanel::onSpatialConstituted(const Enigma::Frameworks::IEventPtr& e)
+void AssetsBrowsePanel::onSpatialCreatedOrConstituted(const Enigma::Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<Enigma::SceneGraph::SpatialConstituted>(e);
-    if (!ev) return;
-    if (ev->isPersisted()) return; // this is not new construction
-    if (ev->spatial()->typeInfo().isDerived(Enigma::SceneGraph::Node::TYPE_RTTI))
+    const Enigma::Frameworks::Rtti* rtti = nullptr;
+    if (auto ev = std::dynamic_pointer_cast<Enigma::SceneGraph::SpatialConstituted>(e))
+    {
+        if (ev->isPersisted()) return; // this is not new construction
+        rtti = &ev->id().rtti();
+    }
+    else if (auto ev = std::dynamic_pointer_cast<Enigma::SceneGraph::SpatialCreated>(e))
+    {
+        rtti = &ev->id().rtti();
+    }
+    if (!rtti) return;
+    if (rtti->isDerived(Enigma::SceneGraph::Node::TYPE_RTTI))
     {
         refreshNodeAssets();
     }
-    else if (ev->spatial()->typeInfo().isDerived(Enigma::SceneGraph::Pawn::TYPE_RTTI))
+    else if (rtti->isDerived(Enigma::SceneGraph::Pawn::TYPE_RTTI))
     {
         refreshPawnAssets();
     }
-    else if (ev->spatial()->typeInfo().isDerived(Enigma::SceneGraph::Light::TYPE_RTTI))
+    else if (rtti->isDerived(Enigma::SceneGraph::Light::TYPE_RTTI))
     {
         refreshLightAssets();
     }

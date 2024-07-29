@@ -10,6 +10,7 @@
 
 #include "SceneGraph/SpatialId.h"
 #include "SceneGraph/Light.h"
+#include "Frameworks/EventSubscriber.h"
 
 namespace Enigma::GameCommon
 {
@@ -28,13 +29,19 @@ namespace Enigma::GameCommon
         void registerHandlers();
         void unregisterHandlers();
 
-        void createAmbientLightQuad(const std::shared_ptr<SceneGraph::Light>& lit);
-        void createSunLightQuad(const std::shared_ptr<SceneGraph::Light>& lit);
-        void createPointLightVolume(const std::shared_ptr<SceneGraph::Light>& lit);
+        void createAmbientLightPawn(const std::shared_ptr<SceneGraph::Light>& lit);
+        void createSunLightPawn(const std::shared_ptr<SceneGraph::Light>& lit);
+        void createPointLightPawn(const std::shared_ptr<SceneGraph::Light>& lit);
         void removeLightingPawn(const SceneGraph::SpatialId& lit_id);
 
     protected:
         std::shared_ptr<LightingPawn> findLightingPawn(const SceneGraph::SpatialId& lit_id);
+
+        void onLightAttached(const Frameworks::IEventPtr& e);
+        void onLightAttachmentFailed(const Frameworks::IEventPtr& e);
+
+        void tryCompleteLightPawnAttachment(const std::shared_ptr<SceneGraph::Light>& lit, const std::shared_ptr<LightingPawn>& lit_pawn);
+        void resolvePendingLightPawnAttachment(const std::shared_ptr<SceneGraph::Light>& lit);
 
     protected:
         using LightingPawnMap = std::unordered_map<SceneGraph::SpatialId, std::weak_ptr<LightingPawn>, SceneGraph::SpatialId::hash>;
@@ -46,6 +53,9 @@ namespace Enigma::GameCommon
             std::shared_ptr<LightingPawn> pawn;
         };
         std::unordered_map<SceneGraph::SpatialId, PendingLightPawn, SceneGraph::SpatialId::hash> m_pendingLightPawnsOfAttachment;
+
+        Frameworks::EventSubscriberPtr m_onLightAttached;
+        Frameworks::EventSubscriberPtr m_onLightAttachmentFailed;
     };
 }
 

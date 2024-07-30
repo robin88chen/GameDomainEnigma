@@ -10,7 +10,7 @@
                 "ResourceName": "",
                 "ResourceFilename": "",
                 "RttiName": "En.SceneGraph.Light",
-                "PrefabFilename": "ww1_amb.light@APK_PATH"
+                "PrefabFilename": "world/ww1_amb.light@APK_PATH"
             }
         },
         "ModelBound": {
@@ -32,7 +32,7 @@
         },
         "Id": {
             "Type": "StringArray",
-            "Value": ["ww1_amb", "En.SceneGraph.Light"]
+            "Value": ["world/ww1_amb", "En.SceneGraph.Light"]
         },
         "WorldTransform": {
             "Type": "Matrix4",
@@ -61,6 +61,35 @@
         },
         "LightInfo": {
             "Type": "DataObject",
-            "Value": null
+            "Value": {
+                "LightType": {
+                    "Type": "Uint32",
+                    "Value": 1
+                },
+                "LightColor": {
+                    "Type": "ColorRGBA",
+                    "Value": [0.20000000298023224, 0.20000000298023224, 0.20000000298023224, 1.0]
+                },
+                "LightIsEnable": {
+                    "Type": "Boolean",
+                    "Value": true
+                },
+                "LightRange": {
+                    "Type": "Float",
+                    "Value": 10.0
+                },
+                "LightPosition": {
+                    "Type": "Vector3",
+                    "Value": [0.0, 0.0, 0.0]
+                },
+                "LightDirection": {
+                    "Type": "Vector3",
+                    "Value": [0.0, 0.0, 1.0]
+                },
+                "LightAttenuation": {
+                    "Type": "Vector3",
+                    "Value": [0.0, 1.0, 0.0]
+                }
+            }
         }
     }]

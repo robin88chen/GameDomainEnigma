@@ -39,7 +39,7 @@ std::shared_ptr<Light> Light::constitute(const SpatialId& id, const Engine::Gene
 Enigma::Engine::GenericDto Light::serializeDto()
 {
     LightDto dto(serializeSpatialDto());
-    dto.lightInfo() = m_lightInfo.serializeDto().toGenericDto();
+    dto.lightInfo(m_lightInfo.serializeDto().toGenericDto());
     return dto.toGenericDto();
 }
 

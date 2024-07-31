@@ -41,11 +41,11 @@ std::shared_ptr<AnimationAsset> AnimationAssetFactory::create(const AnimationAss
     if (creator == m_creators.end())
     {
         Platforms::Debug::Printf("Can't find creator of %s\n", rtti.getName().c_str());
-        EventPublisher::post(std::make_shared<CreateAnimationAssetFailed>(id, ErrorCode::animationFactoryNotExists));
+        EventPublisher::enqueue(std::make_shared<CreateAnimationAssetFailed>(id, ErrorCode::animationFactoryNotExists));
         return nullptr;
     }
     auto anim = creator->second(id);
-    EventPublisher::post(std::make_shared<AnimationAssetCreated>(id, anim));
+    EventPublisher::enqueue(std::make_shared<AnimationAssetCreated>(id, anim));
     return anim;
 }
 
@@ -55,11 +55,11 @@ std::shared_ptr<AnimationAsset> AnimationAssetFactory::constitute(const Animatio
     if (constitutor == m_constitutors.end())
     {
         Platforms::Debug::Printf("Can't find constitutor of %s\n", dto.getRtti().GetRttiName().c_str());
-        EventPublisher::post(std::make_shared<ConstituteAnimationAssetFailed>(id, ErrorCode::animationFactoryNotExists));
+        EventPublisher::enqueue(std::make_shared<ConstituteAnimationAssetFailed>(id, ErrorCode::animationFactoryNotExists));
         return nullptr;
     }
     auto animation = constitutor->second(id, dto);
-    EventPublisher::post(std::make_shared<AnimationAssetConstituted>(id, animation, is_persisted));
+    EventPublisher::enqueue(std::make_shared<AnimationAssetConstituted>(id, animation, is_persisted));
     return animation;
 }
 

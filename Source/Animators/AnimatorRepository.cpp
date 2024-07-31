@@ -28,6 +28,7 @@ AnimatorRepository::AnimatorRepository(Frameworks::ServiceManager* srv_manager, 
 
 AnimatorRepository::~AnimatorRepository()
 {
+    dumpRetainedAnimator();
     SAFE_DELETE(m_factory);
     m_animators.clear();
 }
@@ -77,6 +78,12 @@ ServiceResult AnimatorRepository::onTerm()
     return ServiceResult::Complete;
 }
 
+void AnimatorRepository::registerAnimatorFactory(const std::string& rtti, const AnimatorCreator& creator, const AnimatorConstitutor& constitutor)
+{
+    assert(m_factory);
+    m_factory->registerAnimatorFactory(rtti, creator, constitutor);
+}
+
 std::uint64_t AnimatorRepository::nextSequenceNumber()
 {
     assert(m_storeMapper);
@@ -88,7 +95,7 @@ bool AnimatorRepository::hasAnimator(const AnimatorId& id)
     assert(m_storeMapper);
     std::lock_guard locker{ m_animatorLock };
     const auto it = m_animators.find(id);
-    if (it != m_animators.end()) return true;
+    if ((it != m_animators.end()) && (!it->second.expired())) return true;
     return m_storeMapper->hasAnimator(id.origin());
 }
 
@@ -97,7 +104,7 @@ std::shared_ptr<Animator> AnimatorRepository::queryAnimator(const AnimatorId& id
     if (!hasAnimator(id)) return nullptr;
     std::lock_guard locker{ m_animatorLock };
     auto it = m_animators.find(id);
-    if (it != m_animators.end()) return it->second;
+    if ((it != m_animators.end()) && (!it->second.expired())) return it->second.lock();
     assert(m_factory);
     const auto dto = m_storeMapper->queryAnimator(id.origin());
     assert(dto.has_value());
@@ -112,25 +119,33 @@ void AnimatorRepository::removeAnimator(const AnimatorId& id)
     if (!hasAnimator(id)) return;
     std::lock_guard locker{ m_animatorLock };
     m_animators.erase(id);
+    if (id != id.origin()) return;  // only remove origin animator from store
     error er = m_storeMapper->removeAnimator(id.origin());
     if (er)
     {
         Platforms::Debug::ErrorPrintf("remove animator %s failed : %s\n", id.name().c_str(), er.message().c_str());
-        EventPublisher::post(std::make_shared<RemoveAnimatorFailed>(id, er));
+        EventPublisher::enqueue(std::make_shared<RemoveAnimatorFailed>(id, er));
+    }
+    else
+    {
+        EventPublisher::enqueue(std::make_shared<AnimatorRemoved>(id));
     }
 }
 
 void AnimatorRepository::putAnimator(const AnimatorId& id, const std::shared_ptr<Animator>& animator)
 {
     assert(animator);
-    std::lock_guard locker{ m_animatorLock };
-    m_animators.insert_or_assign(id, animator);
+    assert(m_storeMapper);
     if (id != id.origin()) return;  // only put origin animator to store
     error er = m_storeMapper->putAnimator(id.origin(), animator->serializeDto());
     if (er)
     {
         Platforms::Debug::ErrorPrintf("put animator %s failed : %s\n", id.name().c_str(), er.message().c_str());
-        EventPublisher::post(std::make_shared<PutAnimatorFailed>(id, er));
+        EventPublisher::enqueue(std::make_shared<PutAnimatorFailed>(id, er));
+    }
+    else
+    {
+        EventPublisher::enqueue(std::make_shared<AnimatorPut>(id));
     }
 }
 
@@ -158,19 +173,13 @@ void AnimatorRepository::requestAnimatorCreation(const Frameworks::IQueryPtr& r)
     if (!request) return;
     if (hasAnimator(request->id()))
     {
-        EventPublisher::post(std::make_shared<CreateAnimatorFailed>(request->id(), ErrorCode::animatorEntityAlreadyExists));
+        EventPublisher::enqueue(std::make_shared<CreateAnimatorFailed>(request->id(), ErrorCode::animatorEntityAlreadyExists));
         return;
     }
     auto animator = m_factory->create(request->id(), request->rtti());
-    if (request->persistenceLevel() == PersistenceLevel::Repository)
-    {
-        std::lock_guard locker{ m_animatorLock };
-        m_animators.insert_or_assign(request->id(), animator);
-    }
-    else if (request->persistenceLevel() == PersistenceLevel::Store)
-    {
-        putAnimator(request->id(), animator);
-    }
+    assert(animator);
+    std::lock_guard locker{ m_animatorLock };
+    m_animators.insert_or_assign(request->id(), animator);
     request->setResult(animator);
 }
 
@@ -181,19 +190,13 @@ void AnimatorRepository::requestAnimatorConstitution(const Frameworks::IQueryPtr
     if (!request) return;
     if (hasAnimator(request->id()))
     {
-        EventPublisher::post(std::make_shared<ConstituteAnimatorFailed>(request->id(), ErrorCode::animatorEntityAlreadyExists));
+        EventPublisher::enqueue(std::make_shared<ConstituteAnimatorFailed>(request->id(), ErrorCode::animatorEntityAlreadyExists));
         return;
     }
     auto animator = m_factory->constitute(request->id(), request->dto(), false);
-    if (request->persistenceLevel() == PersistenceLevel::Repository)
-    {
-        std::lock_guard locker{ m_animatorLock };
-        m_animators.insert_or_assign(request->id(), animator);
-    }
-    else if (request->persistenceLevel() == PersistenceLevel::Store)
-    {
-        putAnimator(request->id(), animator);
-    }
+    assert(animator);
+    std::lock_guard locker{ m_animatorLock };
+    m_animators.insert_or_assign(request->id(), animator);
     request->setResult(animator);
 }
 
@@ -213,4 +216,16 @@ void AnimatorRepository::removeAnimator(const Frameworks::ICommandPtr& c)
     removeAnimator(cmd->id());
 }
 
+void AnimatorRepository::dumpRetainedAnimator()
+{
+    Platforms::Debug::Printf("dump retained animator\n");
+    std::lock_guard locker{ m_animatorLock };
+    for (const auto& [id, animator] : m_animators)
+    {
+        if (auto ptr = animator.lock())
+        {
+            Platforms::Debug::Printf("retained animator %s\n", id.name().c_str());
+        }
+    }
+}
 

@@ -38,13 +38,13 @@ ServiceResult RenderablePrimitiveBuilder::onInit()
     EventPublisher::subscribe(typeid(MeshPrimitiveBuilder::MeshPrimitiveHydrated), m_onMeshPrimitiveHydrated);
     EventPublisher::subscribe(typeid(MeshPrimitiveBuilder::HydrateMeshPrimitiveFailed), m_onHydrateMeshPrimitiveFailed);
 
-    m_primitiveRepository.lock()->factory()->registerPrimitiveFactory(MeshPrimitive::TYPE_RTTI.getName(),
+    m_primitiveRepository.lock()->registerPrimitiveFactory(MeshPrimitive::TYPE_RTTI.getName(),
         [=](const PrimitiveId& id) { return createMesh(id); },
         [=](const PrimitiveId& id, const GenericDto& dto) { return constituteMesh(id, dto); });
-    m_primitiveRepository.lock()->factory()->registerPrimitiveFactory(SkinMeshPrimitive::TYPE_RTTI.getName(),
+    m_primitiveRepository.lock()->registerPrimitiveFactory(SkinMeshPrimitive::TYPE_RTTI.getName(),
         [=](const PrimitiveId& id) { return createSkinMesh(id); },
         [=](const PrimitiveId& id, const GenericDto& dto) { return constituteSkinMesh(id, dto); });
-    m_primitiveRepository.lock()->factory()->registerPrimitiveFactory(ModelPrimitive::TYPE_RTTI.getName(),
+    m_primitiveRepository.lock()->registerPrimitiveFactory(ModelPrimitive::TYPE_RTTI.getName(),
         [=](const PrimitiveId& id) { return createModel(id); },
         [=](const PrimitiveId& id, const GenericDto& dto) { return constituteModel(id, dto); });
 
@@ -85,7 +85,7 @@ void RenderablePrimitiveBuilder::registerCustomMeshFactory(const std::string& rt
 {
     m_customMeshCreators.emplace(rtti, creator);
     m_customMeshConstitutors.emplace(rtti, constitutor);
-    m_primitiveRepository.lock()->factory()->registerPrimitiveFactory(rtti,
+    m_primitiveRepository.lock()->registerPrimitiveFactory(rtti,
         [=](const PrimitiveId& id) { return createCustomMesh(id); },
         [=](const PrimitiveId& id, const GenericDto& dto) { return constituteCustomMesh(id, dto); });
 }
@@ -166,7 +166,7 @@ void RenderablePrimitiveBuilder::onPrimitiveHydrated(const IEventPtr& e)
     if (const auto ev = std::dynamic_pointer_cast<MeshPrimitiveBuilder::MeshPrimitiveHydrated, IEvent>(e))
     {
         if (ev->id() != m_currentBuildingId.value()) return;
-        EventPublisher::post(std::make_shared<RenderablePrimitiveHydrated>(m_currentBuildingId.value()));
+        EventPublisher::enqueue(std::make_shared<RenderablePrimitiveHydrated>(m_currentBuildingId.value()));
         m_currentBuildingId = std::nullopt;
     }
 }
@@ -180,7 +180,7 @@ void RenderablePrimitiveBuilder::onHydratePrimitiveFailed(const IEventPtr& e)
         if (ev->id() != m_currentBuildingId.value()) return;
         Platforms::Debug::ErrorPrintf("mesh primitive %s build failed : %s\n",
             ev->name().c_str(), ev->error().message().c_str());
-        EventPublisher::post(std::make_shared<RenderablePrimitiveHydrationFailed>(m_currentBuildingId.value(), ev->error()));
+        EventPublisher::enqueue(std::make_shared<RenderablePrimitiveHydrationFailed>(m_currentBuildingId.value(), ev->error()));
         m_currentBuildingId = std::nullopt;
     }
 }

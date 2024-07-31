@@ -32,6 +32,7 @@ namespace Enigma::Engine
 
         const std::string& name() const { return m_name; }
         bool isSource() const { return m_instance_serial == 0; }
+        std::uint32_t instanceSerial() const { return m_instance_serial; }
 
         class hash
         {

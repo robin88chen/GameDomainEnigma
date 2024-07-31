@@ -41,7 +41,7 @@ error IndexBufferEgl::create(unsigned sizeBuffer)
     auto api_egl = dynamic_cast<GraphicAPIEgl*>(Graphics::IGraphicAPI::instance());
     if (api_egl) api_egl->BindIndexBuffer(nullptr); // gl state reset, 要清掉binder裡的 cache
 
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::IndexBufferResourceCreated>(m_name));
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::IndexBufferResourceCreated>(m_name));
     return ErrorCode::ok;
 }
 
@@ -53,14 +53,14 @@ error IndexBufferEgl::UpdateBuffer(const uint_buffer& dataIndex)
     unsigned int dataSize = (unsigned int)dataIndex.size() * sizeof(unsigned int);
     if (FATAL_LOG_EXPR(dataSize > m_bufferSize))
     {
-        Frameworks::EventPublisher::post(std::make_shared<Graphics::IndexBufferUpdateFailed>(m_name, ErrorCode::bufferSize));
+        Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::IndexBufferUpdateFailed>(m_name, ErrorCode::bufferSize));
         return ErrorCode::bufferSize;
     }
 
     void* buff = glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0, (GLsizeiptr)dataSize, GL_MAP_WRITE_BIT);
     if (!buff)
     {
-        Frameworks::EventPublisher::post(std::make_shared<Graphics::IndexBufferUpdateFailed>(m_name, ErrorCode::eglBufferMapping));
+        Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::IndexBufferUpdateFailed>(m_name, ErrorCode::eglBufferMapping));
         return ErrorCode::eglBufferMapping;
     }
 
@@ -71,7 +71,7 @@ error IndexBufferEgl::UpdateBuffer(const uint_buffer& dataIndex)
     auto api_egl = dynamic_cast<GraphicAPIEgl*>(Graphics::IGraphicAPI::instance());
     if (api_egl) api_egl->BindIndexBuffer(nullptr); // gl state reset, 要清掉binder裡的 cache
 
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::IndexBufferResourceUpdated>(m_name));
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::IndexBufferResourceUpdated>(m_name));
     return ErrorCode::ok;
 }
 
@@ -83,14 +83,14 @@ error IndexBufferEgl::RangedUpdateBuffer(const ranged_buffer& buffer)
     unsigned int dataSize = (unsigned int)buffer.data.size() * sizeof(unsigned int);
     if (FATAL_LOG_EXPR(dataSize > m_bufferSize))
     {
-        Frameworks::EventPublisher::post(std::make_shared<Graphics::IndexBufferUpdateFailed>(m_name, ErrorCode::bufferSize));
+        Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::IndexBufferUpdateFailed>(m_name, ErrorCode::bufferSize));
         return ErrorCode::bufferSize;
     }
 
     void* buff = glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, (GLintptr)(buffer.idx_offset * sizeof(unsigned int)), (GLsizeiptr)dataSize, GL_MAP_WRITE_BIT);
     if (!buff)
     {
-        Frameworks::EventPublisher::post(std::make_shared<Graphics::IndexBufferUpdateFailed>(m_name, ErrorCode::eglBufferMapping));
+        Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::IndexBufferUpdateFailed>(m_name, ErrorCode::eglBufferMapping));
         return ErrorCode::eglBufferMapping;
     }
 
@@ -101,6 +101,6 @@ error IndexBufferEgl::RangedUpdateBuffer(const ranged_buffer& buffer)
     auto api_egl = dynamic_cast<GraphicAPIEgl*>(Graphics::IGraphicAPI::instance());
     if (api_egl) api_egl->BindIndexBuffer(nullptr); // gl state reset, 要清掉binder裡的 cache
 
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::IndexBufferResourceUpdated>(m_name));
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::IndexBufferResourceUpdated>(m_name));
     return ErrorCode::ok;
 }

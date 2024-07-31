@@ -34,6 +34,7 @@
 #include "Renderables/RenderablesInstallingPolicy.h"
 #include "Renderer/RendererInstallingPolicy.h"
 #include "SceneGraph/SceneGraphAssemblers.h"
+#include "SceneGraph/CameraAssemblers.h"
 #include "SceneGraph/SceneGraphCommands.h"
 #include "SceneGraph/SceneGraphInstallingPolicy.h"
 #include "ShadowMap/ShadowMapInstallingPolicies.h"
@@ -45,6 +46,7 @@
 #include "FloorReceiverMaker.h"
 #include "ViewerTextureFileStoreMapper.h"
 #include "ViewerAvatarBaker.h"
+#include "Terrain/TerrainInstallingPolicy.h"
 #include <memory>
 
 using namespace EnigmaViewer;
@@ -187,12 +189,11 @@ void ViewerAppDelegate::installEngine()
     //auto scene_renderer_policy = std::make_shared<SceneRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName, scene_render_config);
     auto game_scene_policy = std::make_shared<GameSceneInstallingPolicy>();
     auto animated_pawn = std::make_shared<AnimatedPawnInstallingPolicy>();
-    auto game_light_policy = std::make_shared<GameLightInstallingPolicy>();
     auto shadow_map_config = std::make_shared<ShadowMapServiceConfiguration>();
     auto shadow_map_policy = std::make_shared<ShadowMapInstallingPolicy>("shadowmap_renderer", "shadowmap_target", shadow_map_config);
-    m_graphicMain->installRenderEngine({ creating_policy, engine_policy, render_sys_policy, animator_policy, scene_graph_policy,
-        input_handler_policy, game_camera_policy, deferred_renderer_policy /*scene_renderer_policy*/, game_scene_policy, animated_pawn, game_light_policy, shadow_map_policy, geometry_policy, primitive_policy,
-        effect_material_source_policy, texture_policy, renderables_policy });
+    auto terrain_policy = std::make_shared<Enigma::Terrain::TerrainInstallingPolicy>();
+    m_graphicMain->installRenderEngine({ creating_policy, engine_policy, render_sys_policy, animator_policy, scene_graph_policy, input_handler_policy, game_camera_policy, deferred_renderer_policy /*scene_renderer_policy*/, game_scene_policy, animated_pawn, shadow_map_policy, geometry_policy, primitive_policy,
+        effect_material_source_policy, texture_policy, renderables_policy, terrain_policy });
     m_inputHandler = input_handler_policy->GetInputHandler();
     m_sceneRenderer = m_graphicMain->getSystemServiceAs<SceneRendererService>();
     m_shadowMapService = m_graphicMain->getSystemServiceAs<ShadowMapService>();
@@ -299,7 +300,7 @@ void ViewerAppDelegate::onRenderEngineInstalled(const Enigma::Frameworks::IEvent
         root_assembler.asNative(m_sceneRootId.name() + ".node@DataPath");
         m_sceneGraphFileStoreMapper->putSpatial(m_sceneRootId, root_assembler.toGenericDto());
     }
-    CommandBus::post(std::make_shared<CreateNodalSceneRoot>(m_sceneRootId));
+    CommandBus::enqueue(std::make_shared<CreateNodalSceneRoot>(m_sceneRootId));
 
     refreshModelList();
     refreshPawnList();
@@ -311,10 +312,25 @@ void ViewerAppDelegate::onSceneGraphRootCreated(const Enigma::Frameworks::IEvent
     const auto ev = std::dynamic_pointer_cast<NodalSceneRootCreated, IEvent>(e);
     if (!ev) return;
     m_sceneRoot = ev->root();
-    CommandBus::post(std::make_shared<CreateAmbientLight>(m_sceneRootId, SpatialId("amb_lit", Light::TYPE_RTTI), Enigma::MathLib::ColorRGBA(0.2f, 0.2f, 0.2f, 1.0f)));
-    CommandBus::post(std::make_shared<CreateSunLight>(m_sceneRootId, SpatialId("sun_lit", Light::TYPE_RTTI), Enigma::MathLib::Vector3(-1.0, -1.0, -1.0), Enigma::MathLib::ColorRGBA(0.6f, 0.6f, 0.6f, 1.0f)));
+    LightInfo amb_info(LightInfo::LightType::Ambient);
+    amb_info.setLightColor(Enigma::MathLib::ColorRGBA(0.2f, 0.2f, 0.2f, 1.0f));
+    SpatialId amb_light_id("amb_lit", Light::TYPE_RTTI);
+    FactoryDesc amb_fd = FactoryDesc(Light::TYPE_RTTI).ClaimAsInstanced(amb_light_id.name() + ".light", "DataPath");
+    CommandBus::enqueue(std::make_shared<CreateAmbientLight>(m_sceneRootId, amb_light_id, amb_info, amb_fd, PersistenceLevel::Repository));
+    LightInfo sun_info(LightInfo::LightType::SunLight);
+    sun_info.setLightColor(Enigma::MathLib::ColorRGBA(0.6f, 0.6f, 0.6f, 1.0f));
+    sun_info.setLightDirection(Enigma::MathLib::Vector3(-1.0f, -1.0f, -1.0f));
+    SpatialId sun_light_id("sun_lit", Light::TYPE_RTTI);
+    FactoryDesc sun_fd = FactoryDesc(Light::TYPE_RTTI).ClaimAsInstanced(sun_light_id.name() + ".light", "DataPath");
+    CommandBus::enqueue(std::make_shared<CreateSunLight>(m_sceneRootId, sun_light_id, sun_info, sun_fd, PersistenceLevel::Repository));
+    LightInfo pt_info(LightInfo::LightType::Point);
+    pt_info.setLightColor(Enigma::MathLib::ColorRGBA(3.0f, 0.0f, 3.0f, 1.0f));
+    pt_info.setLightRange(3.50f);
+    pt_info.setLightPosition(Enigma::MathLib::Vector3(2.0f, 2.0f, 2.0f));
+    SpatialId pt_light_id("point_lit", Light::TYPE_RTTI);
+    FactoryDesc pt_fd = FactoryDesc(Light::TYPE_RTTI).ClaimAsInstanced(pt_light_id.name() + ".light", "DataPath");
     auto mx = Enigma::MathLib::Matrix4::MakeTranslateTransform(2.0f, 2.0f, 2.0f);
-    CommandBus::post(std::make_shared<CreatePointLight>(m_sceneRootId, mx, SpatialId("point_lit", Light::TYPE_RTTI), Enigma::MathLib::Vector3(2.0f, 2.0f, 2.0f), Enigma::MathLib::ColorRGBA(3.0f, 0.0f, 3.0f, 1.0f), 3.50f));
+    CommandBus::enqueue(std::make_shared<CreatePointLight>(m_sceneRootId, mx, pt_light_id, pt_info, pt_fd, PersistenceLevel::Repository));
     FloorReceiverMaker::makeFloorReceiver(m_sceneRoot);
 }
 
@@ -363,7 +379,7 @@ void ViewerAppDelegate::refreshModelList()
 {
     if (m_primitiveFileStoreMapper)
     {
-        CommandBus::post(std::make_shared<RefreshModelPrimitiveList>(m_primitiveFileStoreMapper->modelNames()));
+        CommandBus::enqueue(std::make_shared<RefreshModelPrimitiveList>(m_primitiveFileStoreMapper->modelNames()));
     }
 }
 
@@ -388,7 +404,7 @@ void ViewerAppDelegate::refreshPawnList()
 {
     if (m_sceneGraphFileStoreMapper)
     {
-        CommandBus::post(std::make_shared<RefreshPawnList>(m_sceneGraphFileStoreMapper->pawnNames()));
+        CommandBus::enqueue(std::make_shared<RefreshPawnList>(m_sceneGraphFileStoreMapper->pawnNames()));
     }
 }
 

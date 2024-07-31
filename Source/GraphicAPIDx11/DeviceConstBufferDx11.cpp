@@ -41,9 +41,9 @@ error DeviceConstBufferDx11::CreateDataBuffer(unsigned cb_size)
     // Create the buffer.
     m_d3dBuffer = nullptr;
     HRESULT hr = device->CreateBuffer(&desc, nullptr, &m_d3dBuffer);
-    if (FATAL_LOG_EXPR(hr)) return ErrorCode::dxCreateBuffer;
+    if (FATAL_LOG_EXPR(FAILED(hr))) return ErrorCode::dxCreateBuffer;
 
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::ConstBufferResourceCreated>(m_name));
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::ConstBufferResourceCreated>(m_name));
     return ErrorCode::ok;
 }
 
@@ -63,7 +63,7 @@ error DeviceConstBufferDx11::Apply(const byte_buffer& data, unsigned dataSize)
     deviceContext->Unmap(m_d3dBuffer, 0);
 
     //todo : 這個沒有改變物件狀態，只是展示面的事件需要嗎??
-    //Frameworks::EventPublisher::post(Frameworks::IEventPtr{ menew Graphics::ConstBufferResourceApplied(m_name) });
+    //Frameworks::EventPublisher::enqueue(Frameworks::IEventPtr{ menew Graphics::ConstBufferResourceApplied(m_name) });
     return ErrorCode::ok;
 }
 
@@ -77,9 +77,9 @@ future_error DeviceConstBufferDx11::AsyncApply()
     //! lambda 從 this 抓 member data 並不是 by value, 要複製; c++17 可以用 *this; 因為這個物件不能複製, 所以 *this 沒法使用, 還是複製成員, 做物件複製更不划算
     return Graphics::IGraphicAPI::instance()->GetGraphicThread()->
         PushTask([lifetime = shared_from_this(), data = this->m_data, size = this->m_size, this]() -> error
-        {
-            return Apply(data, size);
-        }); // 資料 copy 到 functor 裡
+            {
+                return Apply(data, size);
+            }); // 資料 copy 到 functor 裡
     //return Graphics::IGraphicAPI::instance()->GetGraphicThread()->
       //  PushTask([=, *this]() -> error { return Apply(m_data, m_size); }); // 資料 copy 到 functor 裡
 }
@@ -111,8 +111,8 @@ future_error DeviceConstBufferDx11::AsyncBindToShader(Graphics::IShaderVariable:
 {
     return Graphics::IGraphicAPI::instance()->GetGraphicThread()->
         PushTask([lifetime = shared_from_this(), this, var_of, bindPoint]()->error
-        {
-            return BindToShader(var_of, bindPoint);
-        });
+            {
+                return BindToShader(var_of, bindPoint);
+            });
 }
 

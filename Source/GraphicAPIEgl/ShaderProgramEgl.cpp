@@ -14,9 +14,9 @@
 using namespace Enigma::Devices;
 using ErrorCode = Enigma::Graphics::ErrorCode;
 
-ShaderProgramEgl::ShaderProgramEgl(const std::string& name,const Graphics::IVertexShaderPtr& vtx_shader, 
+ShaderProgramEgl::ShaderProgramEgl(const std::string& name, const Graphics::IVertexShaderPtr& vtx_shader,
     const Graphics::IPixelShaderPtr& pix_shader, const Graphics::IVertexDeclarationPtr& vtx_decl)
-        : IShaderProgram(name, vtx_shader, pix_shader, vtx_decl)
+    : IShaderProgram(name, vtx_shader, pix_shader, vtx_decl)
 {
     assert((m_vtxShader) && (m_pixShader));
 
@@ -144,7 +144,7 @@ void ShaderProgramEgl::LinkShaders()
             {
                 glGetProgramInfoLog(m_program, infoLogLen, NULL, infoLog);
                 Platforms::Debug::ErrorPrintf("Could not link program:\n%s\n", infoLog);
-                Frameworks::EventPublisher::post(std::make_shared<Graphics::ShaderProgramLinkFailed>(m_name, infoLog));
+                Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::ShaderProgramLinkFailed>(m_name, infoLog));
                 free(infoLog);
             }
         }

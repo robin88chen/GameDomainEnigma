@@ -8,7 +8,7 @@
 #include <cassert>
 
 using namespace Enigma::Devices;
-using ErrorCode  = Enigma::Graphics::ErrorCode;
+using ErrorCode = Enigma::Graphics::ErrorCode;
 
 extern DXGI_FORMAT ConvertGraphicFormatToDXGI(const Enigma::Graphics::GraphicFormat& format);
 extern unsigned int ConvertDXGIFormatToGraphicFormat(DXGI_FORMAT fmt);
@@ -70,7 +70,7 @@ error DepthStencilSurfaceDx11::Resize(const MathLib::Dimension<unsigned>& dimens
     error er = create(graphic->GetD3DDevice(), dimension, m_format);
     if (er) return er;
     CreateD3DDepthView(graphic->GetD3DDevice());
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::DepthSurfaceResized>(m_name, m_dimension));
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::DepthSurfaceResized>(m_name, m_dimension));
 
     return er;
 }

@@ -32,19 +32,19 @@ namespace Enigma::Engine
         RenderBuffer& operator=(RenderBuffer&&) = delete;
 
         /** update vertex */
-        error UpdateVertex(const byte_buffer& dataBuffer, const uint_buffer& indexBuffer);
+        error updateVertex(const byte_buffer& dataBuffer, const uint_buffer& indexBuffer);
         /** ranged update vertex */
-        error RangedUpdateVertex(const Graphics::IVertexBuffer::ranged_buffer& vtxBuffer,
+        error rangedUpdateVertex(const Graphics::IVertexBuffer::ranged_buffer& vtxBuffer,
             const std::optional<const Graphics::IIndexBuffer::ranged_buffer>& idxBuffer);
 
-        Graphics::IVertexBufferPtr GetVertexBuffer() { return m_vertexBuffer; };
-        Graphics::IIndexBufferPtr GetIndexBuffer() { return m_indexBuffer; };
+        Graphics::IVertexBufferPtr vertexBuffer() { return m_vertexBuffer; };
+        Graphics::IIndexBufferPtr indexBuffer() { return m_indexBuffer; };
 
         /** get signature */
-        const RenderBufferSignature& GetSignature() const { return m_signature; };
-        RenderBufferSignature GetSignature() { return m_signature; }
+        const RenderBufferSignature& signature() const { return m_signature; };
+        RenderBufferSignature signature() { return m_signature; }
 
-        bool IsDataEmpty() { return m_isDataEmpty; };
+        bool isDataEmpty() { return m_isDataEmpty; };
 
         /** draw */
         error draw(const std::shared_ptr<EffectMaterial>& effectMaterial, const Geometries::GeometrySegment& segment);

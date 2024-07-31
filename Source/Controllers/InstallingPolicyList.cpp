@@ -14,7 +14,6 @@
 #include "ShadowMap/ShadowMapInstallingPolicies.h"
 #include "Terrain/TerrainInstallingPolicy.h"
 #include "WorldMap/WorldMapInstallingPolicy.h"
-#include "Prefabs/PrefabInstallingPolicy.h"
 #include "Renderables/RenderablesInstallingPolicy.h"
 
 using namespace Enigma::Controllers;
@@ -35,14 +34,12 @@ constexpr std::uint16_t OrderOfDefaultRendererInstalling = 50;
 constexpr std::uint16_t OrderOfInputHandlerInstalling = 60;
 
 constexpr std::uint16_t OrderOfGameCameraInstalling = 500;
-constexpr std::uint16_t OrderOfGameLightInstalling = 500;
 constexpr std::uint16_t OrderOfGameSceneInstalling = 510;
 
 constexpr std::uint16_t OrderOfSceneRendererInstalling = 600;
 constexpr std::uint16_t OrderOfShadowMapInstalling = 610;
 
 constexpr std::uint16_t OrderOfGamePawnsInstalling = 700;
-constexpr std::uint16_t OrderOfPrefabInstalling = 710;
 
 constexpr std::uint64_t OrderOfUnknownPolicy = UINT16_MAX;
 
@@ -82,12 +79,10 @@ void InstallingPolicyList::makeOrderMap()
     m_orderMap[typeid(WorldMap::WorldMapInstallingPolicy)] = OrderOfWorldMapInstalling;
     m_orderMap[typeid(InputHandlers::InputHandlerInstallingPolicy)] = OrderOfInputHandlerInstalling;
     m_orderMap[typeid(GameCommon::GameCameraInstallingPolicy)] = OrderOfGameCameraInstalling;
-    m_orderMap[typeid(GameCommon::GameLightInstallingPolicy)] = OrderOfGameLightInstalling;
     m_orderMap[typeid(GameCommon::GameSceneInstallingPolicy)] = OrderOfGameSceneInstalling;
     m_orderMap[typeid(GameCommon::SceneRendererInstallingPolicy)] = OrderOfSceneRendererInstalling;
     m_orderMap[typeid(GameCommon::DeferredRendererInstallingPolicy)] = OrderOfSceneRendererInstalling;
     m_orderMap[typeid(ShadowMap::ShadowMapInstallingPolicy)] = OrderOfShadowMapInstalling;
     m_orderMap[typeid(ShadowMap::CascadeShadowMapInstallingPolicy)] = OrderOfShadowMapInstalling;
     m_orderMap[typeid(GameCommon::AnimatedPawnInstallingPolicy)] = OrderOfGamePawnsInstalling;
-    m_orderMap[typeid(Prefabs::PrefabInstallingPolicy)] = OrderOfPrefabInstalling;
 }

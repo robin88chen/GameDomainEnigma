@@ -24,12 +24,12 @@ namespace LevelEditor
         error StartLoadingPawn(const std::string& full_path);
 
     private:
-        void OnSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
-        void OnBuildSceneGraphFailed(const Enigma::Frameworks::IEventPtr& e);
+        //void OnSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
+        //void OnBuildSceneGraphFailed(const Enigma::Frameworks::IEventPtr& e);
 
     private:
-        Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
-        Enigma::Frameworks::EventSubscriberPtr m_onBuildSceneGraphFailed;
+        //Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
+        //Enigma::Frameworks::EventSubscriberPtr m_onBuildSceneGraphFailed;
 
         std::string m_pawnFullPath;
     };

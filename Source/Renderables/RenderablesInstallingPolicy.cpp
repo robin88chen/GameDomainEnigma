@@ -9,9 +9,7 @@
 #include "ModelAnimationAsset.h"
 #include "Frameworks/CommandBus.h"
 #include "Animators/AnimatorRepository.h"
-#include "Animators/AnimatorFactory.h"
 #include "Animators/AnimationAssetRepository.h"
-#include "Animators/AnimationAssetFactory.h"
 #include <system_error>
 
 using namespace Enigma::Renderables;
@@ -27,10 +25,10 @@ error RenderablesInstallingPolicy::install(Frameworks::ServiceManager* service_m
 
     auto animator_repository = service_manager->getSystemServiceAs<Animators::AnimatorRepository>();
     assert(animator_repository);
-    animator_repository->factory()->registerAnimatorFactory(ModelPrimitiveAnimator::TYPE_RTTI.getName(), ModelPrimitiveAnimator::create, ModelPrimitiveAnimator::constitute);
+    animator_repository->registerAnimatorFactory(ModelPrimitiveAnimator::TYPE_RTTI.getName(), ModelPrimitiveAnimator::create, ModelPrimitiveAnimator::constitute);
     auto animation_asset_repository = service_manager->getSystemServiceAs<Animators::AnimationAssetRepository>();
     assert(animation_asset_repository);
-    animation_asset_repository->factory()->registerAnimationAssetFactory(ModelAnimationAsset::TYPE_RTTI.getName(), ModelAnimationAsset::create, ModelAnimationAsset::constitute);
+    animation_asset_repository->registerAnimationAssetFactory(ModelAnimationAsset::TYPE_RTTI.getName(), ModelAnimationAsset::create, ModelAnimationAsset::constitute);
 
     Primitives::PrimitiveRay3IntersectionFinderFactory::registerCreator(ModelPrimitive::TYPE_RTTI.getName(), ModelPrimitiveRay3IntersectionFinder::create);
     Primitives::PrimitiveRay3IntersectionFinderFactory::registerCreator(MeshPrimitive::TYPE_RTTI.getName(), MeshPrimitiveRay3IntersectionFinder::create);

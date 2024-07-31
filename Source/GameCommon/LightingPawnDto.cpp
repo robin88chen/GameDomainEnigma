@@ -6,21 +6,15 @@ using namespace Enigma::SceneGraph;
 
 static std::string TOKEN_HOST_LIGHT_ID = "HostLightId";
 
-LightingPawnDto::LightingPawnDto() : PawnDto()
+LightingPawnDto::LightingPawnDto(const Engine::GenericDto& dto) : PawnDto(dto)
 {
     m_factoryDesc = Engine::FactoryDesc(LightingPawn::TYPE_RTTI.getName());
+    if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_HOST_LIGHT_ID)) hostLightId(v.value());
 }
 
 LightingPawnDto::LightingPawnDto(const SceneGraph::PawnDto& dto) : PawnDto(dto)
 {
     assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), LightingPawn::TYPE_RTTI.getName()));
-}
-
-LightingPawnDto LightingPawnDto::fromGenericDto(const Engine::GenericDto& dto)
-{
-    LightingPawnDto pawn_dto{ PawnDto(dto) };
-    if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_HOST_LIGHT_ID)) pawn_dto.hostLightId() = v.value();
-    return pawn_dto;
 }
 
 Enigma::Engine::GenericDto LightingPawnDto::toGenericDto() const

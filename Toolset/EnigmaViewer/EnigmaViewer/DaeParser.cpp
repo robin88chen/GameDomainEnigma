@@ -146,7 +146,7 @@ void DaeParser::loadDaeFile(const std::string& filename)
 
 void DaeParser::outputLog(const std::string& msg)
 {
-    CommandBus::post(std::make_shared<OutputMessage>(msg));
+    CommandBus::enqueue(std::make_shared<OutputMessage>(msg));
 }
 
 void DaeParser::parseScene(const pugi::xml_node& collada_root)
@@ -1144,9 +1144,9 @@ void DaeParser::persistMesh(const Enigma::Primitives::PrimitiveId& mesh_id, cons
     mesh_dto.effects().emplace_back(effect_id);
     if ((texture_id) && (tex_semantic))
     {
-        EffectTextureMapDtoHelper texture_helper;
-        texture_helper.textureMapping(texture_id.value(), std::nullopt, tex_semantic.value());
-        mesh_dto.textureMaps().emplace_back(texture_helper.toGenericDto());
+        EffectTextureMapAssembler texture_assembler;
+        texture_assembler.textureMapping(texture_id.value(), std::nullopt, tex_semantic.value());
+        mesh_dto.textureMaps().emplace_back(texture_assembler.toGenericDto());
     }
     mesh_dto.renderListID() = Enigma::Renderer::Renderer::RenderListID::Scene;
     mesh_dto.visualTechniqueSelection() = "Default";
@@ -1165,9 +1165,9 @@ void DaeParser::persistSkinMesh(const Enigma::Primitives::PrimitiveId& mesh_id, 
     mesh_dto.effects().emplace_back(effect_id);
     if ((texture_id) && (tex_semantic))
     {
-        EffectTextureMapDtoHelper texture_helper;
-        texture_helper.textureMapping(texture_id.value(), std::nullopt, tex_semantic.value());
-        mesh_dto.textureMaps().emplace_back(texture_helper.toGenericDto());
+        EffectTextureMapAssembler texture_assembler;
+        texture_assembler.textureMapping(texture_id.value(), std::nullopt, tex_semantic.value());
+        mesh_dto.textureMaps().emplace_back(texture_assembler.toGenericDto());
     }
     mesh_dto.renderListID() = Enigma::Renderer::Renderer::RenderListID::Scene;
     mesh_dto.visualTechniqueSelection() = "Default";

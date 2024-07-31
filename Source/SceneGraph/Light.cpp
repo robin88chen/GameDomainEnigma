@@ -1,9 +1,8 @@
 ﻿#include "Light.h"
 #include "LightInfo.h"
-#include "LightInfoDtos.h"
+#include "LightDtos.h"
 #include "SceneGraphErrors.h"
-#include "SceneGraphEvents.h"
-#include "SceneGraphDtos.h"
+#include "LightEvents.h"
 #include "Frameworks/EventPublisher.h"
 
 using namespace Enigma::SceneGraph;
@@ -24,13 +23,23 @@ Light::Light(const SpatialId& id, const Engine::GenericDto& o) : Spatial(id, o)
 
 Light::~Light()
 {
-    Frameworks::EventPublisher::post(std::make_shared<LightInfoDeleted>(m_id, m_lightInfo.lightType()));
+    Frameworks::EventPublisher::enqueue(std::make_shared<LightInfoDeleted>(m_id, m_lightInfo.lightType()));
+}
+
+std::shared_ptr<Light> Light::create(const SpatialId& id, const LightInfo& light_info)
+{
+    return std::make_shared<Light>(id, light_info);
+}
+
+std::shared_ptr<Light> Light::constitute(const SpatialId& id, const Engine::GenericDto& dto)
+{
+    return std::make_shared<Light>(id, dto);
 }
 
 Enigma::Engine::GenericDto Light::serializeDto()
 {
     LightDto dto(serializeSpatialDto());
-    dto.lightInfo() = m_lightInfo.serializeDto().toGenericDto();
+    dto.lightInfo(m_lightInfo.serializeDto().toGenericDto());
     return dto.toGenericDto();
 }
 
@@ -52,35 +61,35 @@ error Light::_updateWorldData(const MathLib::Matrix4& mxParentWorld)
 void Light::setLightColor(const MathLib::ColorRGBA& color)
 {
     info().setLightColor(color);
-    Frameworks::EventPublisher::post(std::make_shared<LightInfoUpdated>(thisLight(), LightInfoUpdated::NotifyCode::Color));
+    Frameworks::EventPublisher::enqueue(std::make_shared<LightInfoUpdated>(thisLight(), LightInfoUpdated::NotifyCode::Color));
 }
 
 void Light::setLightPosition(const MathLib::Vector3& vec)
 {
     info().setLightPosition(vec);
-    Frameworks::EventPublisher::post(std::make_shared<LightInfoUpdated>(thisLight(), LightInfoUpdated::NotifyCode::Position));
+    Frameworks::EventPublisher::enqueue(std::make_shared<LightInfoUpdated>(thisLight(), LightInfoUpdated::NotifyCode::Position));
 }
 
 void Light::setLightDirection(const MathLib::Vector3& vec)
 {
     info().setLightDirection(vec);
-    Frameworks::EventPublisher::post(std::make_shared<LightInfoUpdated>(thisLight(), LightInfoUpdated::NotifyCode::Direction));
+    Frameworks::EventPublisher::enqueue(std::make_shared<LightInfoUpdated>(thisLight(), LightInfoUpdated::NotifyCode::Direction));
 }
 
 void Light::setLightAttenuation(const MathLib::Vector3& attenuation)
 {
     info().setLightAttenuation(attenuation);
-    Frameworks::EventPublisher::post(std::make_shared<LightInfoUpdated>(thisLight(), LightInfoUpdated::NotifyCode::Attenuation));
+    Frameworks::EventPublisher::enqueue(std::make_shared<LightInfoUpdated>(thisLight(), LightInfoUpdated::NotifyCode::Attenuation));
 }
 
 void Light::setLightRange(float range)
 {
     info().setLightRange(range);
-    Frameworks::EventPublisher::post(std::make_shared<LightInfoUpdated>(thisLight(), LightInfoUpdated::NotifyCode::Range));
+    Frameworks::EventPublisher::enqueue(std::make_shared<LightInfoUpdated>(thisLight(), LightInfoUpdated::NotifyCode::Range));
 }
 
 void Light::setEnable(bool flag)
 {
     info().setEnable(flag);
-    Frameworks::EventPublisher::post(std::make_shared<LightInfoUpdated>(thisLight(), LightInfoUpdated::NotifyCode::Enable));
+    Frameworks::EventPublisher::enqueue(std::make_shared<LightInfoUpdated>(thisLight(), LightInfoUpdated::NotifyCode::Enable));
 }

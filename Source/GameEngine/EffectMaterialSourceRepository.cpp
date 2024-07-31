@@ -5,6 +5,7 @@
 #include "EffectQueries.h"
 #include "Frameworks/QueryDispatcher.h"
 #include "Platforms/MemoryMacro.h"
+#include "Frameworks/CommandBus.h"
 #include <system_error>
 #include <cassert>
 
@@ -92,8 +93,3 @@ void EffectMaterialSourceRepository::queryEffectMaterial(const Frameworks::IQuer
     query->setResult(queryEffectMaterial(query->id()));
 }
 
-void EffectMaterialSourceRepository::releaseEffectMaterial(const EffectMaterialId& id)
-{
-    std::lock_guard locker{ m_sourceMapLock };
-    m_sourceMaterials.erase(id);
-}

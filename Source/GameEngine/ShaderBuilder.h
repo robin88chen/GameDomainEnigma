@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   ShaderBuilder.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   August 2022
  *********************************************************************/
@@ -29,7 +29,7 @@ namespace Enigma::Engine
         public:
             VertexShaderBuilt(const std::string& name) :
                 m_name(name) {};
-            const std::string& GetShaderName() { return m_name; }
+            const std::string& shaderName() { return m_name; }
         private:
             std::string m_name;
         };
@@ -38,7 +38,7 @@ namespace Enigma::Engine
         public:
             PixelShaderBuilt(const std::string& name) :
                 m_name(name) {};
-            const std::string& GetShaderName() { return m_name; }
+            const std::string& shaderName() { return m_name; }
         private:
             std::string m_name;
         };
@@ -49,7 +49,7 @@ namespace Enigma::Engine
         public:
             ShaderProgramBuilt(const std::string& name) :
                 m_name(name) {};
-            const std::string& GetShaderName() { return m_name; }
+            const std::string& shaderName() { return m_name; }
         private:
             std::string m_name;
         };
@@ -63,21 +63,21 @@ namespace Enigma::Engine
         ShaderBuilder& operator=(const ShaderBuilder&) = delete;
         ShaderBuilder& operator=(ShaderBuilder&&) = delete;
 
-        void BuildShaderProgram(const ShaderProgramPolicy& policy);
+        void buildShaderProgram(const ShaderProgramPolicy& policy);
 
-        Graphics::IShaderProgramPtr GetProgram() { return m_program; }
+        Graphics::IShaderProgramPtr getProgram() { return m_program; }
 
     private:
-        void OnVertexShaderCreated(const Frameworks::IEventPtr& e);
-        void OnVertexShaderCompiled(const Frameworks::IEventPtr& e);
-        void OnVertexLayoutCreated(const Frameworks::IEventPtr& e);
-        void OnPixelShaderCreated(const Frameworks::IEventPtr& e);
-        void OnPixelShaderCompiled(const Frameworks::IEventPtr& e);
-        void OnShaderCompileFailed(const Frameworks::IEventPtr& e);
+        void onVertexShaderCreated(const Frameworks::IEventPtr& e);
+        void onVertexShaderCompiled(const Frameworks::IEventPtr& e);
+        void onVertexLayoutCreated(const Frameworks::IEventPtr& e);
+        void onPixelShaderCreated(const Frameworks::IEventPtr& e);
+        void onPixelShaderCompiled(const Frameworks::IEventPtr& e);
+        void onShaderCompileFailed(const Frameworks::IEventPtr& e);
 
-        void OnShaderBuilt(const Frameworks::IEventPtr& e);
-        void OnShaderProgramCreated(const Frameworks::IEventPtr& e);
-        void OnShaderProgramLinkFailed(const Frameworks::IEventPtr& e);
+        void onShaderBuilt(const Frameworks::IEventPtr& e);
+        void onShaderProgramCreated(const Frameworks::IEventPtr& e);
+        void onShaderProgramLinkFailed(const Frameworks::IEventPtr& e);
 
     private:
         ShaderRepository* m_hostRepository;

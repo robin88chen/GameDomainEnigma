@@ -17,15 +17,15 @@ namespace Enigma::Primitives
     class PrimitiveId
     {
     public:
-        PrimitiveId() = default;
+        PrimitiveId() : m_name(""), m_sequence(0), m_rtti(nullptr) {}
         PrimitiveId(const std::string& name, const Frameworks::Rtti& rtti);
         PrimitiveId(const std::string& name, std::uint64_t sequence, const Frameworks::Rtti& rtti);
         PrimitiveId(const std::vector<std::string>& tokens);
         ~PrimitiveId() = default;
         PrimitiveId(const PrimitiveId& other);
         PrimitiveId& operator=(const PrimitiveId& other);
-        PrimitiveId(PrimitiveId&& other);
-        PrimitiveId& operator=(PrimitiveId&& other);
+        PrimitiveId(PrimitiveId&& other) noexcept;
+        PrimitiveId& operator=(PrimitiveId&& other) noexcept;
 
         bool operator==(const PrimitiveId& other) const { return m_name == other.m_name && m_sequence == other.m_sequence && m_rtti == other.m_rtti; }
         bool operator!=(const PrimitiveId& other) const { return m_name != other.m_name || m_sequence != other.m_sequence || m_rtti != other.m_rtti; }

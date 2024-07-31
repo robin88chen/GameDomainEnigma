@@ -35,7 +35,7 @@ PrimitiveId::PrimitiveId(const PrimitiveId& other)
     m_rtti = other.m_rtti;
 }
 
-PrimitiveId::PrimitiveId(PrimitiveId&& other)
+PrimitiveId::PrimitiveId(PrimitiveId&& other) noexcept
 {
     m_name = std::move(other.m_name);
     m_sequence = std::move(other.m_sequence);
@@ -50,7 +50,7 @@ PrimitiveId& PrimitiveId::operator=(const PrimitiveId& other)
     return *this;
 }
 
-PrimitiveId& PrimitiveId::operator=(PrimitiveId&& other)
+PrimitiveId& PrimitiveId::operator=(PrimitiveId&& other) noexcept
 {
     m_name = std::move(other.m_name);
     m_sequence = std::move(other.m_sequence);

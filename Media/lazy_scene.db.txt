@@ -1,0 +1,1 @@
+world/ww1_map,En.SceneGraph.OutRegionNode,world/lazied_ww1_map.node@APK_PATH

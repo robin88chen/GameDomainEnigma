@@ -116,9 +116,9 @@ GenericDto SquareQuadAssembler::toGenericDto()
     return m_dto.toGenericDto();
 }
 
-std::shared_ptr<GeometryData> SquareQuadAssembler::constitute(PersistenceLevel persistence_level)
+std::shared_ptr<GeometryData> SquareQuadAssembler::constitute()
 {
-    return std::make_shared<RequestGeometryConstitution>(m_id, toGenericDto(), persistence_level)->dispatch();
+    return std::make_shared<RequestGeometryConstitution>(m_id, toGenericDto())->dispatch();
 }
 
 CubeAssembler::CubeAssembler(const GeometryId& id)
@@ -411,9 +411,9 @@ GenericDto CubeAssembler::toGenericDto()
     return m_dto.toGenericDto();
 }
 
-std::shared_ptr<GeometryData> CubeAssembler::constitute(PersistenceLevel persistence_level)
+std::shared_ptr<GeometryData> CubeAssembler::constitute()
 {
-    return std::make_shared<RequestGeometryConstitution>(m_id, toGenericDto(), persistence_level)->dispatch();
+    return std::make_shared<RequestGeometryConstitution>(m_id, toGenericDto())->dispatch();
 }
 
 SphereAssembler::SphereAssembler(const GeometryId& id)
@@ -633,8 +633,8 @@ GenericDto SphereAssembler::toGenericDto()
     m_dto.topology() = static_cast<unsigned>(Graphics::PrimitiveTopology::Topology_TriangleList);
     return m_dto.toGenericDto();
 }
-std::shared_ptr<GeometryData> SphereAssembler::constitute(PersistenceLevel persistence_level)
+std::shared_ptr<GeometryData> SphereAssembler::constitute()
 {
-    return std::make_shared<RequestGeometryConstitution>(m_id, toGenericDto(), persistence_level)->dispatch();
+    return std::make_shared<RequestGeometryConstitution>(m_id, toGenericDto())->dispatch();
 }
 

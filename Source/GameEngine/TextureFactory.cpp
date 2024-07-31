@@ -42,6 +42,6 @@ std::shared_ptr<Texture> TextureFactory::constitute(const TextureId& id, const G
     if (er) return nullptr;
     er = m_processor->hydrateNextTextureResource();
     if (er) return nullptr;
-    Frameworks::EventPublisher::post(std::make_shared<TextureConstituted>(id, texture, is_persisted));
+    Frameworks::EventPublisher::enqueue(std::make_shared<TextureConstituted>(id, texture, is_persisted));
     return texture;
 }

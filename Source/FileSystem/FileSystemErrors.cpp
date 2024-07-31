@@ -18,6 +18,7 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::expiredPackage: return "Expired package";
     case ErrorCode::emptyAssetKey: return "Empty asset key";
     case ErrorCode::emptyWriteBuffer: return "Empty write buffer";
+    case ErrorCode::zeroReadSize: return "Zero read size";
     case ErrorCode::zeroSizeContent: return "Zero size content";
     case ErrorCode::readOffsetError: return "Read offset error";
     case ErrorCode::readFail: return "Read fail";

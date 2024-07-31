@@ -93,7 +93,7 @@ void AppDelegate::initialize(Graphics::IGraphicAPI::APIVersion /*api_ver*/, Grap
     registerAppClass();
     create();
 
-    CoInitializeEx(NULL, COINIT_MULTITHREADED);  // for WIC Texture Loader
+    //CoInitializeEx(NULL, COINIT_MULTITHREADED);  // for WIC Texture Loader
 
     installEngine();
 }
@@ -171,7 +171,7 @@ void AppDelegate::run()
 
 void AppDelegate::onFrameSizeChanged(int w, int h)
 {
-    Frameworks::CommandBus::post(std::make_shared<Renderer::ResizePrimaryRenderTarget>(
+    Frameworks::CommandBus::enqueue(std::make_shared<Renderer::ResizePrimaryRenderTarget>(
         MathLib::Dimension<unsigned>{(unsigned)w, (unsigned)h}));
 }
 

@@ -14,16 +14,17 @@
 #include <nana/gui/widgets/combox.hpp>
 #include <nana/gui/widgets/label.hpp>
 #include "TerrainEditService.h"
+#include "GameEngine/TextureId.h"
 #include <array>
 
 namespace LevelEditor
 {
-    class WorldEditConsole;
+    class TerrainEditConsole;
 
     class AddTerrainDialog : public nana::form
     {
     public:
-        AddTerrainDialog(nana::window owner, const std::shared_ptr<WorldEditConsole>& world_edit, const std::string& media_path_id);
+        AddTerrainDialog(nana::window owner, const std::shared_ptr<TerrainEditConsole>& terrain_edit);
         virtual ~AddTerrainDialog();
 
         void onOkButton(const nana::arg_click& arg);
@@ -61,12 +62,11 @@ namespace LevelEditor
         nana::combox* m_cellPerUVCombo;
 
         std::array<nana::button*, TerrainEditService::TextureLayerNum> m_textureLayerButtons;
-        std::array<std::string, TerrainEditService::TextureLayerNum> m_layerTextureFilenames;
+        std::array<Enigma::Engine::TextureId, TerrainEditService::TextureLayerNum> m_layerTextureIds;
         //nana::textbox* m_rootNodePrompt;
         //nana::textbox* m_rootNodeNameInputBox;
 
-        std::weak_ptr<WorldEditConsole> m_worldEdit;
-        std::string m_mediaPathId;
+        std::weak_ptr<TerrainEditConsole> m_terrainEdit;
     };
 }
 

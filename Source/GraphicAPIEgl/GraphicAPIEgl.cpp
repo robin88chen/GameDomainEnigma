@@ -43,7 +43,7 @@ GraphicAPIEgl::~GraphicAPIEgl()
 
 }
 
-error GraphicAPIEgl::CreateDevice(const Graphics::DeviceRequiredBits& rqb, void* hwnd)
+error GraphicAPIEgl::createDevice(const Graphics::DeviceRequiredBits& rqb, void* hwnd)
 {
     m_wnd = hwnd;
     m_deviceRequiredBits = rqb;
@@ -54,18 +54,18 @@ error GraphicAPIEgl::CreateDevice(const Graphics::DeviceRequiredBits& rqb, void*
     return ErrorCode::ok;
 }
 
-error GraphicAPIEgl::CleanupDevice()
+error GraphicAPIEgl::cleanupDevice()
 {
     CleanupDeviceObjects();
     return ErrorCode::ok;
 }
 
-error GraphicAPIEgl::BeginDrawingScene()
+error GraphicAPIEgl::beginDrawingScene()
 {
     return ErrorCode::ok;
 }
 
-error GraphicAPIEgl::EndDrawingScene()
+error GraphicAPIEgl::endDrawingScene()
 {
     return ErrorCode::ok;
 }
@@ -82,13 +82,13 @@ void GraphicAPIEgl::CleanupDeviceObjects()
     m_boundDepthSurface = nullptr;
 }
 
-error GraphicAPIEgl::DrawPrimitive(unsigned vertexCount, unsigned vertexOffset)
+error GraphicAPIEgl::drawPrimitive(unsigned vertexCount, unsigned vertexOffset)
 {
     glDrawArrays(PrimitiveTopologyToGL(m_boundTopology), static_cast<GLint>(vertexOffset), static_cast<GLsizei>(vertexCount));
     return ErrorCode::ok;
 }
 
-error GraphicAPIEgl::DrawIndexedPrimitive(unsigned indexCount, unsigned vertexCount, unsigned indexOffset, int baseVertexOffset)
+error GraphicAPIEgl::drawIndexedPrimitive(unsigned indexCount, unsigned vertexCount, unsigned indexOffset, int baseVertexOffset)
 {
     // GLES 3.0 才有
     glDrawRangeElements(PrimitiveTopologyToGL(m_boundTopology), baseVertexOffset, baseVertexOffset + vertexCount - 1,
@@ -96,7 +96,7 @@ error GraphicAPIEgl::DrawIndexedPrimitive(unsigned indexCount, unsigned vertexCo
     return ErrorCode::ok;
 }
 
-error GraphicAPIEgl::FlipBackSurface()
+error GraphicAPIEgl::flipBackSurface()
 {
     return ErrorCode::ok;
 }
@@ -113,7 +113,7 @@ error GraphicAPIEgl::CreatePrimaryBackSurface(const std::string& back_name, cons
         menew DepthStencilSurfaceEgl{ depth_name, m_surfaceDimension, getDepthSurfaceFormat() } };
     m_stash->Add(depth_name, depth_surface);
 
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::PrimarySurfaceCreated>(back_name, depth_name));
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::PrimarySurfaceCreated>(back_name, depth_name));
 
     return ErrorCode::ok;
 }
@@ -126,7 +126,7 @@ error GraphicAPIEgl::CreateBackSurface(const std::string& back_name, const MathL
         menew BackSurfaceEgl{ back_name, dimension, fmt, false} };
     m_stash->Add(back_name, back_surface);
 
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::BackSurfaceCreated>(back_name));
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::BackSurfaceCreated>(back_name));
     return ErrorCode::ok;
 }
 
@@ -138,7 +138,7 @@ error GraphicAPIEgl::CreateBackSurface(const std::string& back_name, const MathL
         menew MultiBackSurfaceEgl{ back_name, dimension, buff_count, fmts } };
     m_stash->Add(back_name, back_surface);
 
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::MultiBackSurfaceCreated>(back_name));
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::MultiBackSurfaceCreated>(back_name));
     return ErrorCode::ok;
 }
 
@@ -150,7 +150,7 @@ error GraphicAPIEgl::CreateDepthStencilSurface(const std::string& depth_name, co
         menew DepthStencilSurfaceEgl{ depth_name, dimension, fmt } };
     m_stash->Add(depth_name, depth_surface);
 
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::DepthSurfaceCreated>(depth_name));
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::DepthSurfaceCreated>(depth_name));
     return ErrorCode::ok;
 }
 
@@ -164,7 +164,7 @@ error GraphicAPIEgl::ShareDepthStencilSurface(const std::string& depth_name,
         menew DepthStencilSurfaceEgl{ depth_name, depth_egl } };
     m_stash->Add(depth_name, depth_surface);
 
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::DepthSurfaceShared>(depth_name));
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::DepthSurfaceShared>(depth_name));
     return ErrorCode::ok;
 }
 
@@ -237,7 +237,7 @@ error GraphicAPIEgl::CreateVertexShader(const std::string& name)
     Graphics::IVertexShaderPtr shader = Graphics::IVertexShaderPtr{ menew VertexShaderEgl{ name } };
     m_stash->Add(name, shader);
 
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::DeviceVertexShaderCreated>(name));
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::DeviceVertexShaderCreated>(name));
     return ErrorCode::ok;
 }
 
@@ -247,7 +247,7 @@ error GraphicAPIEgl::CreatePixelShader(const std::string& name)
     Graphics::IPixelShaderPtr shader = Graphics::IPixelShaderPtr{ menew PixelShaderEgl{ name } };
     m_stash->Add(name, shader);
 
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::DevicePixelShaderCreated>(name));
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::DevicePixelShaderCreated>(name));
     return ErrorCode::ok;
 }
 
@@ -260,7 +260,7 @@ error GraphicAPIEgl::CreateShaderProgram(const std::string& name, const Graphics
     {
         m_stash->Add(name, shader);
 
-        Frameworks::EventPublisher::post(std::make_shared<Graphics::DeviceShaderProgramCreated>(name));
+        Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::DeviceShaderProgramCreated>(name));
     }
     return ErrorCode::ok;
 }
@@ -276,7 +276,7 @@ error GraphicAPIEgl::CreateVertexDeclaration(const std::string& name, const std:
         VertexDeclarationEgl(name, data_vertex_format) };
     m_stash->Add(name, vtxDecl);
 
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::DeviceVertexDeclarationCreated>(name));
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::DeviceVertexDeclarationCreated>(name));
     return ErrorCode::ok;
 }
 
@@ -287,7 +287,7 @@ error GraphicAPIEgl::CreateVertexBuffer(const std::string& buff_name, unsigned i
     buff->create(sizeofVertex, sizeBuffer);
     m_stash->Add(buff_name, buff);
 
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::DeviceVertexBufferCreated>(buff_name));
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::DeviceVertexBufferCreated>(buff_name));
     return ErrorCode::ok;
 }
 
@@ -298,7 +298,7 @@ error GraphicAPIEgl::CreateIndexBuffer(const std::string& buff_name, unsigned in
     buff->create(sizeBuffer);
     m_stash->Add(buff_name, buff);
 
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::DeviceIndexBufferCreated>(buff_name));
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::DeviceIndexBufferCreated>(buff_name));
     return ErrorCode::ok;
 }
 
@@ -309,7 +309,7 @@ error GraphicAPIEgl::CreateSamplerState(const std::string& name, const Graphics:
     state->CreateFromData(data);
     //m_stash->Add(name, state);
 
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::DeviceSamplerStateCreated>(name, state));
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::DeviceSamplerStateCreated>(name, state));
     return ErrorCode::ok;
 }
 
@@ -320,7 +320,7 @@ error GraphicAPIEgl::CreateRasterizerState(const std::string& name, const Graphi
     state->CreateFromData(data);
     //m_stash->Add(name, state);
 
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::DeviceRasterizerStateCreated>(name, state));
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::DeviceRasterizerStateCreated>(name, state));
     return ErrorCode::ok;
 }
 
@@ -331,7 +331,7 @@ error GraphicAPIEgl::CreateAlphaBlendState(const std::string& name, const Graphi
     state->CreateFromData(data);
     //m_stash->Add(name, state);
 
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::DeviceAlphaBlendStateCreated>(name, state));
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::DeviceAlphaBlendStateCreated>(name, state));
     return ErrorCode::ok;
 }
 
@@ -342,7 +342,7 @@ error GraphicAPIEgl::CreateDepthStencilState(const std::string& name, const Grap
     state->CreateFromData(data);
     //m_stash->Add(name, state);
 
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::DeviceDepthStencilStateCreated>(name, state));
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::DeviceDepthStencilStateCreated>(name, state));
     return ErrorCode::ok;
 }
 
@@ -352,7 +352,7 @@ error GraphicAPIEgl::createTexture(const std::string& tex_name)
     Graphics::ITexturePtr tex = Graphics::ITexturePtr{ menew TextureEgl{ tex_name } };
     m_stash->Add(tex_name, tex);
 
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::DeviceTextureCreated>(tex_name));
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::DeviceTextureCreated>(tex_name));
     return ErrorCode::ok;
 }
 
@@ -362,7 +362,7 @@ error GraphicAPIEgl::createMultiTexture(const std::string& tex_name)
     Graphics::ITexturePtr tex = Graphics::ITexturePtr{ menew MultiTextureEgl{ tex_name } };
     m_stash->Add(tex_name, tex);
 
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::DeviceMultiTextureCreated>(tex_name));
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::DeviceMultiTextureCreated>(tex_name));
     return ErrorCode::ok;
 }
 

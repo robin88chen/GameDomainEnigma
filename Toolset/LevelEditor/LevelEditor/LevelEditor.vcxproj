@@ -72,6 +72,9 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -112,7 +115,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(EnigmaSourceRoot)ShareLib\nanagui\prebuilt;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>nana_$(PlatformToolset)_$(Configuration)_$(PlatformTarget).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>nana_$(PlatformToolset)_$(Configuration)_$(PlatformTarget).lib;FileStorage.Win32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -134,9 +137,16 @@
   <ItemGroup>
     <ClCompile Include="AddTerrainDialog.cpp" />
     <ClCompile Include="AppConfiguration.cpp" />
+    <ClCompile Include="AssetsBrowsePanel.cpp" />
     <ClCompile Include="CreateNewWorldDlg.cpp" />
     <ClCompile Include="EditorSceneConsole.cpp" />
     <ClCompile Include="EditorUtilities.cpp" />
+    <ClCompile Include="GeometryDataFileStoreMapper.cpp" />
+    <ClCompile Include="InputNameVerifier.cpp" />
+    <ClCompile Include="NameInputDialog.cpp" />
+    <ClCompile Include="SceneGraphFileStoreMapper.cpp" />
+    <ClCompile Include="TextureFileStoreMapper.cpp" />
+    <ClCompile Include="WorldMapFileStoreMapper.cpp" />
     <ClCompile Include="FrustumInfoDialog.cpp" />
     <ClCompile Include="LevelEditorAppDelegate.cpp" />
     <ClCompile Include="LevelEditorErrors.cpp" />
@@ -166,10 +176,19 @@
   <ItemGroup>
     <ClInclude Include="AddTerrainDialog.h" />
     <ClInclude Include="AppConfiguration.h" />
+    <ClInclude Include="AssetIdCombo.h" />
+    <ClInclude Include="AssetsBrowsePanel.h" />
     <ClInclude Include="CreateNewWorldDlg.h" />
     <ClInclude Include="EditorModes.h" />
     <ClInclude Include="EditorSceneConsole.h" />
     <ClInclude Include="EditorUtilities.h" />
+    <ClInclude Include="GeometryDataFileStoreMapper.h" />
+    <ClInclude Include="InputNameVerifier.h" />
+    <ClInclude Include="LevelEditorQueries.h" />
+    <ClInclude Include="NameInputDialog.h" />
+    <ClInclude Include="SceneGraphFileStoreMapper.h" />
+    <ClInclude Include="TextureFileStoreMapper.h" />
+    <ClInclude Include="WorldMapFileStoreMapper.h" />
     <ClInclude Include="FrustumInfoDialog.h" />
     <ClInclude Include="LevelEditorAppDelegate.h" />
     <ClInclude Include="LevelEditorCommands.h" />

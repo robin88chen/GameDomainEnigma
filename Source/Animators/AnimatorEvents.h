@@ -61,6 +61,14 @@ namespace Enigma::Animators
         AnimatorId m_id;
         std::error_code m_error;
     };
+    class AnimatorRemoved : public Frameworks::IEvent
+    {
+    public:
+        AnimatorRemoved(const AnimatorId& id) : m_id(id) {};
+        const AnimatorId& id() { return m_id; }
+    private:
+        AnimatorId m_id;
+    };
     class RemoveAnimatorFailed : public Frameworks::IEvent
     {
     public:
@@ -71,6 +79,14 @@ namespace Enigma::Animators
     private:
         AnimatorId m_id;
         std::error_code m_error;
+    };
+    class AnimatorPut : public Frameworks::IEvent
+    {
+    public:
+        AnimatorPut(const AnimatorId& id) : m_id(id) {};
+        const AnimatorId& id() { return m_id; }
+    private:
+        AnimatorId m_id;
     };
     class PutAnimatorFailed : public Frameworks::IEvent
     {

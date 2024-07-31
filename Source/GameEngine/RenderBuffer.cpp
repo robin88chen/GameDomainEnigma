@@ -24,7 +24,7 @@ RenderBuffer::~RenderBuffer()
     m_indexBuffer = nullptr;
 }
 
-error RenderBuffer::UpdateVertex(const byte_buffer& dataBuffer, const uint_buffer& indexBuffer)
+error RenderBuffer::updateVertex(const byte_buffer& dataBuffer, const uint_buffer& indexBuffer)
 {
     assert(m_vertexBuffer);
     if (FATAL_LOG_EXPR(dataBuffer.size() > m_vertexBuffer->BufferSize())) return Graphics::ErrorCode::bufferSize;
@@ -38,7 +38,7 @@ error RenderBuffer::UpdateVertex(const byte_buffer& dataBuffer, const uint_buffe
     return ErrorCode::ok;
 }
 
-error RenderBuffer::RangedUpdateVertex(const Graphics::IVertexBuffer::ranged_buffer& vtxBuffer,
+error RenderBuffer::rangedUpdateVertex(const Graphics::IVertexBuffer::ranged_buffer& vtxBuffer,
     const std::optional<const Graphics::IIndexBuffer::ranged_buffer>& idxBuffer)
 {
     assert(m_vertexBuffer);
@@ -61,7 +61,7 @@ error RenderBuffer::draw(const std::shared_ptr<EffectMaterial>& effectMaterial,
     if (FATAL_LOG_EXPR(!m_vertexBuffer)) return Graphics::ErrorCode::nullVertexBuffer;
     if (m_vertexBuffer)
     {
-        Graphics::IGraphicAPI::instance()->bind(m_vertexBuffer, m_signature.GetTopology());
+        Graphics::IGraphicAPI::instance()->bind(m_vertexBuffer, m_signature.topology());
     }
     if (m_indexBuffer)
     {

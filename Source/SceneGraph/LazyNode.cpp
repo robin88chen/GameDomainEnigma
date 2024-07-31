@@ -5,6 +5,7 @@
 #include "Frameworks/Rtti.h"
 #include "GameEngine/FactoryDesc.h"
 #include "SceneGraphQueries.h"
+#include "SceneGraphCommands.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Engine;
@@ -48,7 +49,7 @@ std::error_code LazyNode::hydrate(const Engine::GenericDto& dto)
         if (!child_spatial)
         {
             if (!child.dto().has_value()) return ErrorCode::childDtoNotFound;
-            child_spatial = std::make_shared<RequestSpatialConstitution>(child.id(), child.dto().value(), PersistenceLevel::Repository)->dispatch();
+            child_spatial = std::make_shared<RequestSpatialConstitution>(child.id(), child.dto().value())->dispatch();
         }
         if (child_spatial)
         {
@@ -84,7 +85,7 @@ LazyNodeDto LazyNode::serializeLazyNodeAsLaziness()
     LazyNodeDto lazy_node_dto = LazyNodeDto(NodeDto(serializeSpatialDto()));  // this won't serialize children, that's we want
     FactoryDesc factory_desc = m_factoryDesc;
     factory_desc.ClaimAsDeferred(); // serialize as deferred
-    lazy_node_dto.factoryDesc() = factory_desc;
+    lazy_node_dto.factoryDesc(factory_desc);
     return lazy_node_dto;
 }
 Enigma::Engine::GenericDtoCollection LazyNode::serializeFlattenedTree()

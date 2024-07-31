@@ -1,11 +1,14 @@
 ﻿#include "WorldMapRepository.h"
 #include "WorldMapStoreMapper.h"
 #include "WorldMapQueries.h"
+#include "WorldMapCommands.h"
 #include "QuadTreeRoot.h"
 #include "WorldMapErrors.h"
 #include "WorldMapEvents.h"
 #include "Frameworks/QueryDispatcher.h"
 #include "Frameworks/EventPublisher.h"
+#include "Frameworks/CommandBus.h"
+#include "Platforms/PlatformLayer.h"
 
 using namespace Enigma::WorldMap;
 using namespace Enigma::Frameworks;
@@ -23,6 +26,8 @@ WorldMapRepository::~WorldMapRepository()
 
 ServiceResult WorldMapRepository::onInit()
 {
+    m_storeMapper->connect();
+
     m_queryQuadTreeRoot = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { queryQuadTreeRoot(q); });
     QueryDispatcher::subscribe(typeid(QueryQuadTreeRoot), m_queryQuadTreeRoot);
     m_hasQuadTreeRoot = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { hasQuadTreeRoot(q); });
@@ -36,16 +41,24 @@ ServiceResult WorldMapRepository::onInit()
     QueryDispatcher::subscribe(typeid(QueryWorldMap), m_queryWorldMap);
     m_hasWorldMap = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { hasWorldMap(q); });
     QueryDispatcher::subscribe(typeid(HasWorldMap), m_hasWorldMap);
-    m_requestQuadTreeRootCreation = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { requestWorldMapCreation(q); });
+    m_requestWorldMapCreation = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { requestWorldMapCreation(q); });
     QueryDispatcher::subscribe(typeid(RequestWorldMapCreation), m_requestWorldMapCreation);
-    m_requestQuadTreeRootConstitution = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { requestWorldMapConstitution(q); });
+    m_requestWorldMapConstitution = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { requestWorldMapConstitution(q); });
     QueryDispatcher::subscribe(typeid(RequestWorldMapConstitution), m_requestWorldMapConstitution);
+
+    m_putWorldMap = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { putWorldMap(c); });
+    CommandBus::subscribe(typeid(PutWorldMap), m_putWorldMap);
+    m_removeWorldMap = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { removeWorldMap(c); });
+    CommandBus::subscribe(typeid(RemoveWorldMap), m_removeWorldMap);
 
     return ServiceResult::Complete;
 }
 
 ServiceResult WorldMapRepository::onTerm()
 {
+    dumpRetainedQuadTrees();
+    dumpRetainedWorldMaps();
+
     QueryDispatcher::unsubscribe(typeid(QueryQuadTreeRoot), m_queryQuadTreeRoot);
     m_queryQuadTreeRoot = nullptr;
     QueryDispatcher::unsubscribe(typeid(HasQuadTreeRoot), m_hasQuadTreeRoot);
@@ -64,6 +77,13 @@ ServiceResult WorldMapRepository::onTerm()
     QueryDispatcher::unsubscribe(typeid(RequestWorldMapConstitution), m_requestWorldMapConstitution);
     m_requestWorldMapConstitution = nullptr;
 
+    CommandBus::unsubscribe(typeid(PutWorldMap), m_putWorldMap);
+    m_putWorldMap = nullptr;
+    CommandBus::unsubscribe(typeid(RemoveWorldMap), m_removeWorldMap);
+    m_removeWorldMap = nullptr;
+
+    m_storeMapper->disconnect();
+
     return ServiceResult::Complete;
 }
 
@@ -72,7 +92,7 @@ bool WorldMapRepository::hasQuadTreeRoot(const QuadTreeRootId& id)
     assert(m_storeMapper);
     std::lock_guard locker{ m_quadTreeRootLock };
     auto it = m_quadTreeRoots.find(id);
-    if (it != m_quadTreeRoots.end()) return true;
+    if ((it != m_quadTreeRoots.end()) && (!it->second.expired())) return true;
     return m_storeMapper->hasQuadTreeRoot(id);
 }
 
@@ -81,34 +101,28 @@ std::shared_ptr<QuadTreeRoot> WorldMapRepository::queryQuadTreeRoot(const QuadTr
     assert(m_storeMapper);
     std::lock_guard locker{ m_quadTreeRootLock };
     auto it = m_quadTreeRoots.find(id);
-    if (it != m_quadTreeRoots.end()) return it->second;
+    if ((it != m_quadTreeRoots.end()) && (!it->second.expired())) return it->second.lock();
     auto dto = m_storeMapper->queryQuadTreeRoot(id);
     if (!dto) return nullptr;
     auto quadTreeRoot = std::make_shared<QuadTreeRoot>(id, *dto);
-    m_quadTreeRoots[id] = quadTreeRoot;
+    m_quadTreeRoots.insert_or_assign(id, quadTreeRoot);
     return quadTreeRoot;
 }
 
-void WorldMapRepository::putQuadTreeRoot(const QuadTreeRootId& id, const std::shared_ptr<QuadTreeRoot>& quad_tree_root, PersistenceLevel persistence_level)
+void WorldMapRepository::putQuadTreeRoot(const QuadTreeRootId& id, const std::shared_ptr<QuadTreeRoot>& quad_tree_root)
 {
     assert(m_storeMapper);
     assert(quad_tree_root);
     std::lock_guard locker{ m_quadTreeRootLock };
-    if (persistence_level >= PersistenceLevel::Repository)
+    m_quadTreeRoots.insert_or_assign(id, quad_tree_root);
+    auto er = m_storeMapper->putQuadTreeRoot(id, quad_tree_root->serializeDto());
+    if (!er)
     {
-        m_quadTreeRoots[id] = quad_tree_root;
+        EventPublisher::enqueue(std::make_shared<QuadTreeRootPut>(id));
     }
-    if (persistence_level >= PersistenceLevel::Store)
+    else
     {
-        auto er = m_storeMapper->putQuadTreeRoot(id, quad_tree_root->serializeDto());
-        if (!er)
-        {
-            EventPublisher::post(std::make_shared<QuadTreeRootPut>(id));
-        }
-        else
-        {
-            EventPublisher::post(std::make_shared<PutQuadTreeRootFailed>(id, er));
-        }
+        EventPublisher::enqueue(std::make_shared<PutQuadTreeRootFailed>(id, er));
     }
 }
 
@@ -121,11 +135,11 @@ void WorldMapRepository::removeQuadTreeRoot(const QuadTreeRootId& id)
     auto er = m_storeMapper->removeQuadTreeRoot(id);
     if (!er)
     {
-        EventPublisher::post(std::make_shared<QuadTreeRootRemoved>(id));
+        EventPublisher::enqueue(std::make_shared<QuadTreeRootRemoved>(id));
     }
     else
     {
-        EventPublisher::post(std::make_shared<RemoveQuadTreeRootFailed>(id, er));
+        EventPublisher::enqueue(std::make_shared<RemoveQuadTreeRootFailed>(id, er));
     }
 }
 
@@ -134,7 +148,7 @@ bool WorldMapRepository::hasWorldMap(const WorldMapId& id)
     assert(m_storeMapper);
     std::lock_guard locker{ m_worldMapLock };
     auto it = m_worldMaps.find(id);
-    if (it != m_worldMaps.end()) return true;
+    if ((it != m_worldMaps.end()) && (!it->second.expired())) return true;
     return m_storeMapper->hasWorldMap(id);
 }
 
@@ -143,34 +157,29 @@ std::shared_ptr<WorldMap> WorldMapRepository::queryWorldMap(const WorldMapId& id
     assert(m_storeMapper);
     std::lock_guard locker{ m_worldMapLock };
     auto it = m_worldMaps.find(id);
-    if (it != m_worldMaps.end()) return it->second;
+    if ((it != m_worldMaps.end()) && (!it->second.expired())) return it->second.lock();
     auto dto = m_storeMapper->queryWorldMap(id);
     if (!dto) return nullptr;
     auto worldMap = std::make_shared<WorldMap>(id, *dto);
-    m_worldMaps[id] = worldMap;
+    m_worldMaps.insert_or_assign(id, worldMap);
     return worldMap;
 }
 
-void WorldMapRepository::putWorldMap(const WorldMapId& id, const std::shared_ptr<WorldMap>& world_map, PersistenceLevel persistence_level)
+void WorldMapRepository::putWorldMap(const WorldMapId& id, const std::shared_ptr<WorldMap>& world_map)
 {
     assert(m_storeMapper);
     assert(world_map);
+    world_map->putOutRegion();
     std::lock_guard locker{ m_worldMapLock };
-    if (persistence_level >= PersistenceLevel::Repository)
+    m_worldMaps.insert_or_assign(id, world_map);
+    auto er = m_storeMapper->putWorldMap(id, world_map->serializeDto());
+    if (!er)
     {
-        m_worldMaps[id] = world_map;
+        EventPublisher::enqueue(std::make_shared<WorldMapPut>(id));
     }
-    if (persistence_level >= PersistenceLevel::Store)
+    else
     {
-        auto er = m_storeMapper->putWorldMap(id, world_map->serializeDto());
-        if (!er)
-        {
-            EventPublisher::post(std::make_shared<WorldMapPut>(id));
-        }
-        else
-        {
-            EventPublisher::post(std::make_shared<PutWorldMapFailed>(id, er));
-        }
+        EventPublisher::enqueue(std::make_shared<PutWorldMapFailed>(id, er));
     }
 }
 
@@ -183,11 +192,11 @@ void WorldMapRepository::removeWorldMap(const WorldMapId& id)
     auto er = m_storeMapper->removeWorldMap(id);
     if (!er)
     {
-        EventPublisher::post(std::make_shared<WorldMapRemoved>(id));
+        EventPublisher::enqueue(std::make_shared<WorldMapRemoved>(id));
     }
     else
     {
-        EventPublisher::post(std::make_shared<RemoveWorldMapFailed>(id, er));
+        EventPublisher::enqueue(std::make_shared<RemoveWorldMapFailed>(id, er));
     }
 }
 
@@ -212,11 +221,11 @@ void WorldMapRepository::requestQuadTreeRootCreation(const Frameworks::IQueryPtr
     assert(request);
     if (hasQuadTreeRoot(request->id()))
     {
-        EventPublisher::post(std::make_shared<QuadTreeRootCreationFailed>(request->id(), ErrorCode::quadRootAlreadyExists));
+        EventPublisher::enqueue(std::make_shared<QuadTreeRootCreationFailed>(request->id(), ErrorCode::quadRootAlreadyExists));
         return;
     }
     auto quadTreeRoot = std::make_shared<QuadTreeRoot>(request->id());
-    putQuadTreeRoot(request->id(), quadTreeRoot, request->persistenceLevel());
+    putQuadTreeRoot(request->id(), quadTreeRoot);
     request->setResult(quadTreeRoot);
 }
 
@@ -226,11 +235,11 @@ void WorldMapRepository::requestQuadTreeRootConstitution(const Frameworks::IQuer
     assert(request);
     if (hasQuadTreeRoot(request->id()))
     {
-        EventPublisher::post(std::make_shared<QuadTreeRootConstitutionFailed>(request->id(), ErrorCode::quadRootAlreadyExists));
+        EventPublisher::enqueue(std::make_shared<QuadTreeRootConstitutionFailed>(request->id(), ErrorCode::quadRootAlreadyExists));
         return;
     }
     auto quadTreeRoot = std::make_shared<QuadTreeRoot>(request->id(), request->dto());
-    putQuadTreeRoot(request->id(), quadTreeRoot, request->persistenceLevel());
+    putQuadTreeRoot(request->id(), quadTreeRoot);
     request->setResult(quadTreeRoot);
 }
 
@@ -255,11 +264,12 @@ void WorldMapRepository::requestWorldMapCreation(const Frameworks::IQueryPtr q)
     assert(request);
     if (hasWorldMap(request->id()))
     {
-        EventPublisher::post(std::make_shared<WorldMapCreationFailed>(request->id(), ErrorCode::worldMapAlreadyExists));
+        EventPublisher::enqueue(std::make_shared<WorldMapCreationFailed>(request->id(), ErrorCode::worldMapAlreadyExists));
         return;
     }
     auto worldMap = std::make_shared<WorldMap>(request->id());
-    putWorldMap(request->id(), worldMap, request->persistenceLevel());
+    std::lock_guard locker{ m_worldMapLock };
+    m_worldMaps.insert_or_assign(request->id(), worldMap);
     request->setResult(worldMap);
 }
 
@@ -269,10 +279,47 @@ void WorldMapRepository::requestWorldMapConstitution(const Frameworks::IQueryPtr
     assert(request);
     if (hasWorldMap(request->id()))
     {
-        EventPublisher::post(std::make_shared<WorldMapConstitutionFailed>(request->id(), ErrorCode::worldMapAlreadyExists));
+        EventPublisher::enqueue(std::make_shared<WorldMapConstitutionFailed>(request->id(), ErrorCode::worldMapAlreadyExists));
         return;
     }
     auto worldMap = std::make_shared<WorldMap>(request->id(), request->dto());
-    putWorldMap(request->id(), worldMap, request->persistenceLevel());
+    putWorldMap(request->id(), worldMap);
     request->setResult(worldMap);
 }
+
+void WorldMapRepository::putWorldMap(const Frameworks::ICommandPtr c)
+{
+    auto command = std::dynamic_pointer_cast<PutWorldMap>(c);
+    assert(command);
+    putWorldMap(command->id(), command->worldMap());
+}
+
+void WorldMapRepository::removeWorldMap(const Frameworks::ICommandPtr c)
+{
+    auto command = std::dynamic_pointer_cast<RemoveWorldMap>(c);
+    assert(command);
+    removeWorldMap(command->id());
+}
+
+void WorldMapRepository::dumpRetainedQuadTrees()
+{
+    Platforms::Debug::Printf("Dumping retained Quad Tree roots\n");
+    std::lock_guard locker{ m_quadTreeRootLock };
+    for (auto& [id, quadTreeRoot] : m_quadTreeRoots)
+    {
+        if (quadTreeRoot.expired()) continue;
+        Platforms::Debug::Printf("Quad Tree root %s is retained\n", id.name().c_str());
+    }
+}
+
+void WorldMapRepository::dumpRetainedWorldMaps()
+{
+    Platforms::Debug::Printf("Dumping retained World Maps\n");
+    std::lock_guard locker{ m_worldMapLock };
+    for (auto& [id, worldMap] : m_worldMaps)
+    {
+        if (worldMap.expired()) continue;
+        Platforms::Debug::Printf("World Map %s is retained\n", id.name().c_str());
+    }
+}
+

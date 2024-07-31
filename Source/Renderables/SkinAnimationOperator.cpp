@@ -128,6 +128,13 @@ void SkinAnimationOperator::onAttachingMeshNodeTree(const MeshNodeTree& mesh_nod
     if (cacheSkinMesh()) cacheSkinMesh()->createBoneMatrixArray(bone_count);
 }
 
+void SkinAnimationOperator::onDetachingMeshNodeTree()
+{
+    m_skinNodeIndexMapping.clear();
+    m_nodeOffsets.clear();
+    if (cacheSkinMesh()) cacheSkinMesh()->clearBoneMatrixArray();
+}
+
 std::shared_ptr<SkinMeshPrimitive> SkinAnimationOperator::cacheSkinMesh()
 {
     if ((!m_cachedSkinMesh.expired()) && (m_cachedSkinMesh.lock()->id() == m_skinMeshId)) return m_cachedSkinMesh.lock();

@@ -22,6 +22,7 @@ namespace Enigma::SceneGraph
         parentNode,
         nodeNotFound,
         spatialNotFound,
+        runningSpatialNotFound,
         nullPrimitive,
         nullCullerCamera,
         unsupportPawnPrimitive,

@@ -44,7 +44,7 @@ ServiceResult EventPublisher::onTick()
         }
         m_eventListLock.unlock();
         if (!ev) break;
-        send(ev);
+        publish(ev);
         ev_sended++;
     }
     return ServiceResult::Pendding;
@@ -71,7 +71,7 @@ void EventPublisher::unsubscribe(const std::type_info& ev_type, const EventSubsc
     subscribers->second.remove(sub);
 }
 
-void EventPublisher::post(const IEventPtr& e)
+void EventPublisher::enqueue(const IEventPtr& e)
 {
     assert(m_thisPublisher);
     if (!e) return;
@@ -83,7 +83,7 @@ void EventPublisher::post(const IEventPtr& e)
     m_thisPublisher->m_needTick = true;
 }
 
-void EventPublisher::send(const IEventPtr& e)
+void EventPublisher::publish(const IEventPtr& e)
 {
     assert(m_thisPublisher);
     if (!e) return;

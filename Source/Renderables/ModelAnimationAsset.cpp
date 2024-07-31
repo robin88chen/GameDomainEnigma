@@ -42,8 +42,8 @@ std::shared_ptr<AnimationAsset> ModelAnimationAsset::constitute(const Animators:
 GenericDto ModelAnimationAsset::serializeDto()
 {
     ModelAnimationAssetDto dto;
-    dto.id() = m_id;
-    dto.factoryDesc() = m_factoryDesc;
+    dto.id(m_id);
+    dto.factoryDesc(m_factoryDesc);
     std::vector<std::string> names;
     GenericDtoCollection srts;
     for (auto& key : m_meshNodeKeyArray)

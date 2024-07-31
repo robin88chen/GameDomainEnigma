@@ -87,7 +87,7 @@ void AnimatedPawn::playAnimation(const std::string& name)
     {
         if (anim->typeInfo().isExactly(ModelPrimitiveAnimator::TYPE_RTTI))
         {
-            Frameworks::CommandBus::post(std::make_shared<AddListeningAnimator>(anim->id()));
+            Frameworks::CommandBus::enqueue(std::make_shared<AddListeningAnimator>(anim->id()));
             if (std::shared_ptr<ModelPrimitiveAnimator> model_ani = std::dynamic_pointer_cast<ModelPrimitiveAnimator, Animator>(anim))
             {
                 model_ani->fadeInAnimation(0.3f, action_clip.value().get().clip());
@@ -107,7 +107,7 @@ void AnimatedPawn::stopAnimation()
     {
         if (anim->typeInfo().isExactly(ModelPrimitiveAnimator::TYPE_RTTI))
         {
-            Frameworks::CommandBus::post(std::make_shared<RemoveListeningAnimator>(anim->id()));
+            Frameworks::CommandBus::enqueue(std::make_shared<RemoveListeningAnimator>(anim->id()));
             if (std::shared_ptr<ModelPrimitiveAnimator> model_ani = std::dynamic_pointer_cast<ModelPrimitiveAnimator, Animator>(anim))
             {
                 model_ani->stopAnimation();

@@ -8,6 +8,7 @@
 #ifndef APP_CONFIGURATION_H
 #define APP_CONFIGURATION_H
 
+#include "SceneGraph/SceneGraph.h"
 #include "GameEngine/GenericDto.h"
 
 namespace LevelEditor
@@ -20,17 +21,20 @@ namespace LevelEditor
         void loadConfig();
 
         std::string mediaPathId() const;
-        std::string dataPathId() const;
+        //std::string dataPathId() const;
+        std::string worldDataRelativePath() const;
+        //std::string worldDataPathId() const;
+        std::string terrainRelativePath() const;
         std::string primaryTargetName() const;
         std::string defaultRendererName() const;
-        std::string sceneRootName() const;
-        std::string portalManagementName() const;
+        Enigma::SceneGraph::SpatialId sceneRootId() const;
+        Enigma::SceneGraph::SpatialId portalManagementId() const;
 
         std::string worldMapRootFolderName() const;
         std::string worldMapPathId() const;
 
         Enigma::Engine::GenericDto cameraDto() const;
-        std::string cameraName() const;
+        Enigma::SceneGraph::SpatialId cameraId() const;
         std::string frustumName() const;
 
     private:

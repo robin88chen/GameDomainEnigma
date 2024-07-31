@@ -39,7 +39,7 @@ ServiceResult AnimationFrameListener::onTick()
 {
     if (!m_timer.expired())
     {
-        updateAnimator(m_timer.lock()->GetGameTimer());
+        updateAnimator(m_timer.lock()->getGameTimer());
     }
     if (m_hasExpiredAnimator) removeExpiredAnimator();
     return ServiceResult::Pendding;

@@ -6,7 +6,7 @@
 #include "SceneGraph/SceneGraphAssemblers.h"
 #include "Renderables/RenderablePrimitiveAssembler.h"
 #include "Renderables/RenderablePrimitiveDtos.h"
-#include "GameEngine/EffectDtoHelper.h"
+#include "GameEngine/EffectTextureMapAssembler.h"
 #include "Primitives/PrimitiveId.h"
 #include "Renderables/MeshPrimitive.h"
 #include "Primitives/PrimitiveQueries.h"
@@ -31,20 +31,20 @@ void FloorReceiverMaker::makeFloorReceiver(const std::shared_ptr<Enigma::SceneGr
     auto floorPawnId = SpatialId(FloorReceiverName, Pawn::TYPE_RTTI);
     PawnAssembler pawn_assembler(floorPawnId);
     MeshPrimitiveDto mesh_dto;
-    EffectTextureMapDtoHelper tex_dto;
-    tex_dto.textureMapping(TextureId("image/du011"), std::nullopt, "DiffuseMap");
+    EffectTextureMapAssembler tex_assembler;
+    tex_assembler.textureMapping(TextureId("image/du011"), std::nullopt, "DiffuseMap");
     auto floorMeshId = PrimitiveId("floor_mesh", MeshPrimitive::TYPE_RTTI);
     mesh_dto.id() = floorMeshId;
     mesh_dto.factoryDesc() = FactoryDesc(MeshPrimitive::TYPE_RTTI.getName()).ClaimAsNative(floorMeshId.name() + ".mesh@DataPath");
     mesh_dto.effects().emplace_back(EffectMaterialId("fx/default_textured_mesh_effect"));
-    mesh_dto.textureMaps().emplace_back(tex_dto.toGenericDto());
+    mesh_dto.textureMaps().emplace_back(tex_assembler.toGenericDto());
     mesh_dto.geometryId() = floorGeometryId;
     mesh_dto.renderListID() = Enigma::Renderer::Renderer::RenderListID::Scene;
     mesh_dto.visualTechniqueSelection() = "Default";
 
-    auto mesh = std::make_shared<RequestPrimitiveConstitution>(floorMeshId, mesh_dto.toGenericDto(), Enigma::Primitives::PersistenceLevel::Repository)->dispatch();
+    auto mesh = std::make_shared<RequestPrimitiveConstitution>(floorMeshId, mesh_dto.toGenericDto())->dispatch();
     pawn_assembler.primitive(floorMeshId);
     pawn_assembler.spatial().localTransform(Matrix4::IDENTITY).topLevel(true).spatialFlags(SpatialShadowFlags::Spatial_ShadowReceiver);
-    auto floor = std::dynamic_pointer_cast<Pawn>(std::make_shared<RequestSpatialConstitution>(floorPawnId, pawn_assembler.toGenericDto(), Enigma::SceneGraph::PersistenceLevel::Repository)->dispatch());
+    auto floor = std::dynamic_pointer_cast<Pawn>(std::make_shared<RequestSpatialConstitution>(floorPawnId, pawn_assembler.toGenericDto())->dispatch());
     if (root) root->attachChild(floor, Matrix4::IDENTITY);
 }

@@ -32,14 +32,14 @@ ShaderRepository::~ShaderRepository()
 Enigma::Frameworks::ServiceResult ShaderRepository::onInit()
 {
     m_onBuilderShaderProgramBuilt =
-        std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnBuilderShaderProgramBuilt(c); });
+        std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->onBuilderShaderProgramBuilt(c); });
     Frameworks::EventPublisher::subscribe(typeid(ShaderBuilder::ShaderProgramBuilt), m_onBuilderShaderProgramBuilt);
     m_onBuildShaderProgramFailed =
-        std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->OnBuildShaderProgramFailed(c); });
+        std::make_shared<Frameworks::EventSubscriber>([=](auto c) { this->onBuildShaderProgramFailed(c); });
     Frameworks::EventPublisher::subscribe(typeid(BuildShaderProgramFailed), m_onBuildShaderProgramFailed);
-    m_doBuildingShaderProgram =
-        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoBuildingShaderProgram(c); });
-    Frameworks::CommandBus::subscribe(typeid(Engine::BuildShaderProgram), m_doBuildingShaderProgram);
+    m_buildShaderProgram =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->buildShaderProgram(c); });
+    Frameworks::CommandBus::subscribe(typeid(Engine::BuildShaderProgram), m_buildShaderProgram);
     return Frameworks::ServiceResult::Complete;
 }
 
@@ -53,7 +53,7 @@ Enigma::Frameworks::ServiceResult ShaderRepository::onTick()
         return Frameworks::ServiceResult::Pendding;
     }
     assert(m_builder);
-    m_builder->BuildShaderProgram(m_policies.front());
+    m_builder->buildShaderProgram(m_policies.front());
     m_policies.pop();
     m_isCurrentBuilding = true;
     return Frameworks::ServiceResult::Pendding;
@@ -66,13 +66,13 @@ Enigma::Frameworks::ServiceResult ShaderRepository::onTerm()
     Frameworks::EventPublisher::unsubscribe(typeid(BuildShaderProgramFailed), m_onBuildShaderProgramFailed);
     m_onBuildShaderProgramFailed = nullptr;
 
-    Frameworks::CommandBus::unsubscribe(typeid(Engine::BuildShaderProgram), m_doBuildingShaderProgram);
-    m_doBuildingShaderProgram = nullptr;
+    Frameworks::CommandBus::unsubscribe(typeid(Engine::BuildShaderProgram), m_buildShaderProgram);
+    m_buildShaderProgram = nullptr;
 
     return Frameworks::ServiceResult::Complete;
 }
 
-error ShaderRepository::BuildShaderProgram(const ShaderProgramPolicy& policy)
+error ShaderRepository::buildShaderProgram(const ShaderProgramPolicy& policy)
 {
     std::lock_guard locker{ m_policiesLock };
     m_policies.push(policy);
@@ -80,14 +80,14 @@ error ShaderRepository::BuildShaderProgram(const ShaderProgramPolicy& policy)
     return ErrorCode::ok;
 }
 
-bool ShaderRepository::HasVertexShader(const std::string& name)
+bool ShaderRepository::hasVertexShader(const std::string& name)
 {
     std::lock_guard locker{ m_vtxShaderTableLock };
     auto it = m_vtxShaderTable.find(name);
     return ((it != m_vtxShaderTable.end()) && (!it->second.expired()));
 }
 
-Enigma::Graphics::IVertexShaderPtr ShaderRepository::QueryVertexShader(const std::string& name)
+Enigma::Graphics::IVertexShaderPtr ShaderRepository::queryVertexShader(const std::string& name)
 {
     std::lock_guard locker{ m_vtxShaderTableLock };
     auto it = m_vtxShaderTable.find(name);
@@ -96,14 +96,14 @@ Enigma::Graphics::IVertexShaderPtr ShaderRepository::QueryVertexShader(const std
     return it->second.lock();
 }
 
-bool ShaderRepository::HasVertexLayout(const std::string& name)
+bool ShaderRepository::hasVertexLayout(const std::string& name)
 {
     std::lock_guard locker{ m_vtxLayoutTableLock };
     auto it = m_vtxLayoutTable.find(name);
     return ((it != m_vtxLayoutTable.end()) && (!it->second.expired()));
 }
 
-Enigma::Graphics::IVertexDeclarationPtr ShaderRepository::QueryVertexLayout(const std::string& name)
+Enigma::Graphics::IVertexDeclarationPtr ShaderRepository::queryVertexLayout(const std::string& name)
 {
     std::lock_guard locker{ m_vtxLayoutTableLock };
     auto it = m_vtxLayoutTable.find(name);
@@ -112,14 +112,14 @@ Enigma::Graphics::IVertexDeclarationPtr ShaderRepository::QueryVertexLayout(cons
     return it->second.lock();
 }
 
-bool ShaderRepository::HasPixelShader(const std::string& name)
+bool ShaderRepository::hasPixelShader(const std::string& name)
 {
     std::lock_guard locker{ m_pixShaderTableLock };
     auto it = m_pixShaderTable.find(name);
     return ((it != m_pixShaderTable.end()) && (!it->second.expired()));
 }
 
-Enigma::Graphics::IPixelShaderPtr ShaderRepository::QueryPixelShader(const std::string& name)
+Enigma::Graphics::IPixelShaderPtr ShaderRepository::queryPixelShader(const std::string& name)
 {
     std::lock_guard locker{ m_pixShaderTableLock };
     auto it = m_pixShaderTable.find(name);
@@ -128,14 +128,14 @@ Enigma::Graphics::IPixelShaderPtr ShaderRepository::QueryPixelShader(const std::
     return it->second.lock();
 }
 
-bool ShaderRepository::HasShaderProgram(const std::string& name)
+bool ShaderRepository::hasShaderProgram(const std::string& name)
 {
     std::lock_guard locker{ m_programTableLock };
     auto it = m_programTable.find(name);
     return ((it != m_programTable.end()) && (!it->second.expired()));
 }
 
-Enigma::Graphics::IShaderProgramPtr ShaderRepository::QueryShaderProgram(const std::string& name)
+Enigma::Graphics::IShaderProgramPtr ShaderRepository::queryShaderProgram(const std::string& name)
 {
     std::lock_guard locker{ m_programTableLock };
     auto it = m_programTable.find(name);
@@ -144,19 +144,19 @@ Enigma::Graphics::IShaderProgramPtr ShaderRepository::QueryShaderProgram(const s
     return it->second.lock();
 }
 
-const std::string& ShaderRepository::GetShaderCodePathID()
+const std::string& ShaderRepository::getShaderCodePathID()
 {
     return shaderCodePathID;
 }
 
-void ShaderRepository::OnBuilderShaderProgramBuilt(const Frameworks::IEventPtr& e)
+void ShaderRepository::onBuilderShaderProgramBuilt(const Frameworks::IEventPtr& e)
 {
     assert(m_builder);
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<ShaderBuilder::ShaderProgramBuilt, Frameworks::IEvent>(e);
     if (!ev) return;
 
-    Graphics::IShaderProgramPtr program = m_builder->GetProgram();
+    Graphics::IShaderProgramPtr program = m_builder->getProgram();
     if (!program)
     {
         Platforms::Debug::ErrorPrintf("get null program on builder shader program built!!\n");
@@ -178,11 +178,11 @@ void ShaderRepository::OnBuilderShaderProgramBuilt(const Frameworks::IEventPtr& 
         std::lock_guard locker{ m_programTableLock };
         m_programTable.insert_or_assign(program->getName(), program);
     }
-    Frameworks::EventPublisher::post(std::make_shared<ShaderProgramBuilt>(program->getName(), program));
+    Frameworks::EventPublisher::enqueue(std::make_shared<ShaderProgramBuilt>(program->getName(), program));
     m_isCurrentBuilding = false;
 }
 
-void ShaderRepository::OnBuildShaderProgramFailed(const Frameworks::IEventPtr& e)
+void ShaderRepository::onBuildShaderProgramFailed(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<BuildShaderProgramFailed, Frameworks::IEvent>(e);
@@ -191,10 +191,10 @@ void ShaderRepository::OnBuildShaderProgramFailed(const Frameworks::IEventPtr& e
         ev->GetShaderName().c_str(), ev->GetErrorCode().message().c_str());
     m_isCurrentBuilding = false;
 }
-void ShaderRepository::DoBuildingShaderProgram(const Frameworks::ICommandPtr& c)
+void ShaderRepository::buildShaderProgram(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Engine::BuildShaderProgram, Frameworks::ICommand>(c);
     if (!cmd) return;
-    BuildShaderProgram(cmd->GetPolicy());
+    buildShaderProgram(cmd->GetPolicy());
 }

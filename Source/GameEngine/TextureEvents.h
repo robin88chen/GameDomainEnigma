@@ -129,6 +129,14 @@ namespace Enigma::Engine
         std::error_code m_error;
     };
     //---------------- Repository Events ----------------
+    class TextureRemoved : public Frameworks::IEvent
+    {
+    public:
+        TextureRemoved(const TextureId& id) : m_id(id) {};
+        const TextureId& id() { return m_id; }
+    private:
+        TextureId m_id;
+    };
     class RemoveTextureFailed : public Frameworks::IEvent
     {
     public:
@@ -139,6 +147,14 @@ namespace Enigma::Engine
     private:
         TextureId m_id;
         std::error_code m_error;
+    };
+    class TexturePut : public Frameworks::IEvent
+    {
+    public:
+        TexturePut(const TextureId& id) : m_id(id) {}
+        const TextureId& id() { return m_id; }
+    private:
+        TextureId m_id;
     };
     class PutTextureFailed : public Frameworks::IEvent
     {

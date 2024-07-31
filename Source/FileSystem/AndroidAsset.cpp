@@ -42,6 +42,11 @@ std::optional<std::vector<unsigned char>> AndroidAsset::read(size_t offset, size
         makeErrorCode(ErrorCode::nullAndroidAsset);
         return std::nullopt;
     }
+    if (size_request == 0)
+    {
+        makeErrorCode(ErrorCode::zeroReadSize);
+        return std::nullopt;
+    }
     size_t file_length = AAsset_getLength(m_aasset);
     if (offset > file_length)
     {

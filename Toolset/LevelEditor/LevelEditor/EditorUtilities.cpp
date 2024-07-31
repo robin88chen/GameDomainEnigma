@@ -24,12 +24,12 @@ void LevelEditor::pasteTextureImageToButton(const std::string& filepath, nana::b
 
 std::string LevelEditor::filePathCombinePathID(const std::filesystem::path& path, const std::string& path_id)
 {
-    std::list<FileSystem::IMountPathPtr> mount_paths = FileSystem::FileSystem::Instance()->GetMountPathsWithPathID(path_id);
+    std::list<FileSystem::IMountPathPtr> mount_paths = FileSystem::FileSystem::instance()->getMountPathsWithPathId(path_id);
     if (mount_paths.empty()) return path.filename().string();
     std::filesystem::path parent_path = path.parent_path().parent_path(); // 暫時只往上一層尋找
     for (auto mp : mount_paths)
     {
-        if (mp->EqualMountPath(parent_path))
+        if (mp->equalMountPath(parent_path))
         {
             return (--(--path.end()))->string() + "/" + path.filename().string(); // +"@" + mp->GetPathID();
         }
@@ -77,3 +77,30 @@ double LevelEditor::getSystemTime()
 {
     return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() / 1000.0;
 }
+
+bool LevelEditor::clearTreeItemValue(nana::treebox::item_proxy i)
+{
+    i.value(nullptr);
+    return true;
+}
+
+std::string replaceSlashCharacter(const std::string& str)
+{
+    std::string result = str;
+    for (auto& c : result)
+    {
+        if ((c == '/') || (c == '\\')) c = '_';
+    }
+    return result;
+}
+// tree view key can't contain '/' or '\', it will be treated as path
+std::string LevelEditor::idToTreeViewKey(const Enigma::SceneGraph::SpatialId& id)
+{
+    return replaceSlashCharacter(id.name());
+}
+
+std::string LevelEditor::idToTreeViewKey(const Enigma::WorldMap::WorldMapId& id)
+{
+    return replaceSlashCharacter(id.name());
+}
+

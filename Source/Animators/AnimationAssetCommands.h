@@ -36,7 +36,6 @@ namespace Enigma::Animators
     protected:
         AnimationAssetId m_id;
     };
-
     class RegisterAnimationAssetFactory : public Frameworks::ICommand
     {
     public:

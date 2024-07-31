@@ -18,6 +18,11 @@ namespace LevelEditor
         emptyFilePath,
         fileIOError,
         pawnPutProcedureError,
+
+        emptyWorldName,
+        duplicatedWorldName,
+        emptyOutRegionName,
+        duplicatedOutRegionName,
     };
     class ErrorCategory : public std::error_category
     {

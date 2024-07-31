@@ -10,9 +10,12 @@
 
 #include <string>
 #include <nana/gui/widgets/button.hpp>
+#include <nana/gui/widgets/treebox.hpp>
 #include "MathLib/Vector2.h"
 #include "MathLib/Vector3.h"
 #include "MathLib/ColorRGBA.h"
+#include "SceneGraph/SpatialId.h"
+#include "WorldMap/WorldMapId.h"
 
 namespace LevelEditor
 {
@@ -23,6 +26,11 @@ namespace LevelEditor
     std::tuple<Enigma::MathLib::ColorRGBA, bool> parseTextToColorRGBA(const std::string& value);
 
     double getSystemTime();
+
+    bool clearTreeItemValue(nana::treebox::item_proxy i);
+
+    std::string idToTreeViewKey(const Enigma::SceneGraph::SpatialId& id);
+    std::string idToTreeViewKey(const Enigma::WorldMap::WorldMapId& id);
 }
 
 

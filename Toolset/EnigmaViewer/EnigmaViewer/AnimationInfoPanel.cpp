@@ -127,7 +127,7 @@ void AnimationInfoPanel::onAddActionButton(const nana::arg_click& ev)
     std::string name = string_format("Item %d", count);
     AnimClipInfoItem clip{ name };
     cat.append(clip);
-    Enigma::Frameworks::CommandBus::post(std::make_shared<AddAnimationClip>(clip.m_name, clip.m_clip));
+    Enigma::Frameworks::CommandBus::enqueue(std::make_shared<AddAnimationClip>(clip.m_name, clip.m_clip));
 }
 
 void AnimationInfoPanel::onDeleteActionButton(const nana::arg_click& ev)
@@ -140,14 +140,14 @@ void AnimationInfoPanel::onDeleteActionButton(const nana::arg_click& ev)
         auto item = m_actionTableBox->at(idx.cat).at(idx.item);
         AnimClipInfoItem clip{ "" };
         item->resolve_to(clip);
-        Enigma::Frameworks::CommandBus::post(std::make_shared<DeleteAnimationClip>(clip.m_name));
+        Enigma::Frameworks::CommandBus::enqueue(std::make_shared<DeleteAnimationClip>(clip.m_name));
     }
     m_actionTableBox->erase(idx_pairs);
 }
 
 void AnimationInfoPanel::onActionComboTextChanged(const nana::arg_combox& ev)
 {
-    Enigma::Frameworks::CommandBus::post(std::make_shared<PlayAnimationClip>(ev.widget.caption()));
+    Enigma::Frameworks::CommandBus::enqueue(std::make_shared<PlayAnimationClip>(ev.widget.caption()));
 }
 
 void AnimationInfoPanel::subscribeHandlers()
@@ -197,7 +197,7 @@ void AnimationInfoPanel::onAnimationClipItemUpdated(const Enigma::Frameworks::IE
     auto item = cat.at(ev->itemIndex());
     AnimClipInfoItem clip{ "" };
     item->resolve_to(clip);
-    CommandBus::post(std::make_shared<ChangeAnimationTimeValue>(ev->oldText(), clip.m_name, clip.m_clip));
+    CommandBus::enqueue(std::make_shared<ChangeAnimationTimeValue>(ev->oldText(), clip.m_name, clip.m_clip));
 }
 
 void AnimationInfoPanel::refreshAnimClipMap(const Enigma::Frameworks::ICommandPtr& c)

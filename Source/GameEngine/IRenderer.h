@@ -24,12 +24,12 @@ namespace Enigma::Engine
         IRenderer& operator=(IRenderer&&) = delete;
 
         /** get renderer's name */
-        const std::string& getName() { return m_name; };
+        const std::string& name() { return m_name; };
 
         /** set stamp bit mask */
-        void SetStampBitMask(unsigned int mask) { m_stampBitMask = mask; };
+        void stampBitMask(unsigned int mask) { m_stampBitMask = mask; };
         /** get stamp bit mask */
-        unsigned int GetStampBitMask() const { return m_stampBitMask; };
+        unsigned int stampBitMask() const { return m_stampBitMask; };
 
     protected:
         std::string m_name;

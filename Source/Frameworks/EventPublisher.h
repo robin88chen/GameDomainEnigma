@@ -46,8 +46,8 @@ namespace Enigma::Frameworks
         static void subscribe(const std::type_info& ev_type, const EventSubscriberPtr& sub);
         static void unsubscribe(const std::type_info& ev_type, const EventSubscriberPtr& sub);
 
-        static void post(const IEventPtr& e);
-        static void send(const IEventPtr& e);
+        static void enqueue(const IEventPtr& e);
+        static void publish(const IEventPtr& e);
 
         void cleanupAllEvents();
 

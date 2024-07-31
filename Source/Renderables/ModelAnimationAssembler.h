@@ -11,7 +11,6 @@
 #include "Animators/AnimationAssetId.h"
 #include "ModelAnimationDtos.h"
 #include "AnimationTimeSRT.h"
-#include "Animators/AnimatorPersistenceLevel.h"
 
 namespace Enigma::Renderables
 {
@@ -43,7 +42,7 @@ namespace Enigma::Renderables
 
         Engine::GenericDto toGenericDto();
 
-        std::shared_ptr<ModelAnimationAsset> constitute(Animators::PersistenceLevel persistence_level);
+        std::shared_ptr<ModelAnimationAsset> constitute();
 
     protected:
         Animators::AnimationAssetId m_id;

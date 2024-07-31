@@ -29,14 +29,14 @@ namespace Enigma::Engine
         bool operator!=(const RenderBufferSignature& signature) const;
         bool operator<(const RenderBufferSignature& signature) const;
 
-        const std::string& getName() const { return m_name; };
+        const std::string& name() const { return m_name; };
         // 拿掉 vertex layout, 應該不需要
         //Graphics::IVertexDeclarationPtr GetVertexDeclaration() const { return m_vertexDecl.lock(); };
-        const Graphics::PrimitiveTopology GetTopology() const { return m_topology; };
-        unsigned int getVertexCapacity() { return m_vertexCapacity; };
-        void ChangeVertexCapacity(unsigned int vtxCapa) { m_vertexCapacity = vtxCapa; };
-        unsigned int getIndexCapacity() { return m_indexCapacity; };
-        void ChangeIndexCapacity(unsigned int idxCapa) { m_indexCapacity = idxCapa; };
+        Graphics::PrimitiveTopology topology() const { return m_topology; };
+        unsigned int vertexCapacity() { return m_vertexCapacity; };
+        void changeVertexCapacity(unsigned int vtxCapa) { m_vertexCapacity = vtxCapa; };
+        unsigned int indexCapacity() { return m_indexCapacity; };
+        void changeIndexCapacity(unsigned int idxCapa) { m_indexCapacity = idxCapa; };
 
         class _signature_hasher
         {

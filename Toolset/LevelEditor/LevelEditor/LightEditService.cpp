@@ -37,9 +37,9 @@ ServiceResult LightEditService::onTerm()
 
 void LightEditService::createEnvironmentLight(const ICommandPtr& c)
 {
-    if (!c) return;
+    /*if (!c) return;
     auto cmd = std::dynamic_pointer_cast<CreateEnvironmentLight, ICommand>(c);
     if (!cmd) return;
     CommandBus::post(std::make_shared<CreateAmbientLight>(cmd->getWorldName(), cmd->getWorldName() + "_amb_lit", Enigma::MathLib::ColorRGBA(0.2f, 0.2f, 0.2f, 1.0f)));
-    CommandBus::post(std::make_shared<CreateSunLight>(cmd->getWorldName(), cmd->getWorldName() + "_sun_lit", Enigma::MathLib::Vector3(-1.0, -1.0, -1.0), Enigma::MathLib::ColorRGBA(0.6f, 0.6f, 0.6f, 1.0f)));
+    CommandBus::post(std::make_shared<CreateSunLight>(cmd->getWorldName(), cmd->getWorldName() + "_sun_lit", Enigma::MathLib::Vector3(-1.0, -1.0, -1.0), Enigma::MathLib::ColorRGBA(0.6f, 0.6f, 0.6f, 1.0f)));*/
 }

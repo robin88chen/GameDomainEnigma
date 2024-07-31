@@ -43,7 +43,7 @@ error DeviceSamplerStateEgl::CreateFromData(const SamplerStateData& data)
     //! android 的 gles3 沒有 border color (即使是 texture parameter也沒有)
     //glSamplerParameterfv(m_sampler, GL_TEXTURE_BORDER_COLOR, (float*)m_data.m_borderColor);
     //glSamplerParameterf(m_sampler, GL_TEXTURE_LOD_BIAS, m_data.m_maxLOD);
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::SamplerStateResourceCreated>(m_name));
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::SamplerStateResourceCreated>(m_name));
     return ErrorCode::ok;
 }
 

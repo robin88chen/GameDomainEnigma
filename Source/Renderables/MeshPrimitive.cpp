@@ -9,7 +9,7 @@
 #include "Renderer/RenderElement.h"
 #include "Platforms/PlatformLayer.h"
 #include "RenderablePrimitiveDtos.h"
-#include "Geometries/GeometryDataFactory.h"
+#include "Geometries/GeometryDataQueries.h"
 #include "RenderableErrors.h"
 #include <cassert>
 
@@ -45,11 +45,7 @@ MeshPrimitive::MeshPrimitive(const Primitives::PrimitiveId& id, const Engine::Ge
     }
     else if (mesh_dto.geometry())
     {
-        m_geometry = geometry_repository->factory()->constitute(mesh_dto.geometryId(), mesh_dto.geometry().value(), false);
-        if (!m_geometry)
-        {
-            geometry_repository->putGeometryData(mesh_dto.geometryId(), m_geometry);
-        }
+        m_geometry = std::make_shared<Geometries::RequestGeometryConstitution>(mesh_dto.geometryId(), mesh_dto.geometry().value())->dispatch();
     }
     m_lazyStatus.changeStatus(Frameworks::LazyStatus::Status::Ghost);
     m_renderBuffer = nullptr;
@@ -170,7 +166,7 @@ error MeshPrimitive::updateRenderBuffer()
 {
     assert(m_geometry);
     if (!m_renderBuffer) return ErrorCode::nullRenderBuffer;
-    const error er = m_renderBuffer->UpdateVertex(m_geometry->getVertexMemory(), m_geometry->getIndexMemory());
+    const error er = m_renderBuffer->updateVertex(m_geometry->getVertexMemory(), m_geometry->getIndexMemory());
     return er;
 }
 
@@ -181,7 +177,7 @@ error MeshPrimitive::rangedUpdateRenderBuffer(unsigned vtx_offset, unsigned vtx_
     if (!m_renderBuffer) return ErrorCode::nullRenderBuffer;
     std::optional<IIndexBuffer::ranged_buffer> idx_memory;
     if (idx_count && idx_offset) idx_memory = m_geometry->getRangedIndexMemory(idx_offset.value(), idx_count.value());
-    const error er = m_renderBuffer->RangedUpdateVertex(m_geometry->getRangedVertexMemory(vtx_offset, vtx_count), idx_memory);
+    const error er = m_renderBuffer->rangedUpdateVertex(m_geometry->getRangedVertexMemory(vtx_offset, vtx_count), idx_memory);
     return er;
 }
 

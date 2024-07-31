@@ -56,6 +56,7 @@ ServiceResult GeometryRepository::onInit()
 
 ServiceResult GeometryRepository::onTerm()
 {
+    dumpRetainedGeometry();
     m_storeMapper->disconnect();
     m_geometries.clear();
 
@@ -74,12 +75,18 @@ ServiceResult GeometryRepository::onTerm()
     return Frameworks::ServiceResult::Complete;
 }
 
+void GeometryRepository::registerGeometryFactory(const std::string& rtti_name, const GeometryCreator& creator, const GeometryConstitutor& constitutor)
+{
+    assert(m_factory);
+    m_factory->registerGeometryFactory(rtti_name, creator, constitutor);
+}
+
 bool GeometryRepository::hasGeometryData(const GeometryId& id)
 {
     assert(m_storeMapper);
     std::lock_guard locker{ m_geometryLock };
     const auto it = m_geometries.find(id);
-    if (it != m_geometries.end()) return true;
+    if ((it != m_geometries.end()) && (!it->second.expired())) return true;
     return m_storeMapper->hasGeometry(id);
 }
 
@@ -88,7 +95,7 @@ std::shared_ptr<GeometryData> GeometryRepository::queryGeometryData(const Geomet
     if (!hasGeometryData(id)) return nullptr;
     std::lock_guard locker{ m_geometryLock };
     auto it = m_geometries.find(id);
-    if (it != m_geometries.end()) return it->second;
+    if ((it != m_geometries.end()) && (!it->second.expired())) return it->second.lock();
     assert(m_factory);
     const auto dto = m_storeMapper->queryGeometry(id);
     assert(dto.has_value());
@@ -114,19 +121,13 @@ void GeometryRepository::requestGeometryCreation(const IQueryPtr& r)
     if (!request) return;
     if (hasGeometryData(request->id()))
     {
-        EventPublisher::post(std::make_shared<CreateGeometryFailed>(request->id(), ErrorCode::geometryEntityAlreadyExists));
+        EventPublisher::enqueue(std::make_shared<CreateGeometryFailed>(request->id(), ErrorCode::geometryEntityAlreadyExists));
         return;
     }
     auto geometry = m_factory->create(request->id(), request->rtti());
-    if (request->persistenceLevel() == PersistenceLevel::Repository)
-    {
-        std::lock_guard locker{ m_geometryLock };
-        m_geometries.insert_or_assign(request->id(), geometry);
-    }
-    else if (request->persistenceLevel() == PersistenceLevel::Store)
-    {
-        putGeometryData(request->id(), geometry);
-    }
+    assert(geometry);
+    std::lock_guard locker{ m_geometryLock };
+    m_geometries.insert_or_assign(request->id(), geometry);
     request->setResult(geometry);
 }
 
@@ -137,19 +138,13 @@ void GeometryRepository::requestGeometryConstitution(const IQueryPtr& r)
     if (!request) return;
     if (hasGeometryData(request->id()))
     {
-        EventPublisher::post(std::make_shared<ConstituteGeometryFailed>(request->id(), ErrorCode::geometryEntityAlreadyExists));
+        EventPublisher::enqueue(std::make_shared<ConstituteGeometryFailed>(request->id(), ErrorCode::geometryEntityAlreadyExists));
         return;
     }
     auto geometry = m_factory->constitute(request->id(), request->dto(), false);
-    if (request->persistenceLevel() == PersistenceLevel::Repository)
-    {
-        std::lock_guard locker{ m_geometryLock };
-        m_geometries.insert_or_assign(request->id(), geometry);
-    }
-    else if (request->persistenceLevel() == PersistenceLevel::Store)
-    {
-        putGeometryData(request->id(), geometry);
-    }
+    assert(geometry);
+    std::lock_guard locker{ m_geometryLock };
+    m_geometries.insert_or_assign(request->id(), geometry);
     request->setResult(geometry);
 }
 
@@ -169,6 +164,19 @@ void GeometryRepository::removeGeometryData(const Frameworks::ICommandPtr& c)
     removeGeometryData(cmd->id());
 }
 
+void GeometryRepository::dumpRetainedGeometry()
+{
+    Platforms::Debug::Printf("dump retained geometry\n");
+    std::lock_guard locker{ m_geometryLock };
+    for (const auto& [id, geo] : m_geometries)
+    {
+        if (auto ptr = geo.lock(); ptr)
+        {
+            Platforms::Debug::Printf("retained geometry %s\n", id.name().c_str());
+        }
+    }
+}
+
 void GeometryRepository::removeGeometryData(const GeometryId& id)
 {
     if (!hasGeometryData(id)) return;
@@ -178,27 +186,26 @@ void GeometryRepository::removeGeometryData(const GeometryId& id)
     if (er)
     {
         Platforms::Debug::ErrorPrintf("remove geometry data %s failed : %s\n", id.name().c_str(), er.message().c_str());
-        EventPublisher::post(std::make_shared<RemoveGeometryFailed>(id, er));
+        EventPublisher::enqueue(std::make_shared<RemoveGeometryFailed>(id, er));
     }
     else
     {
-        EventPublisher::post(std::make_shared<GeometryRemoved>(id));
+        EventPublisher::enqueue(std::make_shared<GeometryRemoved>(id));
     }
 }
 
 void GeometryRepository::putGeometryData(const GeometryId& id, const std::shared_ptr<GeometryData>& data)
 {
-    if (hasGeometryData(id)) return;
-    std::lock_guard locker{ m_geometryLock };
-    m_geometries.insert_or_assign(id, data);
+    assert(data);
+    assert(m_storeMapper);
     error er = m_storeMapper->putGeometry(id, data->serializeDto());
     if (er)
     {
         Platforms::Debug::ErrorPrintf("put geometry data %s failed : %s\n", id.name().c_str(), er.message().c_str());
-        EventPublisher::post(std::make_shared<PutGeometryFailed>(id, er));
+        EventPublisher::enqueue(std::make_shared<PutGeometryFailed>(id, er));
     }
     else
     {
-        EventPublisher::post(std::make_shared<GeometryPut>(id));
+        EventPublisher::enqueue(std::make_shared<GeometryPut>(id));
     }
 }

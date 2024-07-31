@@ -1,5 +1,5 @@
 ﻿#include "LightInfo.h"
-#include "LightInfoDtos.h"
+#include "LightDtos.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::MathLib;
@@ -21,28 +21,28 @@ LightInfo::LightInfo(LightType type)
     m_isEnable = true;
 }
 
-LightInfo::LightInfo(const Engine::GenericDto& o) : LightInfo(LightInfoDto::fromGenericDto(o).LightType())
+LightInfo::LightInfo(const Engine::GenericDto& o) : LightInfo(LightInfoDto::fromGenericDto(o).lightType())
 {
     LightInfoDto dto = LightInfoDto::fromGenericDto(o);
-    m_type = dto.LightType();
-    m_color = dto.Color();
-    m_position = dto.Position();
+    m_type = dto.lightType();
+    m_color = dto.color();
+    m_position = dto.position();
     m_dir = dto.direction();
-    m_attenuation = dto.Attenuation();
-    m_range = dto.Range();
+    m_attenuation = dto.attenuation();
+    m_range = dto.range();
     m_isEnable = dto.isEnable();
 }
 
 LightInfoDto LightInfo::serializeDto()
 {
     LightInfoDto dto;
-    dto.LightType() = m_type;
-    dto.Color() = m_color;
-    dto.Position() = m_position;
-    dto.direction() = m_dir;
-    dto.Attenuation() = m_attenuation;
-    dto.Range() = m_range;
-    dto.isEnable() = m_isEnable;
+    dto.lightType(m_type);
+    dto.color(m_color);
+    dto.position(m_position);
+    dto.direction(m_dir);
+    dto.attenuation(m_attenuation);
+    dto.range(m_range);
+    dto.isEnable(m_isEnable);
     return dto;
 }
 

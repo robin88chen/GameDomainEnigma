@@ -10,6 +10,7 @@
 
 #include "Frameworks/ServiceManager.h"
 #include "Frameworks/EventSubscriber.h"
+#include "Frameworks/CommandSubscriber.h"
 #include "GraphicKernel/TargetViewPort.h"
 #include "SceneGraph/Pawn.h"
 #include "SceneGraph/Camera.h"
@@ -32,10 +33,15 @@ namespace LevelEditor
         virtual Enigma::Frameworks::ServiceResult onInit() override;
         virtual Enigma::Frameworks::ServiceResult onTerm() override;
 
+        Enigma::SceneGraph::SpatialId sceneRootId() const { return m_sceneRoot.expired() ? Enigma::SceneGraph::SpatialId() : m_sceneRoot.lock()->id(); }
+        Enigma::SceneGraph::SpatialId pickedSpatialId() const { return m_pickedSpatialId; }
     protected:
         void onGameCameraCreated(const Enigma::Frameworks::IEventPtr& e);
         void onSceneRootCreated(const Enigma::Frameworks::IEventPtr& e);
         void onTargetViewportChanged(const Enigma::Frameworks::IEventPtr& e);
+
+        void onPickedSpatialChanged(const Enigma::Frameworks::IEventPtr& e);
+
         void onMouseMoved(const Enigma::Frameworks::IEventPtr& e);
         void onMouseLeftButtonDown(const Enigma::Frameworks::IEventPtr& e);
         void onMouseLeftButtonUp(const Enigma::Frameworks::IEventPtr& e);
@@ -43,12 +49,17 @@ namespace LevelEditor
 
         void onKeyboardAsyncKeyPressed(const Enigma::Frameworks::IEventPtr& e);
 
+        void dropAssetToSceneGraph(const Enigma::Frameworks::ICommandPtr& c);
+
         std::tuple<std::shared_ptr<Enigma::SceneGraph::Pawn>, Enigma::MathLib::Vector3> pickingOnSceneView(const Enigma::MathLib::Vector2& clip_pos);
 
     protected:
         Enigma::Frameworks::EventSubscriberPtr m_onGameCameraCreated;
         Enigma::Frameworks::EventSubscriberPtr m_onSceneRootCreated;
         Enigma::Frameworks::EventSubscriberPtr m_onTargetViewportChanged;
+
+        Enigma::Frameworks::EventSubscriberPtr m_onPickedSpatialChanged;
+
         Enigma::Frameworks::EventSubscriberPtr m_onMouseMoved;
         Enigma::Frameworks::EventSubscriberPtr m_onMouseLeftButtonDown;
         Enigma::Frameworks::EventSubscriberPtr m_onMouseLeftButtonUp;
@@ -56,9 +67,13 @@ namespace LevelEditor
 
         Enigma::Frameworks::EventSubscriberPtr m_onKeyboardAsyncKeyPressed;
 
+        Enigma::Frameworks::CommandSubscriberPtr m_dropAssetToSceneGraph;
+
         std::weak_ptr<Enigma::SceneGraph::Camera> m_camera;
         std::weak_ptr<Enigma::SceneGraph::Node> m_sceneRoot;
         Enigma::Graphics::TargetViewPort m_targetViewport;
+
+        Enigma::SceneGraph::SpatialId m_pickedSpatialId;
 
         ScenePicker m_scenePicker;
     };

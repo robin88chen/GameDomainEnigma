@@ -1,26 +1,20 @@
 ﻿#include "WorldEditConsole.h"
-#include "Frameworks/CommandBus.h"
-#include "LevelEditorCommands.h"
-#include "Platforms/PlatformLayer.h"
-#include "WorldMap/WorldMapEvents.h"
+#include "SceneGraph/SceneGraphQueries.h"
 #include "EditorUtilities.h"
-#include "Gateways/DtoJsonGateway.h"
+#include "WorldMap/WorldMapQueries.h"
 #include "WorldEditService.h"
-#include "FileSystem/FileSystem.h"
-#include "FileSystem/StdMountPath.h"
-#include "Frameworks/EventPublisher.h"
-#include <filesystem>
+#include "WorldMap/WorldMapCommands.h"
+#include "LevelEditorQueries.h"
+#include "LevelEditorCommands.h"
+#include "SceneGraph/SceneGraphCommands.h"
 
 using namespace LevelEditor;
 using namespace Enigma::Frameworks;
-using namespace Enigma::FileSystem;
-using namespace Enigma::WorldMap;
 
 Rtti WorldEditConsole::TYPE_RTTI{ "LevelEditor.WorldEditConsole", &ISystemService::TYPE_RTTI };
 
-WorldEditConsole::WorldEditConsole(ServiceManager* srv_mngr, const std::shared_ptr<WorldEditService>& world_service) : ISystemService(srv_mngr)
+WorldEditConsole::WorldEditConsole(Enigma::Frameworks::ServiceManager* srv_mngr, const std::shared_ptr<WorldEditService>& world_edit_service, const std::string& world_relate_path, const std::string& media_path_id) : ISystemService(srv_mngr), m_worldEditService(world_edit_service), m_worldRelativePath(world_relate_path), m_mediaPathId(media_path_id)
 {
-    m_worldEditService = world_service;
     m_needTick = false;
 }
 
@@ -28,100 +22,50 @@ WorldEditConsole::~WorldEditConsole()
 {
 }
 
-ServiceResult WorldEditConsole::onInit()
+Enigma::Frameworks::ServiceResult WorldEditConsole::onInit()
 {
-    m_onWorldMapCreated = std::make_shared<EventSubscriber>([=](auto e) { onWorldMapCreated(e); });
-    EventPublisher::subscribe(typeid(WorldMapCreated), m_onWorldMapCreated);
     return ServiceResult::Complete;
 }
 
-ServiceResult WorldEditConsole::onTerm()
+Enigma::Frameworks::ServiceResult WorldEditConsole::onTerm()
 {
-    EventPublisher::unsubscribe(typeid(WorldMapCreated), m_onWorldMapCreated);
-    m_onWorldMapCreated = nullptr;
     return ServiceResult::Complete;
-}
-
-void WorldEditConsole::setWorldMapRootFolder(const std::filesystem::path& folder, const std::string& world_map_path_id)
-{
-    auto path = std::filesystem::current_path();
-    auto mediaPath = path / "../../../Media/";
-    m_mapFileRootPath = mediaPath / folder;
-    m_worldMapPathId = world_map_path_id;
-    FileSystem::Instance()->AddMountPath(std::make_shared<StdMountPath>(m_mapFileRootPath.string(), world_map_path_id));
-}
-
-bool WorldEditConsole::checkWorldMapFolder(const std::string& world_folder)
-{
-    if (world_folder.empty()) return false;
-    const auto world_path = m_mapFileRootPath / world_folder;
-    return is_directory(world_path);
-}
-
-void WorldEditConsole::deleteWorldMapFolder(const std::string& world_folder)
-{
-    if (world_folder.empty()) return;
-    const auto world_path = m_mapFileRootPath / world_folder;
-    std::error_code ec;
-    remove_all(world_path, ec);
-    if (ec)
-    {
-        Enigma::Platforms::Debug::ErrorPrintf("remove folder all error : %s", ec.message().c_str());
-    }
-}
-
-void WorldEditConsole::createWorldMapFolder(const std::string& folder_name)
-{
-    if (folder_name.empty()) return;
-    m_currentWorldFolder = folder_name;
-    const auto world_path = m_mapFileRootPath / folder_name;
-    if (const bool is_created = create_directory(world_path); is_created)
-    {
-        CommandBus::post(std::make_shared<OutputMessage>("[WorldEditorService] World map folder " + folder_name + " is created!"));
-    }
 }
 
 void WorldEditConsole::saveWorldMap()
 {
-    assert(!m_worldEditService.expired());
-    CommandBus::post(std::make_shared<SaveTerrainSplatTexture>(m_worldMapPathId));
-    auto [map_dto, node_graphs] = m_worldEditService.lock()->serializeWorldMapAndNodeGraphs(m_worldMapPathId);
-    std::string json_map = Enigma::Gateways::DtoJsonGateway::Serialize({ map_dto });
-    IFilePtr file_map = FileSystem::Instance()->OpenFile(Filename(map_dto.GetRtti().GetPrefab()), Write | OpenAlways | Binary);
-    if (FATAL_LOG_EXPR(!file_map)) return;
-    file_map->Write(0, convert_to_buffer(json_map));
-    FileSystem::Instance()->CloseFile(file_map);
-    for (auto& dtos : node_graphs)
-    {
-        std::string json = Enigma::Gateways::DtoJsonGateway::Serialize(dtos);
-        IFilePtr iFile = FileSystem::Instance()->OpenFile(Filename(dtos[0].GetRtti().GetPrefab()), Write | OpenAlways | Binary);
-        if (FATAL_LOG_EXPR(!iFile)) return;
-        iFile->Write(0, convert_to_buffer(json));
-        FileSystem::Instance()->CloseFile(iFile);
-    }
+    auto world_edit_service = m_worldEditService.lock();
+    if (!world_edit_service) return;
+
+    auto world_map = world_edit_service->getWorldMap();
+    if (!world_map) return;
+    std::make_shared<Enigma::WorldMap::PutWorldMap>(world_map->id(), world_map)->execute();
 }
 
-void WorldEditConsole::loadWorldMap(const std::filesystem::path& map_filepath, const std::string& portal_manager_name)
+void WorldEditConsole::loadWorldMap(const std::filesystem::path& filepath, const Enigma::SceneGraph::SpatialId& root_id)
 {
-    std::string path_string = filePathCombinePathID(map_filepath, m_worldMapPathId) + "@" + m_worldMapPathId;
-
-    Enigma::Frameworks::CommandBus::post(std::make_shared<OutputMessage>("Load World File " + path_string + "..."));
-    IFilePtr iFile = FileSystem::Instance()->OpenFile(path_string, Read | Binary);
-    size_t file_size = iFile->Size();
-
-    auto read_buf = iFile->Read(0, file_size);
-    FileSystem::Instance()->CloseFile(iFile);
-    auto dtos = Enigma::Gateways::DtoJsonGateway::Deserialize(convert_to_string(read_buf.value(), file_size));
-    if (!m_worldEditService.expired())
+    assert(!root_id.empty());
+    auto filename = filePathCombinePathID(filepath, m_mediaPathId);
+    if (filename.empty()) return;
+    filename = filename + "@" + m_mediaPathId;
+    auto world_map_id = std::make_shared<ResolveWorldId>(filename)->dispatch();
+    if (!world_map_id.has_value())
     {
-        m_worldEditService.lock()->deserializeWorldMap(dtos, portal_manager_name);
+        std::make_shared<OutputMessage>("can't resolve world map id from filename " + filename)->enqueue();
+        return;
     }
+    auto world_map = std::make_shared<Enigma::WorldMap::QueryWorldMap>(world_map_id.value())->dispatch();
+    if (!world_map)
+    {
+        std::make_shared<OutputMessage>("can't load world map " + filename)->enqueue();
+        return;
+    }
+    auto out_region = std::make_shared<Enigma::SceneGraph::QuerySpatial>(world_map->outRegionId())->dispatch();
+    if (!out_region)
+    {
+        std::make_shared<OutputMessage>("can't load out region " + world_map->outRegionId().name())->enqueue();
+        return;
+    }
+    std::make_shared<Enigma::SceneGraph::AttachNodeChild>(root_id, out_region, Enigma::MathLib::Matrix4::IDENTITY)->enqueue();
 }
 
-void WorldEditConsole::onWorldMapCreated(const Enigma::Frameworks::IEventPtr& e)
-{
-    if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<Enigma::WorldMap::WorldMapCreated, IEvent>(e);
-    if (!ev) return;
-    m_currentWorldName = ev->name();
-}

@@ -59,11 +59,11 @@ void TextureLoader::loadImage(const std::shared_ptr<Texture>& texture, const Tex
     m_textureDto = dto;
     if (m_contentingTexture->isMultiTexture())
     {
-        CommandBus::post(std::make_shared<CreateDeviceMultiTexture>(m_contentingTexture->id().name()));
+        CommandBus::enqueue(std::make_shared<CreateDeviceMultiTexture>(m_contentingTexture->id().name()));
     }
     else
     {
-        CommandBus::post(std::make_shared<CreateDeviceTexture>(m_contentingTexture->id().name()));
+        CommandBus::enqueue(std::make_shared<CreateDeviceTexture>(m_contentingTexture->id().name()));
     }
 }
 
@@ -147,7 +147,7 @@ void TextureLoader::onTextureImageLoaded(const Enigma::Frameworks::IEventPtr& e)
         return;
     }
     m_contentingTexture->instanceDeviceTexture(dev_tex);
-    Frameworks::EventPublisher::post(std::make_shared<TextureLoaded>(m_contentingTexture->id(), m_contentingTexture));
+    Frameworks::EventPublisher::enqueue(std::make_shared<TextureLoaded>(m_contentingTexture->id(), m_contentingTexture));
     m_contentingTexture = nullptr;
 }
 
@@ -185,7 +185,7 @@ void TextureLoader::onTextureResourceCreated(const Enigma::Frameworks::IEventPtr
         return;
     }
     m_contentingTexture->instanceDeviceTexture(dev_tex);
-    Frameworks::EventPublisher::post(std::make_shared<TextureLoaded>(m_contentingTexture->id(), m_contentingTexture));
+    Frameworks::EventPublisher::enqueue(std::make_shared<TextureLoaded>(m_contentingTexture->id(), m_contentingTexture));
     m_contentingTexture = nullptr;
 }
 
@@ -203,6 +203,6 @@ void TextureLoader::onTextureCreateResourceFailed(const Enigma::Frameworks::IEve
 void TextureLoader::failLoadingImage(std::error_code er)
 {
     assert(m_contentingTexture);
-    EventPublisher::post(std::make_shared<LoadTextureFailed>(m_contentingTexture->id(), er));
+    EventPublisher::enqueue(std::make_shared<LoadTextureFailed>(m_contentingTexture->id(), er));
     m_contentingTexture = nullptr;
 }

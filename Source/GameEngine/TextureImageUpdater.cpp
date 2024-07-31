@@ -35,7 +35,7 @@ void TextureImageUpdater::retrieveTextureImage(const std::shared_ptr<Texture>& t
     }
     else
     {
-        EventPublisher::post(std::make_shared<RetrieveTextureFailed>(m_targetTexture->id(), ErrorCode::targetTextureNotExists));
+        EventPublisher::enqueue(std::make_shared<RetrieveTextureFailed>(m_targetTexture->id(), ErrorCode::targetTextureNotExists));
     }
 }
 
@@ -50,7 +50,7 @@ void TextureImageUpdater::updateTextureImage(const std::shared_ptr<Texture>& tar
     }
     else
     {
-        EventPublisher::post(std::make_shared<UpdateTextureFailed>(m_targetTexture->id(), ErrorCode::targetTextureNotExists));
+        EventPublisher::enqueue(std::make_shared<UpdateTextureFailed>(m_targetTexture->id(), ErrorCode::targetTextureNotExists));
     }
 }
 
@@ -62,7 +62,7 @@ void TextureImageUpdater::onResourceImageRetrieved(const IEventPtr& e)
     if (ev->textureName() != m_targetTexture->getDeviceTexture()->getName()) return;
     auto target_tex = ev->targetDeviceTexture();
     if (!target_tex) return;
-    EventPublisher::post(std::make_shared<TextureImageRetrieved>(m_targetTexture->id(), target_tex->getRetrievedBuffer()));
+    EventPublisher::enqueue(std::make_shared<TextureImageRetrieved>(m_targetTexture->id(), target_tex->getRetrievedBuffer()));
 }
 
 void TextureImageUpdater::onRetrieveResourceImageFailed(const IEventPtr& e)
@@ -71,7 +71,7 @@ void TextureImageUpdater::onRetrieveResourceImageFailed(const IEventPtr& e)
     const auto ev = std::dynamic_pointer_cast<Graphics::TextureResourceRetrieveImageFailed>(e);
     if (!ev) return;
     if (ev->textureName() != m_targetTexture->getDeviceTexture()->getName()) return;
-    EventPublisher::post(std::make_shared<RetrieveTextureFailed>(m_targetTexture->id(), ev->error()));
+    EventPublisher::enqueue(std::make_shared<RetrieveTextureFailed>(m_targetTexture->id(), ev->error()));
 }
 
 void TextureImageUpdater::onResourceImageUpdated(const IEventPtr& e)
@@ -82,7 +82,7 @@ void TextureImageUpdater::onResourceImageUpdated(const IEventPtr& e)
     if (ev->textureName() != m_targetTexture->getDeviceTexture()->getName()) return;
     auto target_tex = ev->targetDeviceTexture();
     if (!target_tex) return;
-    EventPublisher::post(std::make_shared<TextureImageUpdated>(m_targetTexture->id()));
+    EventPublisher::enqueue(std::make_shared<TextureImageUpdated>(m_targetTexture->id()));
 }
 
 void TextureImageUpdater::onUpdateResourceImageFailed(const IEventPtr& e)
@@ -91,5 +91,5 @@ void TextureImageUpdater::onUpdateResourceImageFailed(const IEventPtr& e)
     const auto ev = std::dynamic_pointer_cast<Graphics::TextureResourceUpdateImageFailed>(e);
     if (!ev) return;
     if (ev->textureName() != m_targetTexture->getDeviceTexture()->getName()) return;
-    EventPublisher::post(std::make_shared<UpdateTextureFailed>(m_targetTexture->id(), ev->error()));
+    EventPublisher::enqueue(std::make_shared<UpdateTextureFailed>(m_targetTexture->id(), ev->error()));
 }

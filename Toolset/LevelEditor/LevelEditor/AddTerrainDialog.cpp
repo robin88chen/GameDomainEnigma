@@ -1,15 +1,17 @@
 ﻿#include "AddTerrainDialog.h"
 #include "nana/gui/filebox.hpp"
-#include "Platforms/MemoryAllocMacro.h"
 #include "Platforms/MemoryMacro.h"
-#include "Terrain/TerrainDtoHelper.h"
 #include "EditorUtilities.h"
 #include "Frameworks/CommandBus.h"
 #include "LevelEditorCommands.h"
 #include "Frameworks/StringFormat.h"
-#include "WorldEditConsole.h"
+#include "TerrainEditConsole.h"
+#include "Terrain/TerrainAssemblers.h"
 #include <cstdlib>
-#include <MathLib/Matrix4.h>
+
+#include "LevelEditorQueries.h"
+#include "MathLib/Matrix4.h"
+#include "nana/gui/msgbox.hpp"
 
 using namespace LevelEditor;
 using namespace Enigma;
@@ -29,10 +31,9 @@ std::vector<std::string> cellPerUVCandidates =
 #define PRESET_MAX_UV   "1.0, 1.0"
 #define PRESET_LOCAL_POS "0.0, 0.0, 0.0"
 
-AddTerrainDialog::AddTerrainDialog(nana::window owner, const std::shared_ptr<WorldEditConsole>& world_edit, const std::string& media_path_id) : form(owner, nana::API::make_center(400, 600), nana::appear::decorate<>{})
+AddTerrainDialog::AddTerrainDialog(nana::window owner, const std::shared_ptr<TerrainEditConsole>& terrain_edit) : form(owner, nana::API::make_center(400, 600), nana::appear::decorate<>{})
 {
-    m_worldEdit = world_edit;
-    m_mediaPathId = media_path_id;
+    m_terrainEdit = terrain_edit;
 
     caption("Add New Terrain");
     get_place().div("vert<><create_prompt arrange=[40%,variable] margin=[10,20]><cell_prompt margin=[10,20]><min_vtx_prompt margin=[10,20]><max_vtx_prompt margin=[10,20]><min_uv_prompt margin=[10,20]><max_uv_prompt margin=[10,20]><local_pos_prompt margin=[10,20]><cell_uv_prompt margin=[10,20]><texture_btns weight=84 arrange=[64,64,64,64] margin=[10,20] gap=10><><buttons margin=[10,40] gap=10><>");
@@ -140,7 +141,13 @@ AddTerrainDialog::~AddTerrainDialog()
 void AddTerrainDialog::onOkButton(const nana::arg_click& arg)
 {
     std::string terrainName = m_terrainNameInputBox->text();
-    terrainName = m_worldEdit.lock()->getCurrentWorldFolder() + "/" + terrainName;
+    if ((terrainName.empty()) || (m_terrainEdit.lock()->isTerrainNameDuplicated(terrainName)))
+    {
+        nana::msgbox mb(*this, "Error");
+        mb << "Terrain Name is empty or duplicated";
+        auto answer = mb.show();
+        return;
+    }
     char* endptr = nullptr;
     unsigned rows, cols;
     rows = std::strtol(m_cellRowsCombo->caption().c_str(), &endptr, 10);
@@ -156,10 +163,9 @@ void AddTerrainDialog::onOkButton(const nana::arg_click& arg)
     MathLib::Vector3 terrainLocalPos;
     if (std::tie(terrainLocalPos, isParseOk) = parseTextToVector3(m_terrainLocalPosInputBox->text()); !isParseOk) return;
 
-    Terrain::TerrainGeometryDtoHelper terrain_helper(terrainName);
-    terrain_helper.NumRows(rows).NumCols(cols).MinPosition(minVertexPos).MaxPosition(maxVertexPos).MinTextureCoordinate(minUV).MinTextureCoordinate(maxUV);
+    auto terrain_id = Geometries::GeometryId(m_terrainEdit.lock()->terrainPath() + "/" + terrainName);
 
-    Frameworks::CommandBus::post(std::make_shared<CreateNewTerrain>(terrainName, terrain_helper.ToDto(), m_layerTextureFilenames, terrainLocalPos, m_worldEdit.lock()->getWorldMapPathId()));
+    Frameworks::CommandBus::enqueue(std::make_shared<CreateNewTerrain>(terrain_id, rows, cols, minVertexPos, maxVertexPos, minUV, maxUV, m_layerTextureIds, terrainLocalPos, m_terrainEdit.lock()->mediaPathId()));
 
     close();
 }
@@ -187,8 +193,11 @@ void AddTerrainDialog::onTextureLayerButton(const nana::arg_click& arg)
     if (auto paths = fb.show(); !paths.empty())
     {
         pasteTextureImageToButton(paths[0].string(), m_textureLayerButtons[btn_idx], 64);
-        std::string path_string = filePathCombinePathID(paths[0], m_mediaPathId);
-        m_layerTextureFilenames[btn_idx] = path_string;
+        std::string stem = paths[0].stem().generic_string();
+        std::string sub_path = (--(--paths[0].end()))->generic_string();
+        auto texure_id = std::make_shared<ResolveTextureId>(sub_path + "/" + stem)->dispatch();
+        if (!texure_id.has_value()) return;
+        m_layerTextureIds[btn_idx] = texure_id.value();
     }
 }
 

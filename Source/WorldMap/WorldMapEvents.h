@@ -21,12 +21,14 @@ namespace Enigma::WorldMap
     class WorldMapCreated : public Frameworks::IEvent
     {
     public:
-        WorldMapCreated(const WorldMapId& id) : m_id(id) {}
+        WorldMapCreated(const WorldMapId& id, const std::shared_ptr<WorldMap>& map) : m_id(id), m_map(map) {}
 
         const WorldMapId& id() const { return m_id; }
+        const std::shared_ptr<WorldMap>& map() const { return m_map; }
 
     protected:
         WorldMapId m_id;
+        std::shared_ptr<WorldMap> m_map;
     };
     class WorldMapCreationFailed : public Frameworks::IEvent
     {
@@ -43,12 +45,14 @@ namespace Enigma::WorldMap
     class WorldMapConstituted : public Frameworks::IEvent
     {
     public:
-        WorldMapConstituted(const WorldMapId& id) : m_id(id) {}
+        WorldMapConstituted(const WorldMapId& id, const std::shared_ptr<WorldMap>& map) : m_id(id), m_map(map) {}
 
         const WorldMapId& id() const { return m_id; }
+        const std::shared_ptr<WorldMap>& map() const { return m_map; }
 
     protected:
         WorldMapId m_id;
+        std::shared_ptr<WorldMap> m_map;
     };
     class WorldMapConstitutionFailed : public Frameworks::IEvent
     {

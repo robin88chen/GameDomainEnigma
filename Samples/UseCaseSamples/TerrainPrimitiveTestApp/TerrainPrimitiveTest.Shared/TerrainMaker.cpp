@@ -4,6 +4,7 @@
 #include "Geometries/GeometryDataQueries.h"
 #include "GameEngine/EffectTextureMapAssembler.h"
 #include "Primitives/PrimitiveQueries.h"
+#include "Primitives/PrimitiveCommands.h"
 #include <memory>
 
 using namespace Enigma::Terrain;
@@ -27,6 +28,7 @@ std::shared_ptr<Enigma::Terrain::TerrainPrimitive> TerrainMaker::makeTerrainPrim
         .textureMapping(TextureId("image/three"), std::nullopt, "TextureLayer3")
         .textureMapping(splat_tex_id, std::nullopt, "AlphaLayer"));
     assembler.asNative(id.name() + ".terrain@DataPath");
-    auto prim = std::make_shared<Enigma::Primitives::RequestPrimitiveConstitution>(id, assembler.toGenericDto(), Enigma::Primitives::PersistenceLevel::Store)->dispatch();
+    auto prim = std::make_shared<Enigma::Primitives::RequestPrimitiveConstitution>(id, assembler.toGenericDto())->dispatch();
+    std::make_shared<Enigma::Primitives::PutPrimitive>(id, prim)->execute();
     return std::dynamic_pointer_cast<TerrainPrimitive>(prim);
 }

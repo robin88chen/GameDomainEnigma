@@ -28,6 +28,7 @@ std::error_code SceneGraphFileStoreMapper::SpatialFileMap::connect()
     FileSystem::IFilePtr mapper_file = FileSystem::FileSystem::instance()->openFile(m_filename, FileSystem::read | FileSystem::binary);
     if (!mapper_file) return FileSystem::ErrorCode::ok;
     auto file_size = mapper_file->size();
+    if (file_size == 0) return FileSystem::ErrorCode::ok;
     auto content = mapper_file->read(0, file_size);
     FileSystem::FileSystem::instance()->closeFile(mapper_file);
     if (!content) return FileSystem::ErrorCode::readFail;
@@ -143,7 +144,7 @@ std::string SceneGraphFileStoreMapper::SpatialFileMap::extractFilename(const Sce
     }
     auto pos = filename.find_last_of('/');
     if (pos == std::string::npos) return m_assetPrefix + filename;
-    return filename.insert(pos, m_assetPrefix);
+    return filename.insert(pos + 1, m_assetPrefix);
 }
 
 std::error_code SceneGraphFileStoreMapper::SpatialFileMap::serializeDataTransferObjects(const std::string& filename, const Engine::GenericDto& dto)

@@ -14,7 +14,6 @@
 #include "GameEngine/EffectMaterialId.h"
 #include "GameEngine/EffectTextureMapAssembler.h"
 #include "Animators/AnimatorId.h"
-#include "Primitives/PrimitivePersistenceLevel.h"
 
 namespace Enigma::Renderables
 {
@@ -36,7 +35,7 @@ namespace Enigma::Renderables
         MeshPrimitiveAssembler& visualTechnique(const std::string& technique);
         MeshPrimitiveAssembler& asNative(const std::string& file_at_path);
 
-        std::shared_ptr<MeshPrimitive> constitute(Primitives::PersistenceLevel persistence_level);
+        std::shared_ptr<MeshPrimitive> constitute();
 
         MeshPrimitiveDto dto() const;
         Engine::GenericDto toGenericDto() const;
@@ -60,7 +59,7 @@ namespace Enigma::Renderables
         SkinMeshPrimitiveAssembler& visualTechnique(const std::string& technique);
         SkinMeshPrimitiveAssembler& asNative(const std::string& file_at_path);
 
-        std::shared_ptr<SkinMeshPrimitive> constitute(Primitives::PersistenceLevel persistence_level);
+        std::shared_ptr<SkinMeshPrimitive> constitute();
 
     protected:
         Engine::GenericDto toGenericDto();
@@ -120,7 +119,7 @@ namespace Enigma::Renderables
 
         Engine::GenericDto toGenericDto();
 
-        std::shared_ptr<ModelPrimitive> constitute(Primitives::PersistenceLevel persistence_level);
+        std::shared_ptr<ModelPrimitive> constitute();
 
     protected:
         Primitives::PrimitiveId m_id;

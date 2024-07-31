@@ -42,8 +42,8 @@ error DeferredRendererInstallingPolicy::install(Frameworks::ServiceManager* serv
     service_manager->registerSystemService(deferred_renderer_service);
     service_manager->insertHashAsService(SceneRendererService::TYPE_RTTI, deferred_renderer_service);
 
-    Frameworks::CommandBus::post(std::make_shared<SceneGraph::RegisterSpatialFactory>(LightVolumePawn::TYPE_RTTI.getName(), LightVolumePawn::create, LightVolumePawn::constitute));
-    Frameworks::CommandBus::post(std::make_shared<SceneGraph::RegisterSpatialFactory>(LightQuadPawn::TYPE_RTTI.getName(), LightQuadPawn::create, LightQuadPawn::constitute));
+    Frameworks::CommandBus::enqueue(std::make_shared<SceneGraph::RegisterSpatialFactory>(LightVolumePawn::TYPE_RTTI.getName(), LightVolumePawn::create, LightVolumePawn::constitute));
+    Frameworks::CommandBus::enqueue(std::make_shared<SceneGraph::RegisterSpatialFactory>(LightQuadPawn::TYPE_RTTI.getName(), LightQuadPawn::create, LightQuadPawn::constitute));
     deferred_renderer_service->createSceneRenderSystem(m_rendererName, m_targetName);
     return error();
 }
@@ -51,8 +51,8 @@ error DeferredRendererInstallingPolicy::install(Frameworks::ServiceManager* serv
 error DeferredRendererInstallingPolicy::shutdown(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
-    //Frameworks::CommandBus::post(std::make_shared<SceneGraph::UnRegisterSpatialDtoFactory>(LightVolumePawn::TYPE_RTTI.getName()));
-    //Frameworks::CommandBus::post(std::make_shared<SceneGraph::UnRegisterSpatialDtoFactory>(LightQuadPawn::TYPE_RTTI.getName()));
+    //Frameworks::CommandBus::enqueue(std::make_shared<SceneGraph::UnRegisterSpatialDtoFactory>(LightVolumePawn::TYPE_RTTI.name()));
+    //Frameworks::CommandBus::enqueue(std::make_shared<SceneGraph::UnRegisterSpatialDtoFactory>(LightQuadPawn::TYPE_RTTI.name()));
     service_manager->removeHashAsService(SceneRendererService::TYPE_RTTI);
     service_manager->shutdownSystemService(DeferredRendererService::TYPE_RTTI);
     return error();

@@ -33,15 +33,15 @@ namespace Enigma::Devices
         virtual error BindIndexBuffer(const Graphics::IIndexBufferPtr& buffer) override;
 
     protected:
-        virtual error CreateDevice(const Graphics::DeviceRequiredBits& rqb, void* hwnd) override;
-        virtual error CleanupDevice() override;
-        virtual error BeginDrawingScene() override;
-        virtual error EndDrawingScene() override;
-        virtual error DrawPrimitive(unsigned int vertexCount, unsigned int vertexOffset) override;
-        virtual error DrawIndexedPrimitive(
+        virtual error createDevice(const Graphics::DeviceRequiredBits& rqb, void* hwnd) override;
+        virtual error cleanupDevice() override;
+        virtual error beginDrawingScene() override;
+        virtual error endDrawingScene() override;
+        virtual error drawPrimitive(unsigned int vertexCount, unsigned int vertexOffset) override;
+        virtual error drawIndexedPrimitive(
             unsigned int indexCount, unsigned int vertexCount, unsigned int indexOffset,
             int baseVertexOffset) override;
-        virtual error FlipBackSurface() override;
+        virtual error flipBackSurface() override;
         virtual error CreatePrimaryBackSurface(const std::string& back_name, const std::string& depth_name) override;
         virtual error CreateBackSurface(const std::string& back_name, const MathLib::Dimension<unsigned>& dimension,
             const Graphics::GraphicFormat& fmt) override;

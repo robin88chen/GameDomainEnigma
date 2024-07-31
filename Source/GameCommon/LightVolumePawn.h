@@ -30,11 +30,21 @@ namespace Enigma::GameCommon
         static std::shared_ptr<LightVolumePawn> constitute(const SceneGraph::SpatialId& id, const Engine::GenericDto& dto);
         virtual Engine::GenericDto serializeDto() override;
 
-        /// 視攝影機位置在內、外，render 內部或外部, 用 mesh select visual tech 改變
-        void ToggleCameraInside(bool is_inside);
+        virtual void registerHandlers() override;
+        virtual void unregisterHandlers() override;
 
         /// 影響的光源就是自己所帶的光源
         virtual error _updateSpatialRenderState() override;
+
+        virtual error _updateLocalTransform(const MathLib::Matrix4& mxLocal) override;
+        virtual error _updateWorldData(const MathLib::Matrix4& mxParentWorld) override;
+
+    protected:
+        void checkBackfaceCulling();
+        /// 視攝影機位置在內、外，render 內部或外部, 用 mesh select visual tech 改變
+        void toggleCameraInside(bool is_inside);
+        virtual void onLightInfoUpdated(const Frameworks::IEventPtr& e) override;
+        void onGameCameraUpdated(const Frameworks::IEventPtr& e);
 
     public:
         static void setDefaultVisualTech(const std::string& token) { m_tokenDefaultVisualTech = token; }
@@ -46,6 +56,8 @@ namespace Enigma::GameCommon
         bool m_isCameraInside;
         static std::string m_tokenDefaultVisualTech;
         static std::string m_tokenInsideVisualTech;
+
+        Frameworks::EventSubscriberPtr m_onGameCameraUpdated;
     };
 }
 

@@ -45,7 +45,7 @@ void TextureSaver::onTextureImageSaved(const Frameworks::IEventPtr& e)
     if (!ev) return;
     if (!m_savingTexture) return;
     if (ev->textureName() != m_savingTexture->getDeviceTexture()->getName()) return;
-    Frameworks::EventPublisher::post(std::make_shared<TextureSaved>(m_savingTexture->id()));
+    Frameworks::EventPublisher::enqueue(std::make_shared<TextureSaved>(m_savingTexture->id()));
 }
 
 void TextureSaver::onSaveTextureImageFailed(const Frameworks::IEventPtr& e)
@@ -60,6 +60,6 @@ void TextureSaver::onSaveTextureImageFailed(const Frameworks::IEventPtr& e)
 
 void TextureSaver::failSavingImage(const TextureId& id, std::error_code er)
 {
-    Frameworks::EventPublisher::post(std::make_shared<SaveTextureFailed>(id, er));
+    Frameworks::EventPublisher::enqueue(std::make_shared<SaveTextureFailed>(id, er));
 }
 

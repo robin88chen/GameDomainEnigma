@@ -20,12 +20,12 @@ IGraphicAPI::IGraphicAPI(AsyncType async) : m_wnd(nullptr), m_apiVersion(APIVers
     m_workerThread = nullptr;
     if (m_async == AsyncType::UseAsyncDevice) m_workerThread = new GraphicThread{};
     m_stash = new AssetStash{};
-    SubscribeHandlers();
+    subscribeHandlers();
 }
 
 IGraphicAPI::~IGraphicAPI()
 {
-    UnsubscribeHandlers();
+    unsubscribeHandlers();
     m_instance = nullptr;
     if (m_workerThread) delete m_workerThread;
     if (m_stash) delete m_stash;
@@ -37,42 +37,42 @@ IGraphicAPI* IGraphicAPI::instance()
     return m_instance;
 }
 
-void IGraphicAPI::SubscribeHandlers()
+void IGraphicAPI::subscribeHandlers()
 {
-    m_doCreatingDevice =
-        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingDevice(c); });
-    Frameworks::CommandBus::subscribe(typeid(Graphics::CreateDevice), m_doCreatingDevice);
-    m_doCleaningDevice =
-        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCleaningDevice(c); });
-    Frameworks::CommandBus::subscribe(typeid(Graphics::CleanupDevice), m_doCleaningDevice);
+    m_createDevice =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->createDevice(c); });
+    Frameworks::CommandBus::subscribe(typeid(Graphics::CreateDevice), m_createDevice);
+    m_cleanDevice =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->cleanDevice(c); });
+    Frameworks::CommandBus::subscribe(typeid(Graphics::CleanupDevice), m_cleanDevice);
 
-    m_doBeginningScene =
-        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoBeginningScene(c); });
-    Frameworks::CommandBus::subscribe(typeid(Graphics::BeginScene), m_doBeginningScene);
-    m_doEndingScene =
-        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoEndingScene(c); });
-    Frameworks::CommandBus::subscribe(typeid(Graphics::EndScene), m_doEndingScene);
+    m_beginScene =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->beginScene(c); });
+    Frameworks::CommandBus::subscribe(typeid(Graphics::BeginScene), m_beginScene);
+    m_endScene =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->endScene(c); });
+    Frameworks::CommandBus::subscribe(typeid(Graphics::EndScene), m_endScene);
 
-    m_doDrawingPrimitive =
-        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoDrawingPrimitive(c); });
-    Frameworks::CommandBus::subscribe(typeid(Graphics::DrawPrimitive), m_doDrawingPrimitive);
-    m_doDrawingIndexedPrimitive =
-        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoDrawingIndexedPrimitive(c); });
-    Frameworks::CommandBus::subscribe(typeid(Graphics::DrawIndexedPrimitive), m_doDrawingIndexedPrimitive);
+    m_drawPrimitive =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->drawPrimitive(c); });
+    Frameworks::CommandBus::subscribe(typeid(Graphics::DrawPrimitive), m_drawPrimitive);
+    m_drawIndexedPrimitive =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->drawIndexedPrimitive(c); });
+    Frameworks::CommandBus::subscribe(typeid(Graphics::DrawIndexedPrimitive), m_drawIndexedPrimitive);
 
-    m_doClearing =
-        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoClearing(c); });
-    Frameworks::CommandBus::subscribe(typeid(Graphics::ClearSurface), m_doClearing);
-    m_doFlipping =
-        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoFlipping(c); });
-    Frameworks::CommandBus::subscribe(typeid(Graphics::FlipBackSurface), m_doFlipping);
+    m_clear =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->clear(c); });
+    Frameworks::CommandBus::subscribe(typeid(Graphics::ClearSurface), m_clear);
+    m_flip =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->flip(c); });
+    Frameworks::CommandBus::subscribe(typeid(Graphics::FlipBackSurface), m_flip);
 
-    m_doCreatingPrimarySurface =
-        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingPrimarySurface(c); });
-    Frameworks::CommandBus::subscribe(typeid(Graphics::CreatePrimarySurface), m_doCreatingPrimarySurface);
-    m_doCreatingBackSurface =
-        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingBackSurface(c); });
-    Frameworks::CommandBus::subscribe(typeid(Graphics::CreateBacksurface), m_doCreatingBackSurface);
+    m_createPrimarySurface =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->createPrimarySurface(c); });
+    Frameworks::CommandBus::subscribe(typeid(Graphics::CreatePrimarySurface), m_createPrimarySurface);
+    m_createBackSurface =
+        std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->createBackSurface(c); });
+    Frameworks::CommandBus::subscribe(typeid(Graphics::CreateBacksurface), m_createBackSurface);
     m_doCreatingMultiBackSurface =
         std::make_shared<Frameworks::CommandSubscriber>([=](auto c) { this->DoCreatingMultiBackSurface(c); });
     Frameworks::CommandBus::subscribe(typeid(Graphics::CreateMultiBacksurface), m_doCreatingMultiBackSurface);
@@ -142,32 +142,32 @@ void IGraphicAPI::SubscribeHandlers()
     Frameworks::CommandBus::subscribe(typeid(Graphics::BindIndexBuffer), m_doBindingIndexBuffer);
 }
 
-void IGraphicAPI::UnsubscribeHandlers()
+void IGraphicAPI::unsubscribeHandlers()
 {
-    Frameworks::CommandBus::unsubscribe(typeid(Graphics::CreateDevice), m_doCreatingDevice);
-    m_doCreatingDevice = nullptr;
-    Frameworks::CommandBus::unsubscribe(typeid(Graphics::CleanupDevice), m_doCleaningDevice);
-    m_doCleaningDevice = nullptr;
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::CreateDevice), m_createDevice);
+    m_createDevice = nullptr;
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::CleanupDevice), m_cleanDevice);
+    m_cleanDevice = nullptr;
 
-    Frameworks::CommandBus::unsubscribe(typeid(Graphics::BeginScene), m_doBeginningScene);
-    m_doBeginningScene = nullptr;
-    Frameworks::CommandBus::unsubscribe(typeid(Graphics::EndScene), m_doEndingScene);
-    m_doEndingScene = nullptr;
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::BeginScene), m_beginScene);
+    m_beginScene = nullptr;
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::EndScene), m_endScene);
+    m_endScene = nullptr;
 
-    Frameworks::CommandBus::unsubscribe(typeid(Graphics::DrawPrimitive), m_doDrawingPrimitive);
-    m_doDrawingPrimitive = nullptr;
-    Frameworks::CommandBus::unsubscribe(typeid(Graphics::DrawIndexedPrimitive), m_doDrawingIndexedPrimitive);
-    m_doDrawingIndexedPrimitive = nullptr;
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::DrawPrimitive), m_drawPrimitive);
+    m_drawPrimitive = nullptr;
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::DrawIndexedPrimitive), m_drawIndexedPrimitive);
+    m_drawIndexedPrimitive = nullptr;
 
-    Frameworks::CommandBus::unsubscribe(typeid(Graphics::ClearSurface), m_doClearing);
-    m_doClearing = nullptr;
-    Frameworks::CommandBus::unsubscribe(typeid(Graphics::FlipBackSurface), m_doFlipping);
-    m_doFlipping = nullptr;
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::ClearSurface), m_clear);
+    m_clear = nullptr;
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::FlipBackSurface), m_flip);
+    m_flip = nullptr;
 
-    Frameworks::CommandBus::unsubscribe(typeid(Graphics::CreatePrimarySurface), m_doCreatingPrimarySurface);
-    m_doCreatingPrimarySurface = nullptr;
-    Frameworks::CommandBus::unsubscribe(typeid(Graphics::CreateBacksurface), m_doCreatingBackSurface);
-    m_doCreatingBackSurface = nullptr;
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::CreatePrimarySurface), m_createPrimarySurface);
+    m_createPrimarySurface = nullptr;
+    Frameworks::CommandBus::unsubscribe(typeid(Graphics::CreateBacksurface), m_createBackSurface);
+    m_createBackSurface = nullptr;
     Frameworks::CommandBus::unsubscribe(typeid(Graphics::CreateMultiBacksurface), m_doCreatingMultiBackSurface);
     m_doCreatingMultiBackSurface = nullptr;
 
@@ -222,11 +222,11 @@ void IGraphicAPI::beginScene()
 {
     if (UseAsync())
     {
-        AsyncBeginDrawingScene();
+        asyncBeginDrawingScene();
     }
     else
     {
-        BeginDrawingScene();
+        beginDrawingScene();
     }
 }
 
@@ -234,11 +234,11 @@ void IGraphicAPI::endScene()
 {
     if (UseAsync())
     {
-        AsyncEndDrawingScene();
+        asyncEndDrawingScene();
     }
     else
     {
-        EndDrawingScene();
+        endDrawingScene();
     }
 }
 
@@ -246,11 +246,11 @@ void IGraphicAPI::draw(unsigned vertexCount, unsigned vertexOffset)
 {
     if (UseAsync())
     {
-        AsyncDrawPrimitive(vertexCount, vertexOffset);
+        asyncDrawPrimitive(vertexCount, vertexOffset);
     }
     else
     {
-        DrawPrimitive(vertexCount, vertexOffset);
+        drawPrimitive(vertexCount, vertexOffset);
     }
 }
 
@@ -258,11 +258,11 @@ void IGraphicAPI::draw(unsigned indexCount, unsigned vertexCount, unsigned index
 {
     if (UseAsync())
     {
-        AsyncDrawIndexedPrimitive(indexCount, vertexCount, indexOffset, baseVertexOffset);
+        asyncDrawIndexedPrimitive(indexCount, vertexCount, indexOffset, baseVertexOffset);
     }
     else
     {
-        DrawIndexedPrimitive(indexCount, vertexCount, indexOffset, baseVertexOffset);
+        drawIndexedPrimitive(indexCount, vertexCount, indexOffset, baseVertexOffset);
     }
 }
 
@@ -283,11 +283,11 @@ void IGraphicAPI::flip()
 {
     if (UseAsync())
     {
-        AsyncFlipBackSurface();
+        asyncFlipBackSurface();
     }
     else
     {
-        FlipBackSurface();
+        flipBackSurface();
     }
 }
 
@@ -351,37 +351,37 @@ void IGraphicAPI::bind(const IIndexBufferPtr& buffer)
     }
 }
 
-void IGraphicAPI::DoCreatingDevice(const Frameworks::ICommandPtr& c)
+void IGraphicAPI::createDevice(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::CreateDevice, Frameworks::ICommand>(c);
     if (!cmd) return;
     if (UseAsync())
     {
-        AsyncCreateDevice(cmd->GetRequiredBits(), cmd->GetHwnd());
+        asyncCreateDevice(cmd->GetRequiredBits(), cmd->GetHwnd());
     }
     else
     {
-        CreateDevice(cmd->GetRequiredBits(), cmd->GetHwnd());
+        createDevice(cmd->GetRequiredBits(), cmd->GetHwnd());
     }
 }
 
-void IGraphicAPI::DoCleaningDevice(const Frameworks::ICommandPtr& c)
+void IGraphicAPI::cleanDevice(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::CleanupDevice, Frameworks::ICommand>(c);
     if (!cmd) return;
     if (UseAsync())
     {
-        AsyncCleanupDevice();
+        asyncCleanupDevice();
     }
     else
     {
-        CleanupDevice();
+        cleanupDevice();
     }
 }
 
-void IGraphicAPI::DoBeginningScene(const Frameworks::ICommandPtr& c)
+void IGraphicAPI::beginScene(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::BeginScene, Frameworks::ICommand>(c);
@@ -389,7 +389,7 @@ void IGraphicAPI::DoBeginningScene(const Frameworks::ICommandPtr& c)
     beginScene();
 }
 
-void IGraphicAPI::DoEndingScene(const Frameworks::ICommandPtr& c)
+void IGraphicAPI::endScene(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::EndScene, Frameworks::ICommand>(c);
@@ -397,7 +397,7 @@ void IGraphicAPI::DoEndingScene(const Frameworks::ICommandPtr& c)
     endScene();
 }
 
-void IGraphicAPI::DoDrawingPrimitive(const Frameworks::ICommandPtr& c)
+void IGraphicAPI::drawPrimitive(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::DrawPrimitive, Frameworks::ICommand>(c);
@@ -405,14 +405,14 @@ void IGraphicAPI::DoDrawingPrimitive(const Frameworks::ICommandPtr& c)
     draw(cmd->GetVertexCount(), cmd->GetVertexOffset());
 }
 
-void IGraphicAPI::DoDrawingIndexedPrimitive(const Frameworks::ICommandPtr& c)
+void IGraphicAPI::drawIndexedPrimitive(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::DrawIndexedPrimitive, Frameworks::ICommand>(c);
     if (!cmd) return;
     draw(cmd->GetIndexCount(), cmd->GetVertexCount(), cmd->GetIndexOffset(), cmd->GetBaseVertexOffset());
 }
-void IGraphicAPI::DoClearing(const Frameworks::ICommandPtr& c)
+void IGraphicAPI::clear(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::ClearSurface, Frameworks::ICommand>(c);
@@ -421,7 +421,7 @@ void IGraphicAPI::DoClearing(const Frameworks::ICommandPtr& c)
         cmd->GetDepthValue(), cmd->GetStencilValue());
 }
 
-void IGraphicAPI::DoFlipping(const Frameworks::ICommandPtr& c)
+void IGraphicAPI::flip(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::FlipBackSurface, Frameworks::ICommand>(c);
@@ -429,7 +429,7 @@ void IGraphicAPI::DoFlipping(const Frameworks::ICommandPtr& c)
     flip();
 }
 
-void IGraphicAPI::DoCreatingPrimarySurface(const Frameworks::ICommandPtr& c)
+void IGraphicAPI::createPrimarySurface(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::CreatePrimarySurface, Frameworks::ICommand>(c);
@@ -444,7 +444,7 @@ void IGraphicAPI::DoCreatingPrimarySurface(const Frameworks::ICommandPtr& c)
     }
 }
 
-void IGraphicAPI::DoCreatingBackSurface(const Frameworks::ICommandPtr& c)
+void IGraphicAPI::createBackSurface(const Frameworks::ICommandPtr& c)
 {
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<Graphics::CreateBacksurface, Frameworks::ICommand>(c);
@@ -724,42 +724,42 @@ void IGraphicAPI::DoBindingIndexBuffer(const Frameworks::ICommandPtr& c)
     bind(cmd->GetBuffer());
 }
 
-future_error IGraphicAPI::AsyncCreateDevice(const DeviceRequiredBits& rqb, void* hwnd)
+future_error IGraphicAPI::asyncCreateDevice(const DeviceRequiredBits& rqb, void* hwnd)
 {
-    return m_workerThread->PushTask([=]() -> error { return this->CreateDevice(rqb, hwnd); });
+    return m_workerThread->PushTask([=]() -> error { return this->createDevice(rqb, hwnd); });
 }
 
-future_error IGraphicAPI::AsyncCleanupDevice()
+future_error IGraphicAPI::asyncCleanupDevice()
 {
-    return m_workerThread->PushTask([=]() -> error { return this->CleanupDevice(); });
+    return m_workerThread->PushTask([=]() -> error { return this->cleanupDevice(); });
 }
 
-future_error IGraphicAPI::AsyncBeginDrawingScene()
+future_error IGraphicAPI::asyncBeginDrawingScene()
 {
-    return m_workerThread->PushTask([=]() -> error { return this->BeginDrawingScene(); });
+    return m_workerThread->PushTask([=]() -> error { return this->beginDrawingScene(); });
 }
 
-future_error IGraphicAPI::AsyncEndDrawingScene()
+future_error IGraphicAPI::asyncEndDrawingScene()
 {
-    return m_workerThread->PushTask([=]() -> error { return this->EndDrawingScene(); });
+    return m_workerThread->PushTask([=]() -> error { return this->endDrawingScene(); });
 }
 
-future_error IGraphicAPI::AsyncDrawPrimitive(unsigned vertexCount, unsigned vertexOffset)
+future_error IGraphicAPI::asyncDrawPrimitive(unsigned vertexCount, unsigned vertexOffset)
 {
     return m_workerThread->PushTask([=]() -> error
-        { return this->DrawPrimitive(vertexCount, vertexOffset); });
+        { return this->drawPrimitive(vertexCount, vertexOffset); });
 }
 
-future_error IGraphicAPI::AsyncDrawIndexedPrimitive(unsigned indexCount, unsigned vertexCount, unsigned indexOffset,
+future_error IGraphicAPI::asyncDrawIndexedPrimitive(unsigned indexCount, unsigned vertexCount, unsigned indexOffset,
     int baseVertexOffset)
 {
     return m_workerThread->PushTask([=]() -> error
-        { return this->DrawIndexedPrimitive(indexCount, vertexCount, indexOffset, baseVertexOffset); });
+        { return this->drawIndexedPrimitive(indexCount, vertexCount, indexOffset, baseVertexOffset); });
 }
 
-future_error IGraphicAPI::AsyncFlipBackSurface()
+future_error IGraphicAPI::asyncFlipBackSurface()
 {
-    return m_workerThread->PushTask([=]() -> error { return this->FlipBackSurface(); });
+    return m_workerThread->PushTask([=]() -> error { return this->flipBackSurface(); });
 }
 
 future_error IGraphicAPI::AsyncCreatePrimaryBackSurface(const std::string& back_name, const std::string& depth_name)

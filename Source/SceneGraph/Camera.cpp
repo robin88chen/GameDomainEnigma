@@ -1,6 +1,6 @@
 ﻿#include "Camera.h"
 #include "SceneGraphErrors.h"
-#include "CameraFrustumDtos.h"
+#include "CameraDtos.h"
 #include "Frustum.h"
 #include "CameraFrustumEvents.h"
 #include "MathLib/Ray3.h"
@@ -99,7 +99,7 @@ error Camera::changeCameraFrame(const std::optional<Vector3>& eye,
 error Camera::zoom(float dist)
 {
     error er = changeCameraFrame(m_vecLocation + dist * m_vecEyeToLookAt, std::nullopt, std::nullopt);
-    if (!er) EventPublisher::post(std::make_shared<CameraFrameChanged>(shared_from_this()));
+    if (!er) EventPublisher::enqueue(std::make_shared<CameraFrameChanged>(shared_from_this()));
     return er;
 }
 
@@ -130,7 +130,7 @@ error Camera::sphereRotate(float horz_angle, float vert_angle, const Vector3& ce
     Vector3 loc = vecCenter - radius * dir;  // 新的camera位置
 
     error er = changeCameraFrame(loc, dir, up);
-    if (!er) EventPublisher::post(std::make_shared<CameraFrameChanged>(shared_from_this()));
+    if (!er) EventPublisher::enqueue(std::make_shared<CameraFrameChanged>(shared_from_this()));
     return er;
 }
 
@@ -144,14 +144,14 @@ error Camera::move(float dir_dist, float slide_dist)
     Vector3 pos = m_vecLocation + dir_dist * move_dir + slide_dist * move_right;
 
     error er = changeCameraFrame(pos, std::nullopt, std::nullopt);
-    if (!er) EventPublisher::post(std::make_shared<CameraFrameChanged>(shared_from_this()));
+    if (!er) EventPublisher::enqueue(std::make_shared<CameraFrameChanged>(shared_from_this()));
     return er;
 }
 
 error Camera::moveXZ(float move_x, float move_z)
 {
     error er = changeCameraFrame(m_vecLocation + Vector3(move_x, 0.0f, move_z), std::nullopt, std::nullopt);
-    if (!er) EventPublisher::post(std::make_shared<CameraFrameChanged>(shared_from_this()));
+    if (!er) EventPublisher::enqueue(std::make_shared<CameraFrameChanged>(shared_from_this()));
     return er;
 }
 
@@ -166,7 +166,7 @@ error Camera::shiftLookAt(const Vector3& vecLookAt)
     if (!res.m_hasIntersect) return ErrorCode::invalidChangingCamera;
     Vector3 new_loc = intr.GetPoint();
     error er = changeCameraFrame(new_loc, std::nullopt, std::nullopt);
-    if (!er) EventPublisher::post(std::make_shared<CameraFrameChanged>(shared_from_this()));
+    if (!er) EventPublisher::enqueue(std::make_shared<CameraFrameChanged>(shared_from_this()));
     return er;
 }
 

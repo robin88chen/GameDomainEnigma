@@ -9,16 +9,17 @@
 #define SCENE_GRAPH_QUERIES_H
 
 #include "Frameworks/Query.h"
-#include "SceneGraphPersistenceLevel.h"
+#include "GameEngine/BoundingVolume.h"
 #include "LightInfo.h"
 #include "SpatialRenderState.h"
+#include "SpatialId.h"
 
 namespace Enigma::SceneGraph
 {
     class Camera;
     class Node;
     class Pawn;
-    class SceneQuadTreeRoot;
+    class Spatial;
     class Light;
     class QueryCamera : public Frameworks::Query<std::shared_ptr<Camera>>
     {
@@ -33,28 +34,24 @@ namespace Enigma::SceneGraph
     class RequestCameraCreation : public Frameworks::Query<std::shared_ptr<Camera>>
     {
     public:
-        RequestCameraCreation(const SpatialId& id, PersistenceLevel persistence_level) : m_id(id), m_persistenceLevel(persistence_level) {}
+        RequestCameraCreation(const SpatialId& id) : m_id(id) {}
 
         const SpatialId& id() { return m_id; }
-        PersistenceLevel persistenceLevel() const { return m_persistenceLevel; }
 
     protected:
         SpatialId m_id;
-        PersistenceLevel m_persistenceLevel;
     };
     class RequestCameraConstitution : public Frameworks::Query<std::shared_ptr<Camera>>
     {
     public:
-        RequestCameraConstitution(const SpatialId& id, const Engine::GenericDto& dto, PersistenceLevel persistence_level) : m_id(id), m_dto(dto), m_persistenceLevel(persistence_level) {}
+        RequestCameraConstitution(const SpatialId& id, const Engine::GenericDto& dto) : m_id(id), m_dto(dto) {}
 
         const SpatialId& id() { return m_id; }
         const Engine::GenericDto& dto() { return m_dto; }
-        PersistenceLevel persistenceLevel() const { return m_persistenceLevel; }
 
     protected:
         SpatialId m_id;
         Engine::GenericDto m_dto;
-        PersistenceLevel m_persistenceLevel;
     };
     class QuerySpatial : public Frameworks::Query<std::shared_ptr<Spatial>>
     {
@@ -69,7 +66,7 @@ namespace Enigma::SceneGraph
     class HasSpatial : public Frameworks::Query<bool>
     {
     public:
-        HasSpatial(const SpatialId& id) : m_id(id) {}
+        HasSpatial(const SpatialId& id) : Query(false), m_id(id) { }
 
         const SpatialId& id() const { return m_id; }
 
@@ -96,45 +93,49 @@ namespace Enigma::SceneGraph
     protected:
         SpatialId m_id;
     };
-    class RequestSpatialCreation : public Frameworks::Query<std::shared_ptr<Spatial>>
+    class QueryRunningSpatial : public Frameworks::Query<std::shared_ptr<Spatial>>
     {
     public:
-        RequestSpatialCreation(const SpatialId& id, PersistenceLevel persistence_level) : m_id(id), m_persistenceLevel(persistence_level) {}
+        QueryRunningSpatial(const SpatialId& id) : m_id(id) {}
 
-        const SpatialId& id() { return m_id; }
-        PersistenceLevel persistenceLevel() const { return m_persistenceLevel; }
+        const SpatialId& id() const { return m_id; }
 
     protected:
         SpatialId m_id;
-        PersistenceLevel m_persistenceLevel;
+    };
+    class RequestSpatialCreation : public Frameworks::Query<std::shared_ptr<Spatial>>
+    {
+    public:
+        RequestSpatialCreation(const SpatialId& id) : m_id(id) {}
+
+        const SpatialId& id() { return m_id; }
+
+    protected:
+        SpatialId m_id;
     };
     class RequestSpatialConstitution : public Frameworks::Query<std::shared_ptr<Spatial>>
     {
     public:
-        RequestSpatialConstitution(const SpatialId& id, const Engine::GenericDto& dto, PersistenceLevel persistence_level) : m_id(id), m_dto(dto), m_persistenceLevel(persistence_level) {}
+        RequestSpatialConstitution(const SpatialId& id, const Engine::GenericDto& dto) : m_id(id), m_dto(dto) {}
 
         const SpatialId& id() { return m_id; }
         const Engine::GenericDto& dto() { return m_dto; }
-        PersistenceLevel persistenceLevel() const { return m_persistenceLevel; }
 
     protected:
         SpatialId m_id;
         Engine::GenericDto m_dto;
-        PersistenceLevel m_persistenceLevel;
     };
     class RequestLightCreation : public Frameworks::Query<std::shared_ptr<Light>>
     {
     public:
-        RequestLightCreation(const SpatialId& id, const LightInfo& info, PersistenceLevel persistence_level) : m_id(id), m_info(info), m_persistenceLevel(persistence_level) {}
+        RequestLightCreation(const SpatialId& id, const LightInfo& info) : m_id(id), m_info(info) {}
 
         const SpatialId& id() { return m_id; }
         const LightInfo& info() { return m_info; }
-        PersistenceLevel persistenceLevel() const { return m_persistenceLevel; }
 
     protected:
         SpatialId m_id;
         LightInfo m_info;
-        PersistenceLevel m_persistenceLevel;
     };
     class QueryLightingStateAt : public Frameworks::Query<SpatialRenderState>
     {

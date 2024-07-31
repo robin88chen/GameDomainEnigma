@@ -16,9 +16,6 @@
     <Filter Include="Forms\Custom Widgets">
       <UniqueIdentifier>{0cb909bf-fd8b-489c-850c-e4e41f922b60}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Events &amp; Commands">
-      <UniqueIdentifier>{e4d2a328-4aaf-44d6-851b-330ed49a7144}</UniqueIdentifier>
-    </Filter>
     <Filter Include="EditorServices">
       <UniqueIdentifier>{2fe6ea78-3b72-4ce4-bfe9-3aa8fa729be5}</UniqueIdentifier>
     </Filter>
@@ -27,6 +24,12 @@
     </Filter>
     <Filter Include="Errors">
       <UniqueIdentifier>{0e915b66-e096-4240-b678-33fcae1a05a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FileStorages">
+      <UniqueIdentifier>{dc4164a1-0b25-4ea5-acbb-c55a3af519b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Communications">
+      <UniqueIdentifier>{e4d2a328-4aaf-44d6-851b-330ed49a7144}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -63,9 +66,6 @@
     </ClCompile>
     <ClCompile Include="OutputPanel.cpp">
       <Filter>Forms</Filter>
-    </ClCompile>
-    <ClCompile Include="WorldEditConsole.cpp">
-      <Filter>EditorServices</Filter>
     </ClCompile>
     <ClCompile Include="AppConfiguration.cpp">
       <Filter>AppDelegate</Filter>
@@ -112,6 +112,30 @@
     <ClCompile Include="PawnLoader.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="WorldEditConsole.cpp">
+      <Filter>EditorServices</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldMapFileStoreMapper.cpp">
+      <Filter>FileStorages</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryDataFileStoreMapper.cpp">
+      <Filter>FileStorages</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureFileStoreMapper.cpp">
+      <Filter>FileStorages</Filter>
+    </ClCompile>
+    <ClCompile Include="NameInputDialog.cpp">
+      <Filter>Forms</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneGraphFileStoreMapper.cpp">
+      <Filter>FileStorages</Filter>
+    </ClCompile>
+    <ClCompile Include="InputNameVerifier.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetsBrowsePanel.cpp">
+      <Filter>Forms</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SchemeColorDef.h">
@@ -146,10 +170,7 @@
       <Filter>Forms</Filter>
     </ClInclude>
     <ClInclude Include="LevelEditorCommands.h">
-      <Filter>Events &amp; Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="WorldEditConsole.h">
-      <Filter>EditorServices</Filter>
+      <Filter>Communications</Filter>
     </ClInclude>
     <ClInclude Include="AppConfiguration.h">
       <Filter>AppDelegate</Filter>
@@ -173,7 +194,7 @@
       <Filter>EditorServices</Filter>
     </ClInclude>
     <ClInclude Include="LevelEditorEvents.h">
-      <Filter>Events &amp; Commands</Filter>
+      <Filter>Communications</Filter>
     </ClInclude>
     <ClInclude Include="EditorModes.h">
       <Filter>EditorServices</Filter>
@@ -182,7 +203,7 @@
       <Filter>EditorServices</Filter>
     </ClInclude>
     <ClInclude Include="LevelEditorUiEvents.h">
-      <Filter>Events &amp; Commands</Filter>
+      <Filter>Communications</Filter>
     </ClInclude>
     <ClInclude Include="EditorSceneConsole.h">
       <Filter>EditorServices</Filter>
@@ -203,6 +224,36 @@
       <Filter>Errors</Filter>
     </ClInclude>
     <ClInclude Include="PawnLoader.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldEditConsole.h">
+      <Filter>EditorServices</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldMapFileStoreMapper.h">
+      <Filter>FileStorages</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryDataFileStoreMapper.h">
+      <Filter>FileStorages</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelEditorQueries.h">
+      <Filter>Communications</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureFileStoreMapper.h">
+      <Filter>FileStorages</Filter>
+    </ClInclude>
+    <ClInclude Include="NameInputDialog.h">
+      <Filter>Forms</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneGraphFileStoreMapper.h">
+      <Filter>FileStorages</Filter>
+    </ClInclude>
+    <ClInclude Include="InputNameVerifier.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetsBrowsePanel.h">
+      <Filter>Forms</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetIdCombo.h">
       <Filter>Utilities</Filter>
     </ClInclude>
   </ItemGroup>

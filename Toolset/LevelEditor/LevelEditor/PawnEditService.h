@@ -41,8 +41,8 @@ namespace LevelEditor
     private:
         void onPrefabLoaded(const Enigma::Frameworks::IEventPtr& e);
         void onLoadPrefabFailed(const Enigma::Frameworks::IEventPtr& e);
-        void onFittingNodeCreated(const Enigma::Frameworks::IEventPtr& e);
-        void onCreateFittingNodeFailed(const Enigma::Frameworks::IEventPtr& e);
+        //void onFittingNodeCreated(const Enigma::Frameworks::IEventPtr& e);
+        //void onCreateFittingNodeFailed(const Enigma::Frameworks::IEventPtr& e);
 
         void loadNextPawn();
         bool tryPutPawnAt(const std::shared_ptr<Enigma::SceneGraph::Pawn>& pawn, const Enigma::MathLib::Vector3& position);
@@ -55,8 +55,8 @@ namespace LevelEditor
 
         Enigma::Frameworks::EventSubscriberPtr m_onPrefabLoaded;
         Enigma::Frameworks::EventSubscriberPtr m_onLoadPrefabFailed;
-        Enigma::Frameworks::EventSubscriberPtr m_onFittingNodeCreated;
-        Enigma::Frameworks::EventSubscriberPtr m_onCreateFittingNodeFailed;
+        //Enigma::Frameworks::EventSubscriberPtr m_onFittingNodeCreated;
+        //Enigma::Frameworks::EventSubscriberPtr m_onCreateFittingNodeFailed;
 
         struct LoadingPawnMeta
         {

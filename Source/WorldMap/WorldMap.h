@@ -22,7 +22,7 @@ namespace Enigma::WorldMap
         DECLARE_EN_RTTI_NON_BASE;
     public:
         WorldMap(const WorldMapId& id);
-        WorldMap(const WorldMapId& id, const std::vector<QuadTreeRootId>& quad_roots);
+        WorldMap(const WorldMapId& id, const SceneGraph::SpatialId& out_region_id, const std::vector<QuadTreeRootId>& quad_roots);
         WorldMap(const WorldMapId& id, const Engine::GenericDto& dto);
         ~WorldMap();
         WorldMap(const WorldMap&) = delete;
@@ -30,14 +30,21 @@ namespace Enigma::WorldMap
         WorldMap& operator=(const WorldMap&) = delete;
         WorldMap& operator=(WorldMap&&) = delete;
 
+        const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
+        void factoryDesc(const Engine::FactoryDesc& fd) { m_factoryDesc = fd; }
         const WorldMapId& id() const { return m_id; }
 
         Engine::GenericDto serializeDto() const;
 
         std::shared_ptr<SceneGraph::LazyNode> findFittingNode(const Engine::BoundingVolume& bv_in_world);
 
+        SceneGraph::SpatialId outRegionId() const { return m_outRegionId; }
+        void putOutRegion();
+
     protected:
+        Engine::FactoryDesc m_factoryDesc;
         WorldMapId m_id;
+        SceneGraph::SpatialId m_outRegionId;
         std::vector<QuadTreeRootId> m_quadRootIds;
         std::vector<std::weak_ptr<QuadTreeRoot>> m_quadRoots;
     };

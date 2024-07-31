@@ -40,6 +40,7 @@ Enigma::Frameworks::ServiceResult TextureRepository::onInit()
 Enigma::Frameworks::ServiceResult TextureRepository::onTerm()
 {
     assert(m_storeMapper);
+    dumpRetainedTexture();
     m_storeMapper->disconnect();
 
     m_textures.clear();
@@ -78,7 +79,7 @@ bool TextureRepository::hasTexture(const TextureId& id)
     assert(m_storeMapper);
     std::lock_guard locker{ m_textureMapLock };
     const auto it = m_textures.find(id);
-    if (it != m_textures.end()) return true;
+    if ((it != m_textures.end()) && (!it->second.expired())) return true;
     return m_storeMapper->hasTexture(id);
 }
 
@@ -87,7 +88,7 @@ std::shared_ptr<Texture> TextureRepository::queryTexture(const TextureId& id)
     if (!hasTexture(id)) return nullptr;
     std::lock_guard locker{ m_textureMapLock };
     auto it = m_textures.find(id);
-    if (it != m_textures.end()) return it->second;
+    if ((it != m_textures.end()) && (!it->second.expired())) return it->second.lock();
     assert(m_factory);
     const auto dto = m_storeMapper->queryTexture(id);
     assert(dto.has_value());
@@ -106,7 +107,11 @@ void TextureRepository::removeTexture(const TextureId& id)
     if (er)
     {
         Platforms::Debug::ErrorPrintf("remove texture %s failed : %s\n", id.name().c_str(), er.message().c_str());
-        Frameworks::EventPublisher::post(std::make_shared<RemoveTextureFailed>(id, er));
+        Frameworks::EventPublisher::enqueue(std::make_shared<RemoveTextureFailed>(id, er));
+    }
+    else
+    {
+        Frameworks::EventPublisher::enqueue(std::make_shared<TextureRemoved>(id));
     }
 }
 
@@ -119,7 +124,11 @@ void TextureRepository::putTexture(const TextureId& id, const std::shared_ptr<Te
     if (er)
     {
         Platforms::Debug::ErrorPrintf("put primitive %s failed : %s\n", id.name().c_str(), er.message().c_str());
-        Frameworks::EventPublisher::post(std::make_shared<PutTextureFailed>(id, er));
+        Frameworks::EventPublisher::enqueue(std::make_shared<PutTextureFailed>(id, er));
+    }
+    else
+    {
+        Frameworks::EventPublisher::enqueue(std::make_shared<TexturePut>(id));
     }
 }
 
@@ -155,10 +164,23 @@ void TextureRepository::requestTextureConstitution(const Frameworks::IQueryPtr& 
     if (!request) return;
     if (hasTexture(request->id()))
     {
-        Frameworks::EventPublisher::post(std::make_shared<ConstituteTextureFailed>(request->id(), ErrorCode::textureAlreadyExists));
+        Frameworks::EventPublisher::enqueue(std::make_shared<ConstituteTextureFailed>(request->id(), ErrorCode::textureAlreadyExists));
         return;
     }
     auto tex = m_factory->constitute(request->id(), request->dto(), false);
     request->setResult(tex);
     m_textures.insert_or_assign(request->id(), tex);
+}
+
+void TextureRepository::dumpRetainedTexture()
+{
+    Platforms::Debug::Printf("dump retained texture\n");
+    std::lock_guard locker{ m_textureMapLock };
+    for (const auto& [id, tex] : m_textures)
+    {
+        if (auto ptr = tex.lock(); ptr)
+        {
+            Platforms::Debug::Printf("retained texture %s\n", id.name().c_str());
+        }
+    }
 }

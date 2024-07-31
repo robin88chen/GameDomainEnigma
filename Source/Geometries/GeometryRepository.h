@@ -12,6 +12,7 @@
 #include "Frameworks/ServiceManager.h"
 #include "Frameworks/QuerySubscriber.h"
 #include "Frameworks/CommandSubscriber.h"
+#include "GeometryFactoryDelegate.h"
 #include "GeometryId.h"
 #include <memory>
 #include <mutex>
@@ -41,7 +42,7 @@ namespace Enigma::Geometries
         /// On Term
         virtual Frameworks::ServiceResult onTerm() override;
 
-        GeometryDataFactory* factory() { return m_factory; }
+        void registerGeometryFactory(const std::string& rtti_name, const GeometryCreator& creator, const GeometryConstitutor& constitutor);
 
         bool hasGeometryData(const GeometryId& id);
         std::shared_ptr<GeometryData> queryGeometryData(const GeometryId& id);
@@ -56,10 +57,13 @@ namespace Enigma::Geometries
         void putGeometryData(const Frameworks::ICommandPtr& c);
         void removeGeometryData(const Frameworks::ICommandPtr& c);
 
+        void dumpRetainedGeometry();
+
     protected:
         std::shared_ptr<GeometryDataStoreMapper> m_storeMapper;
         GeometryDataFactory* m_factory;
-        std::unordered_map<GeometryId, std::shared_ptr<GeometryData>, GeometryId::hash> m_geometries;
+        //! ADR: 在 repository 中，map 是存放已生成 asset 的 cache, 不擁有asset, 所以改用 weak_ptr
+        std::unordered_map<GeometryId, std::weak_ptr<GeometryData>, GeometryId::hash> m_geometries;
         std::recursive_mutex m_geometryLock;
 
         Frameworks::QuerySubscriberPtr m_queryGeometryData;

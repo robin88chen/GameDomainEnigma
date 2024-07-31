@@ -40,6 +40,11 @@ std::optional<std::vector<unsigned char>> StdioFile::read(size_t offset, size_t 
         makeErrorCode(ErrorCode::fileStatusError);
         return std::nullopt;
     }
+    if (size_request == 0)
+    {
+        makeErrorCode(ErrorCode::zeroReadSize);
+        return std::nullopt;
+    }
 
     m_file.seekg(0, std::fstream::end);
     size_t file_length = (size_t)m_file.tellg();

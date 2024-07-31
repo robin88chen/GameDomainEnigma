@@ -81,9 +81,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClipMapEvents.h">
       <Filter>AnimationClipMap</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GameLightService.h">
-      <Filter>GameLight</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameLightCommands.h">
       <Filter>GameLight</Filter>
     </ClInclude>
@@ -98,9 +95,6 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameSceneCommands.h">
       <Filter>GameScene</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GameLightEvents.h">
-      <Filter>GameLight</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightingPawn.h">
       <Filter>DeferredRenderer\LightingPawn</Filter>
@@ -125,6 +119,18 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClipMapAssembler.h">
       <Filter>AnimationClipMap</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightingMeshQueries.h">
+      <Filter>DeferredRenderer\LightingPawn</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightingPawnRepository.h">
+      <Filter>DeferredRenderer\LightingPawn</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCameraQueries.h">
+      <Filter>GameCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightMeshAssembler.h">
+      <Filter>DeferredRenderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -164,9 +170,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatedPawnDto.cpp">
       <Filter>AnimatedPawn</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\GameLightService.cpp">
-      <Filter>GameLight</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\DeferredRendererService.cpp">
       <Filter>DeferredRenderer</Filter>
     </ClCompile>
@@ -193,6 +196,15 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationClipMapAssembler.cpp">
       <Filter>AnimationClipMap</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GameLightCommands.cpp">
+      <Filter>GameLight</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightingPawnRepository.cpp">
+      <Filter>DeferredRenderer\LightingPawn</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightMeshAssembler.cpp">
+      <Filter>DeferredRenderer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

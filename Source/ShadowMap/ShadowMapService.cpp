@@ -8,6 +8,7 @@
 #include "SceneGraph/SceneGraphEvents.h"
 #include "SceneGraph/Light.h"
 #include "SceneGraph/LightInfo.h"
+#include "SceneGraph/LightEvents.h"
 #include "GameCommon/GameCameraService.h"
 #include "GameEngine/MaterialVariableMap.h"
 #include "SceneGraph/Pawn.h"

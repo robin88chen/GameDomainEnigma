@@ -231,7 +231,7 @@ FactoryDesc DeserializeFactoryDesc(const rapidjson::Value& value)
     switch (instance_type)
     {
     case FactoryDesc::InstanceType::Native:
-        desc.ClaimAsNative(resource_name);
+        desc.ClaimAsNative(prefab);
         break;
     case FactoryDesc::InstanceType::ByPrefab:
         desc.ClaimByPrefab(prefab);

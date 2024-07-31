@@ -12,6 +12,7 @@
 #include "GameEngine/FactoryDesc.h"
 #include "WorldMapId.h"
 #include "QuadTreeRootId.h"
+#include "SceneGraph/SpatialId.h"
 #include <vector>
 
 namespace Enigma::WorldMap
@@ -24,6 +25,8 @@ namespace Enigma::WorldMap
 
         [[nodiscard]] const WorldMapId& id() const { return m_id; }
         void id(const WorldMapId& id) { m_id = id; }
+        [[nodiscard]] const std::optional<SceneGraph::SpatialId>& outRegionId() const { return m_outRegionId; }
+        void outRegionId(const SceneGraph::SpatialId& id) { m_outRegionId = id; }
         [[nodiscard]] const std::vector<QuadTreeRootId>& quadRootIds() const { return m_quadRootIds; }
         void quadRootIds(const std::vector<QuadTreeRootId>& ids) { m_quadRootIds = ids; }
         [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
@@ -33,6 +36,7 @@ namespace Enigma::WorldMap
 
     protected:
         WorldMapId m_id;
+        std::optional<SceneGraph::SpatialId> m_outRegionId;
         std::vector<QuadTreeRootId> m_quadRootIds;
         Engine::FactoryDesc m_factoryDesc;
     };

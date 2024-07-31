@@ -31,6 +31,11 @@ std::optional<std::vector<unsigned char>> PackageContent::read(size_t offset, si
 {
     Platforms::Debug::Printf("Read File in thread %d\n", std::this_thread::get_id());
     if (!IsValidContent()) return std::nullopt;
+    if (size_request == 0)
+    {
+        makeErrorCode(ErrorCode::zeroReadSize);
+        return std::nullopt;
+    }
     if (m_cacheBuffer.empty())
     {
         ErrorCode er = RetrieveAssetContent();

@@ -3,6 +3,7 @@
 #include "EffectEvents.h"
 #include "Frameworks/EventPublisher.h"
 #include "Platforms/MemoryMacro.h"
+#include "Platforms/PlatformLayerUtilities.h"
 #include <cassert>
 
 using namespace Enigma::Engine;
@@ -50,7 +51,7 @@ void EffectMaterialSource::hydrateDuplicatedEffects()
         if (!effect.expired() && !effect.lock()->lazyStatus().isReady())
         {
             effect.lock()->hydrateTechniques(m_sourceEffectMaterial->effectTechniques());
-            Frameworks::EventPublisher::post(std::make_shared<EffectMaterialHydrated>(m_id, effect.lock()->id()));
+            Frameworks::EventPublisher::enqueue(std::make_shared<EffectMaterialHydrated>(m_id, effect.lock()->id()));
         }
     }
 }
@@ -78,4 +79,10 @@ void EffectMaterialSource::duplicatedEffectDeleter(EffectMaterial* effect)
         m_duplicateCount--;
     }
     delete effect;
+    if (m_duplicateCount == 0)
+    {
+        //! ADR : shader 比較耗時，先不做釋放, not test yet
+        Platforms::Debug::Printf("Effect Material %s has zero duplication\n", m_id.name().c_str());
+        //std::make_shared<ReleaseEffectMaterial>(m_id)->enqueue();
+    }
 }

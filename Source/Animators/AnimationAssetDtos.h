@@ -19,10 +19,10 @@ namespace Enigma::Animators
         AnimationAssetDto();
 
         [[nodiscard]] const AnimationAssetId& id() const { return m_id; }
-        AnimationAssetId& id() { return m_id; }
+        void id(const AnimationAssetId& id) { m_id = id; }
 
         [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
-        Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
+        void factoryDesc(const Engine::FactoryDesc& factoryDesc) { m_factoryDesc = factoryDesc; }
 
     protected:
         AnimationAssetId m_id;

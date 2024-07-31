@@ -9,7 +9,10 @@
 #define WORLD_EDIT_SERVICE_H
 
 #include "Frameworks/ServiceManager.h"
-#include "WorldMap/WorldMapService.h"
+#include "GameEngine/GenericDto.h"
+#include "Frameworks/EventSubscriber.h"
+#include "WorldMap/WorldMap.h"
+#include "WorldMap/WorldMapRepository.h"
 
 namespace LevelEditor
 {
@@ -17,7 +20,7 @@ namespace LevelEditor
     {
         DECLARE_EN_RTTI;
     public:
-        WorldEditService(Enigma::Frameworks::ServiceManager* srv_mngr, const std::shared_ptr<Enigma::WorldMap::WorldMapService>& map);
+        WorldEditService(Enigma::Frameworks::ServiceManager* srv_mngr, const std::shared_ptr<Enigma::WorldMap::WorldMapRepository>& world_map_repository);
         virtual ~WorldEditService() override;
 
         virtual Enigma::Frameworks::ServiceResult onInit() override;
@@ -25,6 +28,8 @@ namespace LevelEditor
 
         //void AddNewTerrain(const std::string& terrain_name, const Enigma::Matrix4& mxLocal,
         //    const TerrainCreationSetting& terrain_creation_setting);
+
+        std::shared_ptr<Enigma::WorldMap::WorldMap> getWorldMap() const;
 
         /** picking terrain
         @param clip_pos position on clipping space
@@ -38,12 +43,20 @@ namespace LevelEditor
         void deserializeWorldMap(const Enigma::Engine::GenericDtoCollection& world_map_dto, const std::string& portal_manager_name);
 
     private:
+        void onWorldMapCreatedOrConstituted(const Enigma::Frameworks::IEventPtr& e);
+        void onWorldMapRemoved(const Enigma::Frameworks::IEventPtr& e);
         //void OnAsyncKeyPressed(const Enigma::IMessagePtr& m);
         //void OnAsyncKeyReleased(const Enigma::IMessagePtr& m);
 
         //void OnEditorModeSelected(EditorModeSelectedMessage* msg);
     private:
-        std::weak_ptr<Enigma::WorldMap::WorldMapService> m_worldMap;
+        std::weak_ptr<Enigma::WorldMap::WorldMapRepository> m_worldMapRepository;
+        std::shared_ptr<Enigma::WorldMap::WorldMap> m_worldMap;
+
+        Enigma::Frameworks::EventSubscriberPtr m_onWorldMapCreated;
+        Enigma::Frameworks::EventSubscriberPtr m_onWorldMapConstituted;
+        Enigma::Frameworks::EventSubscriberPtr m_onWorldMapRemoved;
+        //std::weak_ptr<Enigma::WorldMap::WorldMapService> m_worldMap;
         //Enigma::MessageSubscriberPtr m_onAsyncKeyPressed;
         //Enigma::MessageSubscriberPtr m_onAsyncKeyReleased;
 

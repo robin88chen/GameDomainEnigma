@@ -39,13 +39,13 @@ namespace LevelEditor
             FromSceneView
         };
     public:
-        PickedSpatialChanged(const std::shared_ptr<Enigma::SceneGraph::Spatial>& spatial, PickedFrom from) : m_spatial(spatial), m_from(from) {}
+        PickedSpatialChanged(const Enigma::SceneGraph::SpatialId& spatial_id, PickedFrom from) : m_id(spatial_id), m_from(from) {}
 
-        const std::shared_ptr<Enigma::SceneGraph::Spatial>& spatial() const { return m_spatial; }
+        const Enigma::SceneGraph::SpatialId& id() const { return m_id; }
         PickedFrom wherePickedFrom() const { return m_from; }
 
     protected:
-        std::shared_ptr<Enigma::SceneGraph::Spatial> m_spatial;
+        Enigma::SceneGraph::SpatialId m_id;
         PickedFrom m_from;
     };
     //---- Scene View Events ----

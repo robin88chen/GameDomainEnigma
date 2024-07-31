@@ -13,7 +13,7 @@
 #include <nana/gui/widgets/textbox.hpp>
 #include <nana/gui/widgets/label.hpp>
 #include <nana/gui/widgets/checkbox.hpp>
-#include "AppConfiguration.h"
+#include "SceneGraph/SpatialId.h"
 
 namespace LevelEditor
 {
@@ -21,22 +21,28 @@ namespace LevelEditor
     class CreateNewWorldDlg : public nana::form
     {
     public:
-        CreateNewWorldDlg(nana::window owner, const std::shared_ptr<WorldEditConsole>& world_editor, const std::string& portal_manager_name);
+        CreateNewWorldDlg(nana::window owner, const std::shared_ptr<WorldEditConsole>& world_editor, const Enigma::SceneGraph::SpatialId& portal_manager_id);
         virtual ~CreateNewWorldDlg();
 
+    private:
         void onOkButton(const nana::arg_click& arg);
         void onCancelButton(const nana::arg_click& arg);
+        void onInputNameChanged(const nana::arg_textbox& arg);
+
+        Enigma::SceneGraph::SpatialId outsideRegionFromInput();
+
+        std::error_code validateInputNames();
     private:
         nana::button* m_okButton;
         nana::button* m_cancelButton;
         nana::label* m_namePrompt;
         nana::textbox* m_nameInputBox;
-        nana::label* m_folderNamePrompt;
-        nana::textbox* m_folderNameInputBox;
-        nana::checkbox* m_deleteExistFolderCheckBox;
+        nana::checkbox* m_regionCheckbox;
+        nana::textbox* m_regionNameInputBox;
+        nana::label* m_nameValidationPrompt;
 
         std::weak_ptr<WorldEditConsole> m_worldEditor;
-        std::string m_portalManagerName;
+        Enigma::SceneGraph::SpatialId m_portalManagerId;
     };
 }
 

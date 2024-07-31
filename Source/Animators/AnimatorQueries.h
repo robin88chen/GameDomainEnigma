@@ -11,7 +11,6 @@
 #include "Frameworks/Query.h"
 #include "GameEngine/GenericDto.h"
 #include "AnimatorId.h"
-#include "AnimatorPersistenceLevel.h"
 
 namespace Enigma::Animators
 {
@@ -30,7 +29,7 @@ namespace Enigma::Animators
     class QueryAnimatorNextSequenceNumber : public Frameworks::Query<std::uint64_t>
     {
     public:
-        QueryAnimatorNextSequenceNumber(const AnimatorId& id) : m_id(id) {}
+        QueryAnimatorNextSequenceNumber(const AnimatorId& id) : Query(0), m_id(id) {}
 
         const AnimatorId& id() const { return m_id; }
 
@@ -40,28 +39,24 @@ namespace Enigma::Animators
     class RequestAnimatorCreation : public Frameworks::Query<std::shared_ptr<Animator>>
     {
     public:
-        RequestAnimatorCreation(const AnimatorId& id, const Frameworks::Rtti& rtti, PersistenceLevel persistence_level) : m_id(id), m_rtti(rtti.getName()), m_persistenceLevel(persistence_level) {}
+        RequestAnimatorCreation(const AnimatorId& id, const Frameworks::Rtti& rtti) : m_id(id), m_rtti(rtti.getName()) {}
         const AnimatorId& id() { return m_id; }
         const Frameworks::Rtti& rtti() { return Frameworks::Rtti::fromName(m_rtti); }
-        PersistenceLevel persistenceLevel() const { return m_persistenceLevel; }
 
     private:
         AnimatorId m_id;
         std::string m_rtti;
-        PersistenceLevel m_persistenceLevel;
     };
     class RequestAnimatorConstitution : public Frameworks::Query<std::shared_ptr<Animator>>
     {
     public:
-        RequestAnimatorConstitution(const AnimatorId& id, const Engine::GenericDto& dto, PersistenceLevel persistence_level) : m_id(id), m_dto(dto), m_persistenceLevel(persistence_level) {}
+        RequestAnimatorConstitution(const AnimatorId& id, const Engine::GenericDto& dto) : m_id(id), m_dto(dto) {}
         const AnimatorId& id() { return m_id; }
         const Engine::GenericDto& dto() { return m_dto; }
-        PersistenceLevel persistenceLevel() const { return m_persistenceLevel; }
 
     private:
         AnimatorId m_id;
         Engine::GenericDto m_dto;
-        PersistenceLevel m_persistenceLevel;
     };
 }
 

@@ -11,6 +11,7 @@
 #include "FileSystem/FileSystem.h"
 #include "GameEngine/Texture.h"
 #include "TerrainEditService.h"
+#include "SceneGraph/SceneGraphQueries.h"
 
 using namespace LevelEditor;
 
@@ -141,7 +142,7 @@ void TerrainToolPanel::setTerrainName(const std::string& name)
 void TerrainToolPanel::onBrushSizeChanged(const nana::arg_spinbox& arg)
 {
     if (!m_brushSizeSpin) return;
-    Enigma::Frameworks::EventPublisher::post(std::make_shared<TerrainBrushSizeChanged>(m_brushSizeSpin->to_int()));
+    Enigma::Frameworks::EventPublisher::enqueue(std::make_shared<TerrainBrushSizeChanged>(m_brushSizeSpin->to_int()));
 }
 
 void TerrainToolPanel::onBrushHeightChanged(const nana::arg_textbox& arg)
@@ -149,7 +150,7 @@ void TerrainToolPanel::onBrushHeightChanged(const nana::arg_textbox& arg)
     if ((m_brushHeight) && (!m_brushHeight->text().empty()))
     {
         auto height = static_cast<float>(m_brushHeight->to_double());
-        Enigma::Frameworks::EventPublisher::post(std::make_shared<TerrainBrushHeightChanged>(height));
+        Enigma::Frameworks::EventPublisher::enqueue(std::make_shared<TerrainBrushHeightChanged>(height));
     }
 }
 
@@ -157,18 +158,18 @@ void TerrainToolPanel::onLayerDensityChanged(const nana::arg_slider& arg)
 {
     if (!m_textureDensity) return;
     auto density = slideValueToDensity(m_textureDensity->value());
-    Enigma::Frameworks::EventPublisher::post(std::make_shared<TerrainBrushDensityChanged>(density));
+    Enigma::Frameworks::EventPublisher::enqueue(std::make_shared<TerrainBrushDensityChanged>(density));
 }
 
 void TerrainToolPanel::onTextureLayerButton(const nana::arg_click& arg, unsigned int index)
 {
     if (index >= m_textureLayerButtons.size()) return;
-    Enigma::Frameworks::EventPublisher::post(std::make_shared<TerrainPaintingLayerChanged>(index));
+    Enigma::Frameworks::EventPublisher::enqueue(std::make_shared<TerrainPaintingLayerChanged>(index));
 }
 
 void TerrainToolPanel::onTerrainToolButton(const nana::toolbar::item_proxy& it, TerrainEditToolSelected::Tool tool)
 {
-    Enigma::Frameworks::EventPublisher::post(std::make_shared<TerrainEditToolSelected>(tool));
+    Enigma::Frameworks::EventPublisher::enqueue(std::make_shared<TerrainEditToolSelected>(tool));
 }
 
 unsigned int TerrainToolPanel::densityToSlideValue(float density) const
@@ -186,12 +187,12 @@ void TerrainToolPanel::refreshTextureLayerButtons(const Enigma::Engine::EffectTe
 {
     for (unsigned int i = 0; i < TerrainEditService::LayerSemantics.size(); i++)
     {
-        auto semantic_tex = texture_map.FindSemanticTexture(TerrainEditService::LayerSemantics[i]);
+        auto semantic_tex = texture_map.findSemanticTexture(TerrainEditService::LayerSemantics[i]);
         if (!semantic_tex) continue;
         auto tex = std::get<std::shared_ptr<Enigma::Engine::Texture>>(*semantic_tex);
         if (!tex) continue;
         Enigma::FileSystem::Filename filename(tex->factoryDesc().GetResourceFilename());
-        std::string filepath = Enigma::FileSystem::FileSystem::Instance()->GetStdioFullPath(filename.GetSubPathFileName(), filename.GetMountPathID());
+        std::string filepath = Enigma::FileSystem::FileSystem::instance()->getStdioFullPath(filename.getSubPathFileName(), filename.getMountPathId());
         pasteTextureImageToButton(filepath, m_textureLayerButtons[i], 64);
         m_textureLayerButtons[i]->focus();
     }
@@ -202,10 +203,10 @@ void TerrainToolPanel::onPickedSpatialChanged(const Enigma::Frameworks::IEventPt
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<PickedSpatialChanged>(e);
     if (!ev) return;
-    auto terrain = std::dynamic_pointer_cast<Enigma::Terrain::TerrainPawn>(ev->spatial());
+    auto terrain = std::dynamic_pointer_cast<Enigma::Terrain::TerrainPawn>(std::make_shared<Enigma::SceneGraph::QueryRunningSpatial>(ev->id())->dispatch());
     if (!terrain) return;
-    auto terrain_prim = std::dynamic_pointer_cast<Enigma::Terrain::TerrainPrimitive>(terrain->GetPrimitive());
+    auto terrain_prim = std::dynamic_pointer_cast<Enigma::Terrain::TerrainPrimitive>(terrain->getPrimitive());
     if (!terrain_prim) return;
-    setTerrainName(terrain->getSpatialName());
-    refreshTextureLayerButtons(terrain_prim->GetTextureMap(0));
+    setTerrainName(terrain->id().name());
+    refreshTextureLayerButtons(terrain_prim->getTextureMap(0));
 }

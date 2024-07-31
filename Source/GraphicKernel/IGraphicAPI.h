@@ -136,23 +136,23 @@ namespace Enigma::Graphics
         }
 
     protected:
-        void SubscribeHandlers();
-        void UnsubscribeHandlers();
+        void subscribeHandlers();
+        void unsubscribeHandlers();
 
         /** command handlers */
         //@{
-        void DoCreatingDevice(const Frameworks::ICommandPtr& c);
-        void DoCleaningDevice(const Frameworks::ICommandPtr& c);
+        void createDevice(const Frameworks::ICommandPtr& c);
+        void cleanDevice(const Frameworks::ICommandPtr& c);
 
-        void DoBeginningScene(const Frameworks::ICommandPtr& c);
-        void DoEndingScene(const Frameworks::ICommandPtr& c);
-        void DoDrawingPrimitive(const Frameworks::ICommandPtr& c);
-        void DoDrawingIndexedPrimitive(const Frameworks::ICommandPtr& c);
-        void DoClearing(const Frameworks::ICommandPtr& c);
-        void DoFlipping(const Frameworks::ICommandPtr& c);
+        void beginScene(const Frameworks::ICommandPtr& c);
+        void endScene(const Frameworks::ICommandPtr& c);
+        void drawPrimitive(const Frameworks::ICommandPtr& c);
+        void drawIndexedPrimitive(const Frameworks::ICommandPtr& c);
+        void clear(const Frameworks::ICommandPtr& c);
+        void flip(const Frameworks::ICommandPtr& c);
 
-        void DoCreatingPrimarySurface(const Frameworks::ICommandPtr& c);
-        void DoCreatingBackSurface(const Frameworks::ICommandPtr& c);
+        void createPrimarySurface(const Frameworks::ICommandPtr& c);
+        void createBackSurface(const Frameworks::ICommandPtr& c);
         void DoCreatingMultiBackSurface(const Frameworks::ICommandPtr& c);
         void DoCreatingDepthSurface(const Frameworks::ICommandPtr& c);
         void DoSharingDepthSurface(const Frameworks::ICommandPtr& c);
@@ -184,33 +184,33 @@ namespace Enigma::Graphics
 
         /** @name create / cleanup device */
         //@{
-        virtual error CreateDevice(const DeviceRequiredBits& rqb, void* hwnd) = 0;
-        virtual error CleanupDevice() = 0;
-        virtual future_error AsyncCreateDevice(const DeviceRequiredBits& rqb, void* hwnd);
-        virtual future_error AsyncCleanupDevice();
+        virtual error createDevice(const DeviceRequiredBits& rqb, void* hwnd) = 0;
+        virtual error cleanupDevice() = 0;
+        virtual future_error asyncCreateDevice(const DeviceRequiredBits& rqb, void* hwnd);
+        virtual future_error asyncCleanupDevice();
 
         /** @name scene begin/end  */
         //@{
-        virtual error BeginDrawingScene() = 0;
-        virtual error EndDrawingScene() = 0;
-        virtual future_error AsyncBeginDrawingScene();
-        virtual future_error AsyncEndDrawingScene();
+        virtual error beginDrawingScene() = 0;
+        virtual error endDrawingScene() = 0;
+        virtual future_error asyncBeginDrawingScene();
+        virtual future_error asyncEndDrawingScene();
         //@}
 
         /** @name draw call */
         //@{
         /** draw primitive */
-        virtual error DrawPrimitive(unsigned int vertexCount, unsigned int vertexOffset) = 0;
-        virtual future_error AsyncDrawPrimitive(unsigned int vertexCount, unsigned int vertexOffset);
+        virtual error drawPrimitive(unsigned int vertexCount, unsigned int vertexOffset) = 0;
+        virtual future_error asyncDrawPrimitive(unsigned int vertexCount, unsigned int vertexOffset);
         /** draw indexed primitive */
-        virtual error DrawIndexedPrimitive(unsigned int indexCount, unsigned int vertexCount, unsigned int indexOffset,
+        virtual error drawIndexedPrimitive(unsigned int indexCount, unsigned int vertexCount, unsigned int indexOffset,
             int baseVertexOffset) = 0;
-        virtual future_error AsyncDrawIndexedPrimitive(unsigned int indexCount, unsigned int vertexCount, unsigned int indexOffset,
+        virtual future_error asyncDrawIndexedPrimitive(unsigned int indexCount, unsigned int vertexCount, unsigned int indexOffset,
             int baseVertexOffset);
         //@}
 
-        virtual error FlipBackSurface() = 0;
-        virtual future_error AsyncFlipBackSurface();
+        virtual error flipBackSurface() = 0;
+        virtual future_error asyncFlipBackSurface();
 
         /** @name back / depth surface */
         //@{
@@ -357,18 +357,18 @@ namespace Enigma::Graphics
         IIndexBufferPtr m_boundIndexBuffer;
         TargetViewPort m_boundViewPort;
 
-        Frameworks::CommandSubscriberPtr m_doCreatingDevice;
-        Frameworks::CommandSubscriberPtr m_doCleaningDevice;
+        Frameworks::CommandSubscriberPtr m_createDevice;
+        Frameworks::CommandSubscriberPtr m_cleanDevice;
 
-        Frameworks::CommandSubscriberPtr m_doBeginningScene;
-        Frameworks::CommandSubscriberPtr m_doEndingScene;
-        Frameworks::CommandSubscriberPtr m_doDrawingPrimitive;
-        Frameworks::CommandSubscriberPtr m_doDrawingIndexedPrimitive;
-        Frameworks::CommandSubscriberPtr m_doClearing;
-        Frameworks::CommandSubscriberPtr m_doFlipping;
+        Frameworks::CommandSubscriberPtr m_beginScene;
+        Frameworks::CommandSubscriberPtr m_endScene;
+        Frameworks::CommandSubscriberPtr m_drawPrimitive;
+        Frameworks::CommandSubscriberPtr m_drawIndexedPrimitive;
+        Frameworks::CommandSubscriberPtr m_clear;
+        Frameworks::CommandSubscriberPtr m_flip;
 
-        Frameworks::CommandSubscriberPtr m_doCreatingPrimarySurface;
-        Frameworks::CommandSubscriberPtr m_doCreatingBackSurface;
+        Frameworks::CommandSubscriberPtr m_createPrimarySurface;
+        Frameworks::CommandSubscriberPtr m_createBackSurface;
         Frameworks::CommandSubscriberPtr m_doCreatingMultiBackSurface;
         Frameworks::CommandSubscriberPtr m_doCreatingDepthSurface;
         Frameworks::CommandSubscriberPtr m_doSharingDepthSurface;

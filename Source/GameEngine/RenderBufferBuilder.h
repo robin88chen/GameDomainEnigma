@@ -27,7 +27,7 @@ namespace Enigma::Engine
         public:
             VertexBufferBuilt(const std::string& name) :
                 m_name(name) {};
-            const std::string& GetBufferName() { return m_name; }
+            const std::string& bufferName() { return m_name; }
         private:
             std::string m_name;
         };
@@ -36,7 +36,7 @@ namespace Enigma::Engine
         public:
             IndexBufferBuilt(const std::string& name) :
                 m_name(name) {};
-            const std::string& GetBufferName() { return m_name; }
+            const std::string& bufferName() { return m_name; }
         private:
             std::string m_name;
         };
@@ -46,9 +46,9 @@ namespace Enigma::Engine
         public:
             RenderBufferBuilt(const std::string& name, const RenderBufferSignature& signature, const RenderBufferPtr& buffer) :
                 m_name(name), m_signature(signature), m_buffer(buffer) {};
-            const std::string& getName() const { return m_name; }
-            const RenderBufferSignature& GetSignature() const { return m_signature; }
-            const RenderBufferPtr& GetBuffer() const { return m_buffer; }
+            const std::string& name() const { return m_name; }
+            const RenderBufferSignature& signature() const { return m_signature; }
+            const RenderBufferPtr& buffer() const { return m_buffer; }
         private:
             std::string m_name;
             RenderBufferSignature m_signature;
@@ -62,15 +62,15 @@ namespace Enigma::Engine
         RenderBufferBuilder& operator=(const RenderBufferBuilder&) = delete;
         RenderBufferBuilder& operator=(RenderBufferBuilder&&) = delete;
 
-        void BuildRenderBuffer(const RenderBufferPolicy& policy);
+        void buildRenderBuffer(const RenderBufferPolicy& policy);
     private:
-        void OnVertexBufferCreated(const Frameworks::IEventPtr& e);
-        void OnVertexBufferUpdated(const Frameworks::IEventPtr& e);
-        void OnIndexBufferCreated(const Frameworks::IEventPtr& e);
-        void OnIndexBufferUpdated(const Frameworks::IEventPtr& e);
+        void onVertexBufferCreated(const Frameworks::IEventPtr& e);
+        void onVertexBufferUpdated(const Frameworks::IEventPtr& e);
+        void onIndexBufferCreated(const Frameworks::IEventPtr& e);
+        void onIndexBufferUpdated(const Frameworks::IEventPtr& e);
 
-        void OnBufferUpdateFailed(const Frameworks::IEventPtr& e);
-        void OnBufferBuilt(const Frameworks::IEventPtr& e);
+        void onBufferUpdateFailed(const Frameworks::IEventPtr& e);
+        void onBufferBuilt(const Frameworks::IEventPtr& e);
 
     private:
         Frameworks::EventSubscriberPtr m_onVertexBufferCreated;

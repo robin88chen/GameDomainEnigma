@@ -10,20 +10,23 @@
 #include "SceneGraph/VisibilityManagedNode.h"
 #include <cassert>
 
+#include "SceneGraph/SceneGraphQueries.h"
+
 using namespace Enigma::WorldMap;
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Frameworks;
 
 DEFINE_RTTI_OF_BASE(WorldMap, QuadTreeRoot);
 
-QuadTreeRoot::QuadTreeRoot(const QuadTreeRootId& id) : m_id(id)
+QuadTreeRoot::QuadTreeRoot(const QuadTreeRootId& id) : m_id(id), m_factoryDesc(QuadTreeRoot::TYPE_RTTI)
 {
 }
 
-QuadTreeRoot::QuadTreeRoot(const QuadTreeRootId& id, const Engine::GenericDto& o) : m_id(id)
+QuadTreeRoot::QuadTreeRoot(const QuadTreeRootId& id, const Engine::GenericDto& o) : m_id(id), m_factoryDesc(QuadTreeRoot::TYPE_RTTI)
 {
     QuadTreeRootDto dto(o);
     assert(dto.id() == m_id);
+    m_factoryDesc = dto.factoryDesc();
     m_rootNodeId = dto.rootNodeId();
     if (!m_rootNodeId.empty())
     {
@@ -34,6 +37,7 @@ QuadTreeRoot::QuadTreeRoot(const QuadTreeRootId& id, const Engine::GenericDto& o
 Enigma::Engine::GenericDto QuadTreeRoot::serializeDto() const
 {
     QuadTreeRootDto dto;
+    dto.factoryDesc(m_factoryDesc);
     dto.id(m_id);
     dto.rootNodeId(m_rootNodeId);
     return dto.toGenericDto();
@@ -64,7 +68,7 @@ void QuadTreeRoot::createFittingNodes(const std::shared_ptr<SceneGraph::SceneGra
     auto fitting_volumes = root->collectFitVolumes(bv_in_world);
     if (fitting_volumes.empty())
     {
-        EventPublisher::post(std::make_shared<FittingNodeCreationFailed>(m_id, ErrorCode::emptyQuadVolumeList));
+        EventPublisher::enqueue(std::make_shared<FittingNodeCreationFailed>(m_id, ErrorCode::emptyQuadVolumeList));
         return;
     }
     for (const auto& quad_tree_volume : fitting_volumes)
@@ -73,11 +77,11 @@ void QuadTreeRoot::createFittingNodes(const std::shared_ptr<SceneGraph::SceneGra
         if (repository->hasSpatial(quad_tree_volume->id())) continue;
         if (auto er = createTreeNode(repository, quad_tree_volume))
         {
-            EventPublisher::post(std::make_shared<FittingNodeCreationFailed>(m_id, er));
+            EventPublisher::enqueue(std::make_shared<FittingNodeCreationFailed>(m_id, er));
             return;
         }
     }
-    EventPublisher::post(std::make_shared<FittingNodeCreated>(m_id));
+    EventPublisher::enqueue(std::make_shared<FittingNodeCreated>(m_id));
 }
 
 std::error_code QuadTreeRoot::createTreeNode(const std::shared_ptr<SceneGraph::SceneGraphRepository>& repository, const std::shared_ptr<QuadTreeVolume>& volume)
@@ -95,15 +99,15 @@ std::error_code QuadTreeRoot::createTreeNode(const std::shared_ptr<SceneGraph::S
     }
     MathLib::Matrix4 local_transform = volume->worldTransform() * parent_node->getWorldTransform().Inverse();
     Engine::GenericDto child_dto = assembleChildTreeNode(volume->parentId().value(), parent_node->factoryDesc(), volume->id(), local_transform, volume->worldTransform(), volume->modelBounding());
-    std::shared_ptr<LazyNode> child_node = std::dynamic_pointer_cast<LazyNode>(repository->factory()->constituteSpatial(volume->id(), child_dto, true));
+    std::shared_ptr<LazyNode> child_node = std::dynamic_pointer_cast<LazyNode>(std::make_shared<RequestSpatialConstitution>(volume->id(), child_dto)->dispatch());
     if (!child_node) return ErrorCode::childQuadNodeConstitutionFailed;
+    repository->putSpatial(child_node);
     std::error_code er = child_node->hydrate(child_dto);
     if (er) return er;
-    repository->putSpatial(child_node, SceneGraph::PersistenceLevel::Store);
     repository->putLaziedContent(child_node);
     er = parent_node->attachChild(child_node, local_transform);
     if (er) return er;
-    repository->putSpatial(parent_node, SceneGraph::PersistenceLevel::Store);
+    repository->putSpatial(parent_node);
     repository->putLaziedContent(parent_node);
     return ErrorCode::ok;
 }

@@ -12,6 +12,7 @@
 #include "Frameworks/QuerySubscriber.h"
 #include "Frameworks/CommandSubscriber.h"
 #include "AnimationAsset.h"
+#include "AnimatorFactoryDelegate.h"
 #include <mutex>
 
 namespace Enigma::Animators
@@ -33,7 +34,7 @@ namespace Enigma::Animators
         virtual Frameworks::ServiceResult onInit() override;
         virtual Frameworks::ServiceResult onTerm() override;
 
-        AnimationAssetFactory* factory() { return m_factory; }
+        void registerAnimationAssetFactory(const std::string& rtti_name, const AnimationAssetCreator& creator, const AnimationAssetConstitutor& constitutor);
 
         bool hasAnimationAsset(const AnimationAssetId& id);
         std::shared_ptr<AnimationAsset> queryAnimationAsset(const AnimationAssetId& id);
@@ -47,10 +48,13 @@ namespace Enigma::Animators
         void removeAnimationAsset(const Frameworks::ICommandPtr& c);
         void putAnimationAsset(const Frameworks::ICommandPtr& c);
 
+        void dumpRetainedAnimation();
+
     protected:
         std::shared_ptr<AnimationAssetStoreMapper> m_storeMapper;
         AnimationAssetFactory* m_factory;
-        std::unordered_map<AnimationAssetId, std::shared_ptr<AnimationAsset>, AnimationAssetId::hash> m_animationAssets;
+        //! ADR: 在 repository 中，map 是存放已生成 asset 的 cache, 不擁有asset, 所以改用 weak_ptr 
+        std::unordered_map<AnimationAssetId, std::weak_ptr<AnimationAsset>, AnimationAssetId::hash> m_animationAssets;
         std::recursive_mutex m_animationAssetLock;
 
         Frameworks::QuerySubscriberPtr m_queryAnimationAsset;

@@ -80,7 +80,7 @@ void EffectCompilingQueue::onCompilerEffectMaterialCompiled(const Frameworks::IE
     {
         m_currentCompilingEffect->getEffectMaterialSource()->hydrateDuplicatedEffects();
     }
-    Frameworks::EventPublisher::post(std::make_shared<EffectMaterialSourceCompiled>(m_currentCompilingEffect->id()));
+    Frameworks::EventPublisher::enqueue(std::make_shared<EffectMaterialSourceCompiled>(m_currentCompilingEffect->id()));
     m_currentCompilingEffect = nullptr;
     auto er = compileNextEffect();
 }
@@ -94,7 +94,7 @@ void EffectCompilingQueue::onCompilerCompileEffectMaterialFailed(const Framework
     if (ev->id() != m_currentCompilingEffect->id()) return;
 
     Platforms::Debug::ErrorPrintf("effect material %s compile failed : %s\n", ev->id().name().c_str(), ev->error().message().c_str());
-    Frameworks::EventPublisher::post(std::make_shared<CompileEffectMaterialSourceFailed>(ev->id(), ev->error()));
+    Frameworks::EventPublisher::enqueue(std::make_shared<CompileEffectMaterialSourceFailed>(ev->id(), ev->error()));
     m_currentCompilingEffect = nullptr;
     auto er = compileNextEffect();
 }

@@ -11,14 +11,11 @@
 #include "GameEngine/GenericDto.h"
 #include "AnimatorId.h"
 #include "Frameworks/CommandSubscriber.h"
+#include "AnimatorFactoryDelegate.h"
 #include <unordered_map>
 
 namespace Enigma::Animators
 {
-    class Animator;
-    using AnimatorCreator = std::function<std::shared_ptr<Animator>(const AnimatorId& id)>;
-    using AnimatorConstitutor = std::function<std::shared_ptr<Animator>(const AnimatorId& id, const Engine::GenericDto& dto)>;
-
     class AnimatorFactory
     {
     public:

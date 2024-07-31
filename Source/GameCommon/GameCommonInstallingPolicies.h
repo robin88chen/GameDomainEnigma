@@ -9,8 +9,7 @@
 #define _GAME_COMMON_INSTALLING_POLICIES_H
 
 #include "GameEngine/InstallingPolicy.h"
-#include "SceneGraph/CameraFrustumDtos.h"
-#include "SceneGraph/SceneGraphPersistenceLevel.h"
+#include "SceneGraph/CameraDtos.h"
 
 namespace Enigma::GameCommon
 {
@@ -27,14 +26,6 @@ namespace Enigma::GameCommon
     protected:
         SceneGraph::SpatialId m_cameraId;
         Engine::GenericDto m_cameraDto;
-    };
-    class GameLightInstallingPolicy : public Engine::InstallingPolicy
-    {
-    public:
-        GameLightInstallingPolicy() = default;
-
-        virtual error install(Frameworks::ServiceManager* service_manager) override;
-        virtual error shutdown(Frameworks::ServiceManager* service_manager) override;
     };
     class GameSceneInstallingPolicy : public Engine::InstallingPolicy
     {

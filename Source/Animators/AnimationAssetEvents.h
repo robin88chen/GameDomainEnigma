@@ -98,7 +98,6 @@ namespace Enigma::Animators
         AnimationAssetId m_id;
         std::error_code m_error;
     };
-
 }
 
 #endif // ANIMATION_ASSET_EVENTS_H

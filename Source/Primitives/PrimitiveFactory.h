@@ -11,12 +11,11 @@
 #include "GameEngine/GenericDto.h"
 #include "PrimitiveId.h"
 #include "Frameworks/CommandSubscriber.h"
+#include "PrimitiveFactoryDelegate.h"
 
 namespace Enigma::Primitives
 {
     class Primitive;
-    using PrimitiveCreator = std::function<std::shared_ptr<Primitive>(const PrimitiveId& id)>;
-    using PrimitiveConstitutor = std::function<std::shared_ptr<Primitive>(const PrimitiveId& id, const Engine::GenericDto& dto)>;
 
     class PrimitiveFactory
     {

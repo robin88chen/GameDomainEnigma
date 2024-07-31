@@ -54,9 +54,9 @@ Enigma::Engine::GenericDto MeshPrimitiveAssembler::toGenericDto() const
     return dto().toGenericDto();
 }
 
-std::shared_ptr<MeshPrimitive> MeshPrimitiveAssembler::constitute(Primitives::PersistenceLevel persistence_level)
+std::shared_ptr<MeshPrimitive> MeshPrimitiveAssembler::constitute()
 {
-    return std::dynamic_pointer_cast<MeshPrimitive>(std::make_shared<Primitives::RequestPrimitiveConstitution>(m_id, toGenericDto(), persistence_level)->dispatch());
+    return std::dynamic_pointer_cast<MeshPrimitive>(std::make_shared<Primitives::RequestPrimitiveConstitution>(m_id, toGenericDto())->dispatch());
 }
 
 MeshPrimitiveDto MeshPrimitiveAssembler::dto() const
@@ -112,9 +112,9 @@ Enigma::Engine::GenericDto SkinMeshPrimitiveAssembler::toGenericDto()
     return m_dto.toGenericDto();
 }
 
-std::shared_ptr<SkinMeshPrimitive> SkinMeshPrimitiveAssembler::constitute(Primitives::PersistenceLevel persistence_level)
+std::shared_ptr<SkinMeshPrimitive> SkinMeshPrimitiveAssembler::constitute()
 {
-    return std::dynamic_pointer_cast<SkinMeshPrimitive>(std::make_shared<Primitives::RequestPrimitiveConstitution>(m_id, toGenericDto(), persistence_level)->dispatch());
+    return std::dynamic_pointer_cast<SkinMeshPrimitive>(std::make_shared<Primitives::RequestPrimitiveConstitution>(m_id, toGenericDto())->dispatch());
 }
 
 MeshNodeAssembler::MeshNodeAssembler(const std::string& name)
@@ -216,7 +216,7 @@ Enigma::Engine::GenericDto ModelPrimitiveAssembler::toGenericDto()
     return m_dto.toGenericDto();
 }
 
-std::shared_ptr<ModelPrimitive> ModelPrimitiveAssembler::constitute(Primitives::PersistenceLevel persistence_level)
+std::shared_ptr<ModelPrimitive> ModelPrimitiveAssembler::constitute()
 {
-    return std::dynamic_pointer_cast<ModelPrimitive>(std::make_shared<Primitives::RequestPrimitiveConstitution>(m_id, toGenericDto(), persistence_level)->dispatch());
+    return std::dynamic_pointer_cast<ModelPrimitive>(std::make_shared<Primitives::RequestPrimitiveConstitution>(m_id, toGenericDto())->dispatch());
 }

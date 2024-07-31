@@ -13,9 +13,9 @@
 #include "Frameworks/CommandSubscriber.h"
 #include "Frameworks/QuerySubscriber.h"
 #include "SpatialId.h"
-#include "SceneGraphPersistenceLevel.h"
 #include "MathLib/Matrix4.h"
 #include "GameEngine/BoundingVolume.h"
+#include "SceneGraphFactoryDelegate.h"
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -30,8 +30,6 @@ namespace Enigma::SceneGraph
     class Node;
     class Portal;
     class LazyNode;
-    class PortalZoneNode;
-    class PortalZoneNodeDto;
 
     class SceneGraphRepository : public Frameworks::ISystemService
     {
@@ -50,7 +48,8 @@ namespace Enigma::SceneGraph
         void setCoordinateSystem(GraphicCoordSys hand);
         GraphicCoordSys getCoordinateSystem();
 
-        SceneGraphFactory* factory() { return m_factory; }
+        void registerSpatialFactory(const std::string& rtti, const SpatialCreator& creator, const SpatialConstitutor& constitutor);
+        void registerSpatialLightFactory(const std::string& rtti, const LightCreator& creator, const LightConstitutor& constitutor);
 
         /** query entities */
         bool hasCamera(const SpatialId& id);
@@ -61,10 +60,11 @@ namespace Enigma::SceneGraph
         void hydrateLazyNode(const SpatialId& id);
         MathLib::Matrix4 queryWorldTransform(const SpatialId& id);
         Engine::BoundingVolume queryModelBound(const SpatialId& id);
+        std::shared_ptr<Spatial> queryRunningSpatial(const SpatialId& id);
 
         /** put entities */
         void putCamera(const std::shared_ptr<Camera>& camera);
-        void putSpatial(const std::shared_ptr<Spatial>& spatial, PersistenceLevel persistence_level);
+        void putSpatial(const std::shared_ptr<Spatial>& spatial);
         void putLaziedContent(const std::shared_ptr<LazyNode>& lazy_node);
 
         /** remove entities */
@@ -86,6 +86,7 @@ namespace Enigma::SceneGraph
         void requestLightCreation(const Frameworks::IQueryPtr& r);
         void queryWorldTransform(const Frameworks::IQueryPtr& q);
         void queryModelBound(const Frameworks::IQueryPtr& q);
+        void queryRunningSpatial(const Frameworks::IQueryPtr& q);
 
         void putCamera(const Frameworks::ICommandPtr& c);
         void removeCamera(const Frameworks::ICommandPtr& c);
@@ -94,15 +95,23 @@ namespace Enigma::SceneGraph
         void putLaziedContent(const Frameworks::ICommandPtr& c);
         void removeLaziedContent(const Frameworks::ICommandPtr& c);
 
+        std::shared_ptr<Camera> findCachedCamera(const SpatialId& id);
+        std::shared_ptr<Spatial> findCachedSpatial(const SpatialId& id);
+
+        void dumpRetainedCameras();
+        void dumpRetainedSpatials();
+
     private:
         SceneGraphFactory* m_factory;
         std::shared_ptr<SceneGraphStoreMapper> m_storeMapper;
         GraphicCoordSys m_handSystem;
 
-        std::unordered_map<SpatialId, std::shared_ptr<Camera>, SpatialId::hash> m_cameras;
+        //! ADR: 在 repository 中，map 是存放已生成 asset 的 cache, 不擁有asset, 所以改用 weak_ptr
+        std::unordered_map<SpatialId, std::weak_ptr<Camera>, SpatialId::hash> m_cameras;
         std::recursive_mutex m_cameraMapLock;
 
-        std::unordered_map<SpatialId, std::shared_ptr<Spatial>, SpatialId::hash> m_spatials;
+        //! ADR: 在 repository 中，map 是存放已生成 asset 的 cache, 不擁有asset, 所以改用 weak_ptr
+        std::unordered_map<SpatialId, std::weak_ptr<Spatial>, SpatialId::hash> m_spatials;
         std::recursive_mutex m_spatialMapLock;
 
         Frameworks::QuerySubscriberPtr m_queryCamera;
@@ -115,6 +124,7 @@ namespace Enigma::SceneGraph
         Frameworks::QuerySubscriberPtr m_requestLightCreation;
         Frameworks::QuerySubscriberPtr m_queryWorldTransform;
         Frameworks::QuerySubscriberPtr m_queryModelBound;
+        Frameworks::QuerySubscriberPtr m_queryRunningSpatial;
 
         Frameworks::CommandSubscriberPtr m_putCamera;
         Frameworks::CommandSubscriberPtr m_removeCamera;

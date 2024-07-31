@@ -78,7 +78,7 @@ void ModelListPanel::onLoadModel(nana::menu::item_proxy& item)
     if (m_modelList->selected().empty()) return;
     const auto selected = m_modelList->selected().front();
     const auto name = m_modelList->at(selected).text(0);
-    Enigma::Frameworks::CommandBus::post(std::make_shared<LoadModelPrimitive>(name));
+    Enigma::Frameworks::CommandBus::enqueue(std::make_shared<LoadModelPrimitive>(name));
 }
 
 void ModelListPanel::onRemoveModel(nana::menu::item_proxy& item)
@@ -86,6 +86,6 @@ void ModelListPanel::onRemoveModel(nana::menu::item_proxy& item)
     if (m_modelList->selected().empty()) return;
     const auto selected = m_modelList->selected().front();
     const auto name = m_modelList->at(selected).text(0);
-    Enigma::Frameworks::CommandBus::post(std::make_shared<RemoveModelPrimitive>(name));
+    Enigma::Frameworks::CommandBus::enqueue(std::make_shared<RemoveModelPrimitive>(name));
 }
 

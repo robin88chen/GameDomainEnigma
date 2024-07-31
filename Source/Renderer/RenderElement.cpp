@@ -41,7 +41,7 @@ error RenderElement::draw(const MathLib::Matrix4& mxWorld,
     if (m_renderBuffer.expired()) return ErrorCode::nullRenderBuffer;
     if (!m_effectMaterial) return ErrorCode::nullEffectMaterial;
     m_effectMaterial->selectRendererTechnique(rendererTechnique);
-    state.CommitState();
+    state.commitState();
     Engine::MaterialVariableMap::useWorldTransform(mxWorld);
     const error er = m_renderBuffer.lock()->draw(m_effectMaterial, m_segment);
     return er;

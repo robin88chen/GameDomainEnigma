@@ -27,6 +27,7 @@ AnimationAssetRepository::AnimationAssetRepository(ServiceManager* srv_manager, 
 
 AnimationAssetRepository::~AnimationAssetRepository()
 {
+    dumpRetainedAnimation();
     SAFE_DELETE(m_factory);
     m_animationAssets.clear();
 }
@@ -68,12 +69,18 @@ ServiceResult AnimationAssetRepository::onTerm()
     return ServiceResult::Complete;
 }
 
+void AnimationAssetRepository::registerAnimationAssetFactory(const std::string& rtti_name, const AnimationAssetCreator& creator, const AnimationAssetConstitutor& constitutor)
+{
+    assert(m_factory);
+    m_factory->registerAnimationAssetFactory(rtti_name, creator, constitutor);
+}
+
 bool AnimationAssetRepository::hasAnimationAsset(const AnimationAssetId& id)
 {
     assert(m_storeMapper);
     std::lock_guard lock(m_animationAssetLock);
     const auto& it = m_animationAssets.find(id);
-    if (it != m_animationAssets.end()) return true;
+    if ((it != m_animationAssets.end()) && (!it->second.expired())) return true;
     return m_storeMapper->hasAnimationAsset(id);
 }
 
@@ -82,7 +89,7 @@ std::shared_ptr<AnimationAsset> AnimationAssetRepository::queryAnimationAsset(co
     if (!hasAnimationAsset(id)) return nullptr;
     std::lock_guard lock(m_animationAssetLock);
     const auto& it = m_animationAssets.find(id);
-    if (it != m_animationAssets.end()) return it->second;
+    if ((it != m_animationAssets.end()) && (!it->second.expired())) return it->second.lock();
     assert(m_factory);
     const auto dto = m_storeMapper->queryAnimationAsset(id);
     assert(dto.has_value());
@@ -101,28 +108,28 @@ void AnimationAssetRepository::removeAnimationAsset(const AnimationAssetId& id)
     if (er)
     {
         Platforms::Debug::ErrorPrintf("remove animation asset %s failed : %s\n", id.name().c_str(), er.message().c_str());
-        EventPublisher::post(std::make_shared<RemoveAnimationAssetFailed>(id, er));
+        EventPublisher::enqueue(std::make_shared<RemoveAnimationAssetFailed>(id, er));
     }
     else
     {
-        EventPublisher::post(std::make_shared<AnimationAssetRemoved>(id));
+        EventPublisher::enqueue(std::make_shared<AnimationAssetRemoved>(id));
     }
 }
 
 void AnimationAssetRepository::putAnimationAsset(const AnimationAssetId& id, const std::shared_ptr<AnimationAsset>& asset)
 {
-    if (hasAnimationAsset(id)) return;
+    assert(asset);
+    assert(m_storeMapper);
     std::lock_guard locker{ m_animationAssetLock };
-    m_animationAssets.insert_or_assign(id, asset);
     error er = m_storeMapper->putAnimationAsset(id, asset->serializeDto());
     if (er)
     {
         Platforms::Debug::ErrorPrintf("put animation asset %s failed : %s\n", id.name().c_str(), er.message().c_str());
-        EventPublisher::post(std::make_shared<PutAnimationAssetFailed>(id, er));
+        EventPublisher::enqueue(std::make_shared<PutAnimationAssetFailed>(id, er));
     }
     else
     {
-        EventPublisher::post(std::make_shared<AnimationAssetPut>(id));
+        EventPublisher::enqueue(std::make_shared<AnimationAssetPut>(id));
     }
 }
 
@@ -142,19 +149,13 @@ void AnimationAssetRepository::requestAnimationAssetCreation(const Frameworks::I
     if (!request) return;
     if (hasAnimationAsset(request->id()))
     {
-        EventPublisher::post(std::make_shared<CreateAnimationAssetFailed>(request->id(), ErrorCode::animationAssetAlreadyExists));
+        EventPublisher::enqueue(std::make_shared<CreateAnimationAssetFailed>(request->id(), ErrorCode::animationAssetAlreadyExists));
         return;
     }
     auto animation = m_factory->create(request->id(), request->rtti());
-    if (request->persistenceLevel() == PersistenceLevel::Repository)
-    {
-        std::lock_guard locker{ m_animationAssetLock };
-        m_animationAssets.insert_or_assign(request->id(), animation);
-    }
-    else if (request->persistenceLevel() == PersistenceLevel::Store)
-    {
-        putAnimationAsset(request->id(), animation);
-    }
+    assert(animation);
+    std::lock_guard lock(m_animationAssetLock);
+    m_animationAssets.insert_or_assign(request->id(), animation);
     request->setResult(animation);
 }
 
@@ -165,19 +166,13 @@ void AnimationAssetRepository::requestAnimationAssetConstitution(const Framework
     if (!request) return;
     if (hasAnimationAsset(request->id()))
     {
-        EventPublisher::post(std::make_shared<ConstituteAnimationAssetFailed>(request->id(), ErrorCode::animationAssetAlreadyExists));
+        EventPublisher::enqueue(std::make_shared<ConstituteAnimationAssetFailed>(request->id(), ErrorCode::animationAssetAlreadyExists));
         return;
     }
     auto animation = m_factory->constitute(request->id(), request->dto(), false);
-    if (request->persistenceLevel() == PersistenceLevel::Repository)
-    {
-        std::lock_guard locker{ m_animationAssetLock };
-        m_animationAssets.insert_or_assign(request->id(), animation);
-    }
-    else if (request->persistenceLevel() == PersistenceLevel::Store)
-    {
-        putAnimationAsset(request->id(), animation);
-    }
+    assert(animation);
+    std::lock_guard lock(m_animationAssetLock);
+    m_animationAssets.insert_or_assign(request->id(), animation);
     request->setResult(animation);
 }
 
@@ -195,4 +190,17 @@ void AnimationAssetRepository::putAnimationAsset(const ICommandPtr& c)
     const auto cmd = std::dynamic_pointer_cast<PutAnimationAsset>(c);
     if (!cmd) return;
     putAnimationAsset(cmd->id(), cmd->animation());
+}
+
+void AnimationAssetRepository::dumpRetainedAnimation()
+{
+    Platforms::Debug::Printf("dump retained animation asset\n");
+    std::lock_guard lock(m_animationAssetLock);
+    for (const auto& [id, asset] : m_animationAssets)
+    {
+        if (auto ptr = asset.lock())
+        {
+            Platforms::Debug::Printf("retained animation asset %s\n", id.name().c_str());
+        }
+    }
 }

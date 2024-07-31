@@ -9,7 +9,6 @@
 #define SCENE_GRAPH_EVENTS_H
 
 #include "Frameworks/Event.h"
-#include "LightInfo.h"
 #include "Spatial.h"
 #include <memory>
 #include <system_error>
@@ -55,172 +54,6 @@ namespace Enigma::SceneGraph
     public:
         SpatialVisibilityChanged(const SpatialId& id) : SceneGraphEvent(id) {};
     };
-    class SceneGraphChanged : public SceneGraphEvent
-    {
-    public:
-        enum class NotifyCode
-        {
-            Invalid = 0,
-            AttachChild,
-            DetachChild,
-            DeferredInstanced,
-        };
-    public:
-        SceneGraphChanged(const SpatialId& parent_id, const SpatialId& child_id, NotifyCode code)
-            : SceneGraphEvent(parent_id), m_childId(child_id), m_code(code) {};
-        const SpatialId& parentId() { return m_id; }
-        const SpatialId& childId() { return m_childId; }
-        const NotifyCode notifyCode() const { return m_code; }
-    protected:
-        SpatialId m_childId;
-        NotifyCode m_code;
-    };
-    //------------------------- Light Info Events --------------------------
-    class LightInfoEvent : public Frameworks::IEvent
-    {
-    public:
-        LightInfoEvent(const std::shared_ptr<Light>& lit) : m_light(lit) {};
-
-        std::shared_ptr<Light> light() { return m_light.lock(); }
-    protected:
-        std::weak_ptr<Light> m_light;
-    };
-    class LightInfoCreated : public LightInfoEvent
-    {
-    public:
-        LightInfoCreated(const std::shared_ptr<Light>& lit) : LightInfoEvent(lit) {}
-    };
-    class LightInfoDeleted : public LightInfoEvent
-    {
-    public:
-        LightInfoDeleted(const SpatialId& id, LightInfo::LightType light_type) : LightInfoEvent(nullptr),
-            m_lightId(id), m_lightType{ light_type } {}
-
-        const SpatialId& lightId() { return m_lightId; }
-        LightInfo::LightType lightType() const { return m_lightType; }
-    protected:
-        SpatialId m_lightId;
-        LightInfo::LightType m_lightType;
-    };
-    class LightInfoUpdated : public LightInfoEvent
-    {
-    public:
-        enum class NotifyCode
-        {
-            Color,
-            Position,
-            Direction,
-            Range,
-            Attenuation,
-            Enable,
-        };
-    public:
-        LightInfoUpdated(const std::shared_ptr<Light>& lit, NotifyCode code) : LightInfoEvent(lit),
-            m_notifyCode{ code } {}
-
-        NotifyCode notifyCode() const { return m_notifyCode; }
-    protected:
-        NotifyCode m_notifyCode;
-    };
-
-    //------------------------ scene graph factory event ------------------
-    class FactorySpatialCreated : public Frameworks::IEvent
-    {
-    public:
-        FactorySpatialCreated(const Engine::GenericDto& dto, const std::shared_ptr<Spatial>& spatial)
-            : m_dto(dto), m_spatial(spatial) {};
-
-        const Engine::GenericDto& GetDto() const { return m_dto; }
-        const std::shared_ptr<Spatial>& GetSpatial() { return m_spatial; }
-
-    protected:
-        Engine::GenericDto m_dto;
-        std::shared_ptr<Spatial> m_spatial;
-    };
-    class CreateFactorySpatialFailed : public Frameworks::IEvent
-    {
-    public:
-        CreateFactorySpatialFailed(const Engine::GenericDto& dto, std::error_code er) : m_dto(dto), m_error(er) {}
-
-        const Engine::GenericDto& GetDto() const { return m_dto; }
-        std::error_code GetErrorCode() const { return m_error; }
-
-    protected:
-        Engine::GenericDto m_dto;
-        std::error_code m_error;
-    };
-    class FactorySceneGraphBuilt : public Frameworks::IEvent
-    {
-    public:
-        FactorySceneGraphBuilt(const std::string& scene_graph_id, const std::vector<std::shared_ptr<Spatial>>& top_levels)
-            : m_sceneGraphId(scene_graph_id), m_topLevels(top_levels) {}
-
-        const std::string& GetSceneGraphId() { return m_sceneGraphId; }
-        const std::vector<std::shared_ptr<Spatial>>& GetTopLevelSpatial() { return m_topLevels; }
-
-    protected:
-        std::string m_sceneGraphId;
-        std::vector<std::shared_ptr<Spatial>> m_topLevels;
-    };
-    class BuildFactorySceneGraphFailed : public Frameworks::IEvent
-    {
-    public:
-        BuildFactorySceneGraphFailed(const std::string& scene_graph_id, std::error_code er)
-            : m_sceneGraphId(scene_graph_id), m_error(er) {}
-
-        const std::string& GetSceneGraphId() { return m_sceneGraphId; }
-        std::error_code GetErrorCode() const { return m_error; }
-
-    protected:
-        std::string m_sceneGraphId;
-        std::error_code m_error;
-    };
-
-    class LazyNodeInstanced : public Frameworks::IEvent
-    {
-    public:
-        LazyNodeInstanced(const std::shared_ptr<LazyNode>& node) : m_node(node) {};
-
-        const std::shared_ptr<LazyNode>& GetNode() { return m_node; }
-    protected:
-        std::shared_ptr<LazyNode> m_node;
-    };
-    class InstanceLazyNodeFailed : public  Frameworks::IEvent
-    {
-    public:
-        InstanceLazyNodeFailed(const std::shared_ptr<LazyNode>& node, std::error_code er)
-            : m_node(node), m_error(er) {}
-
-        std::shared_ptr<LazyNode> GetNode() { return m_node.lock(); }
-        std::error_code GetErrorCode() const { return m_error; }
-    protected:
-        std::weak_ptr<LazyNode> m_node;
-        std::error_code m_error;
-    };
-
-    class PawnPrimitiveBuilt : public Frameworks::IEvent
-    {
-    public:
-        PawnPrimitiveBuilt(const std::shared_ptr<Pawn>& pawn) : m_pawn(pawn) {};
-
-        const std::shared_ptr<Pawn>& pawn() { return m_pawn; }
-    protected:
-        std::shared_ptr<Pawn> m_pawn;
-    };
-
-    class BuildPawnPrimitiveFailed : public  Frameworks::IEvent
-    {
-    public:
-        BuildPawnPrimitiveFailed(const std::shared_ptr<Pawn>& pawn, std::error_code er)
-            : m_pawn(pawn), m_error(er) {}
-
-        std::shared_ptr<Pawn> pawn() { return m_pawn.lock(); }
-        std::error_code error() const { return m_error; }
-    protected:
-        std::weak_ptr<Pawn> m_pawn;
-        std::error_code m_error;
-    };
-
     //------------ visibility manage ------------
     class VisibilityChanged : public Frameworks::IEvent
     {
@@ -239,8 +72,9 @@ namespace Enigma::SceneGraph
     class SpatialCreated : public Frameworks::IEvent
     {
     public:
-        SpatialCreated(const SpatialId& id, const std::shared_ptr<Spatial>& spatial) : m_id(id), m_spatial(spatial) {};
+        SpatialCreated(const SpatialId& id, const std::shared_ptr<Spatial>& spatial) : m_id(id), m_spatial(spatial) {}
         const SpatialId& id() const { return m_id; }
+        const Frameworks::Rtti& rtti() const { return m_id.rtti(); }
         std::shared_ptr<Spatial> spatial() { return m_spatial; }
 
     protected:
@@ -263,6 +97,7 @@ namespace Enigma::SceneGraph
     public:
         SpatialConstituted(const SpatialId& id, const std::shared_ptr<Spatial>& spatial, bool is_persisted) : m_id(id), m_spatial(spatial), m_isPersisted(is_persisted) {};
         const SpatialId& id() const { return m_id; }
+        const Frameworks::Rtti& rtti() const { return m_id.rtti(); }
         std::shared_ptr<Spatial> spatial() { return m_spatial; }
         bool isPersisted() const { return m_isPersisted; }
 
@@ -399,10 +234,10 @@ namespace Enigma::SceneGraph
         SpatialId m_nodeId;
         std::weak_ptr<Spatial> m_child;
     };
-    class AttachNodeChildFailed : public Frameworks::IEvent
+    class NodeChildAttachmentFailed : public Frameworks::IEvent
     {
     public:
-        AttachNodeChildFailed(const SpatialId& node_id, const SpatialId& child_id, std::error_code er) : m_nodeId(node_id), m_childId(child_id), m_error(er) {}
+        NodeChildAttachmentFailed(const SpatialId& node_id, const SpatialId& child_id, std::error_code er) : m_nodeId(node_id), m_childId(child_id), m_error(er) {}
 
         const SpatialId& nodeId() const { return m_nodeId; }
         const SpatialId& childId() const { return m_childId; }
@@ -425,10 +260,10 @@ namespace Enigma::SceneGraph
         SpatialId m_nodeId;
         SpatialId m_childId;
     };
-    class DetachNodeChildFailed : public Frameworks::IEvent
+    class NodeChildDetachmentFailed : public Frameworks::IEvent
     {
     public:
-        DetachNodeChildFailed(const SpatialId& node_id, const SpatialId& child_id, std::error_code er) : m_nodeId(node_id), m_childId(child_id), m_error(er) {}
+        NodeChildDetachmentFailed(const SpatialId& node_id, const SpatialId& child_id, std::error_code er) : m_nodeId(node_id), m_childId(child_id), m_error(er) {}
 
         const SpatialId& nodeId() const { return m_nodeId; }
         const SpatialId& childId() const { return m_childId; }

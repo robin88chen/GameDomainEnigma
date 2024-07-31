@@ -41,7 +41,7 @@ error VertexBufferEgl::create(unsigned sizeofVertex, unsigned sizeBuffer)
     auto api_egl = dynamic_cast<GraphicAPIEgl*>(Graphics::IGraphicAPI::instance());
     if (api_egl) api_egl->BindVertexBuffer(nullptr, Graphics::PrimitiveTopology::Topology_Undefine); // gl state reset, 要清掉binder裡的 cache
 
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::VertexBufferResourceCreated>(m_name));
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::VertexBufferResourceCreated>(m_name));
     return ErrorCode::ok;
 }
 
@@ -51,14 +51,14 @@ error VertexBufferEgl::UpdateBuffer(const byte_buffer& dataVertex)
     assert(!dataVertex.empty());
     if (FATAL_LOG_EXPR(dataVertex.size() > m_bufferSize))
     {
-        Frameworks::EventPublisher::post(std::make_shared<Graphics::VertexBufferUpdateFailed>(m_name, ErrorCode::bufferSize));
+        Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::VertexBufferUpdateFailed>(m_name, ErrorCode::bufferSize));
         return ErrorCode::bufferSize;
     }
     glBindBuffer(GL_ARRAY_BUFFER, m_bufferHandle);
     void* buff = glMapBufferRange(GL_ARRAY_BUFFER, 0, (GLsizeiptr)dataVertex.size(), GL_MAP_WRITE_BIT);
     if (!buff)
     {
-        Frameworks::EventPublisher::post(std::make_shared<Graphics::VertexBufferUpdateFailed>(m_name, ErrorCode::eglBufferMapping));
+        Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::VertexBufferUpdateFailed>(m_name, ErrorCode::eglBufferMapping));
         return ErrorCode::eglBufferMapping;
     }
 
@@ -69,7 +69,7 @@ error VertexBufferEgl::UpdateBuffer(const byte_buffer& dataVertex)
     auto api_egl = dynamic_cast<GraphicAPIEgl*>(Graphics::IGraphicAPI::instance());
     if (api_egl) api_egl->BindVertexBuffer(nullptr, Graphics::PrimitiveTopology::Topology_Undefine); // gl state reset, 要清掉binder裡的 cache
 
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::VertexBufferResourceUpdated>(m_name));
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::VertexBufferResourceUpdated>(m_name));
     return ErrorCode::ok;
 }
 
@@ -79,7 +79,7 @@ error VertexBufferEgl::RangedUpdateBuffer(const ranged_buffer& buffer)
     assert(!buffer.data.empty());
     if (FATAL_LOG_EXPR(buffer.data.size() > m_bufferSize))
     {
-        Frameworks::EventPublisher::post(std::make_shared<Graphics::VertexBufferUpdateFailed>(m_name, ErrorCode::bufferSize));
+        Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::VertexBufferUpdateFailed>(m_name, ErrorCode::bufferSize));
         return ErrorCode::bufferSize;
     }
 
@@ -88,7 +88,7 @@ error VertexBufferEgl::RangedUpdateBuffer(const ranged_buffer& buffer)
         (GLsizeiptr)buffer.data.size(), GL_MAP_WRITE_BIT);
     if (!buff)
     {
-        Frameworks::EventPublisher::post(std::make_shared<Graphics::VertexBufferUpdateFailed>(m_name, ErrorCode::eglBufferMapping));
+        Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::VertexBufferUpdateFailed>(m_name, ErrorCode::eglBufferMapping));
         return ErrorCode::eglBufferMapping;
     }
 
@@ -99,7 +99,7 @@ error VertexBufferEgl::RangedUpdateBuffer(const ranged_buffer& buffer)
     auto api_egl = dynamic_cast<GraphicAPIEgl*>(Graphics::IGraphicAPI::instance());
     if (api_egl) api_egl->BindVertexBuffer(nullptr, Graphics::PrimitiveTopology::Topology_Undefine); // gl state reset, 要清掉binder裡的 cache
 
-    Frameworks::EventPublisher::post(std::make_shared<Graphics::VertexBufferResourceRangedUpdated>(
+    Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::VertexBufferResourceRangedUpdated>(
         m_name, buffer.vtx_offset, buffer.vtx_count));
     return ErrorCode::ok;
 }

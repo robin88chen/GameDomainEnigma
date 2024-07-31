@@ -8,6 +8,7 @@
 #ifndef TERRAIN_EDIT_SERVICE_H
 #define TERRAIN_EDIT_SERVICE_H
 
+#include "FileStorage/TextureFileStoreMapper.h"
 #include "Frameworks/ServiceManager.h"
 #include "Frameworks/CommandSubscriber.h"
 #include "Frameworks/EventSubscriber.h"
@@ -19,11 +20,13 @@
 
 namespace LevelEditor
 {
+    class CreateNewTerrain;
+
     class TerrainEditService : public Enigma::Frameworks::ISystemService
     {
         DECLARE_EN_RTTI;
     public:
-        TerrainEditService(Enigma::Frameworks::ServiceManager* srv_mngr);
+        TerrainEditService(Enigma::Frameworks::ServiceManager* srv_mngr, const std::shared_ptr<Enigma::FileStorage::TextureFileStoreMapper>& texture_file_store_mapper);
         TerrainEditService(const TerrainEditService&) = delete;
         TerrainEditService& operator=(const TerrainEditService&) = delete;
         virtual ~TerrainEditService() override;
@@ -34,13 +37,18 @@ namespace LevelEditor
         virtual Enigma::Frameworks::ServiceResult onTerm() override;
 
     protected:
+        void assembleTerrainGeometry(const std::shared_ptr<CreateNewTerrain>& cmd);
+        Enigma::Engine::TextureId assembleTerrainSplatTexture(const std::shared_ptr<CreateNewTerrain>& cmd);
+        Enigma::Primitives::PrimitiveId assembleTerrainPrimitive(const std::shared_ptr<CreateNewTerrain>& cmd, const Enigma::Engine::TextureId& splat_texture_id);
+        std::shared_ptr<Enigma::Terrain::TerrainPawn> assembleTerrainPawn(const std::shared_ptr<CreateNewTerrain>& cmd, const Enigma::Primitives::PrimitiveId& terrain_primitive_id);
         void createNewTerrain(const Enigma::Frameworks::ICommandPtr& c);
         void moveUpTerrainVertex(const Enigma::Frameworks::ICommandPtr& c);
         void paintTerrainLayer(const Enigma::Frameworks::ICommandPtr& c);
         void saveSplatTexture(const Enigma::Frameworks::ICommandPtr& c); // service 有 splat texture, 所以由 service 來存
+        void savePickedTerrain(const Enigma::Frameworks::ICommandPtr& c);
 
-        void onSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
-        void onTerrainPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
+        //void onSceneGraphBuilt(const Enigma::Frameworks::IEventPtr& e);
+        //void onTerrainPrimitiveBuilt(const Enigma::Frameworks::IEventPtr& e);
         void onPickedSpatialChanged(const Enigma::Frameworks::IEventPtr& e);
 
         void onSplatTextureSaved(const Enigma::Frameworks::IEventPtr& e);
@@ -61,17 +69,19 @@ namespace LevelEditor
         static std::array<std::string, TextureLayerNum> LayerSemantics;
 
     protected:
+        std::weak_ptr<Enigma::FileStorage::TextureFileStoreMapper> m_textureFileStoreMapper;
         std::weak_ptr<Enigma::Terrain::TerrainPawn> m_pickedTerrain;
-        std::unordered_map<std::string, std::weak_ptr<Enigma::Engine::Texture>> m_splatTextures;
+        std::unordered_map<Enigma::SceneGraph::SpatialId, std::weak_ptr<Enigma::Engine::Texture>, Enigma::SceneGraph::SpatialId::hash> m_splatTextures;
         std::weak_ptr<Enigma::Engine::Texture> m_pickedSplatTexture;
 
         Enigma::Frameworks::CommandSubscriberPtr m_createNewTerrain;
         Enigma::Frameworks::CommandSubscriberPtr m_moveUpTerrainVertex;
         Enigma::Frameworks::CommandSubscriberPtr m_paintTerrainLayer;
         Enigma::Frameworks::CommandSubscriberPtr m_saveSplatTexture;
+        Enigma::Frameworks::CommandSubscriberPtr m_savePickedTerrain;
 
-        Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
-        Enigma::Frameworks::EventSubscriberPtr m_onTerrainPrimitiveBuilt;
+        //Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphBuilt;
+        //Enigma::Frameworks::EventSubscriberPtr m_onTerrainPrimitiveBuilt;
         Enigma::Frameworks::EventSubscriberPtr m_onPickedSpatialChanged;
 
         Enigma::Frameworks::EventSubscriberPtr m_onSplatTextureSaved;

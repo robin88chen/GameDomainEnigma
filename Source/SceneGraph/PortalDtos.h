@@ -21,12 +21,28 @@ namespace Enigma::SceneGraph
         PortalZoneNodeDto(const LazyNodeDto& lazy_node_dto);
 
         [[nodiscard]] const SpatialId& portalParentId() const { return m_portalParentId; }
-        SpatialId& portalParentId() { return m_portalParentId; }
+        void portalParentId(const SpatialId& id) { m_portalParentId = id; }
 
         Engine::GenericDto toGenericDto() const;
 
     protected:
         SpatialId m_portalParentId;
+    };
+
+    class OutRegionNodeDto : public LazyNodeDto
+    {
+    public:
+        OutRegionNodeDto();
+        OutRegionNodeDto(const Engine::GenericDto& dto);
+        OutRegionNodeDto(const LazyNodeDto& lazy_node_dto);
+
+        [[nodiscard]] const SpatialId& ownerManagementId() const { return m_ownerManagementId; }
+        void ownerManagementId(const SpatialId& id) { m_ownerManagementId = id; }
+
+        Engine::GenericDto toGenericDto() const;
+
+    protected:
+        SpatialId m_ownerManagementId;
     };
 
     class PortalDto : public SpatialDto
@@ -37,10 +53,10 @@ namespace Enigma::SceneGraph
         PortalDto(const SpatialDto& spatial_dto);
 
         [[nodiscard]] const SpatialId& adjacentZoneNodeId() const { return m_adjacentZoneNodeId; }
-        SpatialId& adjacentZoneNodeId() { return m_adjacentZoneNodeId; }
+        void adjacentZoneNodeId(const SpatialId& id) { m_adjacentZoneNodeId = id; }
 
         [[nodiscard]] bool isOpen() const { return m_isOpen; }
-        bool& isOpen() { return m_isOpen; }
+        void isOpen(bool open) { m_isOpen = open; }
 
         Engine::GenericDto toGenericDto();
 
@@ -58,11 +74,11 @@ namespace Enigma::SceneGraph
 
         Engine::GenericDto toGenericDto();
 
-        [[nodiscard]] const SpatialId& outsideZoneNodeId() const { return m_outsideZoneNodeId; }
-        SpatialId& outsideZoneNodeId() { return m_outsideZoneNodeId; }
+        [[nodiscard]] const std::optional<SpatialId>& outsideRegionId() const { return m_outsideRegionId; }
+        void outsideRegionId(const SpatialId& outside_id) { m_outsideRegionId = outside_id; }
 
     protected:
-        SpatialId m_outsideZoneNodeId;
+        std::optional<SpatialId> m_outsideRegionId;
     };
 }
 

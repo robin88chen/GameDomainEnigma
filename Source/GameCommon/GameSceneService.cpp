@@ -101,14 +101,14 @@ void GameSceneService::createNodalSceneRoot(const SceneGraph::SpatialId& scene_r
     const auto er = m_sceneGraph->createRoot(scene_root_id);
     if (er)
     {
-        EventPublisher::post(std::make_shared<CreateNodalSceneRootFailed>(scene_root_id, er));
+        EventPublisher::enqueue(std::make_shared<CreateNodalSceneRootFailed>(scene_root_id, er));
         return;
     }
     if ((!m_cameraService.expired()) && m_cameraService.lock()->primaryCamera())
     {
         createSceneCuller(m_cameraService.lock()->primaryCamera());
     }
-    EventPublisher::post(std::make_shared<NodalSceneRootCreated>(m_sceneGraph->root()));
+    EventPublisher::enqueue(std::make_shared<NodalSceneRootCreated>(m_sceneGraph->root()));
 }
 
 void GameSceneService::createPortalSceneRoot(const SceneGraph::SpatialId& scene_root_id)
@@ -128,14 +128,14 @@ void GameSceneService::createPortalSceneRoot(const SceneGraph::SpatialId& scene_
     const auto er = m_sceneGraph->createRoot(scene_root_id);
     if (er)
     {
-        EventPublisher::post(std::make_shared<CreatePortalSceneRootFailed>(scene_root_id, er));
+        EventPublisher::enqueue(std::make_shared<CreatePortalSceneRootFailed>(scene_root_id, er));
         return;
     }
     if ((!m_cameraService.expired()) && m_cameraService.lock()->primaryCamera())
     {
         createSceneCuller(m_cameraService.lock()->primaryCamera());
     }
-    EventPublisher::post(std::make_shared<PortalSceneRootCreated>(m_sceneGraph->root()));
+    EventPublisher::enqueue(std::make_shared<PortalSceneRootCreated>(m_sceneGraph->root()));
 }
 
 void GameSceneService::destroyRootScene()
@@ -184,12 +184,12 @@ void GameSceneService::createSceneRoot(const Frameworks::ICommandPtr& c)
     {
         if (cmd->sceneRootId().empty())
         {
-            EventPublisher::post(std::make_shared<CreateNodalSceneRootFailed>(cmd->sceneRootId(), ErrorCode::invalidSceneRootId));
+            EventPublisher::enqueue(std::make_shared<CreateNodalSceneRootFailed>(cmd->sceneRootId(), ErrorCode::invalidSceneRootId));
             return;
         }
         if ((m_sceneGraph) && (m_sceneGraph->root()))
         {
-            EventPublisher::post(std::make_shared<CreateNodalSceneRootFailed>(cmd->sceneRootId(), ErrorCode::sceneRootAlreadyExist));
+            EventPublisher::enqueue(std::make_shared<CreateNodalSceneRootFailed>(cmd->sceneRootId(), ErrorCode::sceneRootAlreadyExist));
             return;
         }
         createNodalSceneRoot(cmd->sceneRootId());
@@ -198,12 +198,12 @@ void GameSceneService::createSceneRoot(const Frameworks::ICommandPtr& c)
     {
         if (cmd->portalManagementNodeId().empty())
         {
-            EventPublisher::post(std::make_shared<CreatePortalSceneRootFailed>(cmd->portalManagementNodeId(), ErrorCode::invalidSceneRootId));
+            EventPublisher::enqueue(std::make_shared<CreatePortalSceneRootFailed>(cmd->portalManagementNodeId(), ErrorCode::invalidSceneRootId));
             return;
         }
         if ((m_sceneGraph) && (m_sceneGraph->root()))
         {
-            EventPublisher::post(std::make_shared<CreatePortalSceneRootFailed>(cmd->portalManagementNodeId(), ErrorCode::sceneRootAlreadyExist));
+            EventPublisher::enqueue(std::make_shared<CreatePortalSceneRootFailed>(cmd->portalManagementNodeId(), ErrorCode::sceneRootAlreadyExist));
             return;
         }
         createPortalSceneRoot(cmd->portalManagementNodeId());
@@ -218,15 +218,15 @@ void GameSceneService::attachSceneRootChild(const Frameworks::ICommandPtr& c)
     if (!cmd->child()) return;
     if (!m_sceneGraph->root())
     {
-        EventPublisher::post(std::make_shared<AttachSceneRootChildFailed>(cmd->child()->id(), ErrorCode::nullSceneRoot));
+        EventPublisher::enqueue(std::make_shared<AttachSceneRootChildFailed>(cmd->child()->id(), ErrorCode::nullSceneRoot));
         return;
     }
     if (error er = m_sceneGraph->root()->attachChild(cmd->child(), cmd->localTransform()))
     {
-        EventPublisher::post(std::make_shared<AttachSceneRootChildFailed>(cmd->child()->id(), er));
+        EventPublisher::enqueue(std::make_shared<AttachSceneRootChildFailed>(cmd->child()->id(), er));
     }
     else
     {
-        EventPublisher::post(std::make_shared<SceneRootChildAttached>(cmd->child()));
+        EventPublisher::enqueue(std::make_shared<SceneRootChildAttached>(cmd->child()));
     }
 }

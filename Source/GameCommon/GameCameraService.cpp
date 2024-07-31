@@ -1,6 +1,7 @@
 ﻿#include "Platforms/PlatformConfig.h"
 #include "GameCameraService.h"
 #include "GameCameraEvents.h"
+#include "GameCameraQueries.h"
 #include "SceneGraph/Camera.h"
 #include "SceneGraph/Frustum.h"
 #include "Frameworks/EventPublisher.h"
@@ -12,6 +13,8 @@
 #include "GameCameraCommands.h"
 #include "InputHandlers/GestureInputEvents.h"
 #include "SceneGraph/SceneGraphFactory.h"
+#include "SceneGraph/SceneGraphQueries.h"
+#include "Frameworks/QueryDispatcher.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::Frameworks;
@@ -64,6 +67,9 @@ ServiceResult GameCameraService::onInit()
     EventPublisher::subscribe(typeid(GestureScale), m_onGestureScale);
 #endif
 
+    m_queryPrimaryCamera = std::make_shared<QuerySubscriber>([=](auto q) { queryPrimaryCamera(q); });
+    QueryDispatcher::subscribe(typeid(QueryPrimaryCamera), m_queryPrimaryCamera);
+
     return ServiceResult::Complete;
 }
 
@@ -94,6 +100,9 @@ ServiceResult GameCameraService::onTerm()
     m_onGestureScale = nullptr;
 #endif
 
+    QueryDispatcher::unsubscribe(typeid(QueryPrimaryCamera), m_queryPrimaryCamera);
+    m_queryPrimaryCamera = nullptr;
+
     m_primaryCamera = nullptr;
 
     return ServiceResult::Complete;
@@ -108,11 +117,10 @@ void GameCameraService::constitutePrimaryCamera(const SceneGraph::SpatialId& id,
     }
     else
     {
-        m_primaryCamera = m_sceneGraphRepository.lock()->factory()->constituteCamera(id, dto, false);
-        m_sceneGraphRepository.lock()->putCamera(m_primaryCamera);
+        m_primaryCamera = std::make_shared<RequestCameraConstitution>(id, dto)->dispatch();
     }
     assert(m_sceneGraphRepository.lock()->hasCamera(id));
-    EventPublisher::post(std::make_shared<GameCameraCreated>(m_primaryCamera));
+    EventPublisher::enqueue(std::make_shared<GameCameraCreated>(m_primaryCamera));
 }
 
 void GameCameraService::zoom(float dist)
@@ -121,7 +129,7 @@ void GameCameraService::zoom(float dist)
 
     const error er = m_primaryCamera->zoom(dist);
 
-    if (!er) EventPublisher::post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::CameraFrame));
+    if (!er) EventPublisher::enqueue(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::CameraFrame));
 }
 
 void GameCameraService::move(float dir_dist, float slide_dist)
@@ -130,7 +138,7 @@ void GameCameraService::move(float dir_dist, float slide_dist)
 
     const error er = m_primaryCamera->move(dir_dist, slide_dist);
 
-    if (!er) EventPublisher::post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::CameraFrame));
+    if (!er) EventPublisher::enqueue(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::CameraFrame));
 }
 
 void GameCameraService::moveXZ(float move_x, float move_z)
@@ -139,7 +147,7 @@ void GameCameraService::moveXZ(float move_x, float move_z)
 
     const error er = m_primaryCamera->moveXZ(move_x, move_z);
 
-    if (!er) EventPublisher::post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::CameraFrame));
+    if (!er) EventPublisher::enqueue(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::CameraFrame));
 }
 
 void GameCameraService::shiftLookAt(const Vector3& vecLookAt)
@@ -148,7 +156,7 @@ void GameCameraService::shiftLookAt(const Vector3& vecLookAt)
 
     const error er = m_primaryCamera->shiftLookAt(vecLookAt);
 
-    if (!er) EventPublisher::post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::CameraFrame));
+    if (!er) EventPublisher::enqueue(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::CameraFrame));
 }
 
 void GameCameraService::sphereRotate(float horz_angle, float vert_angle, const Vector3& center)
@@ -157,35 +165,35 @@ void GameCameraService::sphereRotate(float horz_angle, float vert_angle, const V
 
     const error er = m_primaryCamera->sphereRotate(horz_angle, vert_angle, center);
 
-    if (!er) EventPublisher::post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::CameraFrame));
+    if (!er) EventPublisher::enqueue(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::CameraFrame));
 }
 
 void GameCameraService::changeAspectRatio(float ratio)
 {
     if (!m_primaryCamera) return;
     m_primaryCamera->changeAspectRatio(ratio);
-    EventPublisher::post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::Aspect));
+    EventPublisher::enqueue(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::Aspect));
 }
 
 void GameCameraService::changeFrustumFarPlane(float far_z)
 {
     if (!m_primaryCamera) return;
     m_primaryCamera->changeFrustumFarPlane(far_z);
-    EventPublisher::post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::FrustumZ));
+    EventPublisher::enqueue(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::FrustumZ));
 }
 
 void GameCameraService::changeFrustumFov(float fov)
 {
     if (!m_primaryCamera) return;
     m_primaryCamera->changeFrustumFov(fov);
-    EventPublisher::post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::FrustumFov));
+    EventPublisher::enqueue(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::FrustumFov));
 }
 
 void GameCameraService::changeFrustumNearPlane(float near_z)
 {
     if (!m_primaryCamera) return;
     m_primaryCamera->changeFrustumNearPlane(near_z);
-    EventPublisher::post(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::FrustumZ));
+    EventPublisher::enqueue(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::FrustumZ));
 }
 
 Ray3 GameCameraService::getPickerRay(float clip_space_x, float clip_space_y)
@@ -285,4 +293,12 @@ void GameCameraService::moveXZ(const Frameworks::ICommandPtr& c)
     const auto cmd = std::dynamic_pointer_cast<MoveCameraXZ, ICommand>(c);
     if (!cmd) return;
     moveXZ(cmd->GetMoveX(), cmd->GetMoveZ());
+}
+
+void GameCameraService::queryPrimaryCamera(const Frameworks::IQueryPtr& q)
+{
+    if (!q) return;
+    const auto query = std::dynamic_pointer_cast<QueryPrimaryCamera, IQuery>(q);
+    if (!query) return;
+    query->setResult(primaryCamera());
 }

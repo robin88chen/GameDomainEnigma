@@ -31,7 +31,7 @@ namespace Enigma::GameCommon
 
         Engine::GenericDto toGenericDto();
         AnimatedPawnDto toAnimatedPawnDto();
-        std::shared_ptr<AnimatedPawn> constitute(SceneGraph::PersistenceLevel persistence_level);
+        std::shared_ptr<AnimatedPawn> constitute();
 
     private:
         SceneGraph::SpatialId m_id;

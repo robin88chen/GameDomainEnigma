@@ -11,6 +11,7 @@
 #include "Frameworks/SystemService.h"
 #include "Frameworks/ServiceManager.h"
 #include "Frameworks/QuerySubscriber.h"
+#include "Frameworks/CommandSubscriber.h"
 #include "EffectMaterialId.h"
 #include <unordered_map>
 #include <mutex>
@@ -39,16 +40,15 @@ namespace Enigma::Engine
 
         bool hasEffectMaterial(const EffectMaterialId& id);
         std::shared_ptr<EffectMaterial> queryEffectMaterial(const EffectMaterialId& id);
-        void releaseEffectMaterial(const EffectMaterialId& id);
 
     private:
         void queryEffectMaterial(const Frameworks::IQueryPtr& q);
-
 
     private:
         std::shared_ptr<EffectMaterialSourceStoreMapper> m_storeMapper;
         EffectCompilingQueue* m_compilingQueue;
 
+        //! ADR: effect material 編譯比較耗時，先存放為 shared_ptr, source 中的複製品則用 weak_ptr
         typedef std::unordered_map<EffectMaterialId, std::shared_ptr<EffectMaterialSource>, EffectMaterialId::hash> SourceMaterialMap;
         SourceMaterialMap m_sourceMaterials;
         std::recursive_mutex m_sourceMapLock;

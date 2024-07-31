@@ -36,6 +36,7 @@ namespace Enigma::Renderables
 
         void createBoneMatrixArray(unsigned int size);
         void updateBoneEffectMatrix(unsigned int idx, const MathLib::Matrix4& ref_mx);
+        void clearBoneMatrixArray();
 
         /** bind primitive bone matrix */
         void bindPrimitiveBoneMatrix();

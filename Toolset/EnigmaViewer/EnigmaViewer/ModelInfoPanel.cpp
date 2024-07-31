@@ -149,7 +149,7 @@ void ModelInfoPanel::onChangeMeshTexture(const nana::menu::item_proxy& menu_item
         std::string sub_path = (--(--paths[0].end()))->generic_string();
         auto texure_id = std::make_shared<ResolveTextureId>(sub_path + "/" + stem)->dispatch();
         if (texure_id.name().empty()) return;
-        Enigma::Frameworks::CommandBus::post(std::make_shared<ChangeMeshTexture>(mesh_id, texure_id));
+        Enigma::Frameworks::CommandBus::enqueue(std::make_shared<ChangeMeshTexture>(mesh_id, texure_id));
     }
     //m_main->GetAppDelegate()->ChangeMeshTexture(m_meshNodeTree->selected().key());
 }

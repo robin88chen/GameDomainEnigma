@@ -102,10 +102,10 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphCommands.h">
       <Filter>Commands</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightInfoDtos.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightDtos.h">
       <Filter>DTO &amp; Assemblers</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\CameraFrustumDtos.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\CameraDtos.h">
       <Filter>DTO &amp; Assemblers</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LazyNodeHydrationService.h">
@@ -198,6 +198,39 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalSceneGraph.h">
       <Filter>Scene Graph</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphFactoryDelegate.h">
+      <Filter>Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\CameraAssemblers.h">
+      <Filter>DTO &amp; Assemblers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialDto.h">
+      <Filter>DTO &amp; Assemblers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialAssembler.h">
+      <Filter>DTO &amp; Assemblers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalAssemblers.h">
+      <Filter>Portal System\Dtos</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightAssemblers.h">
+      <Filter>DTO &amp; Assemblers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightEvents.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightCommands.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalEvents.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\OutRegionNode.h">
+      <Filter>Portal System</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphOwnership.h">
+      <Filter>Repository</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp">
@@ -233,10 +266,10 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphDtos.cpp">
       <Filter>DTO &amp; Assemblers</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightInfoDtos.cpp">
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightDtos.cpp">
       <Filter>DTO &amp; Assemblers</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\CameraFrustumDtos.cpp">
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\CameraDtos.cpp">
       <Filter>DTO &amp; Assemblers</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LazyNodeHydrationService.cpp">
@@ -310,6 +343,30 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalSceneGraph.cpp">
       <Filter>Scene Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\CameraAssemblers.cpp">
+      <Filter>DTO &amp; Assemblers</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialDto.cpp">
+      <Filter>DTO &amp; Assemblers</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialAssembler.cpp">
+      <Filter>DTO &amp; Assemblers</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalAssemblers.cpp">
+      <Filter>Portal System\Dtos</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightAssemblers.cpp">
+      <Filter>DTO &amp; Assemblers</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightCommands.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\OutRegionNode.cpp">
+      <Filter>Portal System</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphOwnership.cpp">
+      <Filter>Repository</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

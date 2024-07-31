@@ -44,11 +44,11 @@ std::shared_ptr<GeometryData> GeometryDataFactory::create(const GeometryId& id, 
     if (creator == m_creators.end())
     {
         Platforms::Debug::Printf("Can't find creator of %s\n", rtti.getName().c_str());
-        EventPublisher::post(std::make_shared<CreateGeometryFailed>(id, ErrorCode::geometryFactoryNotExists));
+        EventPublisher::enqueue(std::make_shared<CreateGeometryFailed>(id, ErrorCode::geometryFactoryNotExists));
         return nullptr;
     }
     auto geo = creator->second(id);
-    EventPublisher::post(std::make_shared<GeometryCreated>(id, geo));
+    EventPublisher::enqueue(std::make_shared<GeometryCreated>(id, geo));
     return geo;
 }
 
@@ -58,11 +58,11 @@ std::shared_ptr<GeometryData> GeometryDataFactory::constitute(const GeometryId& 
     if (constitutor == m_constitutors.end())
     {
         Platforms::Debug::Printf("Can't find constitutor of %s\n", dto.getRtti().GetRttiName().c_str());
-        EventPublisher::post(std::make_shared<ConstituteGeometryFailed>(id, ErrorCode::geometryFactoryNotExists));
+        EventPublisher::enqueue(std::make_shared<ConstituteGeometryFailed>(id, ErrorCode::geometryFactoryNotExists));
         return nullptr;
     }
     auto geo = constitutor->second(id, dto);
-    EventPublisher::post(std::make_shared<GeometryConstituted>(id, geo, is_persisted));
+    EventPublisher::enqueue(std::make_shared<GeometryConstituted>(id, geo, is_persisted));
     return geo;
 }
 

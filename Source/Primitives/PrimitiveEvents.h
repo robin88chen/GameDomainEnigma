@@ -60,6 +60,16 @@ namespace Enigma::Primitives
         PrimitiveId m_id;
         std::error_code m_error;
     };
+    class PrimitiveRemoved : public Frameworks::IEvent
+    {
+    public:
+        PrimitiveRemoved(const PrimitiveId& id) : m_id(id) {}
+
+        const PrimitiveId& id() { return m_id; }
+
+    private:
+        PrimitiveId m_id;
+    };
     class RemovePrimitiveFailed : public Frameworks::IEvent
     {
     public:
@@ -70,6 +80,16 @@ namespace Enigma::Primitives
     private:
         PrimitiveId m_id;
         std::error_code m_error;
+    };
+    class PrimitivePut : public Frameworks::IEvent
+    {
+    public:
+        PrimitivePut(const PrimitiveId& id) : m_id(id) {}
+
+        const PrimitiveId& id() { return m_id; }
+
+    private:
+        PrimitiveId m_id;
     };
     class PutPrimitiveFailed : public Frameworks::IEvent
     {

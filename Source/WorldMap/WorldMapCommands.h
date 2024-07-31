@@ -8,28 +8,69 @@
 #ifndef WORLD_MAP_COMMANDS_H
 #define WORLD_MAP_COMMANDS_H
 
+#include "WorldMapId.h"
 #include "Frameworks/Command.h"
 #include "GameEngine/GenericDto.h"
 #include "Terrain/TerrainPawn.h"
 #include "MathLib/Matrix4.h"
 #include "GameEngine/BoundingVolume.h"
+#include "WorldMap.h"
 
 namespace Enigma::WorldMap
 {
     class CreateEmptyWorldMap : public Frameworks::ICommand
     {
     public:
-        CreateEmptyWorldMap(const std::string& name, const Engine::FactoryDesc& factory_desc, const std::string& portal_manager_name) : m_name(name), m_factory_desc(factory_desc), m_portal_manager_name(portal_manager_name) {}
+        CreateEmptyWorldMap(const WorldMapId& id, const Engine::FactoryDesc& factory_desc, const std::optional<SceneGraph::SpatialId>& outside_region_id) : m_id(id), m_factory_desc(factory_desc), m_outside_region_id(outside_region_id) {}
 
-        const std::string& name() const { return m_name; }
+        const WorldMapId& id() const { return m_id; }
         const Engine::FactoryDesc& factoryDesc() const { return m_factory_desc; }
-        const std::string& portalManagerName() const { return m_portal_manager_name; }
+        const std::optional<SceneGraph::SpatialId>& outsideRegionId() const { return m_outside_region_id; }
+
+        //! ADR : 沒有合適的地方放 handler and subscriber, 改為在這裡實作
+        void execute() override;
 
     protected:
-        std::string m_name;
+        WorldMapId m_id;
         Engine::FactoryDesc m_factory_desc;
-        std::string m_portal_manager_name;
+        std::optional<SceneGraph::SpatialId> m_outside_region_id;
     };
+    class CreateWorldMapOutsideRegion : public Frameworks::ICommand
+    {
+    public:
+        CreateWorldMapOutsideRegion(const SceneGraph::SpatialId& id, const Engine::FactoryDesc& factory_desc) : m_id(id), m_factory_desc(factory_desc) {}
+
+        const SceneGraph::SpatialId& id() const { return m_id; }
+        const Engine::FactoryDesc& factoryDesc() const { return m_factory_desc; }
+
+        //! ADR : 沒有合適的地方放 handler and subscriber, 改為在這裡實作
+        void execute() override;
+
+    protected:
+        SceneGraph::SpatialId m_id;
+        Engine::FactoryDesc m_factory_desc;
+    };
+    class PutWorldMap : public Frameworks::ICommand
+    {
+    public:
+        PutWorldMap(const WorldMapId& id, const std::shared_ptr<WorldMap>& world_map) : m_id(id), m_worldMap(world_map) {}
+
+        const WorldMapId& id() const { return m_id; }
+        const std::shared_ptr<WorldMap>& worldMap() const { return m_worldMap; }
+
+    protected:
+        WorldMapId m_id;
+        std::shared_ptr<WorldMap> m_worldMap;
+    };
+    class RemoveWorldMap : public Frameworks::ICommand
+    {
+    public:
+        RemoveWorldMap(const WorldMapId& id) : m_id(id) {}
+        const WorldMapId& id() const { return m_id; }
+    protected:
+        WorldMapId m_id;
+    };
+
     class DeserializeWorldMap : public Frameworks::ICommand
     {
     public:
@@ -55,15 +96,6 @@ namespace Enigma::WorldMap
     protected:
         std::shared_ptr<Terrain::TerrainPawn> m_terrain;
         MathLib::Matrix4 m_local;
-    };
-    class CreateFittingQuadNode : public Frameworks::IRequestCommand
-    {
-    public:
-        CreateFittingQuadNode(const Engine::BoundingVolume& bv) : m_bv(bv) {}
-
-        const Engine::BoundingVolume& getBoundingVolume() const { return m_bv; }
-    protected:
-        Engine::BoundingVolume m_bv;
     };
 }
 

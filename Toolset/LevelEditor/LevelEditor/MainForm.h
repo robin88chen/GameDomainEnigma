@@ -14,6 +14,8 @@
 #include "nana/gui/timer.hpp"
 #include "nana/gui/widgets/toolbar.hpp"
 #include "nana/gui/widgets/label.hpp"
+#include "nana/gui/widgets/treebox.hpp"
+#include "nana/gui/dragdrop.hpp"
 #include "EditorModes.h"
 
 namespace LevelEditor
@@ -24,8 +26,11 @@ namespace LevelEditor
     class SpatialInspectorPanel;
     class TerrainToolPanel;
     class OutputPanel;
+    class AssetsBrowsePanel;
     class WorldEditConsole;
     class PawnEditConsole;
+    class TerrainEditConsole;
+    class EditorSceneConsole;
 
     class MainForm : public nana::form
     {
@@ -58,6 +63,8 @@ namespace LevelEditor
         RenderPanel* getRenderPanel() { return m_renderPanel; }
         SpatialInspectorPanel* getSpatialInspectorPanel() { return m_spatialInspectorPanel; }
 
+        void bindAssetToSceneGraphDragdrop();
+
         inline static std::string DataKey = "LevelEditor::MainForm";
     private:
         void initMenu();
@@ -69,7 +76,10 @@ namespace LevelEditor
         void onLoadWorldCommand(const nana::menu::item_proxy& menu_item);
         void onSaveWorldCommand(const nana::menu::item_proxy& menu_item);
         void onAddTerrainCommand(const nana::menu::item_proxy& menu_item);
-        void onAddEnvironmentLightCommand(const nana::menu::item_proxy& menu_item);
+        void onSaveTerrainCommand(const nana::menu::item_proxy& menu_item);
+        void onAddAmbientLightCommand(const nana::menu::item_proxy& menu_item);
+        void onAddSunLightCommand(const nana::menu::item_proxy& menu_item);
+        void onAddPointLightCommand(const nana::menu::item_proxy& menu_item);
 
         void onCreateZoneNodeCommand(const nana::menu::item_proxy& menu_item);
         void onAddPortalCommand(const nana::menu::item_proxy& menu_item);
@@ -88,6 +98,12 @@ namespace LevelEditor
         void onGodModeChanged(bool enabled);
         void finalizeGraphics();
 
+        nana::treebox* getAssetsTree() const;
+        bool isAssetHovered() const;
+        nana::treebox* getSceneGraphTree() const;
+        void dropAssetToScene();
+        bool hasDropTargetNodeSelected() const;
+
     private:
         nana::menubar* m_menubar;
         nana::tabbar<int>* m_tabbar;
@@ -97,12 +113,17 @@ namespace LevelEditor
         nana::timer* m_timer;
         RenderPanel* m_renderPanel;
         SceneGraphPanel* m_sceneGraphPanel;
+        AssetsBrowsePanel* m_assetsBrowsePanel;
         SpatialInspectorPanel* m_spatialInspectorPanel;
         TerrainToolPanel* m_terrainToolPanel;
         OutputPanel* m_outputPanel;
 
+        nana::simple_dragdrop* m_assetToSceneGraphDragDrop;
+
         std::weak_ptr<WorldEditConsole> m_worldConsole;
+        std::weak_ptr<TerrainEditConsole> m_terrainConsole;
         std::weak_ptr<PawnEditConsole> m_pawnConsole;
+        std::weak_ptr<EditorSceneConsole> m_sceneConsole;
 
         EditorMode m_editorMode;
     };

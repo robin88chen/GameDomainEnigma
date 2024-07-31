@@ -14,7 +14,8 @@
 #include "MathLib/Ray3.h"
 #include "Frameworks/EventSubscriber.h"
 #include "Frameworks/CommandSubscriber.h"
-#include "SceneGraph/CameraFrustumDtos.h"
+#include "Frameworks/QuerySubscriber.h"
+#include "SceneGraph/CameraDtos.h"
 
 namespace Enigma::GameCommon
 {
@@ -66,6 +67,8 @@ namespace Enigma::GameCommon
         void move(const Frameworks::ICommandPtr& c);
         void moveXZ(const Frameworks::ICommandPtr& c);
 
+        void queryPrimaryCamera(const Frameworks::IQueryPtr& q);
+
     protected:
         std::weak_ptr<SceneGraph::SceneGraphRepository> m_sceneGraphRepository;
         std::shared_ptr<SceneGraph::Camera> m_primaryCamera;
@@ -80,6 +83,8 @@ namespace Enigma::GameCommon
         Frameworks::CommandSubscriberPtr m_sphereRotateCamera;
         Frameworks::CommandSubscriberPtr m_moveCamera;
         Frameworks::CommandSubscriberPtr m_moveCameraXZ;
+
+        Frameworks::QuerySubscriberPtr m_queryPrimaryCamera;
     };
 }
 

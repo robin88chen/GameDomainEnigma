@@ -1,0 +1,2 @@
+camera,En.SceneGraph.Camera,camera.cam@DataPath
+_PortalManagement_,En.SceneGraph.PortalManagementNode,_PortalManagement_.node@DataPath

@@ -29,7 +29,7 @@ namespace Enigma::Animators
     class QueryAnimatorNextSequenceNumber : public Frameworks::Query<std::uint64_t>
     {
     public:
-        QueryAnimatorNextSequenceNumber(const AnimatorId& id) : m_id(id) {}
+        QueryAnimatorNextSequenceNumber(const AnimatorId& id) : Query(0), m_id(id) {}
 
         const AnimatorId& id() const { return m_id; }
 

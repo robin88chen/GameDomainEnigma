@@ -33,6 +33,8 @@ namespace Enigma::Frameworks
     class Query : public IQuery
     {
     public:
+        Query() = default;
+        Query(const R& result) : m_result(result) {}
         void setResult(const R& result) { m_result = result; }
         R getResult() const { return m_result; }
 

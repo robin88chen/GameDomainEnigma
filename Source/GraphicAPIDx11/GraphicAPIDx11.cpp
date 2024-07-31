@@ -144,7 +144,7 @@ error GraphicAPIDx11::CreatePrimaryBackSurface(const std::string& back_name, con
 
     if ((m_deviceRequiredBits.m_usesDepthBuffer) && (!depth_name.empty()))
     {
-        auto dimension = back_surface->getDimension();
+        const auto& dimension = back_surface->getDimension();
         Graphics::IDepthStencilSurfacePtr depth_surface = Graphics::IDepthStencilSurfacePtr{
             menew DepthStencilSurfaceDx11{ depth_name, m_d3dDevice, dimension, m_fmtDepthSurface } };
         SetDepthSurfaceFormat(depth_surface->GetFormat());

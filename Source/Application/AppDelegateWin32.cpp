@@ -93,7 +93,7 @@ void AppDelegate::initialize(Graphics::IGraphicAPI::APIVersion /*api_ver*/, Grap
     registerAppClass();
     create();
 
-    CoInitializeEx(NULL, COINIT_MULTITHREADED);  // for WIC Texture Loader
+    //CoInitializeEx(NULL, COINIT_MULTITHREADED);  // for WIC Texture Loader
 
     installEngine();
 }

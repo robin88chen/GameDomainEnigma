@@ -47,7 +47,7 @@ error DeviceAlphaBlendStateDx11::CreateFromData(const BlendStateData& data)
         }
     }
     HRESULT hr = device->CreateBlendState(&desc, &m_d3dBlend);
-    if (FATAL_LOG_EXPR(hr)) return ErrorCode::dxCreateBlendState;
+    if (FATAL_LOG_EXPR(FAILED(hr))) return ErrorCode::dxCreateBlendState;
 
     Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::AlphaBlendStateResourceCreated>(m_name));
     return ErrorCode::ok;

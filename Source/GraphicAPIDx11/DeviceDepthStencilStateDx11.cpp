@@ -61,7 +61,7 @@ error DeviceDepthStencilStateDx11::CreateFromData(const DepthStencilData& data)
     FillStencilOpData(desc.BackFace, m_data.m_backFaceOp);
 
     HRESULT hr = device->CreateDepthStencilState(&desc, &m_d3dDepthStencil);
-    if (FATAL_LOG_EXPR(hr)) return ErrorCode::dxCreateDepthState;
+    if (FATAL_LOG_EXPR(FAILED(hr))) return ErrorCode::dxCreateDepthState;
 
     Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::DepthStencilStateResourceCreated>(m_name));
     return ErrorCode::ok;

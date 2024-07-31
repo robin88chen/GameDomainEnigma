@@ -23,8 +23,8 @@ namespace Enigma::SceneGraph
         ~SpatialId();
         SpatialId(const SpatialId& other);
         SpatialId& operator=(const SpatialId& other);
-        SpatialId(SpatialId&& other);
-        SpatialId& operator=(SpatialId&& other);
+        SpatialId(SpatialId&& other) noexcept;
+        SpatialId& operator=(SpatialId&& other) noexcept;
 
         bool operator==(const SpatialId& other) const { return m_name == other.m_name && m_rtti == other.m_rtti; }
         bool operator!=(const SpatialId& other) const { return m_name != other.m_name || m_rtti != other.m_rtti; }

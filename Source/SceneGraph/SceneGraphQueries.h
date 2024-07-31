@@ -66,7 +66,7 @@ namespace Enigma::SceneGraph
     class HasSpatial : public Frameworks::Query<bool>
     {
     public:
-        HasSpatial(const SpatialId& id) : m_id(id) {}
+        HasSpatial(const SpatialId& id) : Query(false), m_id(id) { }
 
         const SpatialId& id() const { return m_id; }
 

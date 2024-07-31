@@ -24,7 +24,7 @@ SpatialId::SpatialId(const SpatialId& other)
 {
 }
 
-SpatialId::SpatialId(SpatialId&& other)
+SpatialId::SpatialId(SpatialId&& other) noexcept
 {
     m_name = std::move(other.m_name);
     m_rtti = std::move(other.m_rtti);
@@ -37,7 +37,7 @@ SpatialId& SpatialId::operator=(const SpatialId& other)
     return *this;
 }
 
-SpatialId& SpatialId::operator=(SpatialId&& other)
+SpatialId& SpatialId::operator=(SpatialId&& other) noexcept
 {
     m_name = std::move(other.m_name);
     m_rtti = std::move(other.m_rtti);

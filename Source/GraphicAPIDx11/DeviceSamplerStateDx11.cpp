@@ -47,7 +47,7 @@ error DeviceSamplerStateDx11::CreateFromData(const SamplerStateData& data)
     desc.MaxLOD = m_data.m_maxLOD;
 
     HRESULT hr = device->CreateSamplerState(&desc, &m_d3dSampler);
-    if (FATAL_LOG_EXPR(hr)) return ErrorCode::dxCreateSamplerState;
+    if (FATAL_LOG_EXPR(FAILED(hr))) return ErrorCode::dxCreateSamplerState;
 
     Frameworks::EventPublisher::enqueue(std::make_shared<Graphics::SamplerStateResourceCreated>(m_name));
     return ErrorCode::ok;

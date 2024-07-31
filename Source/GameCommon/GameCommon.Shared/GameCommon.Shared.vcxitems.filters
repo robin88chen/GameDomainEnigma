@@ -129,6 +129,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCameraQueries.h">
       <Filter>GameCamera</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightMeshAssembler.h">
+      <Filter>DeferredRenderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCameraService.cpp">
@@ -199,6 +202,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightingPawnRepository.cpp">
       <Filter>DeferredRenderer\LightingPawn</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightMeshAssembler.cpp">
+      <Filter>DeferredRenderer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

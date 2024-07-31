@@ -34,7 +34,7 @@ namespace Enigma::WorldMap
     class HasWorldMap : public Frameworks::Query<bool>
     {
     public:
-        HasWorldMap(const WorldMapId& id) : m_id(id) {}
+        HasWorldMap(const WorldMapId& id) : Query(false), m_id(id) { }
 
         const WorldMapId& id() const { return m_id; }
 
@@ -77,7 +77,7 @@ namespace Enigma::WorldMap
     class HasQuadTreeRoot : public Frameworks::Query<bool>
     {
     public:
-        HasQuadTreeRoot(const QuadTreeRootId& id) : m_id(id) {}
+        HasQuadTreeRoot(const QuadTreeRootId& id) : Query(false), m_id(id) { }
 
         const QuadTreeRootId& id() const { return m_id; }
 

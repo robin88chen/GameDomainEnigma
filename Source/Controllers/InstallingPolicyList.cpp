@@ -6,7 +6,7 @@
 #include "SceneGraph/SceneGraphInstallingPolicy.h"
 #include "InputHandlers/InputHandlerInstallingPolicy.h"
 #include "GameCommon/GameCommonInstallingPolicies.h"
-#include "GameCommon/SceneRendererInstallingPolicy.h"
+#include "Rendering/SceneRendererInstallingPolicy.h"
 #include "Primitives/PrimitiveRepositoryInstallingPolicy.h"
 #include "GameEngine/EffectMaterialSourceRepositoryInstallingPolicy.h"
 #include "GameEngine/TextureRepositoryInstallingPolicy.h"

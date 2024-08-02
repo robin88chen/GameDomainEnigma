@@ -1,11 +1,10 @@
 ﻿#include "LightVolumePawn.h"
-
-#include "GameCameraEvents.h"
+#include "GameCommon/GameCameraEvents.h"
 #include "Renderables/MeshPrimitive.h"
-#include "GameCommonErrors.h"
+#include "RenderingErrors.h"
 #include "LightingMeshQueries.h"
 #include "LightingPawnDto.h"
-#include "GameCameraQueries.h"
+#include "GameCommon/GameCameraQueries.h"
 #include "SceneGraph/LightEvents.h"
 #include "Frameworks/EventPublisher.h"
 
@@ -14,6 +13,7 @@ using namespace Enigma::SceneGraph;
 using namespace Enigma::Engine;
 using namespace Enigma::Renderables;
 using namespace Enigma::MathLib;
+using namespace Enigma::Rendering;
 
 DEFINE_RTTI(GameCommon, LightVolumePawn, LightingPawn);
 

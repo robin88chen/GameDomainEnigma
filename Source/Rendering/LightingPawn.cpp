@@ -1,5 +1,4 @@
 ﻿#include "LightingPawn.h"
-#include "GameCommonErrors.h"
 #include "SceneGraph/Light.h"
 #include "LightingPawnDto.h"
 #include "SceneGraph/SceneGraphQueries.h"

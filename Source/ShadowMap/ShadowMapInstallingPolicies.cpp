@@ -1,7 +1,7 @@
 ﻿#include "ShadowMapInstallingPolicies.h"
 #include "CascadeShadowMapService.h"
 #include "GameCommon/GameSceneService.h"
-#include "GameCommon/SceneRendererService.h"
+#include "Rendering/SceneRendererService.h"
 #include "GameCommon/GameCameraService.h"
 #include "Renderer/RendererManager.h"
 #include "ShadowMapService.h"

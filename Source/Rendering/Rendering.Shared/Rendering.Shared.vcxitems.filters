@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="SceneRendering">
+      <UniqueIdentifier>{227853d2-c978-43e0-a783-ab8494b09ac6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DeferredRendering">
+      <UniqueIdentifier>{efe6f888-6969-4697-8d47-916aa64e5e76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Installing">
+      <UniqueIdentifier>{432cff96-583b-435d-95ff-feeb4742ae83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ErrorCode">
+      <UniqueIdentifier>{275707ac-ed73-47d6-9ce9-dc842bb29be4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneRendererService.cpp">
+      <Filter>SceneRendering</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneRendererServiceConfiguration.cpp">
+      <Filter>SceneRendering</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\DeferredRendererService.cpp">
+      <Filter>DeferredRendering</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\DeferredRendererServiceConfiguration.cpp">
+      <Filter>DeferredRendering</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightMeshAssembler.cpp">
+      <Filter>DeferredRendering</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightingPawn.cpp">
+      <Filter>DeferredRendering</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightingPawnDto.cpp">
+      <Filter>DeferredRendering</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightingPawnRepository.cpp">
+      <Filter>DeferredRendering</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightQuadPawn.cpp">
+      <Filter>DeferredRendering</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightVolumePawn.cpp">
+      <Filter>DeferredRendering</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneRendererInstallingPolicy.cpp">
+      <Filter>Installing</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderingErrors.cpp">
+      <Filter>ErrorCode</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneRendererService.h">
+      <Filter>SceneRendering</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneRendererServiceConfiguration.h">
+      <Filter>SceneRendering</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\DeferredRendererService.h">
+      <Filter>DeferredRendering</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\DeferredRendererServiceConfiguration.h">
+      <Filter>DeferredRendering</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\DeferredRenderingCommands.h">
+      <Filter>DeferredRendering</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightMeshAssembler.h">
+      <Filter>DeferredRendering</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightingMeshQueries.h">
+      <Filter>DeferredRendering</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightingPawn.h">
+      <Filter>DeferredRendering</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightingPawnDto.h">
+      <Filter>DeferredRendering</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightingPawnRepository.h">
+      <Filter>DeferredRendering</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightQuadPawn.h">
+      <Filter>DeferredRendering</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightVolumePawn.h">
+      <Filter>DeferredRendering</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneRendererInstallingPolicy.h">
+      <Filter>Installing</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderingErrors.h">
+      <Filter>ErrorCode</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

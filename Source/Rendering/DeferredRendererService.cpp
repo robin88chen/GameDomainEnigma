@@ -1,7 +1,5 @@
 ﻿#include "DeferredRendererService.h"
 #include "DeferredRendererServiceConfiguration.h"
-#include "GameCameraEvents.h"
-#include "GameSceneService.h"
 #include "LightVolumePawn.h"
 #include "Controllers/GraphicMain.h"
 #include "Frameworks/CommandBus.h"

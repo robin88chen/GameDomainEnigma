@@ -1,15 +1,16 @@
 ﻿#include "LightQuadPawn.h"
-#include "GameCommonErrors.h"
 #include "LightingMeshQueries.h"
 #include "SceneGraph/Light.h"
 #include "SceneGraph/LightInfo.h"
 #include "LightingPawnDto.h"
 #include "SceneGraph/LightEvents.h"
+#include "RenderingErrors.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::MathLib;
 using namespace Enigma::Engine;
 using namespace Enigma::SceneGraph;
+using namespace Enigma::Rendering;
 
 DEFINE_RTTI(GameCommon, LightQuadPawn, LightingPawn);
 

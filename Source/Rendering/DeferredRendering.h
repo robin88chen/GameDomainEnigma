@@ -16,16 +16,12 @@
 #include "SceneGraph/SceneGraphRepository.h"
 #include <memory>
 
-namespace Enigma::GameCommon
+namespace Enigma::Rendering
 {
+    class LightMeshAssembler;
     class LightingPawn;
     class LightVolumePawn;
     class LightingPawnRepository;
-    class LightMeshAssembler;
-};
-
-namespace Enigma::Rendering
-{
     class DeferredRenderingConfiguration;
 
     class DeferredRendering : public SceneRendering
@@ -63,8 +59,8 @@ namespace Enigma::Rendering
 
     private:
         std::shared_ptr<DeferredRenderingConfiguration> m_configuration;
-        std::shared_ptr<GameCommon::LightMeshAssembler> m_lightMeshAssembler;
-        std::shared_ptr<GameCommon::LightingPawnRepository> m_lightingPawns;
+        std::shared_ptr<LightMeshAssembler> m_lightMeshAssembler;
+        std::shared_ptr<LightingPawnRepository> m_lightingPawns;
 
         std::weak_ptr<Renderer::RenderTarget> m_gBuffer;
 

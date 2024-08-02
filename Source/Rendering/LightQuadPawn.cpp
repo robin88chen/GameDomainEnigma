@@ -6,13 +6,13 @@
 #include "SceneGraph/LightEvents.h"
 #include "RenderingErrors.h"
 
-using namespace Enigma::GameCommon;
+using namespace Enigma::Rendering;
 using namespace Enigma::MathLib;
 using namespace Enigma::Engine;
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Rendering;
 
-DEFINE_RTTI(GameCommon, LightQuadPawn, LightingPawn);
+DEFINE_RTTI(Rendering, LightQuadPawn, LightingPawn);
 
 LightQuadPawn::LightQuadPawn(const SpatialId& id) : LightingPawn(id)
 {

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <ImportGroup Label="PropertySheets" />
-  <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
-  <ItemDefinitionGroup>
-    <Link>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <LibraryDependencies>Application_Android;ShadowMap_Android;GameCommon_Android;InputHandlers_Android;Controllers_Android;Gateways_Android;Prefabs_Android;WorldMap_Android;Terrain_Android;Renderables_Android;Renderer_Android;SceneGraph_Android;Geometries_Android;Primitives_Android;Animators_Android;GameEngine_Android;GraphicAPIEgl_Android;GraphicKernel_Android;Frameworks_Android;Platforms_Android;AssetPackage_Android;FileSystem_Android;MathLib_Android;png;z;%(LibraryDependencies)</LibraryDependencies>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemGroup />
+    <ImportGroup Label="PropertySheets" />
+    <PropertyGroup Label="UserMacros" />
+    <PropertyGroup />
+    <ItemDefinitionGroup>
+        <Link>
+            <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+            <LibraryDependencies>Application_Android;ShadowMap_Android;GameCommon_Android;InputHandlers_Android;Controllers_Android;Gateways_Android;Prefabs_Android;Rendering_Android;WorldMap_Android;Terrain_Android;Renderables_Android;Renderer_Android;SceneGraph_Android;Geometries_Android;Primitives_Android;Animators_Android;GameEngine_Android;GraphicAPIEgl_Android;GraphicKernel_Android;Frameworks_Android;Platforms_Android;AssetPackage_Android;FileSystem_Android;MathLib_Android;png;z;%(LibraryDependencies)</LibraryDependencies>
+        </Link>
+    </ItemDefinitionGroup>
+    <ItemGroup />
 </Project>

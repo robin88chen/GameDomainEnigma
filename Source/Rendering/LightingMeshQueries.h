@@ -11,7 +11,7 @@
 #include "Frameworks/Query.h"
 #include "Renderables/MeshPrimitive.h"
 
-namespace Enigma::GameCommon
+namespace Enigma::Rendering
 {
     class RequestAmbientLightMeshAssembly : public Frameworks::Query<std::shared_ptr<Renderables::MeshPrimitive>>
     {

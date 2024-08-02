@@ -10,7 +10,7 @@
 #include "SceneGraph/SceneGraphEvents.h"
 #include "Frameworks/EventPublisher.h"
 
-using namespace Enigma::GameCommon;
+using namespace Enigma::Rendering;
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Renderables;
 using namespace Enigma::Engine;

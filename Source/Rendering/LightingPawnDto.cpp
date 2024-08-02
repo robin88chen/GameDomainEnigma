@@ -1,7 +1,7 @@
 ﻿#include "LightingPawnDto.h"
 #include "LightingPawn.h"
 
-using namespace Enigma::GameCommon;
+using namespace Enigma::Rendering;
 using namespace Enigma::SceneGraph;
 
 static std::string TOKEN_HOST_LIGHT_ID = "HostLightId";

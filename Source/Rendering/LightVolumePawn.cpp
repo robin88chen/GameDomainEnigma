@@ -8,14 +8,14 @@
 #include "SceneGraph/LightEvents.h"
 #include "Frameworks/EventPublisher.h"
 
-using namespace Enigma::GameCommon;
+using namespace Enigma::Rendering;
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Engine;
 using namespace Enigma::Renderables;
 using namespace Enigma::MathLib;
-using namespace Enigma::Rendering;
+using namespace Enigma::GameCommon;
 
-DEFINE_RTTI(GameCommon, LightVolumePawn, LightingPawn);
+DEFINE_RTTI(Rendering, LightVolumePawn, LightingPawn);
 
 std::string LightVolumePawn::m_tokenDefaultVisualTech = "Default";
 std::string LightVolumePawn::m_tokenInsideVisualTech = "Inside";

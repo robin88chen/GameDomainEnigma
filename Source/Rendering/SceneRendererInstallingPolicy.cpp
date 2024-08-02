@@ -42,8 +42,8 @@ error DeferredRendererInstallingPolicy::install(Frameworks::ServiceManager* serv
     service_manager->registerSystemService(deferred_renderer_service);
     service_manager->insertHashAsService(SceneRendering::TYPE_RTTI, deferred_renderer_service);
 
-    Frameworks::CommandBus::enqueue(std::make_shared<SceneGraph::RegisterSpatialFactory>(GameCommon::LightVolumePawn::TYPE_RTTI.getName(), GameCommon::LightVolumePawn::create, GameCommon::LightVolumePawn::constitute));
-    Frameworks::CommandBus::enqueue(std::make_shared<SceneGraph::RegisterSpatialFactory>(GameCommon::LightQuadPawn::TYPE_RTTI.getName(), GameCommon::LightQuadPawn::create, GameCommon::LightQuadPawn::constitute));
+    Frameworks::CommandBus::enqueue(std::make_shared<SceneGraph::RegisterSpatialFactory>(LightVolumePawn::TYPE_RTTI.getName(), LightVolumePawn::create, LightVolumePawn::constitute));
+    Frameworks::CommandBus::enqueue(std::make_shared<SceneGraph::RegisterSpatialFactory>(LightQuadPawn::TYPE_RTTI.getName(), LightQuadPawn::create, LightQuadPawn::constitute));
     deferred_renderer_service->createSceneRenderSystem(m_rendererName, m_targetName);
     return error();
 }

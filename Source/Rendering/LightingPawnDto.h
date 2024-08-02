@@ -10,7 +10,7 @@
 
 #include "SceneGraph/SceneGraphDtos.h"
 
-namespace Enigma::GameCommon
+namespace Enigma::Rendering
 {
     class LightingPawnDto : public SceneGraph::PawnDto
     {

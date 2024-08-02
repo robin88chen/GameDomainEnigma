@@ -5,12 +5,12 @@
 #include "SceneGraph/LightEvents.h"
 #include "Frameworks/EventPublisher.h"
 
-using namespace Enigma::GameCommon;
+using namespace Enigma::Rendering;
 using namespace Enigma::MathLib;
 using namespace Enigma::Engine;
 using namespace Enigma::SceneGraph;
 
-DEFINE_RTTI(GameCommon, LightingPawn, Pawn);
+DEFINE_RTTI(Rendering, LightingPawn, Pawn);
 
 LightingPawn::LightingPawn(const SpatialId& id) : Pawn(id)
 {

@@ -5,7 +5,7 @@
 #include "Geometries/StandardGeometryAssemblers.h"
 #include "Renderables/RenderablePrimitiveAssembler.h"
 
-using namespace Enigma::GameCommon;
+using namespace Enigma::Rendering;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Renderables;
 using namespace Enigma::Geometries;
@@ -15,7 +15,7 @@ using namespace Enigma::Engine;
 #define SPHERE_STACKS 40
 #define SPHERE_SLICES 80
 
-LightMeshAssembler::LightMeshAssembler(const std::shared_ptr<Rendering::DeferredRenderingConfiguration>& configuration)
+LightMeshAssembler::LightMeshAssembler(const std::shared_ptr<DeferredRenderingConfiguration>& configuration)
     : m_configuration(configuration)
 {
     assert(m_configuration);
@@ -48,53 +48,53 @@ void LightMeshAssembler::unregisterHandlers()
 
 std::shared_ptr<MeshPrimitive> LightMeshAssembler::assembleAmbientLightMesh(const Primitives::PrimitiveId& mesh_id)
 {
-    const auto amb_quad_id = Geometries::GeometryId(mesh_id.name() + ".geo");
-    auto quad_geo = Geometries::GeometryData::queryGeometryData(amb_quad_id);
+    const auto amb_quad_id = GeometryId(mesh_id.name() + ".geo");
+    auto quad_geo = GeometryData::queryGeometryData(amb_quad_id);
     if (!quad_geo)
     {
-        quad_geo = Geometries::SquareQuadAssembler(amb_quad_id).xyQuad(MathLib::Vector3(-1.0f, -1.0f, 0.5f), MathLib::Vector3(1.0f, 1.0f, 0.5f)).textureCoord(MathLib::Vector2(0.0f, 1.0f), MathLib::Vector2(1.0f, 0.0f)).constitute();
+        quad_geo = SquareQuadAssembler(amb_quad_id).xyQuad(MathLib::Vector3(-1.0f, -1.0f, 0.5f), MathLib::Vector3(1.0f, 1.0f, 0.5f)).textureCoord(MathLib::Vector2(0.0f, 1.0f), MathLib::Vector2(1.0f, 0.0f)).constitute();
     }
     auto lit_mesh = Primitives::Primitive::queryPrimitive(mesh_id);
     if (!lit_mesh)
     {
-        lit_mesh = Renderables::MeshPrimitiveAssembler(mesh_id).geometryId(amb_quad_id).asNative(mesh_id.name() + ".mesh@DataPath").effect(m_configuration->ambientEffect()).textureMap(getGBufferTextureSemantics()).renderListID(Renderer::Renderer::RenderListID::DeferredLighting).constitute();
+        lit_mesh = MeshPrimitiveAssembler(mesh_id).geometryId(amb_quad_id).asNative(mesh_id.name() + ".mesh@DataPath").effect(m_configuration->ambientEffect()).textureMap(getGBufferTextureSemantics()).renderListID(Renderer::Renderer::RenderListID::DeferredLighting).constitute();
     }
     return std::dynamic_pointer_cast<MeshPrimitive>(lit_mesh);
 }
 
 std::shared_ptr<MeshPrimitive> LightMeshAssembler::assembleSunLightMesh(const Primitives::PrimitiveId& mesh_id)
 {
-    const auto sun_quad_id = Geometries::GeometryId(mesh_id.name() + ".geo");
-    auto quad_geo = Geometries::GeometryData::queryGeometryData(sun_quad_id);
+    const auto sun_quad_id = GeometryId(mesh_id.name() + ".geo");
+    auto quad_geo = GeometryData::queryGeometryData(sun_quad_id);
     if (!quad_geo)
     {
-        quad_geo = Geometries::SquareQuadAssembler(sun_quad_id).xyQuad(MathLib::Vector3(-1.0f, -1.0f, 0.5f), MathLib::Vector3(1.0f, 1.0f, 0.5f)).textureCoord(MathLib::Vector2(0.0f, 1.0f), MathLib::Vector2(1.0f, 0.0f)).constitute();
+        quad_geo = SquareQuadAssembler(sun_quad_id).xyQuad(MathLib::Vector3(-1.0f, -1.0f, 0.5f), MathLib::Vector3(1.0f, 1.0f, 0.5f)).textureCoord(MathLib::Vector2(0.0f, 1.0f), MathLib::Vector2(1.0f, 0.0f)).constitute();
     }
     auto lit_mesh = Primitives::Primitive::queryPrimitive(mesh_id);
     if (!lit_mesh)
     {
-        lit_mesh = Renderables::MeshPrimitiveAssembler(mesh_id).geometryId(sun_quad_id).asNative(mesh_id.name() + ".mesh@DataPath").effect(m_configuration->sunLightEffect()).textureMap(getGBufferTextureSemantics()).renderListID(Renderer::Renderer::RenderListID::DeferredLighting).constitute();
+        lit_mesh = MeshPrimitiveAssembler(mesh_id).geometryId(sun_quad_id).asNative(mesh_id.name() + ".mesh@DataPath").effect(m_configuration->sunLightEffect()).textureMap(getGBufferTextureSemantics()).renderListID(Renderer::Renderer::RenderListID::DeferredLighting).constitute();
     }
     return std::dynamic_pointer_cast<MeshPrimitive>(lit_mesh);
 }
 
 std::shared_ptr<MeshPrimitive> LightMeshAssembler::assemblePointLightMesh(const Primitives::PrimitiveId& mesh_id, float sphere_radius)
 {
-    const auto vol_geo_id = Geometries::GeometryId("deferred_" + mesh_id.name() + ".geo");
-    auto vol_geo = Geometries::GeometryData::queryGeometryData(vol_geo_id);
+    const auto vol_geo_id = GeometryId("deferred_" + mesh_id.name() + ".geo");
+    auto vol_geo = GeometryData::queryGeometryData(vol_geo_id);
     if (!vol_geo)
     {
-        vol_geo = Geometries::SphereAssembler(vol_geo_id).sphere(MathLib::Vector3::ZERO, sphere_radius, SPHERE_SLICES, SPHERE_STACKS).boxBound().constitute();
+        vol_geo = SphereAssembler(vol_geo_id).sphere(MathLib::Vector3::ZERO, sphere_radius, SPHERE_SLICES, SPHERE_STACKS).boxBound().constitute();
     }
     auto vol_mesh = Primitives::Primitive::queryPrimitive(mesh_id);
     if (!vol_mesh)
     {
-        vol_mesh = Renderables::MeshPrimitiveAssembler(mesh_id).geometryId(vol_geo_id).asNative(mesh_id.name() + ".mesh@DataPath").effect(m_configuration->lightVolumeEffect()).textureMap(getGBufferTextureSemantics()).renderListID(Renderer::Renderer::RenderListID::DeferredLighting).constitute();
+        vol_mesh = MeshPrimitiveAssembler(mesh_id).geometryId(vol_geo_id).asNative(mesh_id.name() + ".mesh@DataPath").effect(m_configuration->lightVolumeEffect()).textureMap(getGBufferTextureSemantics()).renderListID(Renderer::Renderer::RenderListID::DeferredLighting).constitute();
     }
     return std::dynamic_pointer_cast<MeshPrimitive>(vol_mesh);
 }
 
-void LightMeshAssembler::requestAmbientLightMeshAssembly(const Frameworks::IQueryPtr& q)
+void LightMeshAssembler::requestAmbientLightMeshAssembly(const IQueryPtr& q)
 {
     if (!q) return;
     const auto ambient_query = std::dynamic_pointer_cast<RequestAmbientLightMeshAssembly>(q);
@@ -102,7 +102,7 @@ void LightMeshAssembler::requestAmbientLightMeshAssembly(const Frameworks::IQuer
     ambient_query->setResult(assembleAmbientLightMesh(ambient_query->meshId()));
 }
 
-void LightMeshAssembler::requestSunLightMeshAssembly(const Frameworks::IQueryPtr& q)
+void LightMeshAssembler::requestSunLightMeshAssembly(const IQueryPtr& q)
 {
     if (!q) return;
     const auto sun_query = std::dynamic_pointer_cast<RequestSunLightMeshAssembly>(q);
@@ -110,7 +110,7 @@ void LightMeshAssembler::requestSunLightMeshAssembly(const Frameworks::IQueryPtr
     sun_query->setResult(assembleSunLightMesh(sun_query->meshId()));
 }
 
-void LightMeshAssembler::requestPointLightMeshAssembly(const Frameworks::IQueryPtr& q)
+void LightMeshAssembler::requestPointLightMeshAssembly(const IQueryPtr& q)
 {
     if (!q) return;
     const auto point_query = std::dynamic_pointer_cast<RequestPointLightMeshAssembly>(q);

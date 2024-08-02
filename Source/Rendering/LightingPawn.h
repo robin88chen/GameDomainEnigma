@@ -12,7 +12,7 @@
 #include "SceneGraph/Light.h"
 #include "Frameworks/EventSubscriber.h"
 
-namespace Enigma::GameCommon
+namespace Enigma::Rendering
 {
     using error = std::error_code;
     class LightingPawn : public SceneGraph::Pawn

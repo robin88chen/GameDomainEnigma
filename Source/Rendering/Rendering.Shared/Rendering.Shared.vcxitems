@@ -14,8 +14,8 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\DeferredRendererService.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\DeferredRendererServiceConfiguration.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\DeferredRendering.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\DeferredRenderingConfiguration.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightingPawn.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightingPawnDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightingPawnRepository.cpp" />
@@ -24,12 +24,12 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightVolumePawn.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderingErrors.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneRendererInstallingPolicy.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneRendererService.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneRendererServiceConfiguration.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneRendering.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneRenderingConfiguration.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\DeferredRendererService.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\DeferredRendererServiceConfiguration.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\DeferredRendering.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\DeferredRenderingConfiguration.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DeferredRenderingCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightingMeshQueries.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightingPawn.h" />
@@ -40,7 +40,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightVolumePawn.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderingErrors.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneRendererInstallingPolicy.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneRendererService.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneRendererServiceConfiguration.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneRendering.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneRenderingConfiguration.h" />
   </ItemGroup>
 </Project>

@@ -1,37 +1,42 @@
 ﻿/*********************************************************************
- * \file   SceneRendererService.h
+ * \file   SceneRendering.h
  * \brief
  *
  * \author Lancelot 'Robin' Chen
  * \date   March 2023
  *********************************************************************/
-#ifndef _SCENE_RENDERER_SERVICE_H
-#define _SCENE_RENDERER_SERVICE_H
+#ifndef _SCENE_RENDERING_H
+#define _SCENE_RENDERING_H
 
 #include "Frameworks/SystemService.h"
 #include "Renderer/RendererManager.h"
 #include "Renderer/Renderer.h"
+#include "Renderer/RenderingConfiguration.h"
 #include "Frameworks/EventSubscriber.h"
-#include "SceneRendererServiceConfiguration.h"
 #include <memory>
 
 namespace Enigma::GameCommon
 {
     class GameSceneService;
     class GameCameraService;
+};
 
-    class SceneRendererService : public Frameworks::ISystemService
+namespace Enigma::Rendering
+{
+    class SceneRenderingConfiguration;
+
+    class SceneRendering : public Frameworks::ISystemService
     {
         DECLARE_EN_RTTI;
     public:
-        SceneRendererService(Frameworks::ServiceManager* mngr, const std::shared_ptr<GameSceneService>& scene_service,
-            const std::shared_ptr<GameCameraService>& camera_service,
-            const std::shared_ptr<Renderer::RendererManager>& renderer_manager, const std::shared_ptr<SceneRendererServiceConfiguration>& config);
-        SceneRendererService(const SceneRendererService&) = delete;
-        SceneRendererService(SceneRendererService&&) = delete;
-        virtual ~SceneRendererService() override;
-        SceneRendererService& operator=(const SceneRendererService&) = delete;
-        SceneRendererService& operator=(SceneRendererService&&) = delete;
+        SceneRendering(Frameworks::ServiceManager* mngr, const std::shared_ptr<GameCommon::GameSceneService>& scene_service,
+            const std::shared_ptr<GameCommon::GameCameraService>& camera_service,
+            const std::shared_ptr<Renderer::RendererManager>& renderer_manager, const std::shared_ptr<Renderer::IRenderingConfiguration>& config);
+        SceneRendering(const SceneRendering&) = delete;
+        SceneRendering(SceneRendering&&) = delete;
+        virtual ~SceneRendering() override;
+        SceneRendering& operator=(const SceneRendering&) = delete;
+        SceneRendering& operator=(SceneRendering&&) = delete;
 
         virtual Frameworks::ServiceResult onInit() override;
         virtual Frameworks::ServiceResult onTerm() override;
@@ -50,11 +55,11 @@ namespace Enigma::GameCommon
         void onPrimaryTargetCreated(const Frameworks::IEventPtr& e);
 
     private:
-        std::shared_ptr<SceneRendererServiceConfiguration> m_config;
+        std::shared_ptr<SceneRenderingConfiguration> m_config;
 
     protected:
-        std::weak_ptr<GameSceneService> m_sceneService;
-        std::weak_ptr<GameCameraService> m_cameraService;
+        std::weak_ptr<GameCommon::GameSceneService> m_sceneService;
+        std::weak_ptr<GameCommon::GameCameraService> m_cameraService;
         std::weak_ptr<Renderer::RendererManager> m_rendererManager;
         std::weak_ptr<Renderer::Renderer> m_renderer;
 
@@ -63,4 +68,4 @@ namespace Enigma::GameCommon
     };
 }
 
-#endif // _SCENE_RENDERER_SERVICE_H
+#endif // _SCENE_RENDERING_H

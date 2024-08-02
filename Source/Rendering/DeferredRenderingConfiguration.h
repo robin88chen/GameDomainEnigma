@@ -1,67 +1,68 @@
 ﻿/*********************************************************************
- * \file   DeferredRendererServiceConfiguration.h
+ * \file   DeferredRenderingConfiguration.h
  * \brief
  *
  * \author Lancelot 'Robin' Chen
  * \date   May 2023
  *********************************************************************/
-#ifndef DEFERRED_RENDERER_SERVICE_CONFIGURATION_H
-#define DEFERRED_RENDERER_SERVICE_CONFIGURATION_H
-#include <string>
-#include <vector>
+#ifndef DEFERRED_RENDERING_CONFIGURATION_H
+#define DEFERRED_RENDERING_CONFIGURATION_H
+
 #include "GraphicKernel/RenderTextureUsage.h"
 #include "GraphicKernel/GraphicAPITypes.h"
-#include "SceneRendererServiceConfiguration.h"
+#include "SceneRenderingConfiguration.h"
 #include "SceneGraph/Spatial.h"
 #include "GameEngine/EffectMaterialId.h"
 #include "GameEngine/TextureId.h"
+#include <string>
+#include <vector>
 
-namespace Enigma::GameCommon
+namespace Enigma::Rendering
 {
-    class DeferredRendererServiceConfiguration : public SceneRendererServiceConfiguration
+    class DeferredRenderingConfiguration : public SceneRenderingConfiguration
     {
     public:
-        DeferredRendererServiceConfiguration();
+        DeferredRenderingConfiguration();
 
         const Engine::EffectMaterialId& ambientEffect() const;
-        Engine::EffectMaterialId& ambientEffect();
+        void ambientEffect(const Engine::EffectMaterialId&);
         const Engine::EffectMaterialId& sunLightEffect() const;
-        Engine::EffectMaterialId& sunLightEffect();
+        void sunLightEffect(const Engine::EffectMaterialId&);
         const Engine::EffectMaterialId& lightVolumeEffect() const;
-        Engine::EffectMaterialId& lightVolumeEffect();
+        void lightVolumeEffect(const Engine::EffectMaterialId&);
 
         const std::string& deferredRendererTechniqueName() const;
-        std::string& deferredRendererTechniqueName();
+        void deferredRendererTechniqueName(const std::string& name);
         const std::string& visualTechniqueNameForCameraDefault() const;
-        std::string& visualTechniqueNameForCameraDefault();
+        void visualTechniqueNameForCameraDefault(const std::string& name);
         const std::string& visualTechniqueNameForCameraInside() const;
-        std::string& visualTechniqueNameForCameraInside();
+        void visualTechniqueNameForCameraInside(const std::string& name);
 
         const std::string& gbufferTargetName() const;
-        std::string& gbufferTargetName();
+        void gbufferTargetName(const std::string& name);
         const Engine::TextureId& gbufferTextureId() const;
-        Engine::TextureId& gbufferTextureId();
+        void gbufferTextureId(const Engine::TextureId&);
         const std::string& gbufferSurfaceName() const;
-        std::string& gbufferSurfaceName();
+        void gbufferSurfaceName(const std::string& name);
         const std::string& gbufferDepthName() const;
-        std::string& gbufferDepthName();
+        void gbufferDepthName(const std::string& name);
 
         const std::vector<Graphics::RenderTextureUsage>& gbufferUsages() const;
-        std::vector<Graphics::RenderTextureUsage>& gbufferUsages();
+        void gbufferUsages(const std::vector<Graphics::RenderTextureUsage>&);
         const std::vector<Graphics::GraphicFormat>& gbufferFormats() const;
-        std::vector<Graphics::GraphicFormat>& gbufferFormats();
+        void gbufferFormats(const std::vector<Graphics::GraphicFormat>&);
 
         const std::string& gbufferNormalSemantic() const;
-        std::string& gbufferNormalSemantic();
+        void gbufferNormalSemantic(const std::string&);
         const std::string& gbufferDiffuseSemantic() const;
-        std::string& gbufferDiffuseSemantic();
+        void gbufferDiffuseSemantic(const std::string&);
         const std::string& gbufferSpecularSemantic() const;
-        std::string& gbufferSpecularSemantic();
+        void gbufferSpecularSemantic(const std::string&);
         const std::string& gbufferDepthSemantic() const;
-        std::string& gbufferDepthSemantic();
+        void gbufferDepthSemantic(const std::string&);
 
         const SceneGraph::Spatial::SpatialFlags& sunLightSpatialFlags() const;
-        SceneGraph::Spatial::SpatialFlags& sunLightSpatialFlags();
+        void sunLightSpatialFlags(const SceneGraph::Spatial::SpatialFlags&);
 
         std::optional<unsigned> findRenderTextureUsageIndex(Graphics::RenderTextureUsage usage) const;
 
@@ -90,4 +91,4 @@ namespace Enigma::GameCommon
     };
 }
 
-#endif // DEFERRED_RENDERER_SERVICE_CONFIGURATION_H
+#endif // DEFERRED_RENDERING_CONFIGURATION_H

@@ -12,14 +12,17 @@
 #include "GameEngine/EffectTextureMapAssembler.h"
 #include "Renderables/MeshPrimitive.h"
 
+namespace Enigma::Rendering
+{
+    class DeferredRenderingConfiguration;
+};
+
 namespace Enigma::GameCommon
 {
-    class DeferredRendererServiceConfiguration;
-
     class LightMeshAssembler
     {
     public:
-        LightMeshAssembler(const std::shared_ptr<DeferredRendererServiceConfiguration>& configuration);
+        LightMeshAssembler(const std::shared_ptr<Rendering::DeferredRenderingConfiguration>& configuration);
         LightMeshAssembler(const LightMeshAssembler&) = delete;
         LightMeshAssembler(LightMeshAssembler&&) = delete;
         ~LightMeshAssembler();
@@ -41,7 +44,7 @@ namespace Enigma::GameCommon
         Engine::EffectTextureMapAssembler getGBufferTextureSemantics();
 
     protected:
-        std::shared_ptr<DeferredRendererServiceConfiguration> m_configuration;
+        std::shared_ptr<Rendering::DeferredRenderingConfiguration> m_configuration;
 
         Frameworks::QuerySubscriberPtr m_requestAmbientLightMeshAssembly;
         Frameworks::QuerySubscriberPtr m_requestSunLightMeshAssembly;

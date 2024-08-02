@@ -1,5 +1,5 @@
 ﻿#include "LightMeshAssembler.h"
-#include "DeferredRendererServiceConfiguration.h"
+#include "DeferredRenderingConfiguration.h"
 #include "Frameworks/QueryDispatcher.h"
 #include "LightingMeshQueries.h"
 #include "Geometries/StandardGeometryAssemblers.h"
@@ -15,7 +15,7 @@ using namespace Enigma::Engine;
 #define SPHERE_STACKS 40
 #define SPHERE_SLICES 80
 
-LightMeshAssembler::LightMeshAssembler(const std::shared_ptr<DeferredRendererServiceConfiguration>& configuration)
+LightMeshAssembler::LightMeshAssembler(const std::shared_ptr<Rendering::DeferredRenderingConfiguration>& configuration)
     : m_configuration(configuration)
 {
     assert(m_configuration);

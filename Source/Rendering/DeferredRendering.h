@@ -1,5 +1,5 @@
 ﻿/*********************************************************************
- * \file   DeferredRendererService.h
+ * \file   DeferredRendering.h
  * \brief
  *
  * \author Lancelot 'Robin' Chen
@@ -8,7 +8,7 @@
 #ifndef DEFERRED_RENDERER_SERVICE_H
 #define DEFERRED_RENDERER_SERVICE_H
 
-#include "SceneRendererService.h"
+#include "SceneRendering.h"
 #include "Renderables/MeshPrimitive.h"
 #include "Frameworks/EventSubscriber.h"
 #include "SceneGraph/Light.h"
@@ -20,23 +20,27 @@ namespace Enigma::GameCommon
 {
     class LightingPawn;
     class LightVolumePawn;
-    class DeferredRendererServiceConfiguration;
     class LightingPawnRepository;
     class LightMeshAssembler;
+};
 
-    class DeferredRendererService : public SceneRendererService
+namespace Enigma::Rendering
+{
+    class DeferredRenderingConfiguration;
+
+    class DeferredRendering : public SceneRendering
     {
         DECLARE_EN_RTTI
     public:
-        DeferredRendererService(Frameworks::ServiceManager* mngr, const std::shared_ptr<GameSceneService>& scene_service,
-            const std::shared_ptr<GameCameraService>& camera_service,
+        DeferredRendering(Frameworks::ServiceManager* mngr, const std::shared_ptr<GameCommon::GameSceneService>& scene_service,
+            const std::shared_ptr<GameCommon::GameCameraService>& camera_service,
             const std::shared_ptr<Renderer::RendererManager>& renderer_manager,
-            const std::shared_ptr<DeferredRendererServiceConfiguration>& configuration);
-        DeferredRendererService(const DeferredRendererService&) = delete;
-        DeferredRendererService(DeferredRendererService&&) = delete;
-        virtual ~DeferredRendererService() override;
-        DeferredRendererService& operator=(DeferredRendererService&) = delete;
-        DeferredRendererService& operator=(DeferredRendererService&&) = delete;
+            const std::shared_ptr<Renderer::IRenderingConfiguration>& configuration);
+        DeferredRendering(const DeferredRendering&) = delete;
+        DeferredRendering(DeferredRendering&&) = delete;
+        virtual ~DeferredRendering() override;
+        DeferredRendering& operator=(DeferredRendering&) = delete;
+        DeferredRendering& operator=(DeferredRendering&&) = delete;
 
         virtual Frameworks::ServiceResult onInit() override;
         virtual Frameworks::ServiceResult onTerm() override;
@@ -58,9 +62,9 @@ namespace Enigma::GameCommon
         void onLightInfoDeleted(const Frameworks::IEventPtr& e);
 
     private:
-        std::shared_ptr<DeferredRendererServiceConfiguration> m_configuration;
-        std::shared_ptr<LightMeshAssembler> m_lightMeshAssembler;
-        std::shared_ptr<LightingPawnRepository> m_lightingPawns;
+        std::shared_ptr<DeferredRenderingConfiguration> m_configuration;
+        std::shared_ptr<GameCommon::LightMeshAssembler> m_lightMeshAssembler;
+        std::shared_ptr<GameCommon::LightingPawnRepository> m_lightingPawns;
 
         std::weak_ptr<Renderer::RenderTarget> m_gBuffer;
 

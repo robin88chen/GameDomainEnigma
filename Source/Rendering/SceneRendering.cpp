@@ -1,4 +1,5 @@
-﻿#include "SceneRendererService.h"
+﻿#include "SceneRendering.h"
+#include "SceneRenderingConfiguration.h"
 #include "GameCommon/GameSceneService.h"
 #include "GameCommon/GameCameraEvents.h"
 #include "GameCommon/GameCameraService.h"
@@ -13,26 +14,28 @@
 using namespace Enigma::GameCommon;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Renderer;
+using namespace Enigma::Rendering;
 
-DEFINE_RTTI(GameCommon, SceneRendererService, ISystemService);
+DEFINE_RTTI(Rendering, SceneRendering, ISystemService);
 
-SceneRendererService::SceneRendererService(ServiceManager* mngr, const std::shared_ptr<GameSceneService>& scene_service,
+SceneRendering::SceneRendering(ServiceManager* mngr, const std::shared_ptr<GameSceneService>& scene_service,
     const std::shared_ptr<GameCameraService>& camera_service,
-    const std::shared_ptr<RendererManager>& renderer_manager, const std::shared_ptr<SceneRendererServiceConfiguration>& config) : ISystemService(mngr)
+    const std::shared_ptr<RendererManager>& renderer_manager, const std::shared_ptr<IRenderingConfiguration>& config) : ISystemService(mngr)
 {
-    m_config = config;
+    m_config = std::dynamic_pointer_cast<SceneRenderingConfiguration>(config);
+    assert(m_config);
     m_sceneService = scene_service;
     m_cameraService = camera_service;
     m_rendererManager = renderer_manager;
     m_needTick = false;
 }
 
-SceneRendererService::~SceneRendererService()
+SceneRendering::~SceneRendering()
 {
 
 }
 
-ServiceResult SceneRendererService::onInit()
+ServiceResult SceneRendering::onInit()
 {
     m_onPrimaryCameraCreated = std::make_shared<EventSubscriber>([this](const IEventPtr& e) { onPrimaryCameraCreated(e); });
     m_onPrimaryTargetCreated = std::make_shared<EventSubscriber>([this](const IEventPtr& e) { onPrimaryTargetCreated(e); });
@@ -42,7 +45,7 @@ ServiceResult SceneRendererService::onInit()
     return ServiceResult::Complete;
 }
 
-ServiceResult SceneRendererService::onTerm()
+ServiceResult SceneRendering::onTerm()
 {
     EventPublisher::unsubscribe(typeid(GameCameraCreated), m_onPrimaryCameraCreated);
     EventPublisher::unsubscribe(typeid(PrimaryRenderTargetCreated), m_onPrimaryTargetCreated);
@@ -52,30 +55,30 @@ ServiceResult SceneRendererService::onTerm()
     return ServiceResult::Complete;
 }
 
-void SceneRendererService::createSceneRenderSystem(const std::string& renderer_name, const std::string& target_name)
+void SceneRendering::createSceneRenderSystem(const std::string& renderer_name, const std::string& target_name)
 {
     assert(m_config);
     assert(!m_rendererManager.expired());
     error er = m_rendererManager.lock()->createRenderer(renderer_name);
     if (er) return;
-    er = m_rendererManager.lock()->createRenderTarget(target_name, m_config->IsPrimary() ? RenderTarget::PrimaryType::IsPrimary : RenderTarget::PrimaryType::NotPrimary, { Graphics::RenderTextureUsage::Default });
+    er = m_rendererManager.lock()->createRenderTarget(target_name, m_config->isPrimary() ? RenderTarget::PrimaryType::IsPrimary : RenderTarget::PrimaryType::NotPrimary, { Graphics::RenderTextureUsage::Default });
     if (er) return;
     auto renderer = std::dynamic_pointer_cast<Renderer::Renderer, Engine::IRenderer>(m_rendererManager.lock()->getRenderer(renderer_name));
-    renderer->selectRendererTechnique(m_config->PrimaryRendererTechniqueName());
+    renderer->selectRendererTechnique(m_config->primaryRendererTechniqueName());
     auto target = m_rendererManager.lock()->getRenderTarget(target_name);
     std::dynamic_pointer_cast<Renderer::Renderer, Engine::IRenderer>(renderer)->setRenderTarget(target);
     m_renderer = renderer;
     attachCamera();
 }
 
-void SceneRendererService::destroySceneRenderSystem(const std::string& renderer_name, const std::string& target_name)
+void SceneRendering::destroySceneRenderSystem(const std::string& renderer_name, const std::string& target_name)
 {
     assert(!m_rendererManager.expired());
     m_rendererManager.lock()->destroyRenderTarget(target_name);
     m_rendererManager.lock()->destroyRenderer(renderer_name);
 }
 
-void SceneRendererService::prepareGameScene()
+void SceneRendering::prepareGameScene()
 {
     if ((!m_renderer.expired()) && (!m_sceneService.expired()) && (m_sceneService.lock()->getSceneCuller()))
     {
@@ -83,7 +86,7 @@ void SceneRendererService::prepareGameScene()
     }
 }
 
-void SceneRendererService::renderGameScene()
+void SceneRendering::renderGameScene()
 {
     if (m_renderer.expired()) return;
     m_renderer.lock()->clearRenderTarget();
@@ -92,13 +95,13 @@ void SceneRendererService::renderGameScene()
     m_renderer.lock()->endScene();
 }
 
-void SceneRendererService::flip()
+void SceneRendering::flip()
 {
     if (m_renderer.expired()) return;
     m_renderer.lock()->flip();
 }
 
-void SceneRendererService::attachCamera()
+void SceneRendering::attachCamera()
 {
     if ((m_renderer.expired()) || (m_cameraService.expired())) return;
     m_renderer.lock()->setAssociatedCamera(m_cameraService.lock()->primaryCamera());
@@ -109,12 +112,12 @@ void SceneRendererService::attachCamera()
     }
 }
 
-void SceneRendererService::onPrimaryCameraCreated(const IEventPtr& e)
+void SceneRendering::onPrimaryCameraCreated(const IEventPtr& e)
 {
     attachCamera();
 }
 
-void SceneRendererService::onPrimaryTargetCreated(const Frameworks::IEventPtr& e)
+void SceneRendering::onPrimaryTargetCreated(const Frameworks::IEventPtr& e)
 {
     attachCamera();
 }

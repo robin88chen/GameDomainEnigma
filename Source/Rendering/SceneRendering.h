@@ -13,13 +13,8 @@
 #include "Renderer/Renderer.h"
 #include "Renderer/RenderingConfiguration.h"
 #include "Frameworks/EventSubscriber.h"
+#include "SceneGraph/VisibleSet.h"
 #include <memory>
-
-namespace Enigma::GameCommon
-{
-    class GameSceneService;
-    class GameCameraService;
-};
 
 namespace Enigma::Rendering
 {
@@ -29,9 +24,7 @@ namespace Enigma::Rendering
     {
         DECLARE_EN_RTTI;
     public:
-        SceneRendering(Frameworks::ServiceManager* mngr, const std::shared_ptr<GameCommon::GameSceneService>& scene_service,
-            const std::shared_ptr<GameCommon::GameCameraService>& camera_service,
-            const std::shared_ptr<Renderer::RendererManager>& renderer_manager, const std::shared_ptr<Renderer::IRenderingConfiguration>& config);
+        SceneRendering(Frameworks::ServiceManager* mngr, const std::shared_ptr<Renderer::RendererManager>& renderer_manager, const std::shared_ptr<Renderer::IRenderingConfiguration>& config);
         SceneRendering(const SceneRendering&) = delete;
         SceneRendering(SceneRendering&&) = delete;
         virtual ~SceneRendering() override;
@@ -44,26 +37,25 @@ namespace Enigma::Rendering
         virtual void createSceneRenderSystem(const std::string& renderer_name, const std::string& target_name);
         virtual void destroySceneRenderSystem(const std::string& renderer_name, const std::string& target_name);
 
-        virtual void prepareGameScene();
+        virtual void prepareGameScene(const SceneGraph::VisibleSet& visible_set);
         virtual void renderGameScene();
         virtual void flip();
 
     protected:
         void attachCamera();
 
-        void onPrimaryCameraCreated(const Frameworks::IEventPtr& e);
+        void onCameraCreatedOrConstituted(const Frameworks::IEventPtr& e);
         void onPrimaryTargetCreated(const Frameworks::IEventPtr& e);
 
     private:
         std::shared_ptr<SceneRenderingConfiguration> m_config;
 
     protected:
-        std::weak_ptr<GameCommon::GameSceneService> m_sceneService;
-        std::weak_ptr<GameCommon::GameCameraService> m_cameraService;
         std::weak_ptr<Renderer::RendererManager> m_rendererManager;
         std::weak_ptr<Renderer::Renderer> m_renderer;
 
-        Frameworks::EventSubscriberPtr m_onPrimaryCameraCreated;
+        Frameworks::EventSubscriberPtr m_onCameraCreated;
+        Frameworks::EventSubscriberPtr m_onCameraConstituted;
         Frameworks::EventSubscriberPtr m_onPrimaryTargetCreated;
     };
 }

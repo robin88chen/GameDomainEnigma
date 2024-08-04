@@ -1,31 +1,25 @@
 ﻿#include "SceneRendering.h"
 #include "SceneRenderingConfiguration.h"
-#include "GameCommon/GameSceneService.h"
-#include "GameCommon/GameCameraEvents.h"
-#include "GameCommon/GameCameraService.h"
 #include "Renderer/RendererManager.h"
 #include "Renderer/RenderTarget.h"
 #include "Renderer/Renderer.h"
 #include "Renderer/RendererEvents.h"
 #include "Frameworks/EventPublisher.h"
+#include "SceneGraph/CameraFrustumEvents.h"
 #include <cassert>
 #include <system_error>
 
-using namespace Enigma::GameCommon;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Renderer;
 using namespace Enigma::Rendering;
+using namespace Enigma::SceneGraph;
 
 DEFINE_RTTI(Rendering, SceneRendering, ISystemService);
 
-SceneRendering::SceneRendering(ServiceManager* mngr, const std::shared_ptr<GameSceneService>& scene_service,
-    const std::shared_ptr<GameCameraService>& camera_service,
-    const std::shared_ptr<RendererManager>& renderer_manager, const std::shared_ptr<IRenderingConfiguration>& config) : ISystemService(mngr)
+SceneRendering::SceneRendering(ServiceManager* mngr, const std::shared_ptr<RendererManager>& renderer_manager, const std::shared_ptr<IRenderingConfiguration>& config) : ISystemService(mngr)
 {
     m_config = std::dynamic_pointer_cast<SceneRenderingConfiguration>(config);
     assert(m_config);
-    m_sceneService = scene_service;
-    m_cameraService = camera_service;
     m_rendererManager = renderer_manager;
     m_needTick = false;
 }
@@ -37,9 +31,11 @@ SceneRendering::~SceneRendering()
 
 ServiceResult SceneRendering::onInit()
 {
-    m_onPrimaryCameraCreated = std::make_shared<EventSubscriber>([this](const IEventPtr& e) { onPrimaryCameraCreated(e); });
+    m_onCameraCreated = std::make_shared<EventSubscriber>([this](const IEventPtr& e) { onCameraCreatedOrConstituted(e); });
+    m_onCameraConstituted = std::make_shared<EventSubscriber>([this](const IEventPtr& e) { onCameraCreatedOrConstituted(e); });
     m_onPrimaryTargetCreated = std::make_shared<EventSubscriber>([this](const IEventPtr& e) { onPrimaryTargetCreated(e); });
-    EventPublisher::subscribe(typeid(GameCameraCreated), m_onPrimaryCameraCreated);
+    EventPublisher::subscribe(typeid(CameraCreated), m_onCameraCreated);
+    EventPublisher::subscribe(typeid(CameraConstituted), m_onCameraConstituted);
     EventPublisher::subscribe(typeid(PrimaryRenderTargetCreated), m_onPrimaryTargetCreated);
 
     return ServiceResult::Complete;
@@ -47,9 +43,11 @@ ServiceResult SceneRendering::onInit()
 
 ServiceResult SceneRendering::onTerm()
 {
-    EventPublisher::unsubscribe(typeid(GameCameraCreated), m_onPrimaryCameraCreated);
+    EventPublisher::unsubscribe(typeid(CameraCreated), m_onCameraCreated);
+    EventPublisher::unsubscribe(typeid(CameraConstituted), m_onCameraConstituted);
     EventPublisher::unsubscribe(typeid(PrimaryRenderTargetCreated), m_onPrimaryTargetCreated);
-    m_onPrimaryCameraCreated = nullptr;
+    m_onCameraCreated = nullptr;
+    m_onCameraConstituted = nullptr;
     m_onPrimaryTargetCreated = nullptr;
 
     return ServiceResult::Complete;
@@ -78,11 +76,11 @@ void SceneRendering::destroySceneRenderSystem(const std::string& renderer_name, 
     m_rendererManager.lock()->destroyRenderer(renderer_name);
 }
 
-void SceneRendering::prepareGameScene()
+void SceneRendering::prepareGameScene(const SceneGraph::VisibleSet& visible_set)
 {
-    if ((!m_renderer.expired()) && (!m_sceneService.expired()) && (m_sceneService.lock()->getSceneCuller()))
+    if ((!m_renderer.expired()) && (visible_set.getCount() != 0))
     {
-        m_renderer.lock()->prepareScene(m_sceneService.lock()->getSceneCuller()->getVisibleSet());
+        m_renderer.lock()->prepareScene(visible_set);
     }
 }
 

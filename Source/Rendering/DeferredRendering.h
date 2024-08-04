@@ -28,7 +28,7 @@ namespace Enigma::Rendering
     {
         DECLARE_EN_RTTI
     public:
-        DeferredRendering(Frameworks::ServiceManager* mngr, const std::shared_ptr<GameCommon::GameSceneService>& scene_service,
+        DeferredRendering(Frameworks::ServiceManager* mngr,
             const std::shared_ptr<GameCommon::GameCameraService>& camera_service,
             const std::shared_ptr<Renderer::RendererManager>& renderer_manager,
             const std::shared_ptr<Renderer::IRenderingConfiguration>& configuration);
@@ -44,7 +44,7 @@ namespace Enigma::Rendering
         virtual void createSceneRenderSystem(const std::string& renderer_name, const std::string& target_name) override;
         virtual void destroySceneRenderSystem(const std::string& renderer_name, const std::string& target_name) override;
 
-        virtual void prepareGameScene() override;
+        virtual void prepareGameScene(const SceneGraph::VisibleSet& visible_set) override;
 
     private:
         void createGBuffer(const Renderer::RenderTargetPtr& primary_target);

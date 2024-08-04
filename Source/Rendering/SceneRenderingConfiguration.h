@@ -9,6 +9,7 @@
 #define SCENE_RENDERING_CONFIGURATION_H
 
 #include "Renderer/RenderingConfiguration.h"
+#include "SceneGraph/SpatialId.h"
 #include <string>
 
 namespace Enigma::Rendering
@@ -18,13 +19,15 @@ namespace Enigma::Rendering
     public:
         SceneRenderingConfiguration();
 
+        const SceneGraph::SpatialId& primaryCameraId() const;
+        void primaryCameraId(const SceneGraph::SpatialId& id);
         bool isPrimary() const;
         void isPrimary(bool primary);
-
         const std::string& primaryRendererTechniqueName() const;
         void primaryRendererTechniqueName(const std::string& name);
 
     protected:
+        SceneGraph::SpatialId m_primaryCameraId;
         bool m_isPrimary;
         std::string m_primaryRendererTechniqueName;
     };

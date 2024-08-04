@@ -28,9 +28,9 @@ using namespace Enigma::Renderer;
 DEFINE_RTTI(Rendering, DeferredRendering, SceneRendering);
 
 DeferredRendering::DeferredRendering(ServiceManager* mngr,
-    const std::shared_ptr<GameSceneService>& scene_service, const std::shared_ptr<GameCameraService>& camera_service,
+    const std::shared_ptr<GameCameraService>& camera_service,
     const std::shared_ptr<RendererManager>& renderer_manager,
-    const std::shared_ptr<Renderer::IRenderingConfiguration>& configuration) : SceneRendering(mngr, scene_service, camera_service, renderer_manager, configuration)
+    const std::shared_ptr<Renderer::IRenderingConfiguration>& configuration) : SceneRendering(mngr, camera_service, renderer_manager, configuration)
 {
     m_configuration = std::dynamic_pointer_cast<DeferredRenderingConfiguration>(configuration);
     assert(m_configuration);
@@ -127,9 +127,9 @@ void DeferredRendering::destroySceneRenderSystem(const std::string& renderer_nam
     m_rendererManager.lock()->destroyRenderer(renderer_name);
 }
 
-void DeferredRendering::prepareGameScene()
+void DeferredRendering::prepareGameScene(const SceneGraph::VisibleSet& visible_set)
 {
-    SceneRendering::prepareGameScene();
+    SceneRendering::prepareGameScene(visible_set);
 }
 
 void DeferredRendering::createGBuffer(const RenderTargetPtr& primary_target)

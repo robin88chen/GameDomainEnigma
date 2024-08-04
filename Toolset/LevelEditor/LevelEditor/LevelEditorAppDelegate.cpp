@@ -9,7 +9,7 @@
 #include "GameEngine/EngineInstallingPolicy.h"
 #include "Renderer/RendererInstallingPolicy.h"
 #include "Gateways/JsonFileDtoDeserializer.h"
-#include "GameCommon/SceneRendererInstallingPolicy.h"
+#include "Rendering/SceneRendererInstallingPolicy.h"
 #include "Animators/AnimatorInstallingPolicy.h"
 #include "SceneGraph/SceneGraphInstallingPolicy.h"
 #include "InputHandlers/InputHandlerInstallingPolicy.h"
@@ -68,6 +68,7 @@ using namespace Enigma::InputHandlers;
 using namespace Enigma::Terrain;
 using namespace Enigma::ShadowMap;
 using namespace Enigma::FileStorage;
+using namespace Enigma::Rendering;
 
 std::string PrimaryTargetName = "primary_target";
 std::string DefaultRendererName = "default_renderer";
@@ -202,9 +203,9 @@ void EditorAppDelegate::installEngine()
     auto primitive_policy = std::make_shared<Enigma::Primitives::PrimitiveRepositoryInstallingPolicy>(m_primitiveFileStoreMapper);
 
     auto render_sys_policy = std::make_shared<RenderSystemInstallingPolicy>();
-    auto deferred_config = std::make_shared<DeferredRendererServiceConfiguration>();
-    deferred_config->sunLightEffect() = EffectMaterialId("fx/DeferredShadingWithShadowSunLightPass");
-    deferred_config->sunLightSpatialFlags() |= SpatialShadowFlags::Spatial_ShadowReceiver;
+    auto deferred_config = std::make_shared<DeferredRenderingConfiguration>();
+    deferred_config->sunLightEffect(EffectMaterialId("fx/DeferredShadingWithShadowSunLightPass"));
+    deferred_config->sunLightSpatialFlags(deferred_config->sunLightSpatialFlags() | Spatial::SpatialFlags(SpatialShadowFlags::Spatial_ShadowReceiver));
     auto deferred_renderer_policy = std::make_shared<DeferredRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName, deferred_config);
     //auto scene_render_config = std::make_shared<SceneRendererServiceConfiguration>();
     //auto scene_renderer_policy = std::make_shared<SceneRendererInstallingPolicy>(m_appConfig->GetDefaultRendererName(), m_appConfig->GetPrimaryTargetName(), scene_render_config);
@@ -229,7 +230,7 @@ void EditorAppDelegate::installEngine()
     m_inputHandler.lock()->RegisterKeyboardAsyncKey('D');
     m_inputHandler.lock()->RegisterKeyboardAsyncKey('S');
     m_inputHandler.lock()->RegisterKeyboardAsyncKey('W');
-    m_sceneRenderer = m_graphicMain->getSystemServiceAs<SceneRendererService>();
+    m_sceneRendering = m_graphicMain->getSystemServiceAs<SceneRendering>();
     m_shadowMapService = m_graphicMain->getSystemServiceAs<ShadowMapService>();
     m_graphicMain->getServiceManager()->registerSystemService(std::make_shared<WorldEditService>(m_graphicMain->getServiceManager(), m_graphicMain->getSystemServiceAs<WorldMapRepository>()));
     m_graphicMain->getServiceManager()->registerSystemService(std::make_shared<TerrainEditService>(m_graphicMain->getServiceManager(), m_textureFileStoreMapper));
@@ -282,16 +283,16 @@ void EditorAppDelegate::frameUpdate()
 void EditorAppDelegate::prepareRender()
 {
     if (!m_shadowMapService.expired()) m_shadowMapService.lock()->prepareShadowScene();
-    if (!m_sceneRenderer.expired()) m_sceneRenderer.lock()->prepareGameScene();
+    if (!m_sceneRendering.expired()) m_sceneRendering.lock()->prepareGameScene();
 }
 
 void EditorAppDelegate::renderFrame()
 {
     if (!m_shadowMapService.expired()) m_shadowMapService.lock()->renderShadowScene();
-    if (!m_sceneRenderer.expired())
+    if (!m_sceneRendering.expired())
     {
-        m_sceneRenderer.lock()->renderGameScene();
-        m_sceneRenderer.lock()->flip();
+        m_sceneRendering.lock()->renderGameScene();
+        m_sceneRendering.lock()->flip();
     }
 }
 

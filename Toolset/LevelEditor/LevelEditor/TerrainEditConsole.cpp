@@ -7,7 +7,7 @@
 #include "SceneGraph/SceneGraphCommands.h"
 #include "SceneGraph/SceneGraphEvents.h"
 #include "GameCommon/GameSceneCommands.h"
-#include "GameCommon/DeferredRenderingCommands.h"
+#include "Rendering/DeferredRenderingCommands.h"
 #include "LevelEditorUiEvents.h"
 #include "GeometryDataFileStoreMapper.h"
 

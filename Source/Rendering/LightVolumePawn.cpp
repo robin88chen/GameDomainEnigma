@@ -1,19 +1,18 @@
 ﻿#include "LightVolumePawn.h"
-#include "GameCommon/GameCameraEvents.h"
 #include "Renderables/MeshPrimitive.h"
 #include "RenderingErrors.h"
 #include "LightingMeshQueries.h"
 #include "LightingPawnDto.h"
-#include "GameCommon/GameCameraQueries.h"
 #include "SceneGraph/LightEvents.h"
 #include "Frameworks/EventPublisher.h"
+#include "SceneGraph/CameraFrustumEvents.h"
+#include "SceneGraph/SceneGraphQueries.h"
 
 using namespace Enigma::Rendering;
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Engine;
 using namespace Enigma::Renderables;
 using namespace Enigma::MathLib;
-using namespace Enigma::GameCommon;
 
 DEFINE_RTTI(Rendering, LightVolumePawn, LightingPawn);
 
@@ -24,16 +23,16 @@ LightVolumePawn::LightVolumePawn(const SpatialId& id) : LightingPawn(id), m_isCa
 {
 }
 
-LightVolumePawn::LightVolumePawn(const SpatialId& id, const Engine::GenericDto& o) : LightingPawn(id, o)
+LightVolumePawn::LightVolumePawn(const SpatialId& id, const Engine::GenericDto& o) : LightingPawn(id, o), m_isCameraInside(false)
 {
     if ((!m_primitive) && (!m_hostLight.expired()))
     {
-        LightingPawnDto dto(o);
+        LightVolumePawnDto dto(o);
         if ((m_hostLight.lock()->info().lightType() == LightInfo::LightType::Point) && (dto.primitiveId().has_value()))
         {
             m_primitive = std::make_shared<RequestPointLightMeshAssembly>(dto.primitiveId().value(), m_hostLight.lock()->getLightRange())->dispatch();
         }
-
+        m_prensentCameraId = dto.presentCameraId();
     }
 }
 
@@ -54,23 +53,24 @@ std::shared_ptr<LightVolumePawn> LightVolumePawn::constitute(const SceneGraph::S
 
 GenericDto LightVolumePawn::serializeDto()
 {
-    LightingPawnDto dto(SerializePawnDto());
+    LightVolumePawnDto dto{ LightingPawnDto(SerializePawnDto()) };
     if (getHostLight()) dto.hostLightId(getHostLight()->id());
+    if (!m_prensentCameraId.empty()) dto.presentCameraId(m_prensentCameraId);
     return dto.toGenericDto();
 }
 
 void LightVolumePawn::registerHandlers()
 {
     LightingPawn::registerHandlers();
-    m_onGameCameraUpdated = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { onGameCameraUpdated(e); });
-    Frameworks::EventPublisher::subscribe(typeid(GameCameraUpdated), m_onGameCameraUpdated);
+    m_onCameraFrameChanged = std::make_shared<Frameworks::EventSubscriber>([=](auto e) { onCameraFrameChanged(e); });
+    Frameworks::EventPublisher::subscribe(typeid(CameraFrameChanged), m_onCameraFrameChanged);
 }
 
 void LightVolumePawn::unregisterHandlers()
 {
     LightingPawn::unregisterHandlers();
-    Frameworks::EventPublisher::unsubscribe(typeid(GameCameraUpdated), m_onGameCameraUpdated);
-    m_onGameCameraUpdated = nullptr;
+    Frameworks::EventPublisher::unsubscribe(typeid(CameraFrameChanged), m_onCameraFrameChanged);
+    m_onCameraFrameChanged = nullptr;
 }
 
 void LightVolumePawn::toggleCameraInside(bool is_inside)
@@ -124,11 +124,11 @@ error LightVolumePawn::_updateWorldData(const MathLib::Matrix4& mxParentWorld)
 
 void LightVolumePawn::checkBackfaceCulling()
 {
-    std::shared_ptr<Camera> primaryCamera = std::make_shared<QueryPrimaryCamera>()->dispatch();
-    if (!primaryCamera) return;
+    std::shared_ptr<Camera> presentCamera = std::make_shared<QueryRunningCamera>(m_prensentCameraId)->dispatch();
+    if (!presentCamera) return;
     const BoundingVolume& bv = getWorldBound();
     if (bv.isEmpty()) return;
-    if (bv.PointInside(primaryCamera->location()))
+    if (bv.PointInside(presentCamera->location()))
     {
         toggleCameraInside(true);
     }
@@ -172,10 +172,11 @@ void LightVolumePawn::onLightInfoUpdated(const Frameworks::IEventPtr& e)
     }
 }
 
-void LightVolumePawn::onGameCameraUpdated(const Frameworks::IEventPtr& e)
+void LightVolumePawn::onCameraFrameChanged(const Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    auto ev = std::dynamic_pointer_cast<GameCameraUpdated>(e);
-    if (!ev) return;
+    auto ev = std::dynamic_pointer_cast<CameraFrameChanged>(e);
+    if ((!ev) || (!ev->camera())) return;
+    if (ev->camera()->id() != m_prensentCameraId) return;
     checkBackfaceCulling();
 }

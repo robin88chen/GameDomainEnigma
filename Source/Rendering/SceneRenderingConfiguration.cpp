@@ -10,6 +10,16 @@ SceneRenderingConfiguration::SceneRenderingConfiguration()
     m_primaryRendererTechniqueName = "Primary";
 }
 
+const Enigma::SceneGraph::SpatialId& SceneRenderingConfiguration::primaryCameraId() const
+{
+    return m_primaryCameraId;
+}
+
+void SceneRenderingConfiguration::primaryCameraId(const SceneGraph::SpatialId& id)
+{
+    m_primaryCameraId = id;
+}
+
 bool SceneRenderingConfiguration::isPrimary() const
 {
     return m_isPrimary;

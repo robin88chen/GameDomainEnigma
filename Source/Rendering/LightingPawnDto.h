@@ -26,6 +26,20 @@ namespace Enigma::Rendering
     private:
         SceneGraph::SpatialId m_hostLightId;
     };
+    class LightVolumePawnDto : public LightingPawnDto
+    {
+    public:
+        LightVolumePawnDto(const Engine::GenericDto& dto);
+        LightVolumePawnDto(const LightingPawnDto& dto);
+
+        [[nodiscard]] const SceneGraph::SpatialId& presentCameraId() const { return m_cameraId; }
+        void presentCameraId(const  SceneGraph::SpatialId& id) { m_cameraId = id; }
+
+        Engine::GenericDto toGenericDto() const;
+
+    private:
+        SceneGraph::SpatialId m_cameraId;
+    };
 }
 
 #endif // LIGHTING_PAWN_DTO_H

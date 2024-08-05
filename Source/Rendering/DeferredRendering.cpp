@@ -11,14 +11,12 @@
 #include "Geometries/GeometryDataQueries.h"
 #include "Frameworks/EventPublisher.h"
 #include "Renderer/RendererEvents.h"
-#include "GameCommon/GameCameraService.h"
 #include "Renderables/ModelPrimitive.h"
 #include "SceneGraph/SceneGraphQueries.h"
 #include "LightMeshAssembler.h"
 #include "LightingPawnRepository.h"
 
 using namespace Enigma::Rendering;
-using namespace Enigma::GameCommon;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Renderables;
 using namespace Enigma::Engine;
@@ -27,10 +25,7 @@ using namespace Enigma::Renderer;
 
 DEFINE_RTTI(Rendering, DeferredRendering, SceneRendering);
 
-DeferredRendering::DeferredRendering(ServiceManager* mngr,
-    const std::shared_ptr<GameCameraService>& camera_service,
-    const std::shared_ptr<RendererManager>& renderer_manager,
-    const std::shared_ptr<Renderer::IRenderingConfiguration>& configuration) : SceneRendering(mngr, camera_service, renderer_manager, configuration)
+DeferredRendering::DeferredRendering(ServiceManager* mngr, const std::shared_ptr<RendererManager>& renderer_manager, const std::shared_ptr<Renderer::IRenderingConfiguration>& configuration) : SceneRendering(mngr, renderer_manager, configuration)
 {
     m_configuration = std::dynamic_pointer_cast<DeferredRenderingConfiguration>(configuration);
     assert(m_configuration);
@@ -173,6 +168,7 @@ void DeferredRendering::onPrimaryRenderTargetResized(const IEventPtr& e)
 
 void DeferredRendering::onLightCreatedOrConstituted(const IEventPtr& e)
 {
+    assert(m_configuration);
     if (!m_lightingPawns) return;
     if (!e) return;
     std::shared_ptr<Light> light;
@@ -206,7 +202,7 @@ void DeferredRendering::onLightCreatedOrConstituted(const IEventPtr& e)
     }
     else if (light->info().lightType() == LightInfo::LightType::Point)
     {
-        m_lightingPawns->createPointLightPawn(light);
+        m_lightingPawns->createPointLightPawn(light, m_configuration->primaryCameraId());
     }
 }
 
@@ -220,6 +216,7 @@ void DeferredRendering::onLightInfoDeleted(const IEventPtr& e)
 
 void DeferredRendering::bindGBufferToPendingLights()
 {
+    assert(m_configuration);
     if (m_pendingLightsOfGBufferBind.empty()) return;
     for (const auto& light : m_pendingLightsOfGBufferBind)
     {
@@ -234,7 +231,7 @@ void DeferredRendering::bindGBufferToPendingLights()
         }
         else if (light->info().lightType() == LightInfo::LightType::Point)
         {
-            m_lightingPawns->createPointLightPawn(light);
+            m_lightingPawns->createPointLightPawn(light, m_configuration->primaryCameraId());
         }
     }
     m_pendingLightsOfGBufferBind.clear();

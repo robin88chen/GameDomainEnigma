@@ -71,6 +71,9 @@ void SceneGraphRepository::registerHandlers()
     QueryDispatcher::subscribe(typeid(RequestCameraCreation), m_requestCameraCreation);
     m_requestCameraConstitution = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { requestCameraConstitution(q); });
     QueryDispatcher::subscribe(typeid(RequestCameraConstitution), m_requestCameraConstitution);
+    m_queryRunningCamera = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { queryRunningCamera(q); });
+    QueryDispatcher::subscribe(typeid(QueryRunningCamera), m_queryRunningCamera);
+
     m_querySpatial = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { querySpatial(q); });
     QueryDispatcher::subscribe(typeid(QuerySpatial), m_querySpatial);
     m_hasSpatial = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { hasSpatial(q); });
@@ -110,6 +113,9 @@ void SceneGraphRepository::unregisterHandlers()
     m_requestCameraCreation = nullptr;
     QueryDispatcher::unsubscribe(typeid(RequestCameraConstitution), m_requestCameraConstitution);
     m_requestCameraConstitution = nullptr;
+    QueryDispatcher::unsubscribe(typeid(QueryRunningCamera), m_queryRunningCamera);
+    m_queryRunningCamera = nullptr;
+
     QueryDispatcher::unsubscribe(typeid(QuerySpatial), m_querySpatial);
     m_querySpatial = nullptr;
     QueryDispatcher::unsubscribe(typeid(HasSpatial), m_hasSpatial);
@@ -181,6 +187,11 @@ std::shared_ptr<Camera> SceneGraphRepository::queryCamera(const SpatialId& id)
     assert(camera);
     m_cameras.insert_or_assign(id, camera);
     return camera;
+}
+
+std::shared_ptr<Camera> SceneGraphRepository::queryRunningCamera(const SpatialId& id)
+{
+    return findCachedCamera(id);
 }
 
 bool SceneGraphRepository::hasSpatial(const SpatialId& id)
@@ -289,6 +300,14 @@ void SceneGraphRepository::requestCameraConstitution(const Frameworks::IQueryPtr
     std::lock_guard locker{ m_cameraMapLock };
     m_cameras.insert_or_assign(request->id(), camera);
     request->setResult(camera);
+}
+
+void SceneGraphRepository::queryRunningCamera(const Frameworks::IQueryPtr& q)
+{
+    if (!q) return;
+    const auto query = std::dynamic_pointer_cast<QueryRunningCamera>(q);
+    assert(query);
+    query->setResult(queryRunningCamera(query->id()));
 }
 
 void SceneGraphRepository::putCamera(const std::shared_ptr<Camera>& camera)

@@ -1,6 +1,5 @@
 ﻿#include "SceneRendererInstallingPolicy.h"
 #include "SceneRendering.h"
-#include "GameCommon/GameCameraService.h"
 #include "DeferredRendering.h"
 #include "Renderer/RendererManager.h"
 #include "SceneGraph/SceneGraphCommands.h"
@@ -13,10 +12,8 @@ using namespace Enigma::Rendering;
 error SceneRendererInstallingPolicy::install(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
-    auto camera_service = service_manager->getSystemServiceAs<GameCommon::GameCameraService>();
     auto render_manager = service_manager->getSystemServiceAs<Renderer::RendererManager>();
-    auto scene_renderer_service = std::make_shared<SceneRendering>(service_manager,
-        camera_service, render_manager, m_config);
+    auto scene_renderer_service = std::make_shared<SceneRendering>(service_manager, render_manager, m_config);
     service_manager->registerSystemService(scene_renderer_service);
     scene_renderer_service->createSceneRenderSystem(m_rendererName, m_targetName);
     return error();
@@ -32,10 +29,9 @@ error SceneRendererInstallingPolicy::shutdown(Frameworks::ServiceManager* servic
 error DeferredRendererInstallingPolicy::install(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
-    auto camera_service = service_manager->getSystemServiceAs<GameCommon::GameCameraService>();
     auto render_manager = service_manager->getSystemServiceAs<Renderer::RendererManager>();
     auto deferred_renderer_service = std::make_shared<DeferredRendering>(service_manager,
-        camera_service, render_manager, m_config);
+        render_manager, m_config);
     service_manager->registerSystemService(deferred_renderer_service);
     service_manager->insertHashAsService(SceneRendering::TYPE_RTTI, deferred_renderer_service);
 

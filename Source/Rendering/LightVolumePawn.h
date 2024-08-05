@@ -44,7 +44,7 @@ namespace Enigma::Rendering
         /// 視攝影機位置在內、外，render 內部或外部, 用 mesh select visual tech 改變
         void toggleCameraInside(bool is_inside);
         virtual void onLightInfoUpdated(const Frameworks::IEventPtr& e) override;
-        void onGameCameraUpdated(const Frameworks::IEventPtr& e);
+        void onCameraFrameChanged(const Frameworks::IEventPtr& e);
 
     public:
         static void setDefaultVisualTech(const std::string& token) { m_tokenDefaultVisualTech = token; }
@@ -53,11 +53,12 @@ namespace Enigma::Rendering
         static const std::string& getInsideVisualTech() { return m_tokenInsideVisualTech; }
 
     protected:
+        SceneGraph::SpatialId m_prensentCameraId;
         bool m_isCameraInside;
         static std::string m_tokenDefaultVisualTech;
         static std::string m_tokenInsideVisualTech;
 
-        Frameworks::EventSubscriberPtr m_onGameCameraUpdated;
+        Frameworks::EventSubscriberPtr m_onCameraFrameChanged;
     };
 }
 

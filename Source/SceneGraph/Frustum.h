@@ -34,7 +34,7 @@ namespace Enigma::SceneGraph
         };
 
     public:
-        Frustum() = default;
+        Frustum();
         Frustum(const Engine::GenericDto& dto);
         Frustum(const Frustum&) = default;
         Frustum(Frustum&&) = default;
@@ -69,6 +69,7 @@ namespace Enigma::SceneGraph
 
     protected:
         Frustum(GraphicCoordSys hand, ProjectionType proj);
+        void constructProjectionTransform();
         /** 設定透視投影矩陣 */
         error setPerspectiveProjection(float fov, float aspect, float n_plane, float f_plane);
         /**  設定平行投影矩陣 */

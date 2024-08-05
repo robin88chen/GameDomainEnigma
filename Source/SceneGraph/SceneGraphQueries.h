@@ -53,6 +53,16 @@ namespace Enigma::SceneGraph
         SpatialId m_id;
         Engine::GenericDto m_dto;
     };
+    class QueryRunningCamera : public Frameworks::Query<std::shared_ptr<Camera>>
+    {
+    public:
+        QueryRunningCamera(const SpatialId& id) : m_id(id) {}
+
+        const SpatialId& id() const { return m_id; }
+
+    protected:
+        SpatialId m_id;
+    };
     class QuerySpatial : public Frameworks::Query<std::shared_ptr<Spatial>>
     {
     public:

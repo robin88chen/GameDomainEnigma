@@ -83,7 +83,7 @@ void LightingPawnRepository::createSunLightPawn(const std::shared_ptr<Light>& li
     if (lit_pawn) tryCompleteLightPawnAttachment(lit, lit_pawn);
 }
 
-void LightingPawnRepository::createPointLightPawn(const std::shared_ptr<Light>& lit)
+void LightingPawnRepository::createPointLightPawn(const std::shared_ptr<Light>& lit, const SpatialId& present_camera_id)
 {
     assert(lit);
 
@@ -95,9 +95,10 @@ void LightingPawnRepository::createPointLightPawn(const std::shared_ptr<Light>& 
         PawnAssembler pawn_assembler(vol_pawn_id);
         pawn_assembler.spatial().topLevel(true).localTransform(lit->getLocalTransform());
         pawn_assembler.factory(FactoryDesc(LightVolumePawn::TYPE_RTTI.getName())).primitive(vol_mesh_id);
-        LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_assembler.toPawnDto());
+        LightVolumePawnDto lighting_pawn_dto = LightVolumePawnDto{ LightingPawnDto(pawn_assembler.toPawnDto()) };
         lighting_pawn_dto.id(vol_pawn_id);
         lighting_pawn_dto.hostLightId(lit->id());
+        lighting_pawn_dto.presentCameraId(present_camera_id);
         auto pawn_dto = lighting_pawn_dto.toGenericDto();
         lit_pawn = std::dynamic_pointer_cast<LightingPawn>(std::make_shared<RequestSpatialConstitution>(vol_pawn_id, pawn_dto)->dispatch());
     }

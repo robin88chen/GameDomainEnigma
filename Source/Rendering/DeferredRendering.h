@@ -28,10 +28,7 @@ namespace Enigma::Rendering
     {
         DECLARE_EN_RTTI
     public:
-        DeferredRendering(Frameworks::ServiceManager* mngr,
-            const std::shared_ptr<GameCommon::GameCameraService>& camera_service,
-            const std::shared_ptr<Renderer::RendererManager>& renderer_manager,
-            const std::shared_ptr<Renderer::IRenderingConfiguration>& configuration);
+        DeferredRendering(Frameworks::ServiceManager* mngr, const std::shared_ptr<Renderer::RendererManager>& renderer_manager, const std::shared_ptr<Renderer::IRenderingConfiguration>& configuration);
         DeferredRendering(const DeferredRendering&) = delete;
         DeferredRendering(DeferredRendering&&) = delete;
         virtual ~DeferredRendering() override;

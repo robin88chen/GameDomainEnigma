@@ -54,6 +54,7 @@ namespace Enigma::SceneGraph
         /** query entities */
         bool hasCamera(const SpatialId& id);
         std::shared_ptr<Camera> queryCamera(const SpatialId& id);
+        std::shared_ptr<Camera> queryRunningCamera(const SpatialId& id);
         bool hasSpatial(const SpatialId& id);
         std::shared_ptr<Spatial> querySpatial(const SpatialId& id);
         bool hasLaziedContent(const SpatialId& id);
@@ -79,6 +80,7 @@ namespace Enigma::SceneGraph
         void queryCamera(const Frameworks::IQueryPtr& q);
         void requestCameraCreation(const Frameworks::IQueryPtr& r);
         void requestCameraConstitution(const Frameworks::IQueryPtr& r);
+        void queryRunningCamera(const Frameworks::IQueryPtr& q);
         void querySpatial(const Frameworks::IQueryPtr& q);
         void hasSpatial(const Frameworks::IQueryPtr& q);
         void requestSpatialCreation(const Frameworks::IQueryPtr& r);
@@ -117,6 +119,7 @@ namespace Enigma::SceneGraph
         Frameworks::QuerySubscriberPtr m_queryCamera;
         Frameworks::QuerySubscriberPtr m_requestCameraCreation;
         Frameworks::QuerySubscriberPtr m_requestCameraConstitution;
+        Frameworks::QuerySubscriberPtr m_queryRunningCamera;
         Frameworks::QuerySubscriberPtr m_querySpatial;
         Frameworks::QuerySubscriberPtr m_hasSpatial;
         Frameworks::QuerySubscriberPtr m_requestSpatialCreation;

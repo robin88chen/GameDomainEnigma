@@ -9,6 +9,8 @@
 #include <cassert>
 #include <system_error>
 
+#include "SceneGraph/SceneGraphQueries.h"
+
 using namespace Enigma::Frameworks;
 using namespace Enigma::Renderer;
 using namespace Enigma::Rendering;
@@ -101,17 +103,31 @@ void SceneRendering::flip()
 
 void SceneRendering::attachCamera()
 {
-    if ((m_renderer.expired()) || (m_cameraService.expired())) return;
-    m_renderer.lock()->setAssociatedCamera(m_cameraService.lock()->primaryCamera());
+    assert(m_config);
+    if (m_renderer.expired()) return;
+    std::shared_ptr<Camera> camera = std::make_shared<QueryRunningCamera>(m_config->primaryCameraId())->dispatch();
+    if (!camera) return;
+    m_renderer.lock()->setAssociatedCamera(camera);
     auto [w, h] = m_renderer.lock()->getRenderTarget()->getDimension();
     if ((w > 0) && (h > 0))
     {
-        m_cameraService.lock()->primaryCamera()->changeAspectRatio(static_cast<float>(w) / static_cast<float>(h));
+        camera->changeAspectRatio(static_cast<float>(w) / static_cast<float>(h));
     }
 }
 
-void SceneRendering::onPrimaryCameraCreated(const IEventPtr& e)
+void SceneRendering::onCameraCreatedOrConstituted(const IEventPtr& e)
 {
+    if (!e) return;
+    SpatialId camera_id;
+    if (const auto camera_created = std::dynamic_pointer_cast<CameraCreated>(e))
+    {
+        camera_id = camera_created->camera()->id();
+    }
+    else if (const auto camera_constituted = std::dynamic_pointer_cast<CameraConstituted>(e))
+    {
+        camera_id = camera_constituted->camera()->id();
+    }
+    if (camera_id != m_config->primaryCameraId()) return;
     attachCamera();
 }
 

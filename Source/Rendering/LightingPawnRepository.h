@@ -31,7 +31,7 @@ namespace Enigma::Rendering
 
         void createAmbientLightPawn(const std::shared_ptr<SceneGraph::Light>& lit);
         void createSunLightPawn(const std::shared_ptr<SceneGraph::Light>& lit);
-        void createPointLightPawn(const std::shared_ptr<SceneGraph::Light>& lit);
+        void createPointLightPawn(const std::shared_ptr<SceneGraph::Light>& lit, const SceneGraph::SpatialId& present_camera_id);
         void removeLightingPawn(const SceneGraph::SpatialId& lit_id);
 
     protected:

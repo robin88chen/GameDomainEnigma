@@ -206,6 +206,7 @@ void EditorAppDelegate::installEngine()
     auto deferred_config = std::make_shared<DeferredRenderingConfiguration>();
     deferred_config->sunLightEffect(EffectMaterialId("fx/DeferredShadingWithShadowSunLightPass"));
     deferred_config->sunLightSpatialFlags(deferred_config->sunLightSpatialFlags() | Spatial::SpatialFlags(SpatialShadowFlags::Spatial_ShadowReceiver));
+    deferred_config->primaryCameraId(m_appConfig->cameraId());
     auto deferred_renderer_policy = std::make_shared<DeferredRendererInstallingPolicy>(DefaultRendererName, PrimaryTargetName, deferred_config);
     //auto scene_render_config = std::make_shared<SceneRendererServiceConfiguration>();
     //auto scene_renderer_policy = std::make_shared<SceneRendererInstallingPolicy>(m_appConfig->GetDefaultRendererName(), m_appConfig->GetPrimaryTargetName(), scene_render_config);
@@ -230,6 +231,7 @@ void EditorAppDelegate::installEngine()
     m_inputHandler.lock()->RegisterKeyboardAsyncKey('D');
     m_inputHandler.lock()->RegisterKeyboardAsyncKey('S');
     m_inputHandler.lock()->RegisterKeyboardAsyncKey('W');
+    m_gameSceneService = m_graphicMain->getSystemServiceAs<GameSceneService>();
     m_sceneRendering = m_graphicMain->getSystemServiceAs<SceneRendering>();
     m_shadowMapService = m_graphicMain->getSystemServiceAs<ShadowMapService>();
     m_graphicMain->getServiceManager()->registerSystemService(std::make_shared<WorldEditService>(m_graphicMain->getServiceManager(), m_graphicMain->getSystemServiceAs<WorldMapRepository>()));
@@ -283,7 +285,13 @@ void EditorAppDelegate::frameUpdate()
 void EditorAppDelegate::prepareRender()
 {
     if (!m_shadowMapService.expired()) m_shadowMapService.lock()->prepareShadowScene();
-    if (!m_sceneRendering.expired()) m_sceneRendering.lock()->prepareGameScene();
+    if (!m_sceneRendering.expired())
+    {
+        if ((!m_gameSceneService.expired()) && (m_gameSceneService.lock()->getSceneCuller()))
+        {
+            m_sceneRendering.lock()->prepareGameScene(m_gameSceneService.lock()->getSceneCuller()->getVisibleSet());
+        }
+    }
 }
 
 void EditorAppDelegate::renderFrame()

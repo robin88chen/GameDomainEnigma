@@ -22,6 +22,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererInstallingPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderingConfiguration.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderPack.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderPackList.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderTarget.h" />

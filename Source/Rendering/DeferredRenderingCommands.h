@@ -11,7 +11,7 @@
 #include "Frameworks/Command.h"
 #include "SceneGraph/Pawn.h"
 
-namespace Enigma::GameCommon
+namespace Enigma::Rendering
 {
     class BindGBuffer : public Frameworks::ICommand
     {

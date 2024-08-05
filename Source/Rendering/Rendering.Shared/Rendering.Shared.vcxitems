@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{08e2eb30-0eac-432c-ba25-df26c1ad4c1b}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\DeferredRendering.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\DeferredRenderingConfiguration.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightingPawn.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightingPawnDto.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightingPawnRepository.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightMeshAssembler.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightQuadPawn.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightVolumePawn.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderingErrors.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneRendererInstallingPolicy.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneRendering.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneRenderingConfiguration.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\DeferredRendering.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\DeferredRenderingConfiguration.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\DeferredRenderingCommands.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightingMeshQueries.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightingPawn.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightingPawnDto.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightingPawnRepository.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightMeshAssembler.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightQuadPawn.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightVolumePawn.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderingErrors.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneRendererInstallingPolicy.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneRendering.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneRenderingConfiguration.h" />
+  </ItemGroup>
+</Project>

@@ -10,7 +10,7 @@
 
 #include "LightingPawn.h"
 
-namespace Enigma::GameCommon
+namespace Enigma::Rendering
 {
     using error = std::error_code;
     class LightQuadPawn : public LightingPawn

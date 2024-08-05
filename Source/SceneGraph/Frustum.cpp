@@ -12,6 +12,11 @@ using namespace Enigma::Frameworks;
 
 DEFINE_RTTI_OF_BASE(SceneGraph, Frustum);
 
+Frustum::Frustum() : m_handCoord(GraphicCoordSys::LeftHand), m_projectionType(ProjectionType::Perspective), m_fov(MathLib::Math::PI / 4.0f), m_nearPlaneZ(0.1f), m_farPlaneZ(100.0f), m_aspectRatio(4.0f / 3.0f), m_nearWidth(40.0f), m_nearHeight(30.0f)
+{
+    constructProjectionTransform();
+}
+
 Frustum::Frustum(GraphicCoordSys hand, ProjectionType proj)
 {
     m_handCoord = hand;
@@ -22,6 +27,11 @@ Frustum::Frustum(GraphicCoordSys hand, ProjectionType proj)
     m_aspectRatio = 4.0f / 3.0f;
     m_nearWidth = 40.0f;
     m_nearHeight = 30.0f;
+    constructProjectionTransform();
+}
+
+void Frustum::constructProjectionTransform()
+{
     if (m_handCoord == GraphicCoordSys::LeftHand)
     {
         if (m_projectionType == ProjectionType::Perspective)
@@ -57,28 +67,7 @@ Frustum::Frustum(const GenericDto& dto)
     m_aspectRatio = frustum_dto.AspectRatio();
     m_nearWidth = frustum_dto.NearWidth();
     m_nearHeight = frustum_dto.NearHeight();
-    if (m_handCoord == GraphicCoordSys::LeftHand)
-    {
-        if (m_projectionType == ProjectionType::Perspective)
-        {
-            m_mxProjTransform = MathLib::MathAlgorithm::MakePerspectiveProjectionFovLH(m_fov, m_aspectRatio, m_nearPlaneZ, m_farPlaneZ);
-        }
-        else
-        {
-            m_mxProjTransform = MathLib::MathAlgorithm::MakeOrthoProjectionLH(m_nearWidth, m_nearHeight, m_nearPlaneZ, m_farPlaneZ);
-        }
-    }
-    else
-    {
-        if (m_projectionType == ProjectionType::Perspective)
-        {
-            m_mxProjTransform = MathLib::MathAlgorithm::MakePerspectiveProjectionFovRH(m_fov, m_aspectRatio, m_nearPlaneZ, m_farPlaneZ);
-        }
-        else
-        {
-            m_mxProjTransform = MathLib::MathAlgorithm::MakeOrthoProjectionRH(m_nearWidth, m_nearHeight, m_nearPlaneZ, m_farPlaneZ);
-        }
-    }
+    constructProjectionTransform();
 }
 
 GenericDto Frustum::serializeDto()

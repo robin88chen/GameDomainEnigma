@@ -22,7 +22,7 @@ namespace Enigma::SceneGraph
     {
     public:
         CameraFrameChanged(const std::shared_ptr<Camera>& camera) : m_camera(camera) {};
-        std::shared_ptr<Camera> GetCamera() { return m_camera.lock(); }
+        std::shared_ptr<Camera> camera() { return m_camera.lock(); }
 
     protected:
         std::weak_ptr<Camera> m_camera;
@@ -31,7 +31,7 @@ namespace Enigma::SceneGraph
     {
     public:
         FrustumShapeChanged(const Frustum& frustum) : m_frustum(frustum) {};
-        const Frustum& GetFrustum() { return m_frustum; }
+        const Frustum& frustum() { return m_frustum; }
 
     protected:
         Frustum m_frustum;

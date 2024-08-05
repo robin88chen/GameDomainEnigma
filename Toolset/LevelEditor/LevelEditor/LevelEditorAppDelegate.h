@@ -11,7 +11,7 @@
 #include <windows.h>
 #include "GraphicKernel/IGraphicAPI.h"
 #include "Controllers/GraphicMain.h"
-#include "GameCommon/SceneRendererService.h"
+#include "Rendering/SceneRendering.h"
 #include "InputHandlers/InputHandlerService.h"
 #include "Frameworks/EventSubscriber.h"
 #include "ShadowMap/ShadowMapService.h"
@@ -83,7 +83,8 @@ namespace LevelEditor
         std::shared_ptr<SceneGraphFileStoreMapper> m_sceneGraphFileStoreMapper;
         std::shared_ptr<WorldMapFileStoreMapper> m_worldMapFileStoreMapper;
         std::weak_ptr<Enigma::InputHandlers::InputHandlerService> m_inputHandler;
-        std::weak_ptr<Enigma::GameCommon::SceneRendererService> m_sceneRenderer;
+        std::weak_ptr<Enigma::GameCommon::GameSceneService> m_gameSceneService;
+        std::weak_ptr<Enigma::Rendering::SceneRendering> m_sceneRendering;
         std::weak_ptr<Enigma::ShadowMap::ShadowMapService> m_shadowMapService;
 
         std::weak_ptr<Enigma::SceneGraph::Node> m_sceneRoot;

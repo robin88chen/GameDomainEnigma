@@ -1,29 +1,21 @@
 ﻿/*********************************************************************
- * \file   GameCommonErrors.h
+ * \file   RenderingErrors.h
  * \brief
  *
  * \author Lancelot 'Robin' Chen
- * \date   March 2023
+ * \date   August 2024
  *********************************************************************/
-#ifndef _GAME_COMMON_ERRORS_H
-#define _GAME_COMMON_ERRORS_H
+#ifndef RENDERING_ERRORS_H
+#define RENDERING_ERRORS_H
 
 #include <system_error>
 
-namespace Enigma::GameCommon
+namespace Enigma::Rendering
 {
     enum class ErrorCode
     {
         ok = 0,
-        nullPortalManagement,
-        nullSceneRoot,
-        nodeNotFound,
-        spatialNotFound,
-        nullFrustum,
-        invalidSceneRootId,
-        sceneRootAlreadyExist,
-        invalidPortalManagementId,
-        portalManagementAlreadyExist,
+        nullHostLight,
     };
     class ErrorCategory : public std::error_category
     {
@@ -45,7 +37,7 @@ namespace std
 {
     // let compiler know that ErrorCode is compatible with std::error_code
     template <>
-    struct is_error_code_enum<Enigma::GameCommon::ErrorCode> : true_type {};
+    struct is_error_code_enum<Enigma::Rendering::ErrorCode> : true_type {};
 }
 
-#endif // _GAME_COMMON_ERRORS_H
+#endif // RENDERING_ERRORS_H

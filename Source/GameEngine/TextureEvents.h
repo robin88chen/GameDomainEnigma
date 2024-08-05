@@ -20,11 +20,11 @@ namespace Enigma::Engine
     class TextureConstituted : public Frameworks::IEvent
     {
     public:
-        TextureConstituted(const TextureId& id, const std::shared_ptr<Texture>& tex, bool is_persisted) : m_id(id), m_texture(tex) {}
+        TextureConstituted(const TextureId& id, const std::shared_ptr<Texture>& tex, bool is_persisted) : m_id(id), m_texture(tex), m_isPersisted(is_persisted) {}
 
         const TextureId& id() { return m_id; }
         std::shared_ptr<Texture> texture() { return m_texture; }
-        bool isPersisted() { return m_isPersisted; }
+        bool isPersisted() const { return m_isPersisted; }
     private:
         TextureId m_id;
         std::shared_ptr<Texture> m_texture;

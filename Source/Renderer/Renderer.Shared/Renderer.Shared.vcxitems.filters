@@ -22,6 +22,9 @@
     <Filter Include="Events">
       <UniqueIdentifier>{5dec1543-6290-4686-8ba9-62f5820b1ccb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="RenderingConfig">
+      <UniqueIdentifier>{88e050e6-a9bf-465d-9d2f-aabdf6d071fa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererManager.h">
@@ -59,6 +62,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RendererEvents.h">
       <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderingConfiguration.h">
+      <Filter>RenderingConfig</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,38 +1,34 @@
-﻿#include "DeferredRendererService.h"
-#include "DeferredRendererServiceConfiguration.h"
-#include "GameCameraEvents.h"
-#include "GameSceneService.h"
+﻿#include "DeferredRendering.h"
+#include "DeferredRenderingConfiguration.h"
 #include "LightVolumePawn.h"
 #include "Controllers/GraphicMain.h"
 #include "Frameworks/CommandBus.h"
 #include "Platforms/PlatformLayer.h"
 #include "Renderer/DeferredRenderer.h"
+#include "Renderer/RendererManager.h"
 #include "SceneGraph/SceneGraphEvents.h"
 #include "SceneGraph/Light.h"
 #include "Geometries/GeometryDataQueries.h"
 #include "Frameworks/EventPublisher.h"
 #include "Renderer/RendererEvents.h"
-#include "GameCommon/GameCameraService.h"
 #include "Renderables/ModelPrimitive.h"
 #include "SceneGraph/SceneGraphQueries.h"
 #include "LightMeshAssembler.h"
 #include "LightingPawnRepository.h"
 
-using namespace Enigma::GameCommon;
+using namespace Enigma::Rendering;
 using namespace Enigma::Frameworks;
 using namespace Enigma::Renderables;
 using namespace Enigma::Engine;
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Renderer;
 
-DEFINE_RTTI(GameCommon, DeferredRendererService, SceneRendererService);
+DEFINE_RTTI(Rendering, DeferredRendering, SceneRendering);
 
-DeferredRendererService::DeferredRendererService(ServiceManager* mngr,
-    const std::shared_ptr<GameSceneService>& scene_service, const std::shared_ptr<GameCameraService>& camera_service,
-    const std::shared_ptr<RendererManager>& renderer_manager,
-    const std::shared_ptr<DeferredRendererServiceConfiguration>& configuration) : SceneRendererService(mngr, scene_service, camera_service, renderer_manager, configuration)
+DeferredRendering::DeferredRendering(ServiceManager* mngr, const std::shared_ptr<RendererManager>& renderer_manager, const std::shared_ptr<Renderer::IRenderingConfiguration>& configuration) : SceneRendering(mngr, renderer_manager, configuration)
 {
-    m_configuration = configuration;
+    m_configuration = std::dynamic_pointer_cast<DeferredRenderingConfiguration>(configuration);
+    assert(m_configuration);
     LightVolumePawn::setDefaultVisualTech(m_configuration->visualTechniqueNameForCameraDefault());
     LightVolumePawn::setInsideVisualTech(m_configuration->visualTechniqueNameForCameraInside());
 
@@ -40,14 +36,14 @@ DeferredRendererService::DeferredRendererService(ServiceManager* mngr,
     m_lightingPawns = nullptr;
 }
 
-DeferredRendererService::~DeferredRendererService()
+DeferredRendering::~DeferredRendering()
 {
     m_configuration = nullptr;
     m_lightingPawns = nullptr;
     m_lightMeshAssembler = nullptr;
 }
 
-ServiceResult DeferredRendererService::onInit()
+ServiceResult DeferredRendering::onInit()
 {
     m_onPrimaryRenderTargetCreated = std::make_shared<EventSubscriber>([=](auto e) { onPrimaryRenderTargetCreated(e); });
     EventPublisher::subscribe(typeid(PrimaryRenderTargetCreated), m_onPrimaryRenderTargetCreated);
@@ -66,10 +62,10 @@ ServiceResult DeferredRendererService::onInit()
     m_lightingPawns = std::make_shared<LightingPawnRepository>();
     m_lightingPawns->registerHandlers();
 
-    return SceneRendererService::onInit();
+    return SceneRendering::onInit();
 }
 
-ServiceResult DeferredRendererService::onTerm()
+ServiceResult DeferredRendering::onTerm()
 {
     EventPublisher::unsubscribe(typeid(PrimaryRenderTargetCreated), m_onPrimaryRenderTargetCreated);
     m_onPrimaryRenderTargetCreated = nullptr;
@@ -88,10 +84,10 @@ ServiceResult DeferredRendererService::onTerm()
     m_lightingPawns->unregisterHandlers();
     m_lightingPawns = nullptr;
 
-    return SceneRendererService::onTerm();
+    return SceneRendering::onTerm();
 }
 
-void DeferredRendererService::createSceneRenderSystem(const std::string& renderer_name, const std::string& target_name)
+void DeferredRendering::createSceneRenderSystem(const std::string& renderer_name, const std::string& target_name)
 {
     assert(!m_rendererManager.expired());
     assert(m_configuration);
@@ -117,7 +113,7 @@ void DeferredRendererService::createSceneRenderSystem(const std::string& rendere
     }
 }
 
-void DeferredRendererService::destroySceneRenderSystem(const std::string& renderer_name, const std::string& target_name)
+void DeferredRendering::destroySceneRenderSystem(const std::string& renderer_name, const std::string& target_name)
 {
     assert(!m_rendererManager.expired());
     assert(m_configuration);
@@ -126,12 +122,12 @@ void DeferredRendererService::destroySceneRenderSystem(const std::string& render
     m_rendererManager.lock()->destroyRenderer(renderer_name);
 }
 
-void DeferredRendererService::prepareGameScene()
+void DeferredRendering::prepareGameScene(const SceneGraph::VisibleSet& visible_set)
 {
-    SceneRendererService::prepareGameScene();
+    SceneRendering::prepareGameScene(visible_set);
 }
 
-void DeferredRendererService::createGBuffer(const RenderTargetPtr& primary_target)
+void DeferredRendering::createGBuffer(const RenderTargetPtr& primary_target)
 {
     assert(primary_target);
     assert(!m_rendererManager.expired());
@@ -148,7 +144,7 @@ void DeferredRendererService::createGBuffer(const RenderTargetPtr& primary_targe
     bindGBufferToPendingLights();
 }
 
-void DeferredRendererService::onPrimaryRenderTargetCreated(const IEventPtr& e)
+void DeferredRendering::onPrimaryRenderTargetCreated(const IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<PrimaryRenderTargetCreated, IEvent>(e);
@@ -159,7 +155,7 @@ void DeferredRendererService::onPrimaryRenderTargetCreated(const IEventPtr& e)
     createGBuffer(primaryTarget);
 }
 
-void DeferredRendererService::onPrimaryRenderTargetResized(const IEventPtr& e)
+void DeferredRendering::onPrimaryRenderTargetResized(const IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<RenderTargetResized, IEvent>(e);
@@ -170,8 +166,9 @@ void DeferredRendererService::onPrimaryRenderTargetResized(const IEventPtr& e)
     if ((!m_gBuffer.expired()) && (m_gBuffer.lock()->getDimension() != target->getDimension())) m_gBuffer.lock()->resize(target->getDimension());
 }
 
-void DeferredRendererService::onLightCreatedOrConstituted(const IEventPtr& e)
+void DeferredRendering::onLightCreatedOrConstituted(const IEventPtr& e)
 {
+    assert(m_configuration);
     if (!m_lightingPawns) return;
     if (!e) return;
     std::shared_ptr<Light> light;
@@ -205,11 +202,11 @@ void DeferredRendererService::onLightCreatedOrConstituted(const IEventPtr& e)
     }
     else if (light->info().lightType() == LightInfo::LightType::Point)
     {
-        m_lightingPawns->createPointLightPawn(light);
+        m_lightingPawns->createPointLightPawn(light, m_configuration->primaryCameraId());
     }
 }
 
-void DeferredRendererService::onLightInfoDeleted(const IEventPtr& e)
+void DeferredRendering::onLightInfoDeleted(const IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<LightInfoDeleted, IEvent>(e);
@@ -217,8 +214,9 @@ void DeferredRendererService::onLightInfoDeleted(const IEventPtr& e)
     m_lightingPawns->removeLightingPawn(ev->lightId());
 }
 
-void DeferredRendererService::bindGBufferToPendingLights()
+void DeferredRendering::bindGBufferToPendingLights()
 {
+    assert(m_configuration);
     if (m_pendingLightsOfGBufferBind.empty()) return;
     for (const auto& light : m_pendingLightsOfGBufferBind)
     {
@@ -233,7 +231,7 @@ void DeferredRendererService::bindGBufferToPendingLights()
         }
         else if (light->info().lightType() == LightInfo::LightType::Point)
         {
-            m_lightingPawns->createPointLightPawn(light);
+            m_lightingPawns->createPointLightPawn(light, m_configuration->primaryCameraId());
         }
     }
     m_pendingLightsOfGBufferBind.clear();

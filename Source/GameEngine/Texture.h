@@ -53,7 +53,7 @@ namespace Enigma::Engine
         bool isCubeTexture() const;
         bool isMultiTexture() const;
         const std::vector<std::string>& filePaths() const;
-        std::vector<std::string>& filePaths();
+        void filePaths(const std::vector<std::string>& paths);
 
     protected:
         TextureId m_id;

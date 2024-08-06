@@ -11,7 +11,6 @@ image/mb30050801,image/mb30050801.tex@APK_PATH
 image/hga0010101,image/hga0010101.tex@APK_PATH
 image/mb20110700,image/mb20110700.tex@APK_PATH
 image/mb20110807,image/mb20110807.tex@APK_PATH
-terrain/ww1_terrain_splat,terrain/ww1_terrain_splat.tex@APK_PATH
 image/mb20110803,image/mb20110803.tex@APK_PATH
 image/mb20110804,image/mb20110804.tex@APK_PATH
 image/mb20110805,image/mb20110805.tex@APK_PATH
@@ -26,7 +25,3 @@ image/mb30050808,image/mb30050808.tex@APK_PATH
 image/six,image/six.tex@APK_PATH
 image/terrain_brush_circle,image/terrain_brush_circle.tex@APK_PATH
 image/three,image/three.tex@APK_PATH
-ww1_splat,ww1_splat.tex@APK_PATH
-terrain/ww1_splat,terrain/ww1_splat.tex@APK_PATH
-terrain/ww2_splat,terrain/ww2_splat.tex@APK_PATH
-terrain/ww3_terrain_splat,terrain/ww3_terrain_splat.tex@APK_PATH

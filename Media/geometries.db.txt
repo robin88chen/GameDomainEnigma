@@ -1,6 +1,5 @@
 geometries/box01.Box001Mesh,geometries/box01.Box001Mesh.geo@APK_PATH
 geometries/mb7013_zup.Mesh.004,geometries/mb7013_zup.Mesh.004.geo@APK_PATH
-terrain/ww1,terrain/ww1.geo@APK_PATH
 geometries/mb7013_zup.Mesh.005,geometries/mb7013_zup.Mesh.005.geo@APK_PATH
 geometries/mb7013_zup.Mesh.002,geometries/mb7013_zup.Mesh.002.geo@APK_PATH
 geometries/mb7013_zup.Mesh.003,geometries/mb7013_zup.Mesh.003.geo@APK_PATH
@@ -17,7 +16,3 @@ geometries/mb7013.Mesh.002,geometries/mb7013.Mesh.002.geo@APK_PATH
 geometries/mb7013.Mesh.003,geometries/mb7013.Mesh.003.geo@APK_PATH
 geometries/mb7013.Mesh.001,geometries/mb7013.Mesh.001.geo@APK_PATH
 geometries/mb7013.Mesh,geometries/mb7013.Mesh.geo@APK_PATH
-ww1,ww1.geo@APK_PATH
-terrain/ww2,terrain/ww2.geo@APK_PATH
-terrain/ww1_terrain,terrain/ww1_terrain.geo@APK_PATH
-terrain/ww3_terrain,terrain/ww3_terrain.geo@APK_PATH

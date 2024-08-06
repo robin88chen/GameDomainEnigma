@@ -16,18 +16,15 @@ TextureDto::TextureDto() : m_factoryDesc(Texture::TYPE_RTTI.getName())
 {
 }
 
-TextureDto TextureDto::fromGenericDto(const GenericDto& dto)
+TextureDto::TextureDto(const GenericDto& dto) : m_factoryDesc(Texture::TYPE_RTTI.getName())
 {
-    TextureDto textureDto;
-    textureDto.m_factoryDesc = dto.getRtti();
-    if (const auto v = dto.tryGetValue<std::string>(TOKEN_ID)) textureDto.id() = v.value();
-    if (const auto v = dto.tryGetValue<unsigned>(TOKEN_FORMAT)) textureDto.format() = v.value();
-    if (const auto v = dto.tryGetValue<unsigned>(TOKEN_WIDTH)) textureDto.dimension().m_width = v.value();
-    if (const auto v = dto.tryGetValue<unsigned>(TOKEN_HEIGHT)) textureDto.dimension().m_height = v.value();
-    if (const auto v = dto.tryGetValue<bool>(TOKEN_IS_CUBE)) textureDto.isCubeTexture() = v.value();
-    if (const auto v = dto.tryGetValue<unsigned>(TOKEN_SURFACE_COUNT)) textureDto.surfaceCount() = v.value();
-    if (const auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_FILE_PATHS)) textureDto.filePaths() = v.value();
-    return textureDto;
+    if (const auto v = dto.tryGetValue<std::string>(TOKEN_ID)) m_id = v.value();
+    if (const auto v = dto.tryGetValue<unsigned>(TOKEN_FORMAT)) m_format.fmt = v.value();
+    if (const auto v = dto.tryGetValue<unsigned>(TOKEN_WIDTH)) m_dimension.m_width = v.value();
+    if (const auto v = dto.tryGetValue<unsigned>(TOKEN_HEIGHT)) m_dimension.m_height = v.value();
+    if (const auto v = dto.tryGetValue<bool>(TOKEN_IS_CUBE)) m_isCubeTexture = v.value();
+    if (const auto v = dto.tryGetValue<unsigned>(TOKEN_SURFACE_COUNT)) m_surfaceCount = v.value();
+    if (const auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_FILE_PATHS)) m_filePaths = v.value();
 }
 
 GenericDto TextureDto::toGenericDto() const

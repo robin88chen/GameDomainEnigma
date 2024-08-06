@@ -318,7 +318,16 @@ void MainForm::onSaveWorldCommand(const nana::menu::item_proxy& menu_item)
 
 void MainForm::onAddTerrainCommand(const nana::menu::item_proxy& menu_item)
 {
-    nana::API::modal_window(AddTerrainDialog(*this, m_terrainConsole.lock()));
+    SpatialId owner_id;
+    if (!m_sceneConsole.lock()->pickedSpatialId().empty())
+    {
+        owner_id = m_sceneConsole.lock()->pickedSpatialId();
+    }
+    else
+    {
+        owner_id = m_sceneConsole.lock()->sceneRootId();
+    }
+    nana::API::modal_window(AddTerrainDialog(*this, m_terrainConsole.lock(), owner_id));
 }
 
 void MainForm::onSaveTerrainCommand(const nana::menu::item_proxy& menu_item)

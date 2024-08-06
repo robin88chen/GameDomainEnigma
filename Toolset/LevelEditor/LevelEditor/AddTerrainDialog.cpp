@@ -31,13 +31,14 @@ std::vector<std::string> cellPerUVCandidates =
 #define PRESET_MAX_UV   "1.0, 1.0"
 #define PRESET_LOCAL_POS "0.0, 0.0, 0.0"
 
-AddTerrainDialog::AddTerrainDialog(nana::window owner, const std::shared_ptr<TerrainEditConsole>& terrain_edit) : form(owner, nana::API::make_center(400, 600), nana::appear::decorate<>{})
+AddTerrainDialog::AddTerrainDialog(nana::window owner, const std::shared_ptr<TerrainEditConsole>& terrain_edit, const SceneGraph::SpatialId& owner_node_id) : form(owner, nana::API::make_center(400, 600), nana::appear::decorate<>{})
 {
     m_terrainEdit = terrain_edit;
+    m_ownerNodeId = owner_node_id;
 
     caption("Add New Terrain");
     get_place().div("vert<><create_prompt arrange=[40%,variable] margin=[10,20]><cell_prompt margin=[10,20]><min_vtx_prompt margin=[10,20]><max_vtx_prompt margin=[10,20]><min_uv_prompt margin=[10,20]><max_uv_prompt margin=[10,20]><local_pos_prompt margin=[10,20]><cell_uv_prompt margin=[10,20]><texture_btns weight=84 arrange=[64,64,64,64] margin=[10,20] gap=10><><buttons margin=[10,40] gap=10><>");
-    m_terrainNamePrompt = menew nana::label(*this, "Terrain Name : ");
+    m_terrainNamePrompt = menew nana::label(*this, "Terrain Name : terrain/");
     (*m_terrainNamePrompt).text_align(nana::align::right);
     m_terrainNameInputBox = new nana::textbox(*this, "Name");
     get_place()["create_prompt"] << *m_terrainNamePrompt << *m_terrainNameInputBox;
@@ -140,7 +141,7 @@ AddTerrainDialog::~AddTerrainDialog()
 
 void AddTerrainDialog::onOkButton(const nana::arg_click& arg)
 {
-    std::string terrainName = m_terrainNameInputBox->text();
+    std::string terrainName = m_terrainEdit.lock()->terrainPath() + "/" + m_terrainNameInputBox->text();
     if ((terrainName.empty()) || (m_terrainEdit.lock()->isTerrainNameDuplicated(terrainName)))
     {
         nana::msgbox mb(*this, "Error");
@@ -163,9 +164,9 @@ void AddTerrainDialog::onOkButton(const nana::arg_click& arg)
     MathLib::Vector3 terrainLocalPos;
     if (std::tie(terrainLocalPos, isParseOk) = parseTextToVector3(m_terrainLocalPosInputBox->text()); !isParseOk) return;
 
-    auto terrain_id = Geometries::GeometryId(m_terrainEdit.lock()->terrainPath() + "/" + terrainName);
+    auto terrain_id = Geometries::GeometryId(terrainName);
 
-    Frameworks::CommandBus::enqueue(std::make_shared<CreateNewTerrain>(terrain_id, rows, cols, minVertexPos, maxVertexPos, minUV, maxUV, m_layerTextureIds, terrainLocalPos, m_terrainEdit.lock()->mediaPathId()));
+    Frameworks::CommandBus::enqueue(std::make_shared<CreateNewTerrain>(terrain_id, rows, cols, minVertexPos, maxVertexPos, minUV, maxUV, m_layerTextureIds, terrainLocalPos, m_ownerNodeId, m_terrainEdit.lock()->mediaPathId()));
 
     close();
 }

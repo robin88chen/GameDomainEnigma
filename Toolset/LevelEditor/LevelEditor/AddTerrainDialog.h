@@ -24,7 +24,7 @@ namespace LevelEditor
     class AddTerrainDialog : public nana::form
     {
     public:
-        AddTerrainDialog(nana::window owner, const std::shared_ptr<TerrainEditConsole>& terrain_edit);
+        AddTerrainDialog(nana::window owner, const std::shared_ptr<TerrainEditConsole>& terrain_edit, const Enigma::SceneGraph::SpatialId& owner_node_id);
         virtual ~AddTerrainDialog();
 
         void onOkButton(const nana::arg_click& arg);
@@ -67,6 +67,8 @@ namespace LevelEditor
         //nana::textbox* m_rootNodeNameInputBox;
 
         std::weak_ptr<TerrainEditConsole> m_terrainEdit;
+
+        Enigma::SceneGraph::SpatialId m_ownerNodeId;
     };
 }
 

@@ -64,7 +64,15 @@ GenericDto Texture::serializeDto() const
     textureDto.dimension(m_dimension);
     textureDto.isCubeTexture(m_isCubeTexture);
     textureDto.surfaceCount(m_surfaceCount);
-    if (!m_filePaths.empty()) textureDto.filePaths(m_filePaths);
+    if (!m_filePaths.empty())
+    {
+        textureDto.filePaths(m_filePaths);
+        textureDto.imageFilenamesOfLoad(m_filePaths);
+    }
+    else
+    {
+        textureDto.dimensionOfCreation(m_dimension);
+    }
     return textureDto.toGenericDto();
 }
 
@@ -91,11 +99,6 @@ bool Texture::isMultiTexture() const
 const std::vector<std::string>& Texture::filePaths() const
 {
     return m_filePaths;
-}
-
-void Texture::filePaths(const std::vector<std::string>& paths)
-{
-    m_filePaths = paths;
 }
 
 void Texture::instanceDeviceTexture(const Graphics::ITexturePtr& tex)

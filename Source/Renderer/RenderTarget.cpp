@@ -293,6 +293,7 @@ void RenderTarget::createRenderTargetTexture(const Engine::TextureId& texture_id
     if (m_backSpecification.has_value())
     {
         dto.id(texture_id);
+        dto.dimensionOfCreation(m_backSpecification->dimension());
         dto.dimension(m_backSpecification->dimension());
         dto.surfaceCount(1);
         dto.format(m_backSpecification->format());
@@ -300,6 +301,7 @@ void RenderTarget::createRenderTargetTexture(const Engine::TextureId& texture_id
     else if (m_multiBackSpecification.has_value())
     {
         dto.id(texture_id);
+        dto.dimensionOfCreation(m_multiBackSpecification->dimension());
         dto.dimension(m_multiBackSpecification->dimension());
         dto.surfaceCount(m_multiBackSpecification->surfaceCount());
         dto.format(m_multiBackSpecification->formats()[0]);

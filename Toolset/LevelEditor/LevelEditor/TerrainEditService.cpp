@@ -335,6 +335,7 @@ std::tuple<Enigma::Engine::TextureId, std::shared_ptr<Texture>> TerrainEditServi
     dto.factoryDesc(Enigma::Engine::FactoryDesc(Enigma::Engine::Texture::TYPE_RTTI.getName()).ClaimAsResourceAsset(splatTextureId.name(), asset_filename));
     dto.format(Enigma::Graphics::GraphicFormat::FMT_A8R8G8B8);
     dto.dimension(Enigma::MathLib::Dimension<unsigned>{ 512, 512 });
+    dto.dimensionOfCreation(Enigma::MathLib::Dimension<unsigned>{ 512, 512 });
     dto.isCubeTexture(false);
     dto.surfaceCount(1);
     dto.filePaths({ image_filename });

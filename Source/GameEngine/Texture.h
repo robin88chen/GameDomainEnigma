@@ -52,8 +52,7 @@ namespace Enigma::Engine
         const MathLib::Dimension<unsigned>& dimension() const;
         bool isCubeTexture() const;
         bool isMultiTexture() const;
-        const std::vector<std::string>& filePaths() const;
-        void filePaths(const std::vector<std::string>& paths);
+        const std::vector<std::string>& filePaths() const; //! ADR : file paths 只是唯讀的屬性
 
     protected:
         TextureId m_id;

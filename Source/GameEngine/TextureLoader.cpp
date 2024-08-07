@@ -72,13 +72,14 @@ void TextureLoader::loadResourceTextures(const std::shared_ptr<Graphics::ITextur
     assert(m_contentingTexture);
     assert(m_contentingTexture->lazyStatus().isLoading());
     assert(dev_tex);
+    assert((m_textureDto.imageFilenamesOfLoad()) && (!m_textureDto.imageFilenamesOfLoad()->empty()));
     if (m_contentingTexture->isMultiTexture())
     {
-        std::dynamic_pointer_cast<IMultiTexture>(dev_tex)->multiLoad(m_textureDto.filePaths(), {});
+        std::dynamic_pointer_cast<IMultiTexture>(dev_tex)->multiLoad(m_textureDto.imageFilenamesOfLoad().value(), {});
     }
     else
     {
-        dev_tex->load(m_textureDto.filePaths()[0], "");
+        dev_tex->load(m_textureDto.imageFilenamesOfLoad().value()[0], "");
     }
 }
 
@@ -87,15 +88,16 @@ void TextureLoader::createEmptyResourceTextures(const std::shared_ptr<Graphics::
     assert(m_contentingTexture);
     assert(m_contentingTexture->lazyStatus().isLoading());
     assert(dev_tex);
+    assert(m_textureDto.dimensionOfCreation());
     if (m_contentingTexture->isMultiTexture())
     {
         std::vector<byte_buffer> buffers;
         buffers.resize(m_textureDto.surfaceCount());
-        std::dynamic_pointer_cast<IMultiTexture>(dev_tex)->multiCreate(m_textureDto.dimension(), m_textureDto.surfaceCount(), buffers);
+        std::dynamic_pointer_cast<IMultiTexture>(dev_tex)->multiCreate(m_textureDto.dimensionOfCreation().value(), m_textureDto.surfaceCount(), buffers);
     }
     else
     {
-        dev_tex->create(m_textureDto.dimension(), byte_buffer{});
+        dev_tex->create(m_textureDto.dimensionOfCreation().value(), byte_buffer{});
     }
 }
 
@@ -122,13 +124,17 @@ void TextureLoader::onDeviceTextureCreated(const IEventPtr& e)
         failLoadingImage(ErrorCode::findStashedAssetFail);
         return;
     }
-    if (!m_textureDto.filePaths().empty())
+    if ((m_textureDto.imageFilenamesOfLoad()) && (!m_textureDto.imageFilenamesOfLoad()->empty()))
     {
         loadResourceTextures(texture.value());
     }
-    else
+    else if (m_textureDto.dimensionOfCreation())
     {
         createEmptyResourceTextures(texture.value());
+    }
+    else
+    {
+        assert(false);
     }
 }
 

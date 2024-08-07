@@ -19,7 +19,7 @@ TextureDto::TextureDto() : m_factoryDesc(Texture::TYPE_RTTI.getName())
 {
 }
 
-TextureDto::TextureDto(const GenericDto& dto) : m_factoryDesc(Texture::TYPE_RTTI.getName())
+TextureDto::TextureDto(const GenericDto& dto) : m_factoryDesc(dto.getRtti())
 {
     if (const auto v = dto.tryGetValue<std::string>(TOKEN_ID)) m_id = v.value();
     if (const auto v = dto.tryGetValue<unsigned>(TOKEN_FORMAT)) m_format.fmt = v.value();

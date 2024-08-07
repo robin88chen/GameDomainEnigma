@@ -1,5 +1,4 @@
 world/ww1_amb,En.SceneGraph.Light,world/ww1_amb.light@APK_PATH
 world/editor_portalmanagement,En.SceneGraph.PortalManagementNode,world/editor_portalmanagement.node@APK_PATH
-terrain/ww1_tt9,En.Terrain.TerrainPawn,terrain/ww1_tt9.terrain@APK_PATH
 world/ww1_map,En.SceneGraph.OutRegionNode,world/ww1_map.node@APK_PATH
 world/ww1_pt1,En.SceneGraph.Light,world/ww1_pt1.light@APK_PATH

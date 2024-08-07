@@ -40,6 +40,7 @@ namespace Enigma::Engine
 
         bool hasEffectMaterial(const EffectMaterialId& id);
         std::shared_ptr<EffectMaterial> queryEffectMaterial(const EffectMaterialId& id);
+        //! ADR: 不會有 run-time 產生的 effect material, 所以不需要 putEffectMaterial/removeEffectMaterial
 
     private:
         void queryEffectMaterial(const Frameworks::IQueryPtr& q);

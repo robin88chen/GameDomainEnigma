@@ -69,7 +69,7 @@ ServiceResult TerrainEditService::onInit()
     m_createNewTerrain = std::make_shared<CommandSubscriber>([=](auto c) { createNewTerrain(c); });
     CommandBus::subscribe(typeid(CreateNewTerrain), m_createNewTerrain);
     m_moveUpTerrainVertex = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { moveUpTerrainVertex(c); });
-    CommandBus::subscribe(typeid(LevelEditor::MoveUpTerrainVertex), m_moveUpTerrainVertex);
+    CommandBus::subscribe(typeid(MoveUpTerrainVertex), m_moveUpTerrainVertex);
     m_paintTerrainLayer = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { paintTerrainLayer(c); });
     CommandBus::subscribe(typeid(PaintTerrainTextureLayer), m_paintTerrainLayer);
     m_saveSplatTexture = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { saveSplatTexture(c); });
@@ -100,7 +100,7 @@ ServiceResult TerrainEditService::onTerm()
 {
     CommandBus::unsubscribe(typeid(CreateNewTerrain), m_createNewTerrain);
     m_createNewTerrain = nullptr;
-    CommandBus::unsubscribe(typeid(LevelEditor::MoveUpTerrainVertex), m_moveUpTerrainVertex);
+    CommandBus::unsubscribe(typeid(MoveUpTerrainVertex), m_moveUpTerrainVertex);
     m_moveUpTerrainVertex = nullptr;
     CommandBus::unsubscribe(typeid(PaintTerrainTextureLayer), m_paintTerrainLayer);
     m_paintTerrainLayer = nullptr;
@@ -325,14 +325,14 @@ void TerrainEditService::assembleTerrainGeometry(const std::shared_ptr<CreateNew
     std::make_shared<Enigma::Geometries::PutGeometry>(cmd->geometryId(), terrain_geo)->execute();
 }
 
-std::tuple<Enigma::Engine::TextureId, std::shared_ptr<Texture>> TerrainEditService::assembleTerrainSplatTexture(const std::shared_ptr<CreateNewTerrain>& cmd)
+std::tuple<TextureId, std::shared_ptr<Texture>> TerrainEditService::assembleTerrainSplatTexture(const std::shared_ptr<CreateNewTerrain>& cmd)
 {
-    Enigma::Engine::TextureDto dto;
-    auto splatTextureId = Enigma::Engine::TextureId(cmd->geometryId().name() + "_splat");
+    TextureDto dto;
+    auto splatTextureId = TextureId(cmd->geometryId().name() + "_splat");
     auto asset_filename = splatTextureId.name() + ".tex@" + cmd->assetPathId();
     auto image_filename = splatTextureId.name() + ".png@" + cmd->assetPathId();
     dto.id(splatTextureId);
-    dto.factoryDesc(Enigma::Engine::FactoryDesc(Enigma::Engine::Texture::TYPE_RTTI.getName()).ClaimAsResourceAsset(splatTextureId.name(), asset_filename));
+    dto.factoryDesc(FactoryDesc(Texture::TYPE_RTTI.getName()).ClaimAsResourceAsset(splatTextureId.name(), asset_filename));
     dto.format(Enigma::Graphics::GraphicFormat::FMT_A8R8G8B8);
     dto.dimension(Enigma::MathLib::Dimension<unsigned>{ 512, 512 });
     dto.dimensionOfCreation(Enigma::MathLib::Dimension<unsigned>{ 512, 512 });
@@ -345,7 +345,7 @@ std::tuple<Enigma::Engine::TextureId, std::shared_ptr<Texture>> TerrainEditServi
     return { splatTextureId, splatTexture };
 }
 
-Enigma::Primitives::PrimitiveId TerrainEditService::assembleTerrainPrimitive(const std::shared_ptr<CreateNewTerrain>& cmd, const Enigma::Engine::TextureId& splat_texture_id)
+Enigma::Primitives::PrimitiveId TerrainEditService::assembleTerrainPrimitive(const std::shared_ptr<CreateNewTerrain>& cmd, const TextureId& splat_texture_id)
 {
     auto terrain_prim_id = Enigma::Primitives::PrimitiveId(cmd->geometryId().name(), TerrainPrimitive::TYPE_RTTI);
     TerrainPrimitiveAssembler primitive_assembler(terrain_prim_id);
@@ -363,14 +363,14 @@ Enigma::Primitives::PrimitiveId TerrainEditService::assembleTerrainPrimitive(con
     return terrain_prim_id;
 }
 
-std::shared_ptr<Enigma::Terrain::TerrainPawn> TerrainEditService::assembleTerrainPawn(const std::shared_ptr<CreateNewTerrain>& cmd, const Enigma::Primitives::PrimitiveId& terrain_primitive_id)
+std::shared_ptr<TerrainPawn> TerrainEditService::assembleTerrainPawn(const std::shared_ptr<CreateNewTerrain>& cmd, const Enigma::Primitives::PrimitiveId& terrain_primitive_id)
 {
-    auto pawn_id = Enigma::SceneGraph::SpatialId(cmd->geometryId().name(), TerrainPawn::TYPE_RTTI);
+    auto pawn_id = SpatialId(cmd->geometryId().name(), TerrainPawn::TYPE_RTTI);
     TerrainPawnAssembler pawn_assembler(pawn_id);
     pawn_assembler.pawn().primitive(terrain_primitive_id);
     pawn_assembler.pawn().spatial().localTransform(Matrix4::MakeTranslateTransform(cmd->localPosistion()));
     pawn_assembler.asNative(pawn_id.name() + ".terrain@" + cmd->assetPathId());
-    auto terrain = std::make_shared<Enigma::SceneGraph::RequestSpatialConstitution>(pawn_id, pawn_assembler.toGenericDto())->dispatch();
+    auto terrain = std::make_shared<RequestSpatialConstitution>(pawn_id, pawn_assembler.toGenericDto())->dispatch();
     assert(terrain);
     std::make_shared<PutSpatial>(pawn_id, terrain)->execute();
     return std::dynamic_pointer_cast<TerrainPawn>(terrain);
@@ -387,7 +387,7 @@ void TerrainEditService::createNewTerrain(const ICommandPtr& c)
     auto [splatTextureId, splatTexture] = assembleTerrainSplatTexture(cmd);
     auto terrain_prim_id = assembleTerrainPrimitive(cmd, splatTextureId);
     auto terrain = assembleTerrainPawn(cmd, terrain_prim_id);
-    CommandBus::enqueue(std::make_shared<Enigma::SceneGraph::AttachNodeChild>(cmd->ownerNodeId(), terrain, terrain->getLocalTransform()));
+    CommandBus::enqueue(std::make_shared<AttachNodeChild>(cmd->ownerNodeId(), terrain, terrain->getLocalTransform()));
     m_pickedTerrain = terrain;
     m_pickedSplatTexture = splatTexture;
 }
@@ -395,7 +395,7 @@ void TerrainEditService::createNewTerrain(const ICommandPtr& c)
 void TerrainEditService::moveUpTerrainVertex(const ICommandPtr& c)
 {
     if (!c) return;
-    const auto cmd = std::dynamic_pointer_cast<LevelEditor::MoveUpTerrainVertex, ICommand>(c);
+    const auto cmd = std::dynamic_pointer_cast<MoveUpTerrainVertex, ICommand>(c);
     if (!cmd) return;
     moveUpTerrainVertexByBrush(cmd->getBrushPos(), cmd->getBrushSize(), cmd->getBrushHeight());
 }
@@ -428,11 +428,12 @@ void TerrainEditService::saveSplatTexture(const ICommandPtr& c)
         CommandBus::enqueue(std::make_shared<OutputMessage>("Save Splat Texture : No terrain selected"));
         return;
     }
+    CommandBus::enqueue(std::make_shared<PutTexture>(m_pickedSplatTexture.lock()->id(), m_pickedSplatTexture.lock()));
     m_savingSplatTextureFile = FileSystem::instance()->openFile(m_pickedSplatTexture.lock()->filePaths()[0], write | openAlways | binary);
     CommandBus::enqueue(std::make_shared<EnqueueSavingTexture>(m_pickedSplatTexture.lock(), m_savingSplatTextureFile));
 }
 
-void TerrainEditService::savePickedTerrain(const Enigma::Frameworks::ICommandPtr& c)
+void TerrainEditService::savePickedTerrain(const ICommandPtr& c)
 {
     if (m_pickedTerrain.expired()) return;
     std::make_shared<PutSpatial>(m_pickedTerrain.lock()->id(), m_pickedTerrain.lock())->enqueue();

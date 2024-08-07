@@ -117,13 +117,13 @@ void TextureRepository::removeTexture(const TextureId& id)
 
 void TextureRepository::putTexture(const TextureId& id, const std::shared_ptr<Texture>& texture)
 {
-    if (hasTexture(id)) return;
+    assert(m_storeMapper);
+    assert(texture);
     std::lock_guard locker{ m_textureMapLock };
-    m_textures.insert_or_assign(id, texture);
     error er = m_storeMapper->putTexture(id, texture->serializeDto());
     if (er)
     {
-        Platforms::Debug::ErrorPrintf("put primitive %s failed : %s\n", id.name().c_str(), er.message().c_str());
+        Platforms::Debug::ErrorPrintf("put texture %s failed : %s\n", id.name().c_str(), er.message().c_str());
         Frameworks::EventPublisher::enqueue(std::make_shared<PutTextureFailed>(id, er));
     }
     else

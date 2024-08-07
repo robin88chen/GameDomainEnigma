@@ -18,4 +18,3 @@ renderables/mb7013_zup.Mesh.003,0,En.Renderables.MeshPrimitive,renderables/mb701
 renderables/mb7013_zup.Mesh.001,0,En.Renderables.SkinMeshPrimitive,renderables/mb7013_zup.Mesh.001.mesh@APK_PATH
 renderables/mb7013_zup.Mesh,0,En.Renderables.SkinMeshPrimitive,renderables/mb7013_zup.Mesh.mesh@APK_PATH
 renderables/mb7013_zup,0,En.Renderables.ModelPrimitive,renderables/mb7013_zup.model@APK_PATH
-terrain/ww1_tt9,0,En.Terrain.TerrainPrimitive,terrain/ww1_tt9.mesh@APK_PATH

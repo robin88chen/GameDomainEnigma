@@ -350,12 +350,14 @@ Enigma::Primitives::PrimitiveId TerrainEditService::assembleTerrainPrimitive(con
     auto terrain_prim_id = Enigma::Primitives::PrimitiveId(cmd->geometryId().name(), TerrainPrimitive::TYPE_RTTI);
     TerrainPrimitiveAssembler primitive_assembler(terrain_prim_id);
     primitive_assembler.meshPrimitive().geometryId(cmd->geometryId()).visualTechnique("Default").effect(EffectMaterialId("fx/TerrainMesh"));
+    EffectTextureMapAssembler texture_map_assembler;
     for (unsigned i = 0; i < TextureLayerNum; i++)
     {
         if (cmd->layerTextures()[i].name().empty()) continue;
-        primitive_assembler.meshPrimitive().textureMap(EffectTextureMapAssembler().textureMapping(cmd->layerTextures()[i], std::nullopt, LayerSemantics[i]));
+        texture_map_assembler.textureMapping(cmd->layerTextures()[i], std::nullopt, LayerSemantics[i]);
     }
-    primitive_assembler.meshPrimitive().textureMap(EffectTextureMapAssembler().textureMapping(splat_texture_id, std::nullopt, ALPHA_TEXTURE_SEMANTIC));
+    texture_map_assembler.textureMapping(splat_texture_id, std::nullopt, ALPHA_TEXTURE_SEMANTIC);
+    primitive_assembler.meshPrimitive().textureMap(texture_map_assembler);
     primitive_assembler.asNative(terrain_prim_id.name() + ".mesh@" + cmd->assetPathId());
     auto terrain_primitive = std::make_shared<Enigma::Primitives::RequestPrimitiveConstitution>(terrain_prim_id, primitive_assembler.toGenericDto())->dispatch();
     assert(terrain_primitive);
@@ -429,15 +431,24 @@ void TerrainEditService::saveSplatTexture(const ICommandPtr& c)
         CommandBus::enqueue(std::make_shared<OutputMessage>("Save Splat Texture : No terrain selected"));
         return;
     }
-    CommandBus::enqueue(std::make_shared<PutTexture>(m_pickedSplatTexture.lock()->id(), m_pickedSplatTexture.lock()));
     m_savingSplatTextureFile = FileSystem::instance()->openFile(m_pickedSplatTexture.lock()->filePaths()[0], write | openAlways | binary);
     CommandBus::enqueue(std::make_shared<EnqueueSavingTexture>(m_pickedSplatTexture.lock(), m_savingSplatTextureFile));
 }
 
 void TerrainEditService::savePickedTerrain(const ICommandPtr& c)
 {
-    if (m_pickedTerrain.expired()) return;
-    std::make_shared<PutSpatial>(m_pickedTerrain.lock()->id(), m_pickedTerrain.lock())->enqueue();
+    if (!m_pickedSplatTexture.expired())
+    {
+        CommandBus::enqueue(std::make_shared<PutTexture>(m_pickedSplatTexture.lock()->id(), m_pickedSplatTexture.lock()));
+    }
+    if (!m_pickedTerrain.expired())
+    {
+        std::make_shared<PutSpatial>(m_pickedTerrain.lock()->id(), m_pickedTerrain.lock())->enqueue();
+        if (m_pickedTerrain.lock()->getPrimitive())
+        {
+            std::make_shared<Enigma::Primitives::PutPrimitive>(m_pickedTerrain.lock()->getPrimitive()->id(), m_pickedTerrain.lock()->getPrimitive())->enqueue();
+        }
+    }
 }
 
 /*void TerrainEditService::onSceneGraphBuilt(const IEventPtr& e)

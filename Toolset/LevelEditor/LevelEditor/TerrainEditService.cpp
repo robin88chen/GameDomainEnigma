@@ -390,6 +390,7 @@ void TerrainEditService::createNewTerrain(const ICommandPtr& c)
     CommandBus::enqueue(std::make_shared<AttachNodeChild>(cmd->ownerNodeId(), terrain, terrain->getLocalTransform()));
     m_pickedTerrain = terrain;
     m_pickedSplatTexture = splatTexture;
+    m_splatTextures.insert_or_assign(terrain->id(), splatTexture);
 }
 
 void TerrainEditService::moveUpTerrainVertex(const ICommandPtr& c)

@@ -14,6 +14,7 @@
 #include "PrimitiveId.h"
 #include "PrimitiveFactoryDelegate.h"
 #include <mutex>
+#include <optional>
 
 namespace Enigma::Primitives
 {
@@ -44,15 +45,18 @@ namespace Enigma::Primitives
         std::shared_ptr<Primitive> queryPrimitive(const PrimitiveId& id);
         void removePrimitive(const PrimitiveId& id);
         void putPrimitive(const PrimitiveId& id, const std::shared_ptr<Primitive>& primitive);
+        std::optional<Engine::GenericDto> queryPrimitiveDto(const PrimitiveId& id);
 
     protected:
         void queryPrimitive(const Frameworks::IQueryPtr& q);
         void queryPrimitiveNextSequenceNumber(const Frameworks::IQueryPtr& q);
         void requestPrimitiveCreation(const Frameworks::IQueryPtr& r);
         void requestPrimitiveConstitution(const Frameworks::IQueryPtr& r);
+        void queryPrimitiveDto(const Frameworks::IQueryPtr& q);
         void putPrimitive(const Frameworks::ICommandPtr& c);
         void removePrimitive(const Frameworks::ICommandPtr& c);
 
+        std::shared_ptr<Primitive> findCachedPrimitive(const PrimitiveId& id);
         void dumpRetainedPrimitives();
 
     protected:
@@ -67,6 +71,7 @@ namespace Enigma::Primitives
         Frameworks::QuerySubscriberPtr m_queryPrimitiveNextSequenceNumber;
         Frameworks::QuerySubscriberPtr m_requestPrimitiveCreation;
         Frameworks::QuerySubscriberPtr m_requestPrimitiveConstitution;
+        Frameworks::QuerySubscriberPtr m_queryPrimitiveDto;
 
         Frameworks::CommandSubscriberPtr m_putPrimitive;
         Frameworks::CommandSubscriberPtr m_removePrimitive;

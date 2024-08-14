@@ -242,12 +242,12 @@ void TerrainEditService::paintTerrainLayer(const Vector3& picking_pos, unsigned 
 
     Matrix4 world_inv = m_pickedTerrain.lock()->getWorldTransform().Inverse();
     Vector3 local_pick_pos = world_inv.TransformCoord(picking_pos);
-    auto min_local_pos = terrain_geo->getMinPosition();
+    Vector3 min_local_pos = terrain_geo->getMinPosition();
 
     auto num_cols = terrain_geo->getNumCols();
     auto num_rows = terrain_geo->getNumRows();
     auto cell_dimension = terrain_geo->getCellDimension();
-    auto tex_dimension = m_pickedSplatTexture.lock()->dimension();
+    Dimension<unsigned> tex_dimension = m_pickedSplatTexture.lock()->dimension();
     auto texel_per_cell_x = tex_dimension.m_width / num_cols;
     auto texel_per_cell_z = tex_dimension.m_height / num_rows;
     float texel_grid_size_x = cell_dimension.m_width / static_cast<float>(texel_per_cell_x);
@@ -269,7 +269,7 @@ void TerrainEditService::addLayerAlpha(unsigned texel_x, unsigned texel_y, unsig
     if (m_alphaTexels.empty()) return;
     if (m_pickedSplatTexture.expired()) return;
 
-    auto dimension = m_pickedSplatTexture.lock()->dimension();
+    Dimension<unsigned> dimension = m_pickedSplatTexture.lock()->dimension();
     unsigned int texel_base_index = (texel_y * dimension.m_width + texel_x) * TextureLayerNum;
     if (layer_idx == 0)
     {

@@ -12,9 +12,12 @@
 #include "Frameworks/Command.h"
 #include "MathLib/Rect.h"
 #include "TextureId.h"
+#include "Frameworks/ExtentTypesDefine.h"
 
 namespace Enigma::Engine
 {
+    class Texture;
+
     class PutTexture : public Frameworks::ICommand
     {
     public:

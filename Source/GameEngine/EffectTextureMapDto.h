@@ -21,6 +21,7 @@ namespace Enigma::Engine
     {
     public:
         TextureMappingDto() = default;
+        TextureMappingDto(const GenericDto& dto);
         TextureMappingDto(const TextureMappingDto&) = default;
         TextureMappingDto(TextureMappingDto&&) = default;
         ~TextureMappingDto() = default;
@@ -28,13 +29,12 @@ namespace Enigma::Engine
         TextureMappingDto& operator=(TextureMappingDto&&) = default;
 
         [[nodiscard]] const TextureId& textureId() const { return m_textureId; }
-        TextureId& textureId() { return m_textureId; }
+        void textureId(const TextureId& id) { m_textureId = id; }
         [[nodiscard]] const std::string& semantic() const { return m_semantic; }
-        std::string& semantic() { return m_semantic; }
+        void semantic(const std::string& semantic) { m_semantic = semantic; }
         [[nodiscard]] std::optional<unsigned> arrayIndex() const { return m_arrayIndex; }
-        std::optional<unsigned>& arrayIndex() { return m_arrayIndex; }
+        void arrayIndex(unsigned index) { m_arrayIndex = index; }
 
-        static TextureMappingDto fromGenericDto(const GenericDto& dto);
         GenericDto toGenericDto() const;
 
     protected:
@@ -47,6 +47,7 @@ namespace Enigma::Engine
     {
     public:
         EffectTextureMapDto() = default;
+        EffectTextureMapDto(const GenericDto& dto);
         EffectTextureMapDto(const EffectTextureMapDto&) = default;
         EffectTextureMapDto(EffectTextureMapDto&&) = default;
         ~EffectTextureMapDto() = default;
@@ -54,9 +55,9 @@ namespace Enigma::Engine
         EffectTextureMapDto& operator=(EffectTextureMapDto&&) = default;
 
         [[nodiscard]] const std::vector<TextureMappingDto>& textureMappings() const { return m_textureMappings; }
-        std::vector<TextureMappingDto>& textureMappings() { return m_textureMappings; }
+        void textureMappings(const std::vector<TextureMappingDto>& mapping_dtos) { m_textureMappings = mapping_dtos; }
+        void addTextureMapping(const TextureMappingDto& mapping_dto) { m_textureMappings.emplace_back(mapping_dto); }
 
-        static EffectTextureMapDto fromGenericDto(const GenericDto& dto);
         GenericDto toGenericDto();
 
     protected:

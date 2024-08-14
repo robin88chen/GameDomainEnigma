@@ -16,7 +16,7 @@ EffectTextureMap::EffectTextureMap()
 
 EffectTextureMap::EffectTextureMap(const GenericDto& dto)
 {
-    EffectTextureMapDto effectTextureMapDto = EffectTextureMapDto::fromGenericDto(dto);
+    EffectTextureMapDto effectTextureMapDto = EffectTextureMapDto(dto);
     for (auto& mapping : effectTextureMapDto.textureMappings())
     {
         if (auto tex = Texture::queryTexture(mapping.textureId()); tex)
@@ -50,10 +50,10 @@ GenericDto EffectTextureMap::serializeDto() const
         {
             if (t->factoryDesc().GetResourceName().empty()) continue; // skip null texture (not resource texture)
             TextureMappingDto mapping;
-            mapping.textureId() = t->id();
-            mapping.semantic() = std::get<std::string>(tex);
-            if (auto& v = std::get<std::optional<unsigned>>(tex)) mapping.arrayIndex() = v.value();
-            dto.textureMappings().emplace_back(mapping);
+            mapping.textureId(t->id());
+            mapping.semantic(std::get<std::string>(tex));
+            if (auto& v = std::get<std::optional<unsigned>>(tex)) mapping.arrayIndex(v.value());
+            dto.addTextureMapping(mapping);
         }
     }
     return dto.toGenericDto();

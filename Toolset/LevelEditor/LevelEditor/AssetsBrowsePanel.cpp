@@ -10,6 +10,13 @@
 #include "WorldMap/WorldMapCommands.h"
 #include "SceneGraph/SceneGraphCommands.h"
 #include "SceneGraph/Light.h"
+#include "SceneGraph/SceneGraphQueries.h"
+#include "Primitives/PrimitiveCommands.h"
+#include "Primitives/PrimitiveQueries.h"
+#include "Terrain/TerrainPrimitiveDto.h"
+#include "GameEngine/EffectTextureMapDto.h"
+#include "Geometries/GeometryCommands.h"
+#include "GameEngine/TextureCommands.h"
 
 const std::string WORLD_ASSETS_KEY("World_Assets");
 const std::string WORLD_ASSETS_NAME("Worlds :");
@@ -122,22 +129,22 @@ AssetIdCombo AssetsBrowsePanel::getSelectedAssetId() const
     if (isRootItemOfAssets(item)) return AssetIdCombo{};
     if (item.key().find_first_of(WORLD_ASSETS_KEY) == 0)
     {
-        auto world_map_id = item.value<Enigma::WorldMap::WorldMapId>();
+        const auto& world_map_id = item.value<Enigma::WorldMap::WorldMapId>();
         return AssetIdCombo{ world_map_id };
     }
     else if (item.key().find_first_of(PAWN_ASSETS_KEY) == 0)
     {
-        auto pawn_id = item.value<Enigma::SceneGraph::SpatialId>();
+        const auto& pawn_id = item.value<Enigma::SceneGraph::SpatialId>();
         return AssetIdCombo{ pawn_id };
     }
     else if (item.key().find_first_of(NODE_ASSETS_KEY) == 0)
     {
-        auto node_id = item.value<Enigma::SceneGraph::SpatialId>();
+        const auto& node_id = item.value<Enigma::SceneGraph::SpatialId>();
         return AssetIdCombo{ node_id };
     }
     else if (item.key().find_first_of(LIGHT_ASSETS_KEY) == 0)
     {
-        auto light_id = item.value<Enigma::SceneGraph::SpatialId>();
+        const auto& light_id = item.value<Enigma::SceneGraph::SpatialId>();
         return AssetIdCombo{ light_id };
     }
     return AssetIdCombo{};
@@ -220,17 +227,24 @@ void AssetsBrowsePanel::onRemoveAsset(nana::menu::item_proxy& item)
     if (isRootItemOfAssets(selected)) return;
     if (selected.key().find_first_of(WORLD_ASSETS_KEY) == 0)
     {
-        auto world_map_id = selected.value<Enigma::WorldMap::WorldMapId>();
+        const auto& world_map_id = selected.value<Enigma::WorldMap::WorldMapId>();
         std::make_shared<Enigma::WorldMap::RemoveWorldMap>(world_map_id)->enqueue();
     }
     else if (selected.key().find_first_of(PAWN_ASSETS_KEY) == 0)
     {
-        auto pawn_id = selected.value<Enigma::SceneGraph::SpatialId>();
-        std::make_shared<Enigma::SceneGraph::RemoveSpatial>(pawn_id)->enqueue();
+        const auto& pawn_id = selected.value<Enigma::SceneGraph::SpatialId>();
+        if (pawn_id.rtti().isDerived(Enigma::Terrain::TerrainPawn::TYPE_RTTI))
+        {
+            removeTerrainReferencedAssets(pawn_id);
+        }
+        else
+        {
+            std::make_shared<Enigma::SceneGraph::RemoveSpatial>(pawn_id)->enqueue();
+        }
     }
     else if (selected.key().find_first_of(NODE_ASSETS_KEY) == 0)
     {
-        auto node_id = selected.value<Enigma::SceneGraph::SpatialId>();
+        const auto& node_id = selected.value<Enigma::SceneGraph::SpatialId>();
         std::make_shared<Enigma::SceneGraph::RemoveSpatial>(node_id)->enqueue();
         if (node_id.rtti().isDerived(Enigma::SceneGraph::LazyNode::TYPE_RTTI))
         {
@@ -239,7 +253,7 @@ void AssetsBrowsePanel::onRemoveAsset(nana::menu::item_proxy& item)
     }
     else if (selected.key().find_first_of(LIGHT_ASSETS_KEY) == 0)
     {
-        auto light_id = selected.value<Enigma::SceneGraph::SpatialId>();
+        const auto& light_id = selected.value<Enigma::SceneGraph::SpatialId>();
         std::make_shared<Enigma::SceneGraph::RemoveSpatial>(light_id)->enqueue();
     }
 }
@@ -330,5 +344,43 @@ std::string AssetsBrowsePanel::makeLightAssetKey(const Enigma::SceneGraph::Spati
 bool AssetsBrowsePanel::isRootItemOfAssets(const nana::treebox::item_proxy& item) const
 {
     return item.key() == WORLD_ASSETS_KEY || item.key() == PAWN_ASSETS_KEY || item.key() == NODE_ASSETS_KEY || item.key() == LIGHT_ASSETS_KEY;
+}
+
+void AssetsBrowsePanel::removeTerrainReferencedAssets(const Enigma::SceneGraph::SpatialId& terrain_id)
+{
+    std::optional<Enigma::Primitives::PrimitiveId> terrain_primitive_id = std::make_shared<Enigma::SceneGraph::QueryPawnPrimitive>(terrain_id)->dispatch();
+    std::optional<Enigma::Geometries::GeometryId> terrain_geo_id;
+    std::optional<Enigma::Engine::TextureId> splat_texture_id;
+    if (terrain_primitive_id.has_value())
+    {
+        std::optional<Enigma::Engine::GenericDto> dto = std::make_shared<Enigma::Primitives::QueryPrimitiveDto>(terrain_primitive_id.value())->dispatch();
+        if (dto.has_value())
+        {
+            Enigma::Terrain::TerrainPrimitiveDto terrain_prim_dto(dto.value());
+            terrain_geo_id = terrain_prim_dto.geometryId();
+            Enigma::Engine::EffectTextureMapDto effect_texture_map_dto(terrain_prim_dto.textureMaps()[0]);
+            for (const auto& mapping_dto : effect_texture_map_dto.textureMappings())
+            {
+                if (mapping_dto.semantic() == "AlphaLayer")
+                {
+                    splat_texture_id = mapping_dto.textureId();
+                    break;
+                }
+            }
+        }
+    }
+    std::make_shared<Enigma::SceneGraph::RemoveSpatial>(terrain_id)->enqueue();
+    if (terrain_primitive_id.has_value())
+    {
+        std::make_shared<Enigma::Primitives::RemovePrimitive>(terrain_primitive_id.value())->enqueue();
+    }
+    if (terrain_geo_id.has_value())
+    {
+        std::make_shared<Enigma::Geometries::RemoveGeometry>(terrain_geo_id.value())->enqueue();
+    }
+    if (splat_texture_id.has_value())
+    {
+        std::make_shared<Enigma::Engine::RemoveTexture>(splat_texture_id.value())->enqueue();
+    }
 }
 

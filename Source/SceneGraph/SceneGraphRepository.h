@@ -16,6 +16,7 @@
 #include "MathLib/Matrix4.h"
 #include "GameEngine/BoundingVolume.h"
 #include "SceneGraphFactoryDelegate.h"
+#include "Primitives/Primitive.h"
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -62,6 +63,7 @@ namespace Enigma::SceneGraph
         MathLib::Matrix4 queryWorldTransform(const SpatialId& id);
         Engine::BoundingVolume queryModelBound(const SpatialId& id);
         std::shared_ptr<Spatial> queryRunningSpatial(const SpatialId& id);
+        std::optional<Primitives::PrimitiveId> queryPawnPrimitive(const SpatialId& id);
 
         /** put entities */
         void putCamera(const std::shared_ptr<Camera>& camera);
@@ -89,6 +91,7 @@ namespace Enigma::SceneGraph
         void queryWorldTransform(const Frameworks::IQueryPtr& q);
         void queryModelBound(const Frameworks::IQueryPtr& q);
         void queryRunningSpatial(const Frameworks::IQueryPtr& q);
+        void queryPawnPrimitive(const Frameworks::IQueryPtr& q);
 
         void putCamera(const Frameworks::ICommandPtr& c);
         void removeCamera(const Frameworks::ICommandPtr& c);
@@ -128,6 +131,7 @@ namespace Enigma::SceneGraph
         Frameworks::QuerySubscriberPtr m_queryWorldTransform;
         Frameworks::QuerySubscriberPtr m_queryModelBound;
         Frameworks::QuerySubscriberPtr m_queryRunningSpatial;
+        Frameworks::QuerySubscriberPtr m_queryPawnPrimitive;
 
         Frameworks::CommandSubscriberPtr m_putCamera;
         Frameworks::CommandSubscriberPtr m_removeCamera;

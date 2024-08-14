@@ -57,6 +57,8 @@ namespace LevelEditor
 
         bool isRootItemOfAssets(const nana::treebox::item_proxy& item) const;
 
+        void removeTerrainReferencedAssets(const Enigma::SceneGraph::SpatialId& terrain_id);
+
     protected:
         MainForm* m_mainForm;
         nana::place* m_place;

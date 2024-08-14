@@ -90,6 +90,8 @@ void SceneGraphRepository::registerHandlers()
     QueryDispatcher::subscribe(typeid(QueryModelBound), m_queryModelBound);
     m_queryRunningSpatial = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { queryRunningSpatial(q); });
     QueryDispatcher::subscribe(typeid(QueryRunningSpatial), m_queryRunningSpatial);
+    m_queryPawnPrimitive = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { queryPawnPrimitive(q); });
+    QueryDispatcher::subscribe(typeid(QueryPawnPrimitive), m_queryPawnPrimitive);
 
     m_putCamera = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { putCamera(c); });
     CommandBus::subscribe(typeid(PutCamera), m_putCamera);
@@ -132,6 +134,8 @@ void SceneGraphRepository::unregisterHandlers()
     m_queryModelBound = nullptr;
     QueryDispatcher::unsubscribe(typeid(QueryRunningSpatial), m_queryRunningSpatial);
     m_queryRunningSpatial = nullptr;
+    QueryDispatcher::unsubscribe(typeid(QueryPawnPrimitive), m_queryPawnPrimitive);
+    m_queryPawnPrimitive = nullptr;
 
     CommandBus::unsubscribe(typeid(PutCamera), m_putCamera);
     m_putCamera = nullptr;
@@ -256,6 +260,33 @@ Enigma::Engine::BoundingVolume SceneGraphRepository::queryModelBound(const Spati
 std::shared_ptr<Spatial> SceneGraphRepository::queryRunningSpatial(const SpatialId& id)
 {
     return findCachedSpatial(id);
+}
+
+std::optional<Enigma::Primitives::PrimitiveId> SceneGraphRepository::queryPawnPrimitive(const SpatialId& id)
+{
+    if (!hasSpatial(id)) return std::nullopt;
+    if (auto spatial = findCachedSpatial(id); spatial)
+    {
+        if (spatial->id().rtti().isDerived(Pawn::TYPE_RTTI))
+        {
+            auto pawn = std::dynamic_pointer_cast<Pawn>(spatial);
+            assert(pawn);
+            if (!pawn->getPrimitive()) return std::nullopt;
+            return pawn->getPrimitive()->id();
+        }
+        else
+        {
+            return std::nullopt;
+        }
+    }
+    auto dto = m_storeMapper->querySpatial(id);
+    assert(dto.has_value());
+    if (Rtti::isDerivedFrom(dto->getRtti().GetRttiName(), Pawn::TYPE_RTTI.getName()))
+    {
+        PawnDto pawn_dto = PawnDto(dto.value());
+        return pawn_dto.primitiveId();
+    }
+    return std::nullopt;
 }
 
 void SceneGraphRepository::queryCamera(const IQueryPtr& q)
@@ -445,6 +476,14 @@ void SceneGraphRepository::queryRunningSpatial(const Frameworks::IQueryPtr& q)
     const auto query = std::dynamic_pointer_cast<QueryRunningSpatial>(q);
     assert(query);
     query->setResult(queryRunningSpatial(query->id()));
+}
+
+void SceneGraphRepository::queryPawnPrimitive(const Frameworks::IQueryPtr& q)
+{
+    if (!q) return;
+    const auto query = std::dynamic_pointer_cast<QueryPawnPrimitive>(q);
+    assert(query);
+    query->setResult(queryPawnPrimitive(query->id()));
 }
 
 void SceneGraphRepository::requestSpatialCreation(const Frameworks::IQueryPtr& r)

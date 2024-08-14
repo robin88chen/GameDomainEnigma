@@ -51,7 +51,7 @@ AddTerrainDialog::AddTerrainDialog(nana::window owner, const std::shared_ptr<Ter
     (*m_cellRowsPrompt).text_align(nana::align::right);
     m_cellRowsCombo = menew nana::combox{ *this };
     m_cellRowsCombo->events().text_changed([this](const nana::arg_combox& a) { this->onCellNumCellPerUVComboTextChanged(a); });
-    for (auto cell_num_candidate : cellNumCandidates)
+    for (const auto& cell_num_candidate : cellNumCandidates)
     {
         m_cellColumnsCombo->push_back(cell_num_candidate);
         m_cellRowsCombo->push_back(cell_num_candidate);
@@ -85,7 +85,7 @@ AddTerrainDialog::AddTerrainDialog(nana::window owner, const std::shared_ptr<Ter
     (*m_cellPerUVPrompt).text_align(nana::align::right);
     m_cellPerUVCombo = menew nana::combox{ *this };
     m_cellPerUVCombo->events().text_changed([this](const nana::arg_combox& a) { this->onCellNumCellPerUVComboTextChanged(a); });
-    for (auto cell_uv_candidate : cellPerUVCandidates)
+    for (const auto& cell_uv_candidate : cellPerUVCandidates)
     {
         m_cellPerUVCombo->push_back(cell_uv_candidate);
     }

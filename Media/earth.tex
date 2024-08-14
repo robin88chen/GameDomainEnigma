@@ -2,16 +2,24 @@
         "Rtti": {
             "Type": "FactoryDesc",
             "Value": {
-                "InstanceType": 4,
+                "InstanceType": 5,
                 "ResourceName": "earth",
                 "ResourceFilename": "earth.tex@APK_PATH",
                 "RttiName": "En.Engine.Texture",
                 "PrefabFilename": ""
             }
         },
+        "IsCube": {
+            "Type": "Boolean",
+            "Value": false
+        },
         "ID": {
             "Type": "String",
             "Value": "earth"
+        },
+        "Height": {
+            "Type": "Uint32",
+            "Value": 256
         },
         "Format": {
             "Type": "Uint32",
@@ -21,19 +29,15 @@
             "Type": "Uint32",
             "Value": 512
         },
-        "Height": {
-            "Type": "Uint32",
-            "Value": 256
-        },
-        "IsCube": {
-            "Type": "Boolean",
-            "Value": false
-        },
         "SurfaceCount": {
             "Type": "Uint32",
             "Value": 1
         },
         "FilePaths": {
+            "Type": "StringArray",
+            "Value": ["earth.png@APK_PATH"]
+        },
+        "ImageFilenamesOfLoad": {
             "Type": "StringArray",
             "Value": ["earth.png@APK_PATH"]
         }

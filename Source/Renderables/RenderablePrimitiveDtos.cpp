@@ -93,7 +93,7 @@ MeshPrimitiveMetaDto::MeshPrimitiveMetaDto(const MeshPrimitiveDto& dto)
     }
     for (auto& tex : dto.textureMaps())
     {
-        m_textureMaps.emplace_back(EffectTextureMapDto::fromGenericDto(tex));
+        m_textureMaps.emplace_back(EffectTextureMapDto(tex));
     }
 }
 

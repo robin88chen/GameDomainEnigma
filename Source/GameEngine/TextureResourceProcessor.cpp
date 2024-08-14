@@ -70,7 +70,7 @@ std::error_code TextureResourceProcessor::enqueueHydratingDto(const std::shared_
     assert(texture);
     if (!texture->lazyStatus().isGhost()) return ErrorCode::textureAlreadyLoaded;
     std::lock_guard locker{ m_hydratingQueueLock };
-    m_hydratingQueue.push({ texture, TextureDto::fromGenericDto(dto) });
+    m_hydratingQueue.push({ texture, TextureDto(dto) });
     texture->lazyStatus().changeStatus(Frameworks::LazyStatus::Status::InQueue);
     return ErrorCode::ok;
 }

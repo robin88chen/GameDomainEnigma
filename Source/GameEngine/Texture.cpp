@@ -22,7 +22,7 @@ Texture::Texture(const TextureId& id) : m_factoryDesc(TYPE_RTTI.getName())
 
 Texture::Texture(const TextureId& id, const GenericDto& dto) : m_factoryDesc(TYPE_RTTI.getName())
 {
-    TextureDto textureDto = TextureDto::fromGenericDto(dto);
+    TextureDto textureDto = TextureDto(dto);
     m_id = id;
     m_factoryDesc = textureDto.factoryDesc();
     m_format = textureDto.format();
@@ -59,12 +59,20 @@ std::shared_ptr<Texture> Texture::queryTexture(const TextureId& id)
 GenericDto Texture::serializeDto() const
 {
     TextureDto textureDto;
-    textureDto.factoryDesc() = m_factoryDesc;
-    textureDto.format() = m_format;
-    textureDto.dimension() = m_dimension;
-    textureDto.isCubeTexture() = m_isCubeTexture;
-    textureDto.surfaceCount() = m_surfaceCount;
-    if (!m_filePaths.empty()) textureDto.filePaths() = m_filePaths;
+    textureDto.factoryDesc(m_factoryDesc);
+    textureDto.format(m_format);
+    textureDto.dimension(m_dimension);
+    textureDto.isCubeTexture(m_isCubeTexture);
+    textureDto.surfaceCount(m_surfaceCount);
+    if (!m_filePaths.empty())
+    {
+        textureDto.filePaths(m_filePaths);
+        textureDto.imageFilenamesOfLoad(m_filePaths);
+    }
+    else
+    {
+        textureDto.dimensionOfCreation(m_dimension);
+    }
     return textureDto.toGenericDto();
 }
 
@@ -89,11 +97,6 @@ bool Texture::isMultiTexture() const
 }
 
 const std::vector<std::string>& Texture::filePaths() const
-{
-    return m_filePaths;
-}
-
-std::vector<std::string>& Texture::filePaths()
 {
     return m_filePaths;
 }

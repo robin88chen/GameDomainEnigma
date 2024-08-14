@@ -38,7 +38,7 @@ namespace LevelEditor
 
     protected:
         void assembleTerrainGeometry(const std::shared_ptr<CreateNewTerrain>& cmd);
-        Enigma::Engine::TextureId assembleTerrainSplatTexture(const std::shared_ptr<CreateNewTerrain>& cmd);
+        std::tuple<Enigma::Engine::TextureId, std::shared_ptr<Enigma::Engine::Texture>> assembleTerrainSplatTexture(const std::shared_ptr<CreateNewTerrain>& cmd);
         Enigma::Primitives::PrimitiveId assembleTerrainPrimitive(const std::shared_ptr<CreateNewTerrain>& cmd, const Enigma::Engine::TextureId& splat_texture_id);
         std::shared_ptr<Enigma::Terrain::TerrainPawn> assembleTerrainPawn(const std::shared_ptr<CreateNewTerrain>& cmd, const Enigma::Primitives::PrimitiveId& terrain_primitive_id);
         void createNewTerrain(const Enigma::Frameworks::ICommandPtr& c);

@@ -44,7 +44,7 @@ AvatarRecipeChangeTextureDto AvatarRecipeChangeTextureDto::fromGenericDto(const 
 {
     AvatarRecipeChangeTextureDto recipe;
     if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_MESH_ID)) recipe.meshId() = v.value();
-    if (auto v = dto.tryGetValue<GenericDto>(TOKEN_TEXTURE_MAPPING_DTO)) recipe.textureDto() = TextureMappingDto::fromGenericDto(v.value());
+    if (auto v = dto.tryGetValue<GenericDto>(TOKEN_TEXTURE_MAPPING_DTO)) recipe.textureDto() = TextureMappingDto(v.value());
     return recipe;
 }
 

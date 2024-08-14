@@ -10,10 +10,10 @@ EffectTextureMapAssembler::EffectTextureMapAssembler()
 EffectTextureMapAssembler& EffectTextureMapAssembler::textureMapping(const TextureId& id, std::optional<unsigned> array_index, const std::string& semantic)
 {
     TextureMappingDto tex;
-    tex.textureId() = id;
-    tex.semantic() = semantic;
-    if (array_index) tex.arrayIndex() = array_index.value();
-    m_dto.textureMappings().emplace_back(tex);
+    tex.textureId(id);
+    tex.semantic(semantic);
+    if (array_index) tex.arrayIndex(array_index.value());
+    m_dto.addTextureMapping(tex);
     return *this;
 }
 

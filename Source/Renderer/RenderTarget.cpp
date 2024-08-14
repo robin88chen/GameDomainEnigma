@@ -292,17 +292,19 @@ void RenderTarget::createRenderTargetTexture(const Engine::TextureId& texture_id
     Engine::TextureDto dto;
     if (m_backSpecification.has_value())
     {
-        dto.id() = texture_id;
-        dto.dimension() = m_backSpecification->dimension();
-        dto.surfaceCount() = 1;
-        dto.format() = m_backSpecification->format();
+        dto.id(texture_id);
+        dto.dimensionOfCreation(m_backSpecification->dimension());
+        dto.dimension(m_backSpecification->dimension());
+        dto.surfaceCount(1);
+        dto.format(m_backSpecification->format());
     }
     else if (m_multiBackSpecification.has_value())
     {
-        dto.id() = texture_id;
-        dto.dimension() = m_multiBackSpecification->dimension();
-        dto.surfaceCount() = m_multiBackSpecification->surfaceCount();
-        dto.format() = m_multiBackSpecification->formats()[0];
+        dto.id(texture_id);
+        dto.dimensionOfCreation(m_multiBackSpecification->dimension());
+        dto.dimension(m_multiBackSpecification->dimension());
+        dto.surfaceCount(m_multiBackSpecification->surfaceCount());
+        dto.format(m_multiBackSpecification->formats()[0]);
     }
     m_renderTargetTexture = std::make_shared<Engine::RequestTextureConstitution>(dto.id(), dto.toGenericDto())->dispatch();
 }

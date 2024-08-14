@@ -21,23 +21,28 @@ namespace Enigma::Engine
     {
     public:
         TextureDto();
+        TextureDto(const GenericDto& dto);
 
-        [[nodiscard]] TextureId id() const { return m_id; }
-        TextureId& id() { return m_id; }
+        [[nodiscard]] const TextureId& id() const { return m_id; }
+        void id(const TextureId& id) { m_id = id; }
         [[nodiscard]] const FactoryDesc& factoryDesc() const { return m_factoryDesc; }
-        FactoryDesc& factoryDesc() { return m_factoryDesc; }
+        void factoryDesc(const FactoryDesc& fd) { m_factoryDesc = fd; }
         [[nodiscard]] const Graphics::GraphicFormat& format() const { return m_format; }
-        Graphics::GraphicFormat& format() { return m_format; }
+        void format(const Graphics::GraphicFormat& fmt) { m_format = fmt; }
         [[nodiscard]] const MathLib::Dimension<unsigned>& dimension() const { return m_dimension; }
-        MathLib::Dimension<unsigned>& dimension() { return m_dimension; }
+        void dimension(const MathLib::Dimension<unsigned>& dim) { m_dimension = dim; }
         [[nodiscard]] bool isCubeTexture() const { return m_isCubeTexture; }
-        bool& isCubeTexture() { return m_isCubeTexture; }
+        void isCubeTexture(bool is_cube) { m_isCubeTexture = is_cube; }
         [[nodiscard]] unsigned surfaceCount() const { return m_surfaceCount; }
-        unsigned& surfaceCount() { return m_surfaceCount; }
+        void surfaceCount(unsigned count) { m_surfaceCount = count; }
         [[nodiscard]] const std::vector<std::string>& filePaths() const { return m_filePaths; }
-        std::vector<std::string>& filePaths() { return m_filePaths; }
+        void filePaths(const std::vector<std::string>& paths) { m_filePaths = paths; }
 
-        static TextureDto fromGenericDto(const GenericDto& dto);
+        [[nodiscard]] const std::optional<MathLib::Dimension<unsigned>>& dimensionOfCreation() const { return m_dimensionOfCreation; }
+        void dimensionOfCreation(const MathLib::Dimension<unsigned>& dimension) { m_dimensionOfCreation = dimension; }
+        [[nodiscard]] const std::optional<std::vector<std::string>>& imageFilenamesOfLoad() const { return m_imageFilenamesOfLoad; }
+        void imageFilenamesOfLoad(const std::vector<std::string>& filenames) { m_imageFilenamesOfLoad = filenames; }
+
         GenericDto toGenericDto() const;
 
     protected:
@@ -48,6 +53,9 @@ namespace Enigma::Engine
         bool m_isCubeTexture = false;
         unsigned m_surfaceCount = 1;
         std::vector<std::string> m_filePaths;
+
+        std::optional<MathLib::Dimension<unsigned>> m_dimensionOfCreation;
+        std::optional<std::vector<std::string>> m_imageFilenamesOfLoad;
     };
 }
 

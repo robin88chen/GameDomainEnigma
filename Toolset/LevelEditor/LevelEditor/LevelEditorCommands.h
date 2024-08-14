@@ -44,8 +44,8 @@ namespace LevelEditor
     class CreateNewTerrain : public Enigma::Frameworks::ICommand
     {
     public:
-        CreateNewTerrain(const Enigma::Geometries::GeometryId& geometry_id, unsigned numRows, unsigned numCols, const Enigma::MathLib::Vector3& minVtxPos, const Enigma::MathLib::Vector3& maxVtxPos, const Enigma::MathLib::Vector2& minUV, const Enigma::MathLib::Vector2& maxUV, const std::array<Enigma::Engine::TextureId, TerrainEditService::TextureLayerNum> layer_textures, const Enigma::MathLib::Vector3& local_pos, const std::string& asset_path_id)
-            : m_geometryId(geometry_id), m_numRows(numRows), m_numCols(numCols), m_minVtxPos(minVtxPos), m_maxVtxPos(maxVtxPos), m_minUV(minUV), m_maxUV(maxUV), m_layerTextures(layer_textures), m_localPos(local_pos), m_assetPathId(asset_path_id) {}
+        CreateNewTerrain(const Enigma::Geometries::GeometryId& geometry_id, unsigned numRows, unsigned numCols, const Enigma::MathLib::Vector3& minVtxPos, const Enigma::MathLib::Vector3& maxVtxPos, const Enigma::MathLib::Vector2& minUV, const Enigma::MathLib::Vector2& maxUV, const std::array<Enigma::Engine::TextureId, TerrainEditService::TextureLayerNum> layer_textures, const Enigma::MathLib::Vector3& local_pos, const Enigma::SceneGraph::SpatialId& owner, const std::string& asset_path_id)
+            : m_geometryId(geometry_id), m_numRows(numRows), m_numCols(numCols), m_minVtxPos(minVtxPos), m_maxVtxPos(maxVtxPos), m_minUV(minUV), m_maxUV(maxUV), m_layerTextures(layer_textures), m_localPos(local_pos), m_owner(owner), m_assetPathId(asset_path_id) {}
 
         const Enigma::Geometries::GeometryId& geometryId() const { return m_geometryId; }
         unsigned numRows() const { return m_numRows; }
@@ -54,9 +54,10 @@ namespace LevelEditor
         const Enigma::MathLib::Vector3& maxVtxPos() const { return m_maxVtxPos; }
         const Enigma::MathLib::Vector2& minUV() const { return m_minUV; }
         const Enigma::MathLib::Vector2& maxUV() const { return m_maxUV; }
-        const std::array<Enigma::Engine::TextureId, TerrainEditService::TextureLayerNum>& getLayerTextures() const { return m_layerTextures; }
-        const Enigma::MathLib::Vector3& getLocalPos() const { return m_localPos; }
-        const std::string& getAssetPathId() const { return m_assetPathId; }
+        const std::array<Enigma::Engine::TextureId, TerrainEditService::TextureLayerNum>& layerTextures() const { return m_layerTextures; }
+        const Enigma::MathLib::Vector3& localPosistion() const { return m_localPos; }
+        const Enigma::SceneGraph::SpatialId& ownerNodeId() const { return m_owner; }
+        const std::string& assetPathId() const { return m_assetPathId; }
 
     protected:
         Enigma::Geometries::GeometryId m_geometryId;
@@ -68,6 +69,7 @@ namespace LevelEditor
         Enigma::MathLib::Vector2 m_maxUV;
         std::array<Enigma::Engine::TextureId, TerrainEditService::TextureLayerNum> m_layerTextures;
         Enigma::MathLib::Vector3 m_localPos;
+        Enigma::SceneGraph::SpatialId m_owner;
         std::string m_assetPathId;
     };
 

@@ -172,13 +172,14 @@ void MainForm::importTextureAsset()
             auto asset_filename = texture_id + ".tex@APK_PATH";
             auto image_filename = sub_path_filename + "@APK_PATH";
             nana::paint::image img{ filepath.generic_string() };
-            dto.id() = texture_id;
-            dto.factoryDesc() = Enigma::Engine::FactoryDesc(Enigma::Engine::Texture::TYPE_RTTI.getName()).ClaimAsResourceAsset(texture_id, asset_filename);
-            dto.format() = Enigma::Graphics::GraphicFormat::FMT_A8R8G8B8;
-            dto.dimension() = Enigma::MathLib::Dimension<unsigned>{ img.size().width, img.size().height };
-            dto.isCubeTexture() = false;
-            dto.surfaceCount() = 1;
-            dto.filePaths().push_back(image_filename);
+            dto.id(texture_id);
+            dto.factoryDesc(Enigma::Engine::FactoryDesc(Enigma::Engine::Texture::TYPE_RTTI.getName()).ClaimAsResourceAsset(texture_id, asset_filename));
+            dto.format(Enigma::Graphics::GraphicFormat::FMT_A8R8G8B8);
+            dto.dimension(Enigma::MathLib::Dimension<unsigned>{ img.size().width, img.size().height });
+            dto.isCubeTexture(false);
+            dto.surfaceCount(1);
+            dto.filePaths({ image_filename });
+            dto.imageFilenamesOfLoad({ image_filename });
             m_textureFileStoreMapper->putTexture(dto.id(), dto.toGenericDto());
         }
     }

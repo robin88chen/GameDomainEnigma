@@ -13,6 +13,7 @@
 #include "LightInfo.h"
 #include "SpatialRenderState.h"
 #include "SpatialId.h"
+#include "Primitives/PrimitiveId.h"
 
 namespace Enigma::SceneGraph
 {
@@ -110,6 +111,14 @@ namespace Enigma::SceneGraph
 
         const SpatialId& id() const { return m_id; }
 
+    protected:
+        SpatialId m_id;
+    };
+    class QueryPawnPrimitive : public Frameworks::Query<std::optional<Primitives::PrimitiveId>>
+    {
+    public:
+        QueryPawnPrimitive(const SpatialId& id) : m_id(id) {}
+        const SpatialId& id() const { return m_id; }
     protected:
         SpatialId m_id;
     };

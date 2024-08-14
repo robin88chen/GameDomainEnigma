@@ -7,13 +7,11 @@ static std::string TOKEN_SEMANTIC = "Semantic";
 static std::string TOKEN_ARRAY_INDEX = "ArrayIndex";
 static std::string TOKEN_TEXTURE_MAPPINGS = "TextureMappings";
 
-TextureMappingDto TextureMappingDto::fromGenericDto(const GenericDto& dto)
+TextureMappingDto::TextureMappingDto(const GenericDto& dto)
 {
-    TextureMappingDto tex;
-    if (const auto v = dto.tryGetValue<std::string>(TOKEN_TEXTURE_ID_NAME)) tex.textureId() = v.value();
-    if (const auto v = dto.tryGetValue<std::string>(TOKEN_SEMANTIC)) tex.semantic() = v.value();
-    if (const auto v = dto.tryGetValue<unsigned>(TOKEN_ARRAY_INDEX)) tex.arrayIndex() = v.value();
-    return tex;
+    if (const auto v = dto.tryGetValue<std::string>(TOKEN_TEXTURE_ID_NAME)) m_textureId = v.value();
+    if (const auto v = dto.tryGetValue<std::string>(TOKEN_SEMANTIC)) m_semantic = v.value();
+    if (const auto v = dto.tryGetValue<unsigned>(TOKEN_ARRAY_INDEX)) m_arrayIndex = v.value();
 }
 
 GenericDto TextureMappingDto::toGenericDto() const
@@ -28,17 +26,15 @@ GenericDto TextureMappingDto::toGenericDto() const
     return dto;
 }
 
-EffectTextureMapDto EffectTextureMapDto::fromGenericDto(const GenericDto& dto)
+EffectTextureMapDto::EffectTextureMapDto(const GenericDto& dto)
 {
-    EffectTextureMapDto effect;
     if (const auto v = dto.tryGetValue<GenericDtoCollection>(TOKEN_TEXTURE_MAPPINGS))
     {
         for (auto& mapping_dto : v.value())
         {
-            effect.textureMappings().emplace_back(TextureMappingDto::fromGenericDto(mapping_dto));
+            m_textureMappings.emplace_back(TextureMappingDto(mapping_dto));
         }
     }
-    return effect;
 }
 
 GenericDto EffectTextureMapDto::toGenericDto()

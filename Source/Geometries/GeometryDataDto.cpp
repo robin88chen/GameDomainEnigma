@@ -44,7 +44,7 @@ static std::array<std::string, VertexFormatCode::MAX_TEX_COORD> TOKEN_TEX_COORDS
     TOKEN_TEX_COORD4, TOKEN_TEX_COORD5, TOKEN_TEX_COORD6, TOKEN_TEX_COORD7
 };
 
-TextureCoordDto TextureCoordDto::fromGenericDto(const GenericDto& dto)
+/*TextureCoordDto TextureCoordDto::fromGenericDto(const GenericDto& dto)
 {
     TextureCoordDto coords;
     if (dto.hasValue(TOKEN_2D_COORDS))
@@ -78,10 +78,10 @@ GenericDto TextureCoordDto::toGenericDto()
         dto.addOrUpdate(TOKEN_3D_COORDS, m_3dCoords.value());
     }
     return dto;
-}
+}*/
 
 //-----------------------------------------------------------------------------------
-GeometryDataDto::GeometryDataDto() : m_vtxCapacity(0), m_idxCapacity(0), m_vtxUsedCount(0), m_idxUsedCount(0), m_topology(0), m_factoryDesc(GeometryData::TYPE_RTTI.getName())
+/*GeometryDataDto::GeometryDataDto() : m_vtxCapacity(0), m_idxCapacity(0), m_vtxUsedCount(0), m_idxUsedCount(0), m_topology(0), m_factoryDesc(GeometryData::TYPE_RTTI.getName())
 {
 }
 
@@ -235,3 +235,4 @@ GenericDto TriangleListDto::toGenericDto() const
 
     return dto;
 }
+*/

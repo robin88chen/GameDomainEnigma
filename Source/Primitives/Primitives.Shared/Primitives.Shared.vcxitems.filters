@@ -92,8 +92,5 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveAssembler.h">
       <Filter>Assemblers</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveDisassembler.h">
-      <Filter>Assemblers</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

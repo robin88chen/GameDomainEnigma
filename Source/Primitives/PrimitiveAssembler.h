@@ -27,6 +27,19 @@ namespace Enigma::Primitives
     protected:
         PrimitiveId m_id;
     };
+
+    class PrimitiveDisassembler
+    {
+    public:
+        PrimitiveDisassembler() = default;
+        virtual ~PrimitiveDisassembler() = default;
+        PrimitiveDisassembler(const PrimitiveDisassembler&) = default;
+        PrimitiveDisassembler(PrimitiveDisassembler&&) = default;
+        PrimitiveDisassembler& operator=(const PrimitiveDisassembler&) = default;
+        PrimitiveDisassembler& operator=(PrimitiveDisassembler&&) = default;
+
+        virtual void disassemble(const Engine::GenericDto& dto) = 0;
+    };
 }
 
 #endif // PRIMITIVE_ASSEMBLER_H

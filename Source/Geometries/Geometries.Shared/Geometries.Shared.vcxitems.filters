@@ -19,8 +19,11 @@
     <Filter Include="Installing">
       <UniqueIdentifier>{c4405ef7-6abf-48c9-8697-0fc1e3db307e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Dto &amp; Assemblers">
+    <Filter Include="Assemblers">
       <UniqueIdentifier>{ee7a8880-8c00-4039-be13-f70db68e6032}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assemblers\Dtos">
+      <UniqueIdentifier>{4f554428-60cb-4a76-93fa-fe63ad4d6cbd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -36,11 +39,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryDataFactory.cpp">
       <Filter>GeometryRepository</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryDataDto.cpp">
-      <Filter>Dto &amp; Assemblers</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\StandardGeometryAssemblers.cpp">
-      <Filter>Dto &amp; Assemblers</Filter>
+      <Filter>Assemblers</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrGeometryRay3.cpp">
       <Filter>Intersection</Filter>
@@ -50,6 +50,18 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryInstallingPolicy.cpp">
       <Filter>Installing</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryDataDto.cpp">
+      <Filter>Assemblers\Dtos</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureCoordinateAssembler.cpp">
+      <Filter>Assemblers</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryAssembler.cpp">
+      <Filter>Assemblers</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TriangleListAssembler.cpp">
+      <Filter>Assemblers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -74,11 +86,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryId.h">
       <Filter>GeometryData</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataDto.h">
-      <Filter>Dto &amp; Assemblers</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\StandardGeometryAssemblers.h">
-      <Filter>Dto &amp; Assemblers</Filter>
+      <Filter>Assemblers</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataEvents.h">
       <Filter>Communications</Filter>
@@ -103,6 +112,18 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryFactoryDelegate.h">
       <Filter>GeometryRepository</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryAssembler.h">
+      <Filter>Assemblers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataDto.h">
+      <Filter>Assemblers\Dtos</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureCoordinateAssembler.h">
+      <Filter>Assemblers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TriangleListAssembler.h">
+      <Filter>Assemblers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

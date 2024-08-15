@@ -114,7 +114,7 @@ void GeometryData::serializeNonVertexAttributes(GeometryDataDto& dto) const
 {
     dto.factoryDesc() = m_factoryDesc;
     dto.id() = m_id;
-    dto.vertexFormat() = m_vertexFormatCode.ToString();
+    dto.vertexFormat() = m_vertexFormatCode.toString();
     dto.vertexCapacity() = m_vtxCapacity;
     dto.vertexUsedCount() = m_vtxUsedCount;
     dto.indexCapacity() = m_idxCapacity;
@@ -135,7 +135,7 @@ void GeometryData::deserializeGeometryDto(const GeometryDataDto& dto)
     createVertexCapacity(dto.vertexFormat(), dto.vertexCapacity(), dto.vertexUsedCount(),
         dto.indexCapacity(), dto.indexUsedCount());
     m_geoSegmentVector.clear();
-    for (unsigned i = 0; i < dto.segments().size(); i += 4)
+    for (unsigned i = 0; i < dto.segments().size() - 3; i += 4)
     {
         m_geoSegmentVector.emplace_back(dto.segments()[i], dto.segments()[i + 1],
             dto.segments()[i + 2], dto.segments()[i + 3]);
@@ -203,7 +203,7 @@ RenderBufferSignature GeometryData::makeRenderBufferSignature() const
 
 error GeometryData::createVertexCapacity(const std::string& vertex_format_string, unsigned vtx_capa, unsigned vtx_count, unsigned idx_capa, unsigned idx_count)
 {
-    m_vertexFormatCode.FromString(vertex_format_string);
+    m_vertexFormatCode.fromString(vertex_format_string);
     m_vertexDesc = m_vertexFormatCode.calculateVertexSize();
 
     if (vtx_capa)

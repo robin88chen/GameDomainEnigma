@@ -9,47 +9,14 @@
 #define _VERTEX_DESCRIPTION_H
 
 #include <string>
+#include "VertexFormatCode.h"
 
 namespace Enigma::Graphics
 {
-    class VertexDescription;
-
     /** Vertex Format Code Structure */
-    struct VertexFormatCode
+    /*struct VertexFormatCode
     {
-        enum
-        {
-            MAX_TEX_COORD = 8,
-        };
-        /** Code Constant */
-        enum
-        {
-            XYZ = 0x001,
-            XYZRHW = 0x002,
-            XYZB1 = 0x003,
-            XYZB2 = 0x004,
-            XYZB3 = 0x005,
-            XYZB4 = 0x006,
-            XYZB5 = 0x007,
-            XYZW = 0x008,
 
-            POSITION_MASK = 0x00f,
-
-            NORMAL = 0x010,
-            PSIZE = 0x020,
-            DIFFUSE = 0x040,
-            SPECULAR = 0x080,
-            TANGENT = 0x100,
-            BINORMAL = 0x200,
-            F_DIFFUSE = 0x400,
-            F_SPECULAR = 0x800,
-            LASTBETA_UBYTE4 = 0x1000,
-            LASTBETA_COLOR = 0x8000,
-        };
-
-        unsigned int m_fvfCode;  /**< 一般性的fvf */
-        unsigned int m_texCount;  /**< 貼圖軸數量 */
-        unsigned char m_texCoordSize[MAX_TEX_COORD];  /**<  每一個stage貼圖軸size (1~4) \n 一定要依照順序，不能跳過某一組 */
 
         VertexFormatCode();
         VertexFormatCode(unsigned int code, unsigned int tex_count = 0,
@@ -60,24 +27,7 @@ namespace Enigma::Graphics
         bool operator !=(const VertexFormatCode& data) const;
         bool operator <(const VertexFormatCode& data) const;
 
-        VertexDescription calculateVertexSize();
-        /** Make Code From String
-        @remarks
-        string format: \n  字串以底線連接token, 每個token表示為: \n
-        "xyz", "xyzrhw", "xyzw", "xyzb1", "xyzb2", "xyzb3", "xyzb4", "xyzb5" :位置 \n
-        "nor" : normal \n
-        "psize" : point size \n
-        "diffuse", "specular" : diffuse/specular color (1 byte)\n
-        "fdiffuse","fspecular" : diffuse/specular color (4 float) \n
-        "tangent", "binormal" : tangent/binormal vector; T/B同時存在: 3 float; 只有tangent : tangent 4 float \n
-        "betabyte", "betacolor" : last beta ubyte/last beta color \n
-        "texn(x,x,x)" : n表示有多少層貼圖(1~8),後面()裡為每層貼圖的貼圖軸數量
-        */
-        void FromString(const std::string& fvf_string);
-        /** Make String From Code */
-        std::string ToString() const;
-        //todo : format code 常數物件；與實作脫離的格式名稱字串 (ex: "PositionNormalSingleUV")
-    };
+    };*/
 
     class VertexDescription
     {
@@ -130,7 +80,7 @@ namespace Enigma::Graphics
         bool hasTangent() const { return tangentOffset() >= 0; }
 
     private:
-        friend VertexFormatCode;
+        friend class VertexFormatCode;
         // offset -- 從vertex的基本位置算起
         int m_positionOffset;
         int m_weightOffset;  // blending weight array

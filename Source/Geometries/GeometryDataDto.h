@@ -19,7 +19,7 @@
 
 namespace Enigma::Geometries
 {
-    class TextureCoordDto
+    /*class TextureCoordDto
     {
     public:
         TextureCoordDto() = default;
@@ -38,9 +38,9 @@ namespace Enigma::Geometries
         std::optional<std::vector<MathLib::Vector2>> m_2dCoords;
         std::optional<std::vector<float>> m_1dCoords;
         std::optional<std::vector<MathLib::Vector3>> m_3dCoords;
-    };
+    };*/
 
-    class GeometryDataDto
+    /*class GeometryDataDto
     {
     public:
         GeometryDataDto();
@@ -113,9 +113,9 @@ namespace Enigma::Geometries
         unsigned m_idxUsedCount;
         unsigned m_topology;
         Engine::GenericDto m_geometryBound;
-    };
+    };*/
 
-    class TriangleListDto : public GeometryDataDto
+    /*class TriangleListDto : public GeometryDataDto
     {
     public:
         TriangleListDto();
@@ -123,7 +123,7 @@ namespace Enigma::Geometries
 
         static TriangleListDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
-    };
+    };*/
 }
 
 #endif // _GEOMETRY_DATA_DTO_H

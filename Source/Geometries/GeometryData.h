@@ -153,7 +153,7 @@ namespace Enigma::Geometries
         Graphics::PrimitiveTopology getPrimitiveTopology() const { return m_topology; };
 
         /** get vertex format string */
-        std::string getVertexFormatString() const { return m_vertexFormatCode.ToString(); };
+        std::string getVertexFormatString() const { return m_vertexFormatCode.toString(); };
 
         /** get vertex memory */
         const byte_buffer& getVertexMemory() const { return m_vertexMemory; };

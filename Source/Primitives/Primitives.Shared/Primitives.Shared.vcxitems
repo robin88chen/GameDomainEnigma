@@ -28,7 +28,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Primitive.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveAssembler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveCommands.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveDisassembler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveErrors.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveFactory.h" />

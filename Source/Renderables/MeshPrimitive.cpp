@@ -398,7 +398,7 @@ std::shared_ptr<Texture> MeshPrimitive::findTextureBySemantic(const std::string&
     {
         auto tex_tuple = eff_tex.findSemanticTexture(semantic);
         if (!tex_tuple) continue;
-        if (auto tex = std::get<std::shared_ptr<Texture>>(tex_tuple.value()))
+        if (const auto& tex = std::get<std::shared_ptr<Texture>>(tex_tuple.value()))
         {
             return tex;
         }

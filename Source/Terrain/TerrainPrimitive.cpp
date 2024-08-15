@@ -30,9 +30,9 @@ std::shared_ptr<Enigma::Primitives::Primitive> TerrainPrimitive::constitute(cons
     return std::make_shared<TerrainPrimitive>(id, dto, geometry_repository);
 }
 
-Enigma::Engine::GenericDto TerrainPrimitive::serializeDto() const
+/*Enigma::Engine::GenericDto TerrainPrimitive::serializeDto() const
 {
     TerrainPrimitiveDto dto(serializeMeshDto());
     return dto.toGenericDto();
-}
+}*/
 

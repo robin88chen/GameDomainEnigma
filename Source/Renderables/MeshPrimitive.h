@@ -43,7 +43,9 @@ namespace Enigma::Renderables
         MeshPrimitive& operator=(const MeshPrimitive&) = delete;
         MeshPrimitive& operator=(MeshPrimitive&&) = delete;
 
-        virtual Engine::GenericDto serializeDto() const override;
+        //todo : implement these functions
+        virtual std::shared_ptr<Primitives::PrimitiveAssembler> assembler() const override;
+        virtual void assemble(const std::shared_ptr<Primitives::PrimitiveAssembler>& assembler) override;
 
         const std::string& getName() const { return m_name; }
         /** get geometry data */

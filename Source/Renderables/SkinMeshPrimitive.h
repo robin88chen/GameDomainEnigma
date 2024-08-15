@@ -27,7 +27,9 @@ namespace Enigma::Renderables
         SkinMeshPrimitive& operator=(const SkinMeshPrimitive&) = delete;
         SkinMeshPrimitive& operator=(SkinMeshPrimitive&&) = delete;
 
-        virtual Engine::GenericDto serializeDto() const override;
+        //todo : implement these functions
+        virtual std::shared_ptr<Primitives::PrimitiveAssembler> assembler() const override;
+        virtual void assemble(const std::shared_ptr<Primitives::PrimitiveAssembler>& assembler) override;
 
         void bindOwnerRootRefTransform(const MathLib::Matrix4& mx);
         const MathLib::Matrix4& getOwnerRootRefTransform() const { return m_ownerNodeRootRefTransform; }

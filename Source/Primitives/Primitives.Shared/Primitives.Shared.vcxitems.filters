@@ -16,6 +16,9 @@
     <Filter Include="Error Codes">
       <UniqueIdentifier>{bb4746a4-8b20-462c-8597-bc846dcbdf50}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Assemblers">
+      <UniqueIdentifier>{7b272243-4157-445f-bc05-804029c60fd2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Primitive.cpp">
@@ -85,6 +88,12 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveFactoryDelegate.h">
       <Filter>Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveAssembler.h">
+      <Filter>Assemblers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveDisassembler.h">
+      <Filter>Assemblers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

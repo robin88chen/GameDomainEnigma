@@ -29,11 +29,11 @@ SkinMeshPrimitive::~SkinMeshPrimitive()
     loosePrimitiveBoneMatrix();
 }
 
-GenericDto SkinMeshPrimitive::serializeDto() const
+/*GenericDto SkinMeshPrimitive::serializeDto() const
 {
     SkinMeshPrimitiveDto dto(serializeMeshDto());
     return dto.toGenericDto();
-}
+}*/
 
 void SkinMeshPrimitive::bindOwnerRootRefTransform(const MathLib::Matrix4& mx)
 {

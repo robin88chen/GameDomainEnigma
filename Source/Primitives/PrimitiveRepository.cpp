@@ -5,6 +5,7 @@
 #include "PrimitiveQueries.h"
 #include "Primitive.h"
 #include "PrimitiveErrors.h"
+#include "PrimitiveAssembler.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/QueryDispatcher.h"
 #include "Platforms/MemoryMacro.h"
@@ -130,7 +131,9 @@ void PrimitiveRepository::putPrimitive(const PrimitiveId& id, const std::shared_
     assert(primitive);
     assert(m_storeMapper);
     if (id != id.origin()) return;  // only put origin primitive to store
-    error er = m_storeMapper->putPrimitive(id.origin(), primitive->serializeDto());
+    std::shared_ptr<PrimitiveAssembler> assembler = primitive->assembler();
+    primitive->assemble(assembler);
+    error er = m_storeMapper->putPrimitive(id.origin(), assembler->assemble());
     if (er)
     {
         Platforms::Debug::ErrorPrintf("put primitive %s failed : %s\n", id.name().c_str(), er.message().c_str());
@@ -145,7 +148,12 @@ void PrimitiveRepository::putPrimitive(const PrimitiveId& id, const std::shared_
 std::optional<Enigma::Engine::GenericDto> PrimitiveRepository::queryPrimitiveDto(const PrimitiveId& id)
 {
     if (!hasPrimitive(id)) return std::nullopt;
-    if (auto cached_prim = findCachedPrimitive(id)) return cached_prim->serializeDto();
+    if (auto cached_prim = findCachedPrimitive(id))
+    {
+        std::shared_ptr<PrimitiveAssembler> assembler = cached_prim->assembler();
+        cached_prim->assemble(assembler);
+        return assembler->assemble();
+    }
     assert(m_storeMapper);
     return m_storeMapper->queryPrimitive(id.origin());
 }

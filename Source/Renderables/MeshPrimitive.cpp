@@ -71,10 +71,10 @@ MeshPrimitive::~MeshPrimitive()
     m_textures.clear();
 }
 
-GenericDto MeshPrimitive::serializeDto() const
+/*GenericDto MeshPrimitive::serializeDto() const
 {
     return serializeMeshDto().toGenericDto();
-}
+}*/
 
 MeshPrimitiveDto MeshPrimitive::serializeMeshDto() const
 {

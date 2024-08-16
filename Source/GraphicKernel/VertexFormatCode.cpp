@@ -5,7 +5,6 @@
 #include <cassert>
 #include <cstring>
 
-
 using namespace Enigma::Graphics;
 
 VertexFormatCode::VertexFormatCode()
@@ -152,6 +151,22 @@ void VertexFormatCode::addFloatSpecular()
     m_fvfCode |= FLOAT_SPECULAR;
 }
 
+void VertexFormatCode::addLastBetaUByte4()
+{
+    m_fvfCode |= LASTBETA_UBYTE4;
+}
+
+void VertexFormatCode::replacePositionFormat(FormatCode format)
+{
+    assert(static_cast<unsigned>(format) <= static_cast<unsigned>(POSITION_MASK));
+    m_fvfCode = (m_fvfCode & (~POSITION_MASK)) | format;
+}
+
+VertexFormatCode::FormatCode VertexFormatCode::getPositionFormat() const
+{
+    return static_cast<FormatCode>(m_fvfCode & POSITION_MASK);
+}
+
 void VertexFormatCode::updateFvfCodeOfPaletteWeight()
 {
     if (!m_hasPosition3) return;
@@ -160,19 +175,19 @@ void VertexFormatCode::updateFvfCodeOfPaletteWeight()
         switch (m_weightCount)
         {
         case 0:
-            m_fvfCode = (m_fvfCode & (~POSITION_MASK)) | XYZB1;
+            replacePositionFormat(XYZB1);
             break;
         case 1:
-            m_fvfCode = (m_fvfCode & (~POSITION_MASK)) | XYZB2;
+            replacePositionFormat(XYZB2);
             break;
         case 2:
-            m_fvfCode = (m_fvfCode & (~POSITION_MASK)) | XYZB3;
+            replacePositionFormat(XYZB3);
             break;
         case 3:
-            m_fvfCode = (m_fvfCode & (~POSITION_MASK)) | XYZB4;
+            replacePositionFormat(XYZB4);
             break;
         case 4:
-            m_fvfCode = (m_fvfCode & (~POSITION_MASK)) | XYZB5;
+            replacePositionFormat(XYZB5);
             break;
         default:
             assert(false);
@@ -185,19 +200,19 @@ void VertexFormatCode::updateFvfCodeOfPaletteWeight()
         switch (m_weightCount)
         {
         case 0:
-            m_fvfCode = (m_fvfCode & (~POSITION_MASK)) | XYZ;
+            replacePositionFormat(XYZ);
             break;
         case 1:
-            m_fvfCode = (m_fvfCode & (~POSITION_MASK)) | XYZB1;
+            replacePositionFormat(XYZB1);
             break;
         case 2:
-            m_fvfCode = (m_fvfCode & (~POSITION_MASK)) | XYZB2;
+            replacePositionFormat(XYZB2);
             break;
         case 3:
-            m_fvfCode = (m_fvfCode & (~POSITION_MASK)) | XYZB3;
+            replacePositionFormat(XYZB3);
             break;
         case 4:
-            m_fvfCode = (m_fvfCode & (~POSITION_MASK)) | XYZB4;
+            replacePositionFormat(XYZB4);
             break;
         default:
             assert(false);
@@ -426,67 +441,68 @@ void VertexFormatCode::fromString(const std::string& fvf_string)
     {
         if (token == "xyz")
         {
-            m_fvfCode = (m_fvfCode & (~POSITION_MASK)) | XYZ;
+            replacePositionFormat(XYZ);
         }
         else if (token == "xyzrhw")
         {
-            m_fvfCode = (m_fvfCode & (~POSITION_MASK)) | XYZRHW;
+            replacePositionFormat(XYZRHW);
         }
         else if (token == "xyzw")
         {
-            m_fvfCode = (m_fvfCode & (~POSITION_MASK)) | XYZW;
+            replacePositionFormat(XYZW);
         }
         else if (token == "xyzb1")
         {
-            m_fvfCode = (m_fvfCode & (~POSITION_MASK)) | XYZB1;
+            replacePositionFormat(XYZB1);
         }
         else if (token == "xyzb2")
         {
-            m_fvfCode = (m_fvfCode & (~POSITION_MASK)) | XYZB2;
+            replacePositionFormat(XYZB2);
         }
         else if (token == "xyzb3")
         {
-            m_fvfCode = (m_fvfCode & (~POSITION_MASK)) | XYZB3;
+            replacePositionFormat(XYZB3);
         }
         else if (token == "xyzb4")
         {
-            m_fvfCode = (m_fvfCode & (~POSITION_MASK)) | XYZB4;
+            replacePositionFormat(XYZB4);
         }
         else if (token == "xyzb5")
         {
+            replacePositionFormat(XYZB5);
             m_fvfCode = (m_fvfCode & (~POSITION_MASK)) | XYZB5;
         }
         else if (token == "nor")
         {
-            m_fvfCode |= NORMAL;
+            addNormal();
         }
         else if (token == "psize")
         {
-            m_fvfCode |= PSIZE;
+            addPointSize();
         }
         else if (token == "diffuse")
         {
-            m_fvfCode |= DIFFUSE;
+            addDiffuse();
         }
         else if (token == "specular")
         {
-            m_fvfCode |= SPECULAR;
+            addSpecular();
         }
         else if (token == "fdiffuse")
         {
-            m_fvfCode |= FLOAT_DIFFUSE;
+            addFloatDiffuse();
         }
         else if (token == "fspecular")
         {
-            m_fvfCode |= FLOAT_SPECULAR;
+            addFloatSpecular();
         }
         else if (token == "tangent")
         {
-            m_fvfCode |= TANGENT;
+            addTangent();
         }
         else if (token == "binormal")
         {
-            m_fvfCode |= BINORMAL;
+            addBinormal();
         }
         else if (token == "betabyte")
         {

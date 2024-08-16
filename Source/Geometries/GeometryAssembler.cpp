@@ -201,7 +201,7 @@ void GeometryAssembler::serializeNonVertexAttributesToGenericDto(Engine::Generic
     dto.addOrUpdate(TOKEN_VERTEX_USED_COUNT, m_vtxUsedCount);
     dto.addOrUpdate(TOKEN_INDEX_USED_COUNT, m_idxUsedCount);
     dto.addOrUpdate(TOKEN_TOPOLOGY, m_topology);
-    dto.addOrUpdate(TOKEN_GEOMETRY_BOUND, m_geometryBound.serializeDto());
+    dto.addOrUpdate(TOKEN_GEOMETRY_BOUND, m_geometryBound.serializeDto().toGenericDto());
 }
 
 void GeometryAssembler::addSegment(const GeometrySegment& segment)

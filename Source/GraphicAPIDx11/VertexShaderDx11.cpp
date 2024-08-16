@@ -91,33 +91,23 @@ void VertexShaderDx11::VertexFormatSemanticMapping(const std::string& semantic_n
     if (semantic_name.empty()) return;
     if (semantic_name == VertexDeclarationDx11::m_positionSemanticName)
     {
-        m_shaderVertexFormat.m_fvfCode =
-            (m_shaderVertexFormat.m_fvfCode & (~Graphics::VertexFormatCode::POSITION_MASK))
-            | Graphics::VertexFormatCode::XYZ;
+        m_shaderVertexFormat.replacePositionFormat(Graphics::VertexFormatCode::XYZ);
     }
     else if (semantic_name == VertexDeclarationDx11::m_weightsSemanticName)
     {
         switch (mask)
         {
         case 0x01:
-            m_shaderVertexFormat.m_fvfCode =
-                (m_shaderVertexFormat.m_fvfCode & (~Graphics::VertexFormatCode::POSITION_MASK))
-                | Graphics::VertexFormatCode::XYZB1;
+            m_shaderVertexFormat.replacePositionFormat(Graphics::VertexFormatCode::XYZB1);
             break;
         case 0x03:
-            m_shaderVertexFormat.m_fvfCode =
-                (m_shaderVertexFormat.m_fvfCode & (~Graphics::VertexFormatCode::POSITION_MASK))
-                | Graphics::VertexFormatCode::XYZB2;
+            m_shaderVertexFormat.replacePositionFormat(Graphics::VertexFormatCode::XYZB2);
             break;
         case 0x07:
-            m_shaderVertexFormat.m_fvfCode =
-                (m_shaderVertexFormat.m_fvfCode & (~Graphics::VertexFormatCode::POSITION_MASK))
-                | Graphics::VertexFormatCode::XYZB3;
+            m_shaderVertexFormat.replacePositionFormat(Graphics::VertexFormatCode::XYZB3);
             break;
         case 0x0f:
-            m_shaderVertexFormat.m_fvfCode =
-                (m_shaderVertexFormat.m_fvfCode & (~Graphics::VertexFormatCode::POSITION_MASK))
-                | Graphics::VertexFormatCode::XYZB4;
+            m_shaderVertexFormat.replacePositionFormat(Graphics::VertexFormatCode::XYZB4);
             break;
         default:
             break;
@@ -125,78 +115,67 @@ void VertexShaderDx11::VertexFormatSemanticMapping(const std::string& semantic_n
     }
     else if (semantic_name == VertexDeclarationDx11::m_boneIndexSemanticName)
     {
-        unsigned int pos_code = m_shaderVertexFormat.m_fvfCode & Graphics::VertexFormatCode::POSITION_MASK;
+        Graphics::VertexFormatCode::FormatCode pos_code = m_shaderVertexFormat.getPositionFormat();
         switch (pos_code)
         {
         case Graphics::VertexFormatCode::XYZ:
-            m_shaderVertexFormat.m_fvfCode =
-                (m_shaderVertexFormat.m_fvfCode & (~Graphics::VertexFormatCode::POSITION_MASK))
-                | Graphics::VertexFormatCode::XYZB1;
+            m_shaderVertexFormat.replacePositionFormat(Graphics::VertexFormatCode::XYZB1);
             break;
         case Graphics::VertexFormatCode::XYZB1:
-            m_shaderVertexFormat.m_fvfCode =
-                (m_shaderVertexFormat.m_fvfCode & (~Graphics::VertexFormatCode::POSITION_MASK))
-                | Graphics::VertexFormatCode::XYZB2;
+            m_shaderVertexFormat.replacePositionFormat(Graphics::VertexFormatCode::XYZB2);
             break;
         case Graphics::VertexFormatCode::XYZB2:
-            m_shaderVertexFormat.m_fvfCode =
-                (m_shaderVertexFormat.m_fvfCode & (~Graphics::VertexFormatCode::POSITION_MASK))
-                | Graphics::VertexFormatCode::XYZB3;
+            m_shaderVertexFormat.replacePositionFormat(Graphics::VertexFormatCode::XYZB3);
             break;
         case Graphics::VertexFormatCode::XYZB3:
-            m_shaderVertexFormat.m_fvfCode =
-                (m_shaderVertexFormat.m_fvfCode & (~Graphics::VertexFormatCode::POSITION_MASK))
-                | Graphics::VertexFormatCode::XYZB4;
+            m_shaderVertexFormat.replacePositionFormat(Graphics::VertexFormatCode::XYZB4);
             break;
         case Graphics::VertexFormatCode::XYZB4:
-            m_shaderVertexFormat.m_fvfCode =
-                (m_shaderVertexFormat.m_fvfCode & (~Graphics::VertexFormatCode::POSITION_MASK))
-                | Graphics::VertexFormatCode::XYZB5;
+            m_shaderVertexFormat.replacePositionFormat(Graphics::VertexFormatCode::XYZB5);
             break;
         default:
             break;
         }
-        m_shaderVertexFormat.m_fvfCode |= Graphics::VertexFormatCode::LASTBETA_UBYTE4;
+        m_shaderVertexFormat.addLastBetaUByte4();
     }
     else if (semantic_name == VertexDeclarationDx11::m_normalSemanticName)
     {
-        m_shaderVertexFormat.m_fvfCode |= Graphics::VertexFormatCode::NORMAL;
+        m_shaderVertexFormat.addNormal();
     }
     else if (semantic_name == VertexDeclarationDx11::m_tangentSemanticName)
     {
-        m_shaderVertexFormat.m_fvfCode |= Graphics::VertexFormatCode::TANGENT;
+        m_shaderVertexFormat.addTangent();
     }
     else if (semantic_name == VertexDeclarationDx11::m_binormalSemanticName)
     {
-        m_shaderVertexFormat.m_fvfCode |= Graphics::VertexFormatCode::BINORMAL;
+        m_shaderVertexFormat.addBinormal();
     }
     else if (semantic_name == VertexDeclarationDx11::m_color0SemanticName)
     {
-        m_shaderVertexFormat.m_fvfCode |= Graphics::VertexFormatCode::F_DIFFUSE;
+        m_shaderVertexFormat.addFloatDiffuse();
     }
     else if (semantic_name == VertexDeclarationDx11::m_color1SemanticName)
     {
-        m_shaderVertexFormat.m_fvfCode |= Graphics::VertexFormatCode::F_SPECULAR;
+        m_shaderVertexFormat.addFloatSpecular();
     }
     else if (semantic_name == VertexDeclarationDx11::m_texCoordSemanticName)
     {
         if (semantic_index >= Graphics::VertexFormatCode::MAX_TEX_COORD) return;
-        if (m_shaderVertexFormat.m_texCount <= semantic_index) m_shaderVertexFormat.m_texCount = semantic_index + 1;
         if (mask == 0x01)
         {
-            m_shaderVertexFormat.m_texCoordSize[semantic_index] = 1;
+            m_shaderVertexFormat.addTextureCoord(semantic_index, 1);
         }
         else if (mask == 0x03)
         {
-            m_shaderVertexFormat.m_texCoordSize[semantic_index] = 2;
+            m_shaderVertexFormat.addTextureCoord(semantic_index, 2);
         }
         else if (mask == 0x07)
         {
-            m_shaderVertexFormat.m_texCoordSize[semantic_index] = 3;
+            m_shaderVertexFormat.addTextureCoord(semantic_index, 3);
         }
         else if (mask == 0x0f)
         {
-            m_shaderVertexFormat.m_texCoordSize[semantic_index] = 4;
+            m_shaderVertexFormat.addTextureCoord(semantic_index, 4);
         }
     }
 }

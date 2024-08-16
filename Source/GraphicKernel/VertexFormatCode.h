@@ -22,7 +22,7 @@ namespace Enigma::Graphics
             MAX_TEX_COORD = 8,
         };
         /** Code Constant */
-        enum
+        enum FormatCode
         {
             XYZ = 0x001,
             XYZRHW = 0x002,
@@ -67,6 +67,9 @@ namespace Enigma::Graphics
         void addTextureCoord(unsigned stage, unsigned size);
         void addFloatDiffuse();
         void addFloatSpecular();
+        void addLastBetaUByte4();
+        void replacePositionFormat(FormatCode format);
+        FormatCode getPositionFormat() const;
 
         VertexDescription calculateVertexSize();
         /** Make Code From String

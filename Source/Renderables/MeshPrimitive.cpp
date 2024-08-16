@@ -11,6 +11,7 @@
 #include "RenderablePrimitiveDtos.h"
 #include "Geometries/GeometryDataQueries.h"
 #include "RenderableErrors.h"
+#include "Geometries/GeometryAssembler.h"
 #include <cassert>
 
 using namespace Enigma::Renderables;
@@ -87,7 +88,9 @@ MeshPrimitiveDto MeshPrimitive::serializeMeshDto() const
         if ((m_geometry->factoryDesc().GetInstanceType() == FactoryDesc::InstanceType::Native)
             || (m_geometry->factoryDesc().GetInstanceType() == FactoryDesc::InstanceType::ResourceAsset))
         {
-            dto.geometry() = m_geometry->serializeDto();
+            std::shared_ptr<Geometries::GeometryAssembler> assembler = m_geometry->assembler();
+            m_geometry->assemble(assembler);
+            dto.geometry() = assembler->assemble();
         }
     }
     for (auto& eff : m_effects)

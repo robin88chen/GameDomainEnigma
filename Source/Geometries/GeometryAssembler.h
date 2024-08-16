@@ -29,6 +29,7 @@ namespace Enigma::Geometries
     {
     public:
         GeometryAssembler(const GeometryId& id);
+        GeometryAssembler(const GeometryId& id, const Engine::FactoryDesc& desc);
         virtual ~GeometryAssembler() = default;
         GeometryAssembler(const GeometryAssembler&) = default;
         GeometryAssembler(GeometryAssembler&&) = default;
@@ -37,7 +38,9 @@ namespace Enigma::Geometries
 
         virtual Engine::GenericDto assemble() const;
 
+        void asAsset(const std::string& name, const std::string& filename, const std::string& path_id);
         void addSegment(const GeometrySegment& segment);
+        void segments(const std::vector<GeometrySegment>& segments);
         void position3s(const std::vector<MathLib::Vector3>& positions);
         void position4s(const std::vector<MathLib::Vector4>& positions);
         void normals(const std::vector<MathLib::Vector3>& normals);
@@ -56,6 +59,8 @@ namespace Enigma::Geometries
         void indexUsedCount(unsigned count) { m_idxUsedCount = count; }
         virtual void topology(Graphics::PrimitiveTopology topology) { m_topology = static_cast<unsigned>(topology); }
         void geometryBound(const Engine::BoundingVolume& bounding) { m_geometryBound = bounding; }
+
+        void computeAlignedBox();
 
     protected:
         void serializeNonVertexAttributesToGenericDto(Engine::GenericDto& dto) const;

@@ -1,6 +1,7 @@
 ﻿#include "GeometryAssembler.h"
 #include "GeometryData.h"
 #include "TextureCoordinateAssembler.h"
+#include "MathLib/ContainmentBox3.h"
 #include <cassert>
 
 using namespace Enigma::Geometries;
@@ -38,7 +39,11 @@ static std::array<std::string, Enigma::Graphics::VertexFormatCode::MAX_TEX_COORD
     TOKEN_TEX_COORD4, TOKEN_TEX_COORD5, TOKEN_TEX_COORD6, TOKEN_TEX_COORD7
 };
 
-GeometryAssembler::GeometryAssembler(const GeometryId& id) : m_id(id), m_vtxCapacity(0), m_idxCapacity(0), m_vtxUsedCount(0), m_idxUsedCount(0), m_topology(0), m_factoryDesc(GeometryData::TYPE_RTTI)
+GeometryAssembler::GeometryAssembler(const GeometryId& id) : m_id(id), m_factoryDesc(GeometryData::TYPE_RTTI), m_vtxCapacity(0), m_idxCapacity(0), m_vtxUsedCount(0), m_idxUsedCount(0), m_topology(0)
+{
+}
+
+GeometryAssembler::GeometryAssembler(const GeometryId& id, const Engine::FactoryDesc& desc) : m_id(id), m_factoryDesc(desc), m_vtxCapacity(0), m_idxCapacity(0), m_vtxUsedCount(0), m_idxUsedCount(0), m_topology(0)
 {
 }
 
@@ -88,6 +93,11 @@ Enigma::Engine::GenericDto GeometryAssembler::assemble() const
         dto.addOrUpdate(TOKEN_INDICES, m_indices.value());
     }
     return dto;
+}
+
+void GeometryAssembler::asAsset(const std::string& name, const std::string& filename, const std::string& path_id)
+{
+    m_factoryDesc.ClaimAsResourceAsset(name, filename, path_id);
 }
 
 void GeometryAssembler::position3s(const std::vector<MathLib::Vector3>& positions)
@@ -167,6 +177,20 @@ void GeometryAssembler::tangents(const std::vector<MathLib::Vector4>& tangents)
     m_vertexFormat.addTangent();
 }
 
+void GeometryAssembler::computeAlignedBox()
+{
+    if (auto& pos3 = m_position3s)
+    {
+        const MathLib::Box3 box = MathLib::ContainmentBox3::ComputeAlignedBox(&(pos3.value()[0]), static_cast<unsigned>(pos3.value().size()));
+        m_geometryBound = Engine::BoundingVolume{ box };
+    }
+    else if (auto& pos4 = m_position4s)
+    {
+        const MathLib::Box3 box = MathLib::ContainmentBox3::ComputeAlignedBox(&(pos4.value()[0]), static_cast<unsigned>(pos4.value().size()));
+        m_geometryBound = Engine::BoundingVolume{ box };
+    }
+}
+
 void GeometryAssembler::serializeNonVertexAttributesToGenericDto(Engine::GenericDto& dto) const
 {
     dto.addOrUpdate(TOKEN_ID, m_id.name());
@@ -188,7 +212,16 @@ void GeometryAssembler::addSegment(const GeometrySegment& segment)
     m_segments.push_back(segment.m_idxCount);
 }
 
-GeometryDisassembler::GeometryDisassembler() : m_factoryDesc(GeometryData::TYPE_RTTI)
+void GeometryAssembler::segments(const std::vector<GeometrySegment>& segments)
+{
+    m_segments.clear();
+    for (const auto& segment : segments)
+    {
+        addSegment(segment);
+    }
+}
+
+GeometryDisassembler::GeometryDisassembler() : m_factoryDesc(GeometryData::TYPE_RTTI), m_vtxCapacity(0), m_idxCapacity(0), m_vtxUsedCount(0), m_idxUsedCount(0), m_topology(PrimitiveTopology::Topology_Undefine)
 {
 }
 
@@ -259,9 +292,13 @@ void GeometryDisassembler::deserializeNonVertexAttributesFromGenericDto(const En
     if (auto v = dto.tryGetValue<std::string>(TOKEN_VERTEX_FORMAT)) m_vertexFormat.fromString(v.value());
     if (auto v = dto.tryGetValue<std::vector<unsigned>>(TOKEN_SEGMENTS))
     {
-        for (unsigned i = 0; i < v.value().size() - 3; i += 4)
+        assert(v.value().size() % 4 == 0);
+        if (v.value().size() > 0)
         {
-            m_segments.emplace_back(v.value()[i], v.value()[i + 1], v.value()[i + 2], v.value()[i + 3]);
+            for (size_t i = 0; i < v.value().size() - 3; i += 4)
+            {
+                m_segments.emplace_back(v.value()[i], v.value()[i + 1], v.value()[i + 2], v.value()[i + 3]);
+            }
         }
     }
     if (auto v = dto.tryGetValue<unsigned>(TOKEN_VERTEX_CAPACITY)) m_vtxCapacity = v.value();

@@ -8,6 +8,8 @@
 #ifndef VERTEX_FORMAT_CODE_H
 #define VERTEX_FORMAT_CODE_H
 
+#include <string>
+
 namespace Enigma::Graphics
 {
     class VertexDescription;

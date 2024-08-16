@@ -27,6 +27,8 @@ namespace Enigma::Geometries
 {
     using error = std::error_code;
 
+    class GeometryAssembler;
+
     class GeometryData : public std::enable_shared_from_this<GeometryData>
     {
         DECLARE_EN_RTTI_OF_BASE;
@@ -42,7 +44,8 @@ namespace Enigma::Geometries
 
         static std::shared_ptr<GeometryData> queryGeometryData(const GeometryId& id);
 
-        virtual Engine::GenericDto serializeDto() const;
+        virtual std::shared_ptr<GeometryAssembler> assembler() const = 0;
+        virtual void assemble(const std::shared_ptr<GeometryAssembler>& assembler) const;
 
         const GeometryId& id() { return m_id; }
 
@@ -201,10 +204,7 @@ namespace Enigma::Geometries
         error setVertexMemoryDataArray(unsigned int start, int elementOffset, int elementDimension,
             int srcDimension, const float* src, unsigned int count, bool isPos);
 
-        GeometryDataDto serializeGeometryDto() const;
-        void deserializeGeometryDto(const GeometryDataDto& dto);
-
-        void serializeNonVertexAttributes(GeometryDataDto& dto) const;
+        void assembleNonVertexAttributes(const std::shared_ptr<GeometryAssembler>& assembler) const;
 
     protected:
         Engine::FactoryDesc m_factoryDesc;

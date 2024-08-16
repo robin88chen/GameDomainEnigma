@@ -4,6 +4,7 @@
 #include "MathLib/ContainmentBox3.h"
 #include "GeometryDataQueries.h"
 #include "Frameworks/QueryDispatcher.h"
+#include "GeometryAssembler.h"
 #include <cassert>
 
 using namespace Enigma::Geometries;
@@ -24,10 +25,10 @@ GeometryData::GeometryData(const GeometryId& id) : m_factoryDesc(GeometryData::T
     m_geometryBound = BoundingVolume{ Box3::UNIT_BOX };
 }
 
-GeometryData::GeometryData(const GeometryId& id, const GenericDto& o) : m_factoryDesc(o.getRtti()), m_id(id)
+GeometryData::GeometryData(const GeometryId& id, const GenericDto& o) : m_factoryDesc(o.getRtti()), m_id(id), m_topology(PrimitiveTopology::Topology_Undefine), m_vtxCapacity(0), m_idxCapacity(0), m_vtxUsedCount(0), m_idxUsedCount(0)
 {
-    GeometryDataDto dto = GeometryDataDto::fromGenericDto(o);
-    deserializeGeometryDto(dto);
+    //GeometryDataDto dto = GeometryDataDto::fromGenericDto(o);
+    //deserializeGeometryDto(dto);
 }
 
 GeometryData::~GeometryData()
@@ -40,12 +41,84 @@ std::shared_ptr<GeometryData> GeometryData::queryGeometryData(const GeometryId& 
     return std::make_shared<QueryGeometryData>(id)->dispatch();
 }
 
-GenericDto GeometryData::serializeDto() const
+void GeometryData::assemble(const std::shared_ptr<GeometryAssembler>& assembler) const
 {
-    return serializeGeometryDto().toGenericDto();
+    assert(assembler);
+    assembleNonVertexAttributes(assembler);
+    if (m_vertexDesc.hasPosition3())
+    {
+        assembler->position3s(getPosition3Array(m_vtxUsedCount));
+    }
+    if (m_vertexDesc.hasPosition4())
+    {
+        assembler->position4s(getPosition4Array(m_vtxUsedCount));
+    }
+    if (m_vertexDesc.hasNormal())
+    {
+        assembler->normals(getVertexNormalArray(m_vtxUsedCount));
+    }
+    if (m_vertexDesc.hasDiffuseColor(VertexDescription::ColorNumeric::Float))
+    {
+        assembler->diffuseColors(getDiffuseColorArray(VertexDescription::ColorNumeric::Float, m_vtxUsedCount));
+    }
+    if (m_vertexDesc.hasSpecularColor(VertexDescription::ColorNumeric::Float))
+    {
+        assembler->specularColors(getSpecularColorArray(VertexDescription::ColorNumeric::Float, m_vtxUsedCount));
+    }
+    for (unsigned i = 0; i < VertexFormatCode::MAX_TEX_COORD; i++)
+    {
+        if (m_vertexDesc.hasTextureCoord(i, 2))
+        {
+            assembler->addTexture2DCoords(getTexture2DCoordArray(i, m_vtxUsedCount));
+        }
+        else if (m_vertexDesc.hasTextureCoord(i, 1))
+        {
+            assembler->addTexture1DCoords(getTexture1DCoordArray(i, m_vtxUsedCount));
+        }
+        else if (m_vertexDesc.hasTextureCoord(i, 3))
+        {
+            assembler->addTexture3DCoords(getTexture3DCoordArray(i, m_vtxUsedCount));
+        }
+        else
+        {
+            break;
+        }
+    }
+    if (m_vertexDesc.hasPaletteIndex())
+    {
+        assembler->paletteIndices(getPaletteIndexArray(m_vtxUsedCount));
+    }
+    if (m_vertexDesc.hasBlendWeight())
+    {
+        assembler->weights(getTotalSkinWeightArray(m_vtxUsedCount), m_vertexDesc.blendWeightCount());
+    }
+    if (m_vertexDesc.hasTangent())
+    {
+        assembler->tangents(getVertexTangentArray(m_vtxUsedCount));
+    }
+    if (!m_indexMemory.empty())
+    {
+        assembler->indices(getIndexMemory());
+    }
 }
 
-GeometryDataDto GeometryData::serializeGeometryDto() const
+void GeometryData::assembleNonVertexAttributes(const std::shared_ptr<GeometryAssembler>& assembler) const
+{
+    assembler->vertexCapacity(m_vtxCapacity);
+    assembler->indexCapacity(m_idxCapacity);
+    assembler->vertexUsedCount(m_vtxUsedCount);
+    assembler->indexUsedCount(m_idxUsedCount);
+    assembler->topology(m_topology);
+    assembler->segments(m_geoSegmentVector);
+    assembler->geometryBound(m_geometryBound);
+}
+
+/*GenericDto GeometryData::serializeDto() const
+{
+    return serializeGeometryDto().toGenericDto();
+}*/
+
+/*GeometryDataDto GeometryData::serializeGeometryDto() const
 {
     GeometryDataDto dto;
     serializeNonVertexAttributes(dto);
@@ -108,9 +181,9 @@ GeometryDataDto GeometryData::serializeGeometryDto() const
     }
 
     return dto;
-}
+}*/
 
-void GeometryData::serializeNonVertexAttributes(GeometryDataDto& dto) const
+/*void GeometryData::serializeNonVertexAttributes(GeometryDataDto& dto) const
 {
     dto.factoryDesc() = m_factoryDesc;
     dto.id() = m_id;
@@ -128,9 +201,9 @@ void GeometryData::serializeNonVertexAttributes(GeometryDataDto& dto) const
     }
     dto.topology() = static_cast<unsigned>(m_topology);
     dto.geometryBound() = m_geometryBound.serializeDto().toGenericDto();
-}
+}*/
 
-void GeometryData::deserializeGeometryDto(const GeometryDataDto& dto)
+/*void GeometryData::deserializeGeometryDto(const GeometryDataDto& dto)
 {
     createVertexCapacity(dto.vertexFormat(), dto.vertexCapacity(), dto.vertexUsedCount(),
         dto.indexCapacity(), dto.indexUsedCount());
@@ -194,7 +267,7 @@ void GeometryData::deserializeGeometryDto(const GeometryDataDto& dto)
         setIndexArray(idx.value());
     }
     m_geometryBound = BoundingVolume(BoundingVolumeDto::fromGenericDto(dto.geometryBound()));
-}
+}*/
 
 RenderBufferSignature GeometryData::makeRenderBufferSignature() const
 {
@@ -651,8 +724,8 @@ error GeometryData::setVertexMemoryData(unsigned vtxIndex, int elementOffset, in
 
     if (elementOffset < 0) return ErrorCode::ok;  // no need set
 
-    unsigned int step = m_vertexDesc.totalVertexSize() / sizeof(float);
-    unsigned int base_idx = step * vtxIndex + elementOffset;
+    size_t step = m_vertexDesc.totalVertexSize() / sizeof(float);
+    size_t base_idx = step * vtxIndex + elementOffset;
     int cp_dimension = srcDimension;
     if (cp_dimension > elementDimension) cp_dimension = elementDimension;
     memcpy(&m_vertexMemory[base_idx * sizeof(float)], src, cp_dimension * sizeof(float));
@@ -683,8 +756,8 @@ error GeometryData::getVertexMemoryDataArray(unsigned start, int elementOffset, 
         return ErrorCode::ok;
     }
 
-    unsigned int step = m_vertexDesc.totalVertexSize() / sizeof(float);
-    unsigned int pos_count = m_vtxUsedCount - start;
+    size_t step = m_vertexDesc.totalVertexSize() / sizeof(float);
+    size_t pos_count = m_vtxUsedCount - static_cast<size_t>(start);
     if (count < pos_count) pos_count = count;
     const float* src = reinterpret_cast<const float*>(&m_vertexMemory[(elementOffset + step * start) * sizeof(float)]);
     int cp_dimension = destDimension;
@@ -712,8 +785,8 @@ error GeometryData::setVertexMemoryDataArray(unsigned start, int elementOffset, 
 
     if (elementOffset < 0) return ErrorCode::ok;  // no need set
 
-    unsigned int step = m_vertexDesc.totalVertexSize() / sizeof(float);
-    unsigned int pos_count = m_vtxUsedCount - start;
+    size_t step = m_vertexDesc.totalVertexSize() / sizeof(float);
+    size_t pos_count = m_vtxUsedCount - static_cast<size_t>(start);
     if (count < pos_count) pos_count = count;
     float* dst = reinterpret_cast<float*>(&m_vertexMemory[(elementOffset + step * start) * sizeof(float)]);
     int cp_dimension = srcDimension;

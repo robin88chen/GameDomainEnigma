@@ -18,7 +18,7 @@ static std::string TOKEN_MIN_TEXTURE_COORDINATE = "MinTextureCoordinate";
 static std::string TOKEN_MAX_TEXTURE_COORDINATE = "MaxTextureCoordinate";
 static std::string TOKEN_HEIGHT_MAP = "HeightMap";
 
-TerrainGeometryDto::TerrainGeometryDto() : TriangleListDto()
+/*TerrainGeometryDto::TerrainGeometryDto() : TriangleListDto()
 {
     m_factoryDesc = Engine::FactoryDesc(TerrainGeometry::TYPE_RTTI.getName());
     m_numRows = m_numCols = 1;
@@ -146,4 +146,4 @@ GenericDto TerrainGeometryDto::toGenericDto() const
         dto.addOrUpdate(TOKEN_HEIGHT_MAP, m_heightMap.value());
     }
     return dto;
-}
+}*/

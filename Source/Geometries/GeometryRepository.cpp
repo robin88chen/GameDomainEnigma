@@ -1,4 +1,5 @@
 ﻿#include "GeometryRepository.h"
+#include "GeometryAssembler.h"
 #include "GeometryDataStoreMapper.h"
 #include "TriangleList.h"
 #include "GeometryDataEvents.h"
@@ -198,7 +199,9 @@ void GeometryRepository::putGeometryData(const GeometryId& id, const std::shared
 {
     assert(data);
     assert(m_storeMapper);
-    error er = m_storeMapper->putGeometry(id, data->serializeDto());
+    std::shared_ptr<GeometryAssembler> assembler = data->assembler();
+    data->assemble(assembler);
+    error er = m_storeMapper->putGeometry(id, assembler->assemble());
     if (er)
     {
         Platforms::Debug::ErrorPrintf("put geometry data %s failed : %s\n", id.name().c_str(), er.message().c_str());

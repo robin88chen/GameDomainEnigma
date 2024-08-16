@@ -1,7 +1,7 @@
 ﻿#include "StandardGeometryAssemblers.h"
+#include "TriangleListAssembler.h"
 #include "GameEngine/BoundingVolume.h"
 #include "Frameworks/ExtentTypesDefine.h"
-#include "GraphicKernel/GraphicAPITypes.h"
 #include "MathLib/ContainmentBox3.h"
 #include "MathLib/MathGlobal.h"
 #include "GeometryDataQueries.h"
@@ -12,7 +12,7 @@ using namespace Enigma::Engine;
 SquareQuadAssembler::SquareQuadAssembler(const GeometryId& id)
 {
     m_id = id;
-    m_dto.id() = id;
+    m_assembler = std::make_shared<TriangleListAssembler>(id);
 }
 
 SquareQuadAssembler& SquareQuadAssembler::xyQuad(const MathLib::Vector3& left_bottom, const MathLib::Vector3& right_top)
@@ -22,19 +22,18 @@ SquareQuadAssembler& SquareQuadAssembler::xyQuad(const MathLib::Vector3& left_bo
     positions.emplace_back(MathLib::Vector3(left_bottom.x(), right_top.y(), left_bottom.z()));
     positions.emplace_back(MathLib::Vector3(right_top.x(), right_top.y(), left_bottom.z()));
     positions.emplace_back(MathLib::Vector3(right_top.x(), left_bottom.y(), left_bottom.z()));
-    m_dto.position3s() = positions;
+    m_assembler->position3s(positions);
     m_normal = MathLib::Vector3(0, 0, 1);
     uint_buffer indices =
     {
         0,1,2, 0,2,3
     };
-    m_dto.indices() = indices;
-    m_dto.segments() = { 0, 4, 0, 6 };
-    m_dto.vertexUsedCount() = 4;
-    m_dto.indexUsedCount() = 6;
-    m_dto.vertexCapacity() = 4;
-    m_dto.indexCapacity() = 6;
-    m_format.m_fvfCode |= Graphics::VertexFormatCode::XYZ;
+    m_assembler->indices(indices);
+    m_assembler->addSegment({ 0, 4, 0, 6 });
+    m_assembler->vertexUsedCount(4);
+    m_assembler->indexUsedCount(6);
+    m_assembler->vertexCapacity(4);
+    m_assembler->indexCapacity(6);
     return *this;
 }
 
@@ -45,19 +44,18 @@ SquareQuadAssembler& SquareQuadAssembler::xzQuad(const MathLib::Vector3& left_bo
     positions.emplace_back(MathLib::Vector3(left_bottom.x(), left_bottom.y(), right_top.z()));
     positions.emplace_back(MathLib::Vector3(right_top.x(), left_bottom.y(), right_top.z()));
     positions.emplace_back(MathLib::Vector3(right_top.x(), left_bottom.y(), left_bottom.z()));
-    m_dto.position3s() = positions;
+    m_assembler->position3s(positions);
     m_normal = MathLib::Vector3(0, 1, 0);
     uint_buffer indices =
     {
         0,1,2, 0,2,3
     };
-    m_dto.indices() = indices;
-    m_dto.segments() = { 0, 4, 0, 6 };
-    m_dto.vertexUsedCount() = 4;
-    m_dto.indexUsedCount() = 6;
-    m_dto.vertexCapacity() = 4;
-    m_dto.indexCapacity() = 6;
-    m_format.m_fvfCode |= Graphics::VertexFormatCode::XYZ;
+    m_assembler->indices(indices);
+    m_assembler->addSegment({ 0, 4, 0, 6 });
+    m_assembler->vertexUsedCount(4);
+    m_assembler->indexUsedCount(6);
+    m_assembler->vertexCapacity(4);
+    m_assembler->indexCapacity(6);
     return *this;
 
 }
@@ -69,8 +67,7 @@ SquareQuadAssembler& SquareQuadAssembler::normal()
     normals.emplace_back(m_normal);
     normals.emplace_back(m_normal);
     normals.emplace_back(m_normal);
-    m_dto.normals() = normals;
-    m_format.m_fvfCode |= Graphics::VertexFormatCode::NORMAL;
+    m_assembler->normals(normals);
     return *this;
 }
 
@@ -81,50 +78,31 @@ SquareQuadAssembler& SquareQuadAssembler::textureCoord(const MathLib::Vector2& l
     texcoords.emplace_back(MathLib::Vector2(left_bottom.x(), right_top.y()));
     texcoords.emplace_back(MathLib::Vector2(right_top.x(), right_top.y()));
     texcoords.emplace_back(MathLib::Vector2(right_top.x(), left_bottom.y()));
-    size_t tex_stage_count = m_dto.textureCoords().size();
-    TextureCoordDto tex_dto;
-    tex_dto.texture2DCoords() = texcoords;
-    m_dto.textureCoords().emplace_back(tex_dto.toGenericDto());
-    m_format.m_texCoordSize[tex_stage_count] = 2;
-    m_format.m_texCount = static_cast<unsigned>(m_dto.textureCoords().size());
+    m_assembler->addTexture2DCoords(texcoords);
     return *this;
 }
 
 SquareQuadAssembler& SquareQuadAssembler::asAsset(const std::string& name, const std::string& filename, const std::string& path_id)
 {
-    m_dto.factoryDesc().ClaimAsResourceAsset(name, filename, path_id);
+    m_assembler->asAsset(name, filename, path_id);
     return *this;
 }
 
-GenericDto SquareQuadAssembler::toGenericDto()
+GenericDto SquareQuadAssembler::assemble() const
 {
-    assert(m_dto.position3s() || m_dto.position4s());
-    m_dto.vertexFormat() = m_format.ToString();
-    m_dto.topology() = static_cast<unsigned>(Graphics::PrimitiveTopology::Topology_TriangleList);
-    if (auto& pos3 = m_dto.position3s())
-    {
-        const MathLib::Box3 box = MathLib::ContainmentBox3::ComputeAlignedBox(&(pos3.value()[0]), static_cast<unsigned>(pos3.value().size()));
-        const auto bb = BoundingVolume{ box };
-        m_dto.geometryBound() = bb.serializeDto().toGenericDto();
-    }
-    else if (auto& pos4 = m_dto.position4s())
-    {
-        const MathLib::Box3 box = MathLib::ContainmentBox3::ComputeAlignedBox(&(pos4.value()[0]), static_cast<unsigned>(pos4.value().size()));
-        const auto bb = BoundingVolume{ box };
-        m_dto.geometryBound() = bb.serializeDto().toGenericDto();
-    }
-    return m_dto.toGenericDto();
+    m_assembler->computeAlignedBox();
+    return m_assembler->assemble();
 }
 
 std::shared_ptr<GeometryData> SquareQuadAssembler::constitute()
 {
-    return std::make_shared<RequestGeometryConstitution>(m_id, toGenericDto())->dispatch();
+    return std::make_shared<RequestGeometryConstitution>(m_id, assemble())->dispatch();
 }
 
 CubeAssembler::CubeAssembler(const GeometryId& id)
 {
     m_id = id;
-    m_dto.id() = id;
+    m_assembler = std::make_shared<TriangleListAssembler>(id);
 }
 
 CubeAssembler& CubeAssembler::cube(const MathLib::Vector3& center, const MathLib::Vector3& axis_extent)
@@ -140,7 +118,7 @@ CubeAssembler& CubeAssembler::cube(const MathLib::Vector3& center, const MathLib
     positions.emplace_back(MathLib::Vector3(xyz1.x(), xyz1.y(), xyz0.z()));
     positions.emplace_back(xyz1);
     positions.emplace_back(MathLib::Vector3(xyz0.x(), xyz1.y(), xyz1.z()));
-    m_dto.position3s() = positions;
+    m_assembler->position3s(positions);
     uint_buffer indices =
     {
         0, 1, 2, 0, 2, 3,
@@ -152,13 +130,12 @@ CubeAssembler& CubeAssembler::cube(const MathLib::Vector3& center, const MathLib
 
         4, 6, 5, 4, 7, 6
     };
-    m_dto.indices() = indices;
-    m_dto.segments() = { 0, 8, 0, 36 };
-    m_dto.vertexUsedCount() = 8;
-    m_dto.indexUsedCount() = 36;
-    m_dto.vertexCapacity() = 8;
-    m_dto.indexCapacity() = 36;
-    m_format.m_fvfCode |= Graphics::VertexFormatCode::XYZ;
+    m_assembler->indices(indices);
+    m_assembler->addSegment({ 0, 8, 0, 36 });
+    m_assembler->vertexUsedCount(8);
+    m_assembler->indexUsedCount(36);
+    m_assembler->vertexCapacity(8);
+    m_assembler->indexCapacity(36);
     return *this;
 }
 
@@ -197,7 +174,7 @@ CubeAssembler& CubeAssembler::facedCube(const MathLib::Vector3& center, const Ma
     positions.emplace_back(xyz7);
     positions.emplace_back(xyz6);
     positions.emplace_back(xyz5);
-    m_dto.position3s() = positions;
+    m_assembler->position3s(positions);
     uint_buffer indices =
     {
         0, 1, 2, 0, 2, 3,
@@ -207,13 +184,12 @@ CubeAssembler& CubeAssembler::facedCube(const MathLib::Vector3& center, const Ma
         16, 17, 18, 16, 18, 19,
         20, 21, 22, 20, 22, 23,
     };
-    m_dto.indices() = indices;
-    m_dto.segments() = { 0, 24, 0, 36 };
-    m_dto.vertexUsedCount() = 24;
-    m_dto.indexUsedCount() = 36;
-    m_dto.vertexCapacity() = 24;
-    m_dto.indexCapacity() = 36;
-    m_format.m_fvfCode |= Graphics::VertexFormatCode::XYZ;
+    m_assembler->indices(indices);
+    m_assembler->addSegment({ 0, 24, 0, 36 });
+    m_assembler->vertexUsedCount(24);
+    m_assembler->indexUsedCount(36);
+    m_assembler->vertexCapacity(24);
+    m_assembler->indexCapacity(36);
     return *this;
 }
 
@@ -228,8 +204,7 @@ CubeAssembler& CubeAssembler::normal()
     normals.emplace_back(MathLib::Vector3(1, 1, -1).normalize());
     normals.emplace_back(MathLib::Vector3(1, 1, 1).normalize());
     normals.emplace_back(MathLib::Vector3(-1, 1, 1).normalize());
-    m_dto.normals() = normals;
-    m_format.m_fvfCode |= Graphics::VertexFormatCode::NORMAL;
+    m_assembler->normals(normals);
     return *this;
 }
 
@@ -260,8 +235,7 @@ CubeAssembler& CubeAssembler::facedNormal()
     normals.emplace_back(MathLib::Vector3::UNIT_Y);
     normals.emplace_back(MathLib::Vector3::UNIT_Y);
     normals.emplace_back(MathLib::Vector3::UNIT_Y);
-    m_dto.normals() = normals;
-    m_format.m_fvfCode |= Graphics::VertexFormatCode::NORMAL;
+    m_assembler->normals(normals);
     return *this;
 }
 
@@ -276,12 +250,7 @@ CubeAssembler& CubeAssembler::textureCoord(const MathLib::Vector2& left_bottom, 
     texcoords.emplace_back(MathLib::Vector2(right_top.x(), right_top.y()));
     texcoords.emplace_back(MathLib::Vector2(left_bottom.x(), right_top.y()));
     texcoords.emplace_back(MathLib::Vector2(right_top.x(), right_top.y()));
-    size_t tex_stage_count = m_dto.textureCoords().size();
-    TextureCoordDto tex_dto;
-    tex_dto.texture2DCoords() = texcoords;
-    m_dto.textureCoords().emplace_back(tex_dto.toGenericDto());
-    m_format.m_texCoordSize[tex_stage_count] = 2;
-    m_format.m_texCount = static_cast<unsigned>(m_dto.textureCoords().size());
+    m_assembler->addTexture2DCoords(texcoords);
     return *this;
 }
 
@@ -312,12 +281,7 @@ CubeAssembler& CubeAssembler::facedTextureCoord(const MathLib::Vector2& left_bot
     texcoords.emplace_back(MathLib::Vector2(left_bottom.x(), right_top.y()));
     texcoords.emplace_back(right_top);
     texcoords.emplace_back(MathLib::Vector2(right_top.x(), left_bottom.y()));
-    size_t tex_stage_count = m_dto.textureCoords().size();
-    TextureCoordDto tex_dto;
-    tex_dto.texture2DCoords() = texcoords;
-    m_dto.textureCoords().emplace_back(tex_dto.toGenericDto());
-    m_format.m_texCoordSize[tex_stage_count] = 2;
-    m_format.m_texCount = static_cast<unsigned>(m_dto.textureCoords().size());
+    m_assembler->addTexture2DCoords(texcoords);
     return *this;
 }
 
@@ -332,12 +296,7 @@ CubeAssembler& CubeAssembler::textureCoord(const MathLib::Vector3& left_bottom_f
     texcoords.emplace_back(MathLib::Vector3(right_top_back.x(), right_top_back.y(), left_bottom_front.z()));
     texcoords.emplace_back(MathLib::Vector3(right_top_back));
     texcoords.emplace_back(MathLib::Vector3(left_bottom_front.x(), right_top_back.y(), right_top_back.z()));
-    size_t tex_stage_count = m_dto.textureCoords().size();
-    TextureCoordDto tex_dto;
-    tex_dto.texture3DCoords() = texcoords;
-    m_dto.textureCoords().emplace_back(tex_dto.toGenericDto());
-    m_format.m_texCoordSize[tex_stage_count] = 3;
-    m_format.m_texCount = static_cast<unsigned>(m_dto.textureCoords().size());
+    m_assembler->addTexture3DCoords(texcoords);
     return *this;
 }
 
@@ -376,53 +335,34 @@ CubeAssembler& CubeAssembler::facedTextureCoord(const MathLib::Vector3& left_bot
     texcoords.emplace_back(xyz7);
     texcoords.emplace_back(xyz6);
     texcoords.emplace_back(xyz5);
-    size_t tex_stage_count = m_dto.textureCoords().size();
-    TextureCoordDto tex_dto;
-    tex_dto.texture3DCoords() = texcoords;
-    m_dto.textureCoords().emplace_back(tex_dto.toGenericDto());
-    m_format.m_texCoordSize[tex_stage_count] = 3;
-    m_format.m_texCount = static_cast<unsigned>(m_dto.textureCoords().size());
+    m_assembler->addTexture3DCoords(texcoords);
     return *this;
 }
 
 CubeAssembler& CubeAssembler::asAsset(const std::string& name, const std::string& filename, const std::string& path_id)
 {
-    m_dto.factoryDesc().ClaimAsResourceAsset(name, filename, path_id);
+    m_assembler->asAsset(name, filename, path_id);
     return *this;
 }
 
-GenericDto CubeAssembler::toGenericDto()
+GenericDto CubeAssembler::assemble() const
 {
-    assert(m_dto.position3s() || m_dto.position4s());
-    m_dto.vertexFormat() = m_format.ToString();
-    m_dto.topology() = static_cast<unsigned>(Graphics::PrimitiveTopology::Topology_TriangleList);
-    if (auto& pos = m_dto.position3s())
-    {
-        const MathLib::Box3 box = MathLib::ContainmentBox3::ComputeAlignedBox(&(pos.value()[0]), static_cast<unsigned>(pos.value().size()));
-        const auto bb = BoundingVolume{ box };
-        m_dto.geometryBound() = bb.serializeDto().toGenericDto();
-    }
-    else if (auto& pos4 = m_dto.position4s())
-    {
-        const MathLib::Box3 box = MathLib::ContainmentBox3::ComputeAlignedBox(&(pos4.value()[0]), static_cast<unsigned>(pos4.value().size()));
-        const auto bb = BoundingVolume{ box };
-        m_dto.geometryBound() = bb.serializeDto().toGenericDto();
-    }
-    return m_dto.toGenericDto();
+    m_assembler->computeAlignedBox();
+    return m_assembler->assemble();
 }
 
 std::shared_ptr<GeometryData> CubeAssembler::constitute()
 {
-    return std::make_shared<RequestGeometryConstitution>(m_id, toGenericDto())->dispatch();
+    return std::make_shared<RequestGeometryConstitution>(m_id, assemble())->dispatch();
 }
 
 SphereAssembler::SphereAssembler(const GeometryId& id)
 {
     m_id = id;
     m_radius = 1.0f;
-    m_dto.id() = id;
+    m_assembler = std::make_shared<TriangleListAssembler>(id);
     const auto bb = BoundingVolume{ MathLib::Sphere3::UNIT_SPHERE };
-    m_dto.geometryBound() = bb.serializeDto().toGenericDto();
+    m_assembler->geometryBound(bb);
 }
 
 SphereAssembler& SphereAssembler::sphere(const MathLib::Vector3& center, float radius, int slices, int stacks)
@@ -568,14 +508,13 @@ SphereAssembler& SphereAssembler::sphere(const MathLib::Vector3& center, float r
         indices[1] = i + 1 + offset;
     }
 
-    m_dto.position3s() = vecPos;
-    m_dto.indices() = vtxIndex;
-    m_dto.segments() = { 0, static_cast<unsigned>(numVertices), 0, static_cast<unsigned>(numIndices) };
-    m_dto.vertexUsedCount() = static_cast<unsigned>(numVertices);
-    m_dto.indexUsedCount() = static_cast<unsigned>(numIndices);
-    m_dto.vertexCapacity() = static_cast<unsigned>(numVertices);
-    m_dto.indexCapacity() = static_cast<unsigned>(numIndices);
-    m_format.m_fvfCode |= Graphics::VertexFormatCode::XYZ;
+    m_assembler->position3s(vecPos);
+    m_assembler->indices(vtxIndex);
+    m_assembler->addSegment({ 0, static_cast<unsigned>(numVertices), 0, static_cast<unsigned>(numIndices) });
+    m_assembler->vertexUsedCount(static_cast<unsigned>(numVertices));
+    m_assembler->indexUsedCount(static_cast<unsigned>(numIndices));
+    m_assembler->vertexCapacity(static_cast<unsigned>(numVertices));
+    m_assembler->indexCapacity(static_cast<unsigned>(numIndices));
 
     m_normals = vecNor;
     m_tex_coords = uvTex;
@@ -585,26 +524,20 @@ SphereAssembler& SphereAssembler::sphere(const MathLib::Vector3& center, float r
 
 SphereAssembler& SphereAssembler::normal()
 {
-    m_dto.normals() = m_normals;
-    m_format.m_fvfCode |= Graphics::VertexFormatCode::NORMAL;
+    m_assembler->normals(m_normals);
     return *this;
 }
 
 SphereAssembler& SphereAssembler::textureCoord()
 {
-    size_t tex_stage_count = m_dto.textureCoords().size();
-    TextureCoordDto tex_dto;
-    tex_dto.texture2DCoords() = m_tex_coords;
-    m_dto.textureCoords().emplace_back(tex_dto.toGenericDto());
-    m_format.m_texCoordSize[tex_stage_count] = 2;
-    m_format.m_texCount = static_cast<unsigned>(m_dto.textureCoords().size());
+    m_assembler->addTexture2DCoords(m_tex_coords);
     return *this;
 }
 
 SphereAssembler& SphereAssembler::sphereBound()
 {
     const auto bb = BoundingVolume{ MathLib::Sphere3(m_center, m_radius) };
-    m_dto.geometryBound() = bb.serializeDto().toGenericDto();
+    m_assembler->geometryBound(bb);
     return *this;
 }
 
@@ -617,24 +550,23 @@ SphereAssembler& SphereAssembler::boxBound()
     box.Extent(2) = m_radius;
 
     const auto bb = BoundingVolume{ box };
-    m_dto.geometryBound() = bb.serializeDto().toGenericDto();
+    m_assembler->geometryBound(bb);
     return *this;
 }
 
 SphereAssembler& SphereAssembler::asAsset(const std::string& name, const std::string& filename, const std::string& path_id)
 {
-    m_dto.factoryDesc().ClaimAsResourceAsset(name, filename, path_id);
+    m_assembler->asAsset(name, filename, path_id);
     return *this;
 }
 
-GenericDto SphereAssembler::toGenericDto()
+GenericDto SphereAssembler::assemble() const
 {
-    m_dto.vertexFormat() = m_format.ToString();
-    m_dto.topology() = static_cast<unsigned>(Graphics::PrimitiveTopology::Topology_TriangleList);
-    return m_dto.toGenericDto();
+    return m_assembler->assemble();
 }
+
 std::shared_ptr<GeometryData> SphereAssembler::constitute()
 {
-    return std::make_shared<RequestGeometryConstitution>(m_id, toGenericDto())->dispatch();
+    return std::make_shared<RequestGeometryConstitution>(m_id, assemble())->dispatch();
 }
 

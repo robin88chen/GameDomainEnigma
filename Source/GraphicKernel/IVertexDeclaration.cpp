@@ -7,7 +7,7 @@ IVertexDeclaration::IVertexDeclaration(const std::string& name, const std::strin
 {
     m_name = name;
     m_formatString = vertex_format;
-    m_dataVertexFormatCode.FromString(vertex_format);
+    m_dataVertexFormatCode.fromString(vertex_format);
     m_dataVertexFormatDesc = m_dataVertexFormatCode.calculateVertexSize();
 }
 

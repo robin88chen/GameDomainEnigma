@@ -28,7 +28,7 @@ namespace Enigma::Geometries
         TriangleList& operator=(const TriangleList&) = delete;
         TriangleList& operator=(TriangleList&&) = delete;
 
-        virtual Engine::GenericDto serializeDto() const override;
+        virtual std::shared_ptr<GeometryAssembler> assembler() const override;
 
         unsigned int getTriangleCount();
         void fetchTrianglePos(unsigned int idx, MathLib::Vector3 tri[3]);

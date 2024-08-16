@@ -25,7 +25,9 @@ namespace Enigma::Terrain
         TerrainGeometry(TerrainGeometry&&) = delete;
         TerrainGeometry& operator=(TerrainGeometry&&) = delete;
 
-        virtual Engine::GenericDto serializeDto() const override;
+        //todo : implement later
+        virtual std::shared_ptr<Geometries::GeometryAssembler> assembler() const override;
+        virtual void assemble(const std::shared_ptr<Geometries::GeometryAssembler>& assembler) const override;
 
         void updateHeightMapToVertexMemory();
         void rangedUpdateHeightMapToVertexMemory(unsigned offset, unsigned count);

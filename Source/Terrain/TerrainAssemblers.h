@@ -34,11 +34,11 @@ namespace Enigma::Terrain
         TerrainGeometryAssembler& asAsset(const std::string& name, const std::string& filename, const std::string& path_id);
 
         Engine::GenericDto toGenericDto() const;
-        TerrainGeometryDto dto() const;
+        //TerrainGeometryDto dto() const;
 
     private:
         Geometries::GeometryId m_id;
-        TerrainGeometryDto m_dto;
+        //TerrainGeometryDto m_dto;
         Engine::BoundingVolume m_geometryBound;
     };
 

@@ -24,7 +24,7 @@ VertexDeclarationEgl::~VertexDeclarationEgl()
 bool VertexDeclarationEgl::IsMatched(const std::string& data_vertex_format, const Graphics::IVertexShaderPtr& vtx_shader)
 {
     Graphics::VertexFormatCode data_vertex_code;
-    data_vertex_code.FromString(data_vertex_format);
+    data_vertex_code.fromString(data_vertex_format);
     if (data_vertex_code != m_dataVertexFormatCode) return false;
     return true;
 }

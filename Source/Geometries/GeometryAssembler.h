@@ -39,6 +39,7 @@ namespace Enigma::Geometries
         virtual Engine::GenericDto assemble() const;
 
         void asAsset(const std::string& name, const std::string& filename, const std::string& path_id);
+        void factoryDesc(const Engine::FactoryDesc& desc) { m_factoryDesc = desc; }
         void addSegment(const GeometrySegment& segment);
         void segments(const std::vector<GeometrySegment>& segments);
         void position3s(const std::vector<MathLib::Vector3>& positions);
@@ -116,10 +117,10 @@ namespace Enigma::Geometries
         [[nodiscard]] const std::optional<std::vector<float>>& weights() const { return m_weights; }
         [[nodiscard]] const std::optional<std::vector<MathLib::Vector4>>& tangents() const { return m_tangents; }
         [[nodiscard]] const std::optional<std::vector<unsigned>>& indices() const { return m_indices; }
-        [[nodiscard]] unsigned vtxCapacity() const { return m_vtxCapacity; }
-        [[nodiscard]] unsigned idxCapacity() const { return m_idxCapacity; }
-        [[nodiscard]] unsigned vtxUsedCount() const { return m_vtxUsedCount; }
-        [[nodiscard]] unsigned idxUsedCount() const { return m_idxUsedCount; }
+        [[nodiscard]] unsigned vertexCapacity() const { return m_vtxCapacity; }
+        [[nodiscard]] unsigned indexCapacity() const { return m_idxCapacity; }
+        [[nodiscard]] unsigned vertexUsedCount() const { return m_vtxUsedCount; }
+        [[nodiscard]] unsigned indexUsedCount() const { return m_idxUsedCount; }
         [[nodiscard]] Graphics::PrimitiveTopology topology() const { return m_topology; }
         [[nodiscard]] const Engine::BoundingVolume& geometryBound() const { return m_geometryBound; }
 

@@ -22,9 +22,6 @@
     <Filter Include="Assemblers">
       <UniqueIdentifier>{ee7a8880-8c00-4039-be13-f70db68e6032}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Assemblers\Dtos">
-      <UniqueIdentifier>{4f554428-60cb-4a76-93fa-fe63ad4d6cbd}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryData.cpp">
@@ -50,9 +47,6 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryInstallingPolicy.cpp">
       <Filter>Installing</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryDataDto.cpp">
-      <Filter>Assemblers\Dtos</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureCoordinateAssembler.cpp">
       <Filter>Assemblers</Filter>
@@ -115,9 +109,6 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryAssembler.h">
       <Filter>Assemblers</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataDto.h">
-      <Filter>Assemblers\Dtos</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureCoordinateAssembler.h">
       <Filter>Assemblers</Filter>

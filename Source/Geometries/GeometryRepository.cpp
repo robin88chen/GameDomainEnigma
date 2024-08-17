@@ -27,7 +27,14 @@ GeometryRepository::GeometryRepository(Frameworks::ServiceManager* srv_manager, 
 
     m_factory->registerGeometryFactory(TriangleList::TYPE_RTTI.getName(),
         [=](auto id) { return std::make_shared<TriangleList>(id); },
-        [=](auto id, auto o) { return std::make_shared<TriangleList>(id, o); });
+        [=](auto id, auto o)
+        {
+            auto geometry = std::make_shared<TriangleList>(id);
+            auto disassembler = geometry->disassembler();
+            disassembler->disassemble(o);
+            geometry->disassemble(disassembler);
+            return geometry;
+        });
 }
 
 GeometryRepository::~GeometryRepository()

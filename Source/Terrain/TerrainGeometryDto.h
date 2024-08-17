@@ -8,7 +8,6 @@
 #ifndef TERRAIN_GEOMETRY_DTO_H
 #define TERRAIN_GEOMETRY_DTO_H
 
-#include "Geometries/GeometryDataDto.h"
 #include "Frameworks/ExtentTypesDefine.h"
 #include "GameEngine/BoundingVolume.h"
 

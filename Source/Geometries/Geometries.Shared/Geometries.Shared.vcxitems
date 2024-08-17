@@ -16,7 +16,6 @@
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryAssembler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryData.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryDataDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryDataFactory.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryErrors.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GeometryInstallingPolicy.cpp" />
@@ -31,7 +30,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryAssembler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryData.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataFactory.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GeometryDataQueries.h" />

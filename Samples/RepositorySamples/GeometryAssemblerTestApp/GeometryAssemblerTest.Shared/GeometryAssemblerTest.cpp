@@ -70,12 +70,12 @@ void GeometryAssemblerTest::onAllServicesInitialized(const Enigma::Frameworks::I
     assert(repository);
     if (!repository->hasGeometryData(GeometryName))
     {
-        assembleStandardGeometry();
-        //createNewGeometry();
+        //assembleStandardGeometry();
+        createNewGeometry();
     }
     else
     {
-        //queryGeometry();
+        queryGeometry();
     }
 }
 
@@ -108,15 +108,15 @@ void GeometryAssemblerTest::createNewGeometry()
     assembler->geometryBound(bound);
     assembler->asAsset(GeometryName, GeometryName + ".geo", "DataPath");
     // 先測試 Gateway
-    std::shared_ptr<Enigma::Gateways::IDtoGateway> gateway = std::make_shared<Enigma::Gateways::DtoJsonGateway>();
-    std::string json = gateway->serialize(std::vector<Enigma::Engine::GenericDto>{assembler->assemble()});
-    IFilePtr iFile = FileSystem::instance()->openFile(Filename(GeometryName + ".geo@DataPath"), write | openAlways);
-    if (FATAL_LOG_EXPR(!iFile)) return;
-    iFile->write(0, convert_to_buffer(json));
-    FileSystem::instance()->closeFile(iFile);
+    //std::shared_ptr<Enigma::Gateways::IDtoGateway> gateway = std::make_shared<Enigma::Gateways::DtoJsonGateway>();
+    //std::string json = gateway->serialize(std::vector<Enigma::Engine::GenericDto>{assembler->assemble()});
+    //IFilePtr iFile = FileSystem::instance()->openFile(Filename(GeometryName + ".geo@DataPath"), write | openAlways);
+    //if (FATAL_LOG_EXPR(!iFile)) return;
+    //iFile->write(0, convert_to_buffer(json));
+    //FileSystem::instance()->closeFile(iFile);
 
-    //std::shared_ptr<GeometryData> geometry = std::make_shared<RequestGeometryConstitution>(GeometryId(GeometryName), assembler->assemble())->dispatch();
-    //repository->putGeometryData(geometry->id(), geometry);
+    std::shared_ptr<GeometryData> geometry = std::make_shared<RequestGeometryConstitution>(GeometryId(GeometryName), assembler->assemble())->dispatch();
+    repository->putGeometryData(geometry->id(), geometry);
 }
 
 void GeometryAssemblerTest::queryGeometry()

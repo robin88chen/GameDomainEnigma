@@ -13,8 +13,8 @@ TerrainGeometry::TerrainGeometry(const Geometries::GeometryId& id) : TriangleLis
     m_factoryDesc = Engine::FactoryDesc(TerrainGeometry::TYPE_RTTI.getName());
 }
 
-TerrainGeometry::TerrainGeometry(const Geometries::GeometryId& id, const GenericDto& o) : TriangleList(id, o)
-{
+//TerrainGeometry::TerrainGeometry(const Geometries::GeometryId& id, const GenericDto& o) : TriangleList(id, o)
+//{
     /*TerrainGeometryDto dto = TerrainGeometryDto::fromGenericDto(o);
     m_numRows = dto.numRows();
     m_numCols = dto.numCols();
@@ -36,7 +36,7 @@ TerrainGeometry::TerrainGeometry(const Geometries::GeometryId& id, const Generic
         dto.convertGeometryVertices();
         GeometryData::deserializeGeometryDto(dto);
     }*/
-}
+    //}
 
 TerrainGeometry::~TerrainGeometry()
 {

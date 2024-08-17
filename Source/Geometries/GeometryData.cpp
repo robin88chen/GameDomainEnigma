@@ -25,15 +25,8 @@ GeometryData::GeometryData(const GeometryId& id) : m_factoryDesc(GeometryData::T
     m_geometryBound = BoundingVolume{ Box3::UNIT_BOX };
 }
 
-GeometryData::GeometryData(const GeometryId& id, const GenericDto& o) : m_factoryDesc(o.getRtti()), m_id(id), m_vtxCapacity(0), m_idxCapacity(0), m_vtxUsedCount(0), m_idxUsedCount(0), m_topology(PrimitiveTopology::Topology_Undefine)
-{
-    //GeometryDataDto dto = GeometryDataDto::fromGenericDto(o);
-    //deserializeGeometryDto(dto);
-}
-
 GeometryData::~GeometryData()
 {
-
 }
 
 std::shared_ptr<GeometryData> GeometryData::queryGeometryData(const GeometryId& id)
@@ -102,8 +95,16 @@ void GeometryData::assemble(const std::shared_ptr<GeometryAssembler>& assembler)
     }
 }
 
+void GeometryData::disassemble(const std::shared_ptr<GeometryDisassembler>& disassembler)
+{
+    assert(disassembler);
+    disassembleNonVertexAttributes(disassembler);
+    disassembleVertexAttributes(disassembler);
+}
+
 void GeometryData::assembleNonVertexAttributes(const std::shared_ptr<GeometryAssembler>& assembler) const
 {
+    assembler->factoryDesc(m_factoryDesc);
     assembler->vertexCapacity(m_vtxCapacity);
     assembler->indexCapacity(m_idxCapacity);
     assembler->vertexUsedCount(m_vtxUsedCount);
@@ -113,161 +114,74 @@ void GeometryData::assembleNonVertexAttributes(const std::shared_ptr<GeometryAss
     assembler->geometryBound(m_geometryBound);
 }
 
-/*GenericDto GeometryData::serializeDto() const
+void GeometryData::disassembleNonVertexAttributes(const std::shared_ptr<GeometryDisassembler>& disassembler)
 {
-    return serializeGeometryDto().toGenericDto();
-}*/
+    assert(disassembler);
+    m_factoryDesc = disassembler->factoryDesc();
+    createVertexCapacity(disassembler->vertexFormat().toString(), disassembler->vertexCapacity(), disassembler->vertexUsedCount(), disassembler->indexCapacity(), disassembler->indexUsedCount());
+    m_geoSegmentVector = disassembler->segments();
+    m_topology = disassembler->topology();
+    m_geometryBound = disassembler->geometryBound();
+}
 
-/*GeometryDataDto GeometryData::serializeGeometryDto() const
+void GeometryData::disassembleVertexAttributes(const std::shared_ptr<GeometryDisassembler>& disassembler)
 {
-    GeometryDataDto dto;
-    serializeNonVertexAttributes(dto);
-    if (m_vertexDesc.hasPosition3())
-    {
-        dto.position3s() = getPosition3Array(m_vtxUsedCount);
-    }
-    if (m_vertexDesc.hasPosition4())
-    {
-        dto.position4s() = getPosition4Array(m_vtxUsedCount);
-    }
-    if (m_vertexDesc.hasNormal())
-    {
-        dto.normals() = getVertexNormalArray(m_vtxUsedCount);
-    }
-    if (m_vertexDesc.hasDiffuseColor(VertexDescription::ColorNumeric::Float))
-    {
-        dto.diffuseColors() = getDiffuseColorArray(VertexDescription::ColorNumeric::Float, m_vtxUsedCount);
-    }
-    if (m_vertexDesc.hasSpecularColor(VertexDescription::ColorNumeric::Float))
-    {
-        dto.specularColors() = getSpecularColorArray(VertexDescription::ColorNumeric::Float, m_vtxUsedCount);
-    }
-    for (unsigned i = 0; i < VertexFormatCode::MAX_TEX_COORD; i++)
-    {
-        TextureCoordDto texture_coord_dto;
-        if (m_vertexDesc.hasTextureCoord(i, 2))
-        {
-            texture_coord_dto.texture2DCoords() = getTexture2DCoordArray(i, m_vtxUsedCount);
-        }
-        else if (m_vertexDesc.hasTextureCoord(i, 1))
-        {
-            texture_coord_dto.texture1DCoords() = getTexture1DCoordArray(i, m_vtxUsedCount);
-        }
-        else if (m_vertexDesc.hasTextureCoord(i, 3))
-        {
-            texture_coord_dto.texture3DCoords() = getTexture3DCoordArray(i, m_vtxUsedCount);
-        }
-        else
-        {
-            break;
-        }
-        dto.textureCoords().push_back(texture_coord_dto.toGenericDto());
-    }
-    if (m_vertexDesc.hasPaletteIndex())
-    {
-        dto.paletteIndices() = getPaletteIndexArray(m_vtxUsedCount);
-    }
-    if (m_vertexDesc.hasBlendWeight())
-    {
-        dto.weights() = getTotalSkinWeightArray(m_vtxUsedCount);
-    }
-    if (m_vertexDesc.hasTangent())
-    {
-        dto.tangents() = getVertexTangentArray(m_vtxUsedCount);
-    }
-    if (!m_indexMemory.empty())
-    {
-        dto.indices() = getIndexMemory();
-    }
-
-    return dto;
-}*/
-
-/*void GeometryData::serializeNonVertexAttributes(GeometryDataDto& dto) const
-{
-    dto.factoryDesc() = m_factoryDesc;
-    dto.id() = m_id;
-    dto.vertexFormat() = m_vertexFormatCode.toString();
-    dto.vertexCapacity() = m_vtxCapacity;
-    dto.vertexUsedCount() = m_vtxUsedCount;
-    dto.indexCapacity() = m_idxCapacity;
-    dto.indexUsedCount() = m_idxUsedCount;
-    for (unsigned i = 0; i < m_geoSegmentVector.size(); i++)
-    {
-        dto.segments().emplace_back(m_geoSegmentVector[i].m_startVtx);
-        dto.segments().emplace_back(m_geoSegmentVector[i].m_vtxCount);
-        dto.segments().emplace_back(m_geoSegmentVector[i].m_startIdx);
-        dto.segments().emplace_back(m_geoSegmentVector[i].m_idxCount);
-    }
-    dto.topology() = static_cast<unsigned>(m_topology);
-    dto.geometryBound() = m_geometryBound.serializeDto().toGenericDto();
-}*/
-
-/*void GeometryData::deserializeGeometryDto(const GeometryDataDto& dto)
-{
-    createVertexCapacity(dto.vertexFormat(), dto.vertexCapacity(), dto.vertexUsedCount(),
-        dto.indexCapacity(), dto.indexUsedCount());
-    m_geoSegmentVector.clear();
-    for (unsigned i = 0; i < dto.segments().size() - 3; i += 4)
-    {
-        m_geoSegmentVector.emplace_back(dto.segments()[i], dto.segments()[i + 1],
-            dto.segments()[i + 2], dto.segments()[i + 3]);
-    }
-    m_topology = static_cast<PrimitiveTopology>(dto.topology());
-    if (auto pos3 = dto.position3s())
+    assert(disassembler);
+    if (auto pos3 = disassembler->position3s())
     {
         setPosition3Array(pos3.value());
     }
-    if (auto pos4 = dto.position4s())
+    if (auto pos4 = disassembler->position4s())
     {
         setPosition4Array(pos4.value());
     }
-    if (auto nor = dto.normals())
+    if (auto nor = disassembler->normals())
     {
         setVertexNormalArray(nor.value());
     }
-    if (auto diff = dto.diffuseColors())
+    if (auto diff = disassembler->diffuseColors())
     {
         setDiffuseColorArray(diff.value());
     }
-    if (auto spe = dto.specularColors())
+    if (auto spe = disassembler->specularColors())
     {
         setSpecularColorArray(spe.value());
     }
-    for (unsigned i = 0; i < dto.textureCoords().size(); i++)
+    if (auto texture_coords = disassembler->textureCoordinates())
     {
-        TextureCoordDto coord = TextureCoordDto::fromGenericDto(dto.textureCoords()[i]);
-        if (auto tex2 = coord.texture2DCoords())
+        for (unsigned i = 0; i < texture_coords.value().size(); i++)
         {
-            setTexture2DCoordArray(i, tex2.value());
-        }
-        else if (auto tex1 = coord.texture1DCoords())
-        {
-            setTexture1DCoordArray(i, tex1.value());
-        }
-        else if (auto tex3 = coord.texture3DCoords())
-        {
-            setTexture3DCoordArray(i, tex3.value());
+            if (auto tex2 = texture_coords.value()[i].texture2DCoords())
+            {
+                setTexture2DCoordArray(i, tex2.value());
+            }
+            else if (auto tex1 = texture_coords.value()[i].texture1DCoords())
+            {
+                setTexture1DCoordArray(i, tex1.value());
+            }
+            else if (auto tex3 = texture_coords.value()[i].texture3DCoords())
+            {
+                setTexture3DCoordArray(i, tex3.value());
+            }
         }
     }
-    if (auto pal = dto.paletteIndices())
+    if (auto pal = disassembler->paletteIndices())
     {
         setPaletteIndexArray(pal.value());
     }
-    if (auto w = dto.weights())
+    if (auto w = disassembler->weights())
     {
         setTotalSkinWeightArray(w.value());
     }
-    if (auto t = dto.tangents())
+    if (auto t = disassembler->tangents())
     {
         setVertexTangentArray(t.value());
     }
-    if (auto idx = dto.indices())
+    if (auto idx = disassembler->indices())
     {
         setIndexArray(idx.value());
     }
-    m_geometryBound = BoundingVolume(BoundingVolumeDto::fromGenericDto(dto.geometryBound()));
-}*/
+}
 
 RenderBufferSignature GeometryData::makeRenderBufferSignature() const
 {

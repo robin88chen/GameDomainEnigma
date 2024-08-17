@@ -8,10 +8,13 @@
 #ifndef STANDARD_GEOMETRY_ASSEMBLERS_H
 #define STANDARD_GEOMETRY_ASSEMBLERS_H
 
-#include <string>
 #include "MathLib/Vector2.h"
 #include "MathLib/Vector3.h"
-#include "GeometryDataDto.h"
+#include "GameEngine/GenericDto.h"
+#include "Geometries/GeometryId.h"
+#include <string>
+#include <memory>
+#include <vector>
 
 namespace Enigma::Geometries
 {

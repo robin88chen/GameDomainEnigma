@@ -9,7 +9,6 @@
 #define _TRIANGLE_LIST_H
 
 #include "GeometryData.h"
-#include "GeometryDataDto.h"
 #include <memory>
 
 namespace Enigma::Geometries
@@ -21,7 +20,6 @@ namespace Enigma::Geometries
         DECLARE_EN_RTTI;
     public:
         TriangleList(const GeometryId& id);
-        TriangleList(const GeometryId& id, const Engine::GenericDto& o);
         TriangleList(const TriangleList&) = delete;
         TriangleList(TriangleList&&) = delete;
         virtual ~TriangleList() override;
@@ -29,6 +27,7 @@ namespace Enigma::Geometries
         TriangleList& operator=(TriangleList&&) = delete;
 
         virtual std::shared_ptr<GeometryAssembler> assembler() const override;
+        virtual std::shared_ptr<GeometryDisassembler> disassembler() override;
 
         unsigned int getTriangleCount();
         void fetchTrianglePos(unsigned int idx, MathLib::Vector3 tri[3]);

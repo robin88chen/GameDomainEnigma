@@ -18,7 +18,6 @@
 #include "MathLib/Vector2.h"
 #include "GraphicKernel/IVertexBuffer.h"
 #include "GraphicKernel/IIndexBuffer.h"
-#include "GeometryDataDto.h"
 #include "GameEngine/RenderBufferSignature.h"
 #include "GeometryId.h"
 #include <memory>
@@ -28,13 +27,13 @@ namespace Enigma::Geometries
     using error = std::error_code;
 
     class GeometryAssembler;
+    class GeometryDisassembler;
 
     class GeometryData : public std::enable_shared_from_this<GeometryData>
     {
         DECLARE_EN_RTTI_OF_BASE;
     public:
         GeometryData(const GeometryId& id);
-        GeometryData(const GeometryId& id, const Engine::GenericDto& dto);
         GeometryData(const GeometryData&) = delete;
         GeometryData(GeometryData&&) = delete;
         virtual ~GeometryData();
@@ -46,6 +45,8 @@ namespace Enigma::Geometries
 
         virtual std::shared_ptr<GeometryAssembler> assembler() const = 0;
         virtual void assemble(const std::shared_ptr<GeometryAssembler>& assembler) const;
+        virtual std::shared_ptr<GeometryDisassembler> disassembler() = 0;
+        virtual void disassemble(const std::shared_ptr<GeometryDisassembler>& disassembler);
 
         const GeometryId& id() { return m_id; }
 
@@ -205,6 +206,8 @@ namespace Enigma::Geometries
             int srcDimension, const float* src, unsigned int count, bool isPos);
 
         void assembleNonVertexAttributes(const std::shared_ptr<GeometryAssembler>& assembler) const;
+        void disassembleNonVertexAttributes(const std::shared_ptr<GeometryDisassembler>& disassembler);
+        void disassembleVertexAttributes(const std::shared_ptr<GeometryDisassembler>& disassembler);
 
     protected:
         Engine::FactoryDesc m_factoryDesc;

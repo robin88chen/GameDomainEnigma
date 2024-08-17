@@ -5,7 +5,7 @@
 
 using namespace Enigma::SceneGraph;
 
-LightAssembler::LightAssembler(const SpatialId& id, const LightInfo::LightType& type) : m_spatialAssembler(id), m_factory(Light::TYPE_RTTI)
+LightAssembler::LightAssembler(const SpatialId& id, const LightInfo::LightType& type) : m_factory(Light::TYPE_RTTI), m_spatialAssembler(id)
 {
     m_id = id;
     m_info.lightType(type);

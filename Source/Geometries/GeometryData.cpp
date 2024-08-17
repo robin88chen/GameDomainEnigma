@@ -25,7 +25,7 @@ GeometryData::GeometryData(const GeometryId& id) : m_factoryDesc(GeometryData::T
     m_geometryBound = BoundingVolume{ Box3::UNIT_BOX };
 }
 
-GeometryData::GeometryData(const GeometryId& id, const GenericDto& o) : m_factoryDesc(o.getRtti()), m_id(id), m_topology(PrimitiveTopology::Topology_Undefine), m_vtxCapacity(0), m_idxCapacity(0), m_vtxUsedCount(0), m_idxUsedCount(0)
+GeometryData::GeometryData(const GeometryId& id, const GenericDto& o) : m_factoryDesc(o.getRtti()), m_id(id), m_vtxCapacity(0), m_idxCapacity(0), m_vtxUsedCount(0), m_idxUsedCount(0), m_topology(PrimitiveTopology::Topology_Undefine)
 {
     //GeometryDataDto dto = GeometryDataDto::fromGenericDto(o);
     //deserializeGeometryDto(dto);

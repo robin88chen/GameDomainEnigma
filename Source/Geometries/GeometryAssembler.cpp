@@ -1,6 +1,7 @@
 ﻿#include "GeometryAssembler.h"
 #include "GeometryData.h"
 #include "TextureCoordinateAssembler.h"
+#include "GameEngine/BoundingVolumeAssembler.h"
 #include "MathLib/ContainmentBox3.h"
 #include <cassert>
 
@@ -201,7 +202,9 @@ void GeometryAssembler::serializeNonVertexAttributesToGenericDto(Engine::Generic
     dto.addOrUpdate(TOKEN_VERTEX_USED_COUNT, m_vtxUsedCount);
     dto.addOrUpdate(TOKEN_INDEX_USED_COUNT, m_idxUsedCount);
     dto.addOrUpdate(TOKEN_TOPOLOGY, m_topology);
-    dto.addOrUpdate(TOKEN_GEOMETRY_BOUND, m_geometryBound.serializeDto().toGenericDto());
+    std::shared_ptr<Engine::BoundingVolumeAssembler> bv_assembler = std::make_shared<Engine::BoundingVolumeAssembler>();
+    m_geometryBound.assemble(bv_assembler);
+    dto.addOrUpdate(TOKEN_GEOMETRY_BOUND, bv_assembler->assemble());
 }
 
 void GeometryAssembler::addSegment(const GeometrySegment& segment)
@@ -306,5 +309,5 @@ void GeometryDisassembler::deserializeNonVertexAttributesFromGenericDto(const En
     if (auto v = dto.tryGetValue<unsigned>(TOKEN_VERTEX_USED_COUNT)) m_vtxUsedCount = v.value();
     if (auto v = dto.tryGetValue<unsigned>(TOKEN_INDEX_USED_COUNT)) m_idxUsedCount = v.value();
     if (auto v = dto.tryGetValue<unsigned>(TOKEN_TOPOLOGY)) m_topology = static_cast<Graphics::PrimitiveTopology>(v.value());
-    if (auto v = dto.tryGetValue<Engine::GenericDto>(TOKEN_GEOMETRY_BOUND)) m_geometryBound = Engine::BoundingVolume(Engine::BoundingVolumeDto::fromGenericDto(v.value()));
+    if (auto v = dto.tryGetValue<Engine::GenericDto>(TOKEN_GEOMETRY_BOUND)) m_geometryBound = Engine::BoundingVolume(v.value());
 }

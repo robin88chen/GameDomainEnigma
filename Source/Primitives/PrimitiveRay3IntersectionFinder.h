@@ -20,7 +20,7 @@ namespace Enigma::Primitives
     class PrimitiveRay3IntersectionFinder
     {
     public:
-        PrimitiveRay3IntersectionFinder() {};
+        PrimitiveRay3IntersectionFinder() : m_requiredResultCount(0) {};
         virtual ~PrimitiveRay3IntersectionFinder() {};
 
         virtual MathLib::Intersector::Result test(const std::shared_ptr<Primitive>& primitive, const MathLib::Ray3& ray, std::unique_ptr<MathLib::IntersectorCache> cache) const = 0;

@@ -76,7 +76,7 @@ std::optional<unsigned> MeshNodeTree::findMeshNodeIndex(const std::string& node_
 std::optional<Enigma::Primitives::PrimitiveId> MeshNodeTree::findInstancedPrimitiveId(const Primitives::PrimitiveId& original_id) const
 {
     if (m_meshNodes.empty()) return std::nullopt;
-    unsigned count = static_cast<unsigned>(m_meshNodes.size());
+    //unsigned count = static_cast<unsigned>(m_meshNodes.size());
     for (const auto& node : m_meshNodes)
     {
         if ((node.getMeshPrimitive()) && (node.getMeshPrimitive()->id().origin() == original_id)) return node.getMeshPrimitive()->id();

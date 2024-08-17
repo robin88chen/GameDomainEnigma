@@ -1,4 +1,5 @@
 ﻿#include "BoundingVolume.h"
+#include "BoundingVolumeAssembler.h"
 #include "BoxBV.h"
 #include "SphereBV.h"
 
@@ -8,13 +9,14 @@ BoundingVolume::BoundingVolume()
 {
 }
 
-BoundingVolume::BoundingVolume(const BoundingVolumeDto& dto)
+BoundingVolume::BoundingVolume(const GenericDto& dto)
 {
-    if (auto box = dto.box())
+    BoundingVolumeDisassembler disassembler(dto);
+    if (auto box = disassembler.box())
     {
         m_bv = std::make_unique<BoxBV>(box.value());
     }
-    else if (auto sphere = dto.sphere())
+    else if (auto sphere = disassembler.sphere())
     {
         m_bv = std::make_unique<SphereBV>(sphere.value());
     }
@@ -78,9 +80,19 @@ BoundingVolume& BoundingVolume::operator=(BoundingVolume&& bv) noexcept
     return *this;
 }
 
-BoundingVolumeDto BoundingVolume::serializeDto() const
+void BoundingVolume::assemble(const std::shared_ptr<BoundingVolumeAssembler>& assembler) const
 {
-    return BoundingVolumeDto{ BoundingBox3(), BoundingSphere3() };
+    if (m_bv)
+    {
+        if (auto box = BoundingBox3())
+        {
+            assembler->box(box.value());
+        }
+        else if (auto sphere = BoundingSphere3())
+        {
+            assembler->sphere(sphere.value());
+        }
+    }
 }
 
 Enigma::MathLib::Vector3 BoundingVolume::Center() const

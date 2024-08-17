@@ -7,6 +7,7 @@
 #include "MathLib/MathAlgorithm.h"
 #include "Frameworks/EventPublisher.h"
 #include "GameEngine/BoundingVolume.h"
+#include "GameEngine/BoundingVolumeAssembler.h"
 #include "SceneGraphQueries.h"
 #include <cassert>
 #include <tuple>
@@ -53,8 +54,8 @@ Spatial::Spatial(const SpatialId& id, const GenericDto& o) : m_factoryDesc(o.get
     assert(m_mxLocalTransform != Matrix4::ZERO);
     m_mxWorldTransform = dto.worldTransform();
     assert(m_mxWorldTransform != Matrix4::ZERO);
-    m_modelBound = BoundingVolume(BoundingVolumeDto::fromGenericDto(dto.modelBound()));
-    m_worldBound = BoundingVolume(BoundingVolumeDto::fromGenericDto(dto.worldBound()));
+    m_modelBound = BoundingVolume{ dto.modelBound() };
+    m_worldBound = BoundingVolume{ dto.worldBound() };
     assert(!m_modelBound.isEmpty());
     assert(!m_worldBound.isEmpty());
     std::tie(m_vecLocalScale, m_qtLocalQuaternion, m_vecLocalPosition) = m_mxLocalTransform.UnMatrixSRT();
@@ -93,8 +94,12 @@ SpatialDto Spatial::serializeSpatialDto()
     dto.notifyFlag(static_cast<unsigned int>(m_notifyFlags.to_ulong()));
     dto.localTransform(m_mxLocalTransform);
     dto.worldTransform(m_mxWorldTransform);
-    dto.modelBound(m_modelBound.serializeDto().toGenericDto());
-    dto.worldBound(m_worldBound.serializeDto().toGenericDto());
+    std::shared_ptr<BoundingVolumeAssembler> model_assembler = std::make_shared<BoundingVolumeAssembler>();
+    m_modelBound.assemble(model_assembler);
+    std::shared_ptr<BoundingVolumeAssembler> world_assembler = std::make_shared<BoundingVolumeAssembler>();
+    m_worldBound.assemble(world_assembler);
+    dto.modelBound(model_assembler->assemble());
+    dto.worldBound(world_assembler->assemble());
     return dto;
 }
 

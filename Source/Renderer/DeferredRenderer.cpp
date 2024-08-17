@@ -6,8 +6,6 @@
 
 using namespace Enigma::Renderer;
 
-constexpr const char* gbuffer_depth_stencil_name = "GBufferDepthStencil";
-
 DeferredRenderer::DeferredRenderer(const std::string& name) : Renderer(name), m_gbufferClearColor(0.0f, 0.0f, 0.0f, 0.0f)
 {
 }

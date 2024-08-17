@@ -15,7 +15,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolume.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolumeDto.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolumeAssembler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoxBV.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DeviceCreatingPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingQueue.h" />
@@ -82,7 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\BoundingVolume.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\BoundingVolumeDto.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\BoundingVolumeAssembler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\BoxBV.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\DeviceCreatingPolicy.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompilingQueue.cpp" />

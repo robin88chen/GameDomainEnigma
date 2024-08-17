@@ -34,9 +34,6 @@
     <Filter Include="DTOs">
       <UniqueIdentifier>{af865989-8dc0-4335-b4a6-8358606c2268}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DTOs\BV Dto">
-      <UniqueIdentifier>{bf6a8ffe-9f5c-49ec-8e80-832da6a2fdf5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Effect Material\Effect Texture Map">
       <UniqueIdentifier>{cb5ad250-41d0-4f9f-8832-8dd059098647}</UniqueIdentifier>
     </Filter>
@@ -168,9 +165,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LinkageResolver.h">
       <Filter>DTOs</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolumeDto.h">
-      <Filter>DTOs\BV Dto</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DtoDeserializer.h">
       <Filter>DTOs</Filter>
     </ClInclude>
@@ -270,6 +264,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureImageUpdater.h">
       <Filter>Textures\ResourceProcessor</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolumeAssembler.h">
+      <Filter>Bounding Volume</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineErrors.cpp">
@@ -341,9 +338,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\FactoryDesc.cpp">
       <Filter>DTOs</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\BoundingVolumeDto.cpp">
-      <Filter>DTOs\BV Dto</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GenericDto.cpp">
       <Filter>DTOs</Filter>
     </ClCompile>
@@ -403,6 +397,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureImageUpdater.cpp">
       <Filter>Textures\ResourceProcessor</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\BoundingVolumeAssembler.cpp">
+      <Filter>Bounding Volume</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

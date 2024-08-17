@@ -64,11 +64,11 @@
     <Filter Include="Effect Material\Repository\Effect Compiler">
       <UniqueIdentifier>{87b312cc-22e3-4fb6-93b8-c2b39ba2e375}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DTOs\Texture Dto">
-      <UniqueIdentifier>{e144ea47-8807-4106-b3f2-39e86ba3b02f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Textures\ResourceProcessor">
       <UniqueIdentifier>{c97ac5c6-b031-4a87-a005-f02d9df4ee96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Textures\Assembler">
+      <UniqueIdentifier>{de94cd66-6534-419a-89cc-9c6963da8723}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -240,9 +240,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureId.h">
       <Filter>Textures</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureDto.h">
-      <Filter>DTOs\Texture Dto</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureFactory.h">
       <Filter>Textures</Filter>
     </ClInclude>
@@ -266,6 +263,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolumeAssembler.h">
       <Filter>Bounding Volume</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureAssembler.h">
+      <Filter>Textures\Assembler</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -377,9 +377,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialSourceRepositoryInstallingPolicy.cpp">
       <Filter>Installing Policies</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureDto.cpp">
-      <Filter>DTOs\Texture Dto</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureFactory.cpp">
       <Filter>Textures</Filter>
     </ClCompile>
@@ -400,6 +397,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\BoundingVolumeAssembler.cpp">
       <Filter>Bounding Volume</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureAssembler.cpp">
+      <Filter>Textures\Assembler</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

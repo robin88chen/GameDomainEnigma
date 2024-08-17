@@ -5,7 +5,7 @@
 #include "Platforms/MemoryMacro.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/CommandBus.h"
-#include "TextureDto.h"
+#include "TextureAssembler.h"
 #include "EngineErrors.h"
 #include "TextureEvents.h"
 #include "TextureCommands.h"
@@ -65,12 +65,12 @@ void TextureResourceProcessor::unregisterHandlers()
     m_enqueueUpdatingImage = nullptr;
 }
 
-std::error_code TextureResourceProcessor::enqueueHydratingDto(const std::shared_ptr<Texture>& texture, const GenericDto& dto)
+std::error_code TextureResourceProcessor::enqueueHydratingDisassembler(const std::shared_ptr<Texture>& texture, const std::shared_ptr<TextureDisassembler>& disassembler)
 {
     assert(texture);
     if (!texture->lazyStatus().isGhost()) return ErrorCode::textureAlreadyLoaded;
     std::lock_guard locker{ m_hydratingQueueLock };
-    m_hydratingQueue.push({ texture, TextureDto(dto) });
+    m_hydratingQueue.push({ texture, disassembler });
     texture->lazyStatus().changeStatus(Frameworks::LazyStatus::Status::InQueue);
     return ErrorCode::ok;
 }

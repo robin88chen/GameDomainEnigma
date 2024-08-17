@@ -3,7 +3,7 @@
 #include "GraphicKernel/IMultiTexture.h"
 #include "GraphicKernel/ITexture.h"
 #include "Texture.h"
-#include "TextureDto.h"
+#include "TextureAssembler.h"
 #include "TextureQueries.h"
 #include "Frameworks/QueryDispatcher.h"
 #include <cassert>
@@ -20,7 +20,7 @@ Texture::Texture(const TextureId& id) : m_factoryDesc(TYPE_RTTI.getName())
     m_lazyStatus.changeStatus(LazyStatus::Status::Ready);
 }
 
-Texture::Texture(const TextureId& id, const GenericDto& dto) : m_factoryDesc(TYPE_RTTI.getName())
+/*Texture::Texture(const TextureId& id, const GenericDto& dto) : m_factoryDesc(TYPE_RTTI.getName())
 {
     TextureDto textureDto = TextureDto(dto);
     m_id = id;
@@ -31,7 +31,7 @@ Texture::Texture(const TextureId& id, const GenericDto& dto) : m_factoryDesc(TYP
     m_surfaceCount = textureDto.surfaceCount();
     m_filePaths = textureDto.filePaths();
     m_lazyStatus.changeStatus(LazyStatus::Status::Ghost);
-}
+}*/
 
 Texture::Texture(const TextureId& id, const ITexturePtr& tex) : m_factoryDesc(TYPE_RTTI.getName())
 {
@@ -56,7 +56,37 @@ std::shared_ptr<Texture> Texture::queryTexture(const TextureId& id)
     return query->getResult();
 }
 
-GenericDto Texture::serializeDto() const
+void Texture::assemble(const std::shared_ptr<TextureAssembler>& assembler) const
+{
+    assembler->factoryDesc(m_factoryDesc);
+    assembler->format(m_format);
+    assembler->dimension(m_dimension);
+    assembler->isCubeTexture(m_isCubeTexture);
+    assembler->surfaceCount(m_surfaceCount);
+    if (!m_filePaths.empty())
+    {
+        assembler->filePaths(m_filePaths);
+        assembler->imageFilenamesOfLoad(m_filePaths);
+    }
+    else
+    {
+        assembler->dimensionOfCreation(m_dimension);
+    }
+}
+
+void Texture::disassemble(const std::shared_ptr<TextureDisassembler>& disassembler)
+{
+    m_id = disassembler->id();
+    m_factoryDesc = disassembler->factoryDesc();
+    m_format = disassembler->format();
+    m_dimension = disassembler->dimension();
+    m_isCubeTexture = disassembler->isCubeTexture();
+    m_surfaceCount = disassembler->surfaceCount();
+    m_filePaths = disassembler->filePaths();
+    m_lazyStatus.changeStatus(LazyStatus::Status::Ghost);
+}
+
+/*GenericDto Texture::serializeDto() const
 {
     TextureDto textureDto;
     textureDto.factoryDesc(m_factoryDesc);
@@ -74,7 +104,7 @@ GenericDto Texture::serializeDto() const
         textureDto.dimensionOfCreation(m_dimension);
     }
     return textureDto.toGenericDto();
-}
+}*/
 
 const Enigma::MathLib::Dimension<unsigned>& Texture::dimension() const
 {

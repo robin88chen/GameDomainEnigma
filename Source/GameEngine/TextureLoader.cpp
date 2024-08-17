@@ -52,11 +52,11 @@ TextureLoader::~TextureLoader()
     m_onTextureCreateResourceFailed = nullptr;
 }
 
-void TextureLoader::loadImage(const std::shared_ptr<Texture>& texture, const TextureDto& dto)
+void TextureLoader::loadImage(const std::shared_ptr<Texture>& texture, const std::shared_ptr<TextureDisassembler>& disassembler)
 {
     assert(texture);
     m_contentingTexture = texture;
-    m_textureDto = dto;
+    m_disassembler = disassembler;
     if (m_contentingTexture->isMultiTexture())
     {
         CommandBus::enqueue(std::make_shared<CreateDeviceMultiTexture>(m_contentingTexture->id().name()));
@@ -71,15 +71,16 @@ void TextureLoader::loadResourceTextures(const std::shared_ptr<Graphics::ITextur
 {
     assert(m_contentingTexture);
     assert(m_contentingTexture->lazyStatus().isLoading());
+    assert(m_disassembler);
     assert(dev_tex);
-    assert((m_textureDto.imageFilenamesOfLoad()) && (!m_textureDto.imageFilenamesOfLoad()->empty()));
+    assert((m_disassembler->imageFilenamesOfLoad()) && (!m_disassembler->imageFilenamesOfLoad()->empty()));
     if (m_contentingTexture->isMultiTexture())
     {
-        std::dynamic_pointer_cast<IMultiTexture>(dev_tex)->multiLoad(m_textureDto.imageFilenamesOfLoad().value(), {});
+        std::dynamic_pointer_cast<IMultiTexture>(dev_tex)->multiLoad(m_disassembler->imageFilenamesOfLoad().value(), {});
     }
     else
     {
-        dev_tex->load(m_textureDto.imageFilenamesOfLoad().value()[0], "");
+        dev_tex->load(m_disassembler->imageFilenamesOfLoad().value()[0], "");
     }
 }
 
@@ -88,16 +89,17 @@ void TextureLoader::createEmptyResourceTextures(const std::shared_ptr<Graphics::
     assert(m_contentingTexture);
     assert(m_contentingTexture->lazyStatus().isLoading());
     assert(dev_tex);
-    assert(m_textureDto.dimensionOfCreation());
+    assert(m_disassembler);
+    assert(m_disassembler->dimensionOfCreation());
     if (m_contentingTexture->isMultiTexture())
     {
         std::vector<byte_buffer> buffers;
-        buffers.resize(m_textureDto.surfaceCount());
-        std::dynamic_pointer_cast<IMultiTexture>(dev_tex)->multiCreate(m_textureDto.dimensionOfCreation().value(), m_textureDto.surfaceCount(), buffers);
+        buffers.resize(m_disassembler->surfaceCount());
+        std::dynamic_pointer_cast<IMultiTexture>(dev_tex)->multiCreate(m_disassembler->dimensionOfCreation().value(), m_disassembler->surfaceCount(), buffers);
     }
     else
     {
-        dev_tex->create(m_textureDto.dimensionOfCreation().value(), byte_buffer{});
+        dev_tex->create(m_disassembler->dimensionOfCreation().value(), byte_buffer{});
     }
 }
 
@@ -124,11 +126,11 @@ void TextureLoader::onDeviceTextureCreated(const IEventPtr& e)
         failLoadingImage(ErrorCode::findStashedAssetFail);
         return;
     }
-    if ((m_textureDto.imageFilenamesOfLoad()) && (!m_textureDto.imageFilenamesOfLoad()->empty()))
+    if ((m_disassembler->imageFilenamesOfLoad()) && (!m_disassembler->imageFilenamesOfLoad()->empty()))
     {
         loadResourceTextures(texture.value());
     }
-    else if (m_textureDto.dimensionOfCreation())
+    else if (m_disassembler->dimensionOfCreation())
     {
         createEmptyResourceTextures(texture.value());
     }
@@ -164,7 +166,7 @@ void TextureLoader::onTextureLoadImageFailed(const Enigma::Frameworks::IEventPtr
     auto ev = std::dynamic_pointer_cast<Graphics::TextureResourceLoadImageFailed, Frameworks::IEvent>(e);
     if (!ev) return;
     if (ev->textureName() != m_contentingTexture->id().name()) return;
-    Platforms::Debug::Printf("texture %s load image %s failed", m_contentingTexture->id().name().c_str(), m_textureDto.filePaths()[0].c_str());
+    Platforms::Debug::Printf("texture %s load image %s failed", m_contentingTexture->id().name().c_str(), m_disassembler->filePaths()[0].c_str());
     failLoadingImage(ev->error());
 }
 

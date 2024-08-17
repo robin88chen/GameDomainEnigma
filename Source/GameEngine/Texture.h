@@ -20,12 +20,14 @@
 
 namespace Enigma::Engine
 {
+    class TextureAssembler;
+    class TextureDisassembler;
+
     class Texture
     {
         DECLARE_EN_RTTI_OF_BASE;
     public:
         Texture(const TextureId& id);
-        Texture(const TextureId& id, const GenericDto& dto);
         Texture(const TextureId& id, const Graphics::ITexturePtr& tex);
         Texture(const Texture&) = delete;
         Texture(Texture&&) = delete;
@@ -35,12 +37,13 @@ namespace Enigma::Engine
 
         static std::shared_ptr<Texture> queryTexture(const TextureId& id);
 
+        void assemble(const std::shared_ptr<TextureAssembler>& assembler) const;
+        void disassemble(const std::shared_ptr<TextureDisassembler>& disassembler);
+
         const TextureId& id() const { return m_id; }
 
         const Frameworks::LazyStatus& lazyStatus() const { return m_lazyStatus; }
         Frameworks::LazyStatus& lazyStatus() { return m_lazyStatus; }
-
-        GenericDto serializeDto() const;
 
         const FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         FactoryDesc& factoryDesc() { return m_factoryDesc; }

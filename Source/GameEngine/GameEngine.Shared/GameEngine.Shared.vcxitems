@@ -65,7 +65,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderRepository.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SphereBV.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Texture.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureDto.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureAssembler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureFactory.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureId.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureRepositoryInstallingPolicy.h" />
@@ -116,7 +116,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ShaderRepository.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SphereBV.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Texture.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureDto.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureAssembler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureFactory.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureImageUpdater.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureLoader.cpp" />

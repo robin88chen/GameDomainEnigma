@@ -18,6 +18,9 @@
 
 namespace Enigma::Animators
 {
+    class AnimatorAssembler;
+    class AnimatorDisassembler;
+
     class Animator : public std::enable_shared_from_this<Animator>
     {
         DECLARE_EN_RTTI_OF_BASE
@@ -37,8 +40,11 @@ namespace Enigma::Animators
 
         static std::shared_ptr<Animator> queryAnimator(const AnimatorId& id);
 
+        virtual std::shared_ptr<AnimatorAssembler> assembler() const = 0;
+        virtual void assemble(const std::shared_ptr<AnimatorAssembler>& assembler) const = 0; ///< that's double dispatch
+        virtual std::shared_ptr<AnimatorDisassembler> disassembler() const = 0;
+        virtual void disassemble(const std::shared_ptr<AnimatorDisassembler>& disassembler) = 0; ///< that's double dispatch
         const AnimatorId& id() const { return m_id; }
-        virtual Engine::GenericDto serializeDto() const = 0;
 
         std::optional<Primitives::PrimitiveId> controlledPrimitiveId() const { return m_controlledPrimitiveId; }
         std::optional<Primitives::PrimitiveId>& controlledPrimitiveId() { return m_controlledPrimitiveId; }

@@ -53,7 +53,7 @@ Enigma::Engine::GenericDto AnimationTimeSRTAssembler::toGenericDto()
 ModelAnimationAssembler::ModelAnimationAssembler(const Animators::AnimationAssetId& id)
 {
     m_id = id;
-    m_dto.id(id);
+    //m_dto.id(id);
 }
 
 ModelAnimationAssembler& ModelAnimationAssembler::nodeSRT(const std::string& node_name, const AnimationTimeSRTAssembler& assembler)
@@ -64,9 +64,9 @@ ModelAnimationAssembler& ModelAnimationAssembler::nodeSRT(const std::string& nod
 
 ModelAnimationAssembler& ModelAnimationAssembler::asAsset(const std::string& name, const std::string& filename, const std::string& path_id)
 {
-    Engine::FactoryDesc fd = m_dto.factoryDesc();
-    fd.ClaimAsResourceAsset(name, filename, path_id);
-    m_dto.factoryDesc(fd);
+    //Engine::FactoryDesc fd = m_dto.factoryDesc();
+    //fd.ClaimAsResourceAsset(name, filename, path_id);
+    //m_dto.factoryDesc(fd);
     return *this;
 }
 

@@ -10,6 +10,7 @@
 #define _MODEL_PRIMITIVE_ANIMATOR_H
 
 #include "Animators/Animator.h"
+#include "Animators/AnimatorAssembler.h"
 #include "AnimationClip.h"
 #include "ModelPrimitive.h"
 #include "SkinMeshPrimitive.h"
@@ -36,7 +37,12 @@ namespace Enigma::Renderables
 
         static std::shared_ptr<Animator> create(const Animators::AnimatorId& id);
         static std::shared_ptr<Animator> constitute(const Animators::AnimatorId& id, const Engine::GenericDto& dto);
-        virtual Engine::GenericDto serializeDto() const override;
+
+        //todo : implement these functions
+        virtual std::shared_ptr<Animators::AnimatorAssembler> assembler() const override;
+        virtual void assemble(const std::shared_ptr<Animators::AnimatorAssembler>& assembler) const override;
+        virtual std::shared_ptr<Animators::AnimatorDisassembler> disassembler() const override;
+        virtual void disassemble(const std::shared_ptr<Animators::AnimatorDisassembler>& disassembler) override;
 
         virtual HasUpdated update(const std::unique_ptr<Frameworks::Timer>& timer) override;
         virtual void reset() override;

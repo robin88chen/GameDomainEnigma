@@ -9,7 +9,6 @@
 #define _MODEL_ANIMATION_DTOS_H
 
 #include "GameEngine/GenericDto.h"
-#include "Animators/AnimationAssetDtos.h"
 #include <string>
 #include <vector>
 
@@ -37,7 +36,7 @@ namespace Enigma::Renderables
         std::vector<float> m_translateTimeKeys;
     };
 
-    class ModelAnimationAssetDto : public Animators::AnimationAssetDto
+    class ModelAnimationAssetDto //: public Animators::AnimationAssetDto
     {
     public:
         ModelAnimationAssetDto();

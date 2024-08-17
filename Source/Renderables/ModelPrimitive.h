@@ -39,7 +39,9 @@ namespace Enigma::Renderables
 
         //todo : implement these functions
         virtual std::shared_ptr<Primitives::PrimitiveAssembler> assembler() const override;
-        virtual void assemble(const std::shared_ptr<Primitives::PrimitiveAssembler>& assembler) override;
+        virtual void assemble(const std::shared_ptr<Primitives::PrimitiveAssembler>& assembler) const override;
+        virtual std::shared_ptr<Primitives::PrimitiveDisassembler> disassembler() const override;
+        virtual void disassemble(const std::shared_ptr<Primitives::PrimitiveDisassembler>& disassembler) override; ///< that's double
 
         void registerHandlers();
         void unregisterHandlers();

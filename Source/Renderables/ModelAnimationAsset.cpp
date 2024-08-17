@@ -16,7 +16,7 @@ ModelAnimationAsset::ModelAnimationAsset(const AnimationAssetId& id) : Animation
 ModelAnimationAsset::ModelAnimationAsset(const AnimationAssetId& id, const GenericDto& dto) : AnimationAsset(id)
 {
     ModelAnimationAssetDto model_dto(dto);
-    m_factoryDesc = model_dto.factoryDesc();
+    //m_factoryDesc = model_dto.factoryDesc();
     m_meshNodeKeyArray.reserve(model_dto.meshNodeNames().size());
     for (unsigned i = 0; i < model_dto.meshNodeNames().size(); i++)
     {
@@ -42,8 +42,8 @@ std::shared_ptr<AnimationAsset> ModelAnimationAsset::constitute(const Animators:
 GenericDto ModelAnimationAsset::serializeDto()
 {
     ModelAnimationAssetDto dto;
-    dto.id(m_id);
-    dto.factoryDesc(m_factoryDesc);
+    //dto.id(m_id);
+    //dto.factoryDesc(m_factoryDesc);
     std::vector<std::string> names;
     GenericDtoCollection srts;
     for (auto& key : m_meshNodeKeyArray)

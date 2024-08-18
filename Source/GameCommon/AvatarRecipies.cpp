@@ -180,8 +180,7 @@ void ReplaceAvatarMaterial::onHydrateMaterialFailed(const IEventPtr& e)
     Platforms::Debug::ErrorPrintf("ReplaceAvatarMaterial::OnContentEffectMaterialFailed: %s, %s\n", ev->id().name().c_str(), ev->error().message().c_str());
 }
 
-ChangeAvatarTexture::ChangeAvatarTexture(const Primitives::PrimitiveId& mesh_id, const TextureMappingDto& texture_dto)
-    : m_meshId(mesh_id), m_textureDto(texture_dto)
+ChangeAvatarTexture::ChangeAvatarTexture(const Primitives::PrimitiveId& mesh_id, const TextureMappingDisassembler& texture_dto) : m_meshId(mesh_id), m_textureDto(texture_dto)
 {
     m_factoryDesc = FactoryDesc(ChangeAvatarTexture::TYPE_RTTI.getName());
     m_onTextureHydrated = std::make_shared<EventSubscriber>([=](auto e) { this->onTextureHydrated(e); });

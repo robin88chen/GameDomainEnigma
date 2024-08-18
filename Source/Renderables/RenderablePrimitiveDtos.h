@@ -10,7 +10,7 @@
 
 #include "GameEngine/GenericDto.h"
 #include "MathLib/Matrix4.h"
-#include "GameEngine/EffectTextureMapDto.h"
+#include "GameEngine/EffectTextureMapAssembler.h"
 #include "GameEngine/FactoryDesc.h"
 #include "Renderer/Renderer.h"
 #include "Primitives/PrimitiveId.h"
@@ -74,11 +74,11 @@ namespace Enigma::Renderables
 
         [[nodiscard]] const std::vector<Engine::EffectMaterialId>& effects() const { return m_effects; }
 
-        [[nodiscard]] const std::vector<Engine::EffectTextureMapDto>& textureMaps() const { return m_textureMaps; }
+        [[nodiscard]] const std::vector<Engine::EffectTextureMapDisassembler>& textureMaps() const { return m_textureMaps; }
 
     protected:
         std::vector<Engine::EffectMaterialId> m_effects;
-        std::vector<Engine::EffectTextureMapDto> m_textureMaps;
+        std::vector<Engine::EffectTextureMapDisassembler> m_textureMaps;
     };
 
     class SkinMeshPrimitiveDto : public MeshPrimitiveDto

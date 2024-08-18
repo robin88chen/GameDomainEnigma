@@ -70,6 +70,9 @@
     <Filter Include="Textures\Assembler">
       <UniqueIdentifier>{de94cd66-6534-419a-89cc-9c6963da8723}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Effect Material\Assemblers">
+      <UniqueIdentifier>{1d7d268b-9770-4a8a-b893-7c19e360563c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineErrors.h">
@@ -183,9 +186,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMap.h">
       <Filter>Effect Material\Effect Texture Map</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMapDto.h">
-      <Filter>DTOs\Effect Dto</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TimerService.h">
       <Filter>Timer Service</Filter>
     </ClInclude>
@@ -206,9 +206,6 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureEvents.h">
       <Filter>Events</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMapAssembler.h">
-      <Filter>DTOs\Effect Dto</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GenericPolicy.h">
       <Filter>DTOs</Filter>
@@ -266,6 +263,12 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureAssembler.h">
       <Filter>Textures\Assembler</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureMappingAssembler.h">
+      <Filter>Effect Material\Assemblers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMapAssembler.h">
+      <Filter>Effect Material\Assemblers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -347,9 +350,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectTextureMap.cpp">
       <Filter>Effect Material\Effect Texture Map</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectTextureMapDto.cpp">
-      <Filter>DTOs\Effect Dto</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TimerService.cpp">
       <Filter>Timer Service</Filter>
     </ClCompile>
@@ -358,9 +358,6 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineInstallingPolicy.cpp">
       <Filter>Installing Policies</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectTextureMapAssembler.cpp">
-      <Filter>DTOs\Effect Dto</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrBVRay3.cpp">
       <Filter>Intersect</Filter>
@@ -400,6 +397,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureAssembler.cpp">
       <Filter>Textures\Assembler</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureMappingAssembler.cpp">
+      <Filter>Effect Material\Assemblers</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectTextureMapAssembler.cpp">
+      <Filter>Effect Material\Assemblers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

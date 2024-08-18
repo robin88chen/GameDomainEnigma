@@ -60,7 +60,11 @@ MeshPrimitive::MeshPrimitive(const Primitives::PrimitiveId& id, const Engine::Ge
     m_textures.clear();
     for (auto& tex_map_dto : mesh_dto.textureMaps())
     {
-        m_textures.emplace_back(tex_map_dto);
+        EffectTextureMap tex_map;
+        std::shared_ptr<EffectTextureMapDisassembler> disassembler = std::make_shared<EffectTextureMapDisassembler>();
+        disassembler->disassemble(tex_map_dto);
+        tex_map.disassemble(disassembler);
+        m_textures.emplace_back(tex_map);
     }
 }
 
@@ -100,7 +104,9 @@ MeshPrimitiveDto MeshPrimitive::serializeMeshDto() const
     for (auto& tex : m_textures)
     {
         if (!tex.isAllResourceTexture()) continue;
-        dto.textureMaps().emplace_back(tex.serializeDto());
+        std::shared_ptr<EffectTextureMapAssembler> tex_assembler = std::make_shared<EffectTextureMapAssembler>();
+        tex.assemble(tex_assembler);
+        dto.textureMaps().emplace_back(tex_assembler->assemble());
     }
     dto.renderListID() = m_renderListID;
     dto.visualTechniqueSelection() = m_selectedVisualTech;

@@ -1,6 +1,5 @@
 ﻿#include "RenderablePrimitiveDtos.h"
 #include "Geometries/GeometryData.h"
-#include "GameEngine/EffectTextureMapDto.h"
 #include "GameEngine/GenericDto.h"
 #include "MeshPrimitive.h"
 #include "MeshNode.h"
@@ -93,7 +92,9 @@ MeshPrimitiveMetaDto::MeshPrimitiveMetaDto(const MeshPrimitiveDto& dto)
     }
     for (auto& tex : dto.textureMaps())
     {
-        m_textureMaps.emplace_back(EffectTextureMapDto(tex));
+        EffectTextureMapDisassembler disassembler;
+        disassembler.disassemble(tex);
+        m_textureMaps.emplace_back(disassembler);
     }
 }
 

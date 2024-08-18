@@ -5,11 +5,15 @@
  * \author Lancelot 'Robin' Chen
  * \date   May 2023
  *********************************************************************/
-#ifndef EFFECT_DTO_HELPER_H
-#define EFFECT_DTO_HELPER_H
+#ifndef EFFECT_TEXTURE_MAP_ASSEMBLER_H
+#define EFFECT_TEXTURE_MAP_ASSEMBLER_H
 
-#include "EffectTextureMapDto.h"
 #include "TextureId.h"
+#include "GenericDto.h"
+#include "TextureMappingAssembler.h"
+#include <optional>
+#include <string>
+#include <vector>
 
 namespace Enigma::Engine
 {
@@ -18,13 +22,26 @@ namespace Enigma::Engine
     public:
         EffectTextureMapAssembler();
 
-        EffectTextureMapAssembler& textureMapping(const TextureId& id, std::optional<unsigned> array_index, const std::string& semantic);
+        void addTextureMapping(const TextureId& id, std::optional<unsigned> array_index, const std::string& semantic);
 
-        GenericDto toGenericDto();
+        GenericDto assemble() const;
 
     protected:
-        EffectTextureMapDto m_dto;
+        std::vector<TextureMappingAssembler> m_mappingAssemblers;
+    };
+
+    class EffectTextureMapDisassembler
+    {
+    public:
+        EffectTextureMapDisassembler();
+
+        [[nodiscard]] const std::vector<TextureMappingDisassembler>& textureMappings() const { return m_mappingDisassemblers; }
+
+        void disassemble(const GenericDto& dto);
+
+    protected:
+        std::vector<TextureMappingDisassembler> m_mappingDisassemblers;
     };
 }
 
-#endif // EFFECT_DTO_HELPER_H
+#endif // EFFECT_TEXTURE_MAP_ASSEMBLER_H

@@ -15,7 +15,6 @@
 #include "Frameworks/LazyStatus.h"
 #include "TextureId.h"
 #include "GenericDto.h"
-#include "Frameworks/EventSubscriber.h"
 #include <string>
 
 namespace Enigma::Engine

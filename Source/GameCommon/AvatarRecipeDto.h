@@ -8,7 +8,7 @@
 #ifndef _AVATAR_RECIPE_DTO_H
 #define _AVATAR_RECIPE_DTO_H
 
-#include "GameEngine/EffectTextureMapDto.h"
+#include "GameEngine/EffectTextureMapAssembler.h"
 #include "GameEngine/EffectMaterialId.h"
 #include "Primitives/Primitive.h"
 
@@ -56,14 +56,14 @@ namespace Enigma::GameCommon
 
         Primitives::PrimitiveId& meshId() { return m_meshId; }
         [[nodiscard]] const Primitives::PrimitiveId& meshId() const { return m_meshId; }
-        Engine::TextureMappingDto& textureDto() { return m_textureDto; }
-        [[nodiscard]] const Engine::TextureMappingDto& textureDto() const { return m_textureDto; }
+        Engine::TextureMappingDisassembler& textureDto() { return m_textureDto; }
+        [[nodiscard]] const Engine::TextureMappingDisassembler& textureDto() const { return m_textureDto; }
 
         static AvatarRecipeChangeTextureDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
     private:
         Primitives::PrimitiveId m_meshId;
-        Engine::TextureMappingDto m_textureDto;
+        Engine::TextureMappingDisassembler m_textureDto;
     };
 }
 

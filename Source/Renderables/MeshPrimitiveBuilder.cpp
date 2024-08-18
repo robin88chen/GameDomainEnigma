@@ -15,6 +15,8 @@
 #include "GameEngine/TextureEvents.h"
 #include "GameEngine/TextureQueries.h"
 #include "GameEngine/Texture.h"
+#include "GameEngine/EffectTextureMapAssembler.h"
+#include "GameEngine/TextureMappingAssembler.h"
 #include "GameEngine/FactoryCommands.h"
 #include "Platforms/PlatformLayer.h"
 

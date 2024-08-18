@@ -9,7 +9,7 @@
 #define _AVATAR_RECIPES_H
 
 #include "Frameworks/EventSubscriber.h"
-#include "GameEngine/EffectTextureMapDto.h"
+#include "GameEngine/EffectTextureMapAssembler.h"
 #include "Renderables/MeshPrimitive.h"
 #include "SceneGraph/Pawn.h"
 #include "GameEngine/EffectMaterialId.h"
@@ -76,7 +76,7 @@ namespace Enigma::GameCommon
     {
         DECLARE_EN_RTTI;
     public:
-        ChangeAvatarTexture(const Primitives::PrimitiveId& mesh_id, const Engine::TextureMappingDto& texture_dto);
+        ChangeAvatarTexture(const Primitives::PrimitiveId& mesh_id, const Engine::TextureMappingDisassembler& texture_dto);
         ChangeAvatarTexture(const Engine::GenericDto& o);
         ChangeAvatarTexture(const ChangeAvatarTexture&) = delete;
         ChangeAvatarTexture(ChangeAvatarTexture&&) = delete;
@@ -94,7 +94,7 @@ namespace Enigma::GameCommon
 
     private:
         Primitives::PrimitiveId m_meshId;
-        Engine::TextureMappingDto m_textureDto;
+        Engine::TextureMappingDisassembler m_textureDto;
         Frameworks::EventSubscriberPtr m_onTextureHydrated;
         Frameworks::EventSubscriberPtr m_onHydrateTextureFailed;
         std::weak_ptr<Renderables::MeshPrimitive> m_mesh;

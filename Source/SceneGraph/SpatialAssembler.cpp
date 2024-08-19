@@ -1,4 +1,5 @@
 ﻿#include "SpatialAssembler.h"
+#include "GameEngine/BoundingVolumeAssembler.h"
 
 using namespace Enigma::SceneGraph;
 
@@ -12,8 +13,8 @@ SpatialAssembler::SpatialAssembler(const SpatialId& id)
     m_dto.isTopLevel(false);
     m_dto.localTransform(MathLib::Matrix4::IDENTITY);
     m_dto.worldTransform(MathLib::Matrix4::IDENTITY);
-    m_dto.modelBound(m_modelBound.serializeDto().toGenericDto());
-    m_dto.worldBound(Engine::BoundingVolume::CreateFromTransform(m_modelBound, m_dto.worldTransform()).serializeDto().toGenericDto());
+    assembleModelBound();
+    assembleWorldBound();
     m_dto.graphDepth(0);
     m_dto.cullingMode(static_cast<unsigned>(Spatial::CullingMode::Dynamic));
     m_dto.notifyFlag(static_cast<unsigned>(Spatial::NotifyBit::Notify_All));
@@ -35,15 +36,15 @@ SpatialAssembler& SpatialAssembler::localTransform(const MathLib::Matrix4& local
 SpatialAssembler& SpatialAssembler::worldTransform(const MathLib::Matrix4& world_transform)
 {
     m_dto.worldTransform(world_transform);
-    m_dto.worldBound(Engine::BoundingVolume::CreateFromTransform(m_modelBound, m_dto.worldTransform()).serializeDto().toGenericDto());
+    assembleWorldBound();
     return *this;
 }
 
 SpatialAssembler& SpatialAssembler::modelBound(const Engine::BoundingVolume& model_bound)
 {
     m_modelBound = model_bound;
-    m_dto.modelBound(m_modelBound.serializeDto().toGenericDto());
-    m_dto.worldBound(Engine::BoundingVolume::CreateFromTransform(m_modelBound, m_dto.worldTransform()).serializeDto().toGenericDto());
+    assembleModelBound();
+    assembleWorldBound();
     return *this;
 }
 
@@ -80,4 +81,18 @@ SpatialAssembler& SpatialAssembler::spatialFlags(Spatial::SpatialFlags spatial_f
 Enigma::Engine::GenericDto SpatialAssembler::toGenericDto() const
 {
     return m_dto.toGenericDto();
+}
+
+void SpatialAssembler::assembleModelBound()
+{
+    std::shared_ptr<Engine::BoundingVolumeAssembler> model_assembler = std::make_shared<Engine::BoundingVolumeAssembler>();
+    m_modelBound.assemble(model_assembler);
+    m_dto.modelBound(model_assembler->assemble());
+}
+
+void SpatialAssembler::assembleWorldBound()
+{
+    std::shared_ptr<Engine::BoundingVolumeAssembler> world_assembler = std::make_shared<Engine::BoundingVolumeAssembler>();
+    Engine::BoundingVolume::CreateFromTransform(m_modelBound, m_dto.worldTransform()).assemble(world_assembler);
+    m_dto.worldBound(world_assembler->assemble());
 }

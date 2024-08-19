@@ -15,7 +15,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolume.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolumeDto.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\BoundingVolumeAssembler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoxBV.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DeviceCreatingPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingQueue.h" />
@@ -27,12 +27,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialSourceRepository.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialSourceStoreMapper.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMap.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMapDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineInstallingPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GenericDto.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\FactoryCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DtoDeserializer.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GenericDtoFactories.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DtoEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompiler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingProfile.h" />
@@ -44,7 +41,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineErrors.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\FactoryDesc.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GenericBV.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GenericPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\InstallingPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrBVRay3.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IRenderer.h" />
@@ -65,9 +61,10 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ShaderRepository.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SphereBV.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Texture.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureDto.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureAssembler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureFactory.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureId.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureMappingAssembler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureRepositoryInstallingPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureResourceProcessor.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureImageUpdater.h" />
@@ -82,7 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\BoundingVolume.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\BoundingVolumeDto.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\BoundingVolumeAssembler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\BoxBV.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\DeviceCreatingPolicy.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompilingQueue.cpp" />
@@ -91,10 +88,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialSourceRepository.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialSourceRepositoryInstallingPolicy.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectTextureMap.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectTextureMapDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineInstallingPolicy.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GenericDto.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\GenericDtoFactories.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompiler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompilingProfile.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterial.cpp" />
@@ -116,10 +111,11 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ShaderRepository.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SphereBV.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Texture.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureDto.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureAssembler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureFactory.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureImageUpdater.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureLoader.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureMappingAssembler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureRepository.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureRepositoryInstallingPolicy.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureResourceProcessor.cpp" />

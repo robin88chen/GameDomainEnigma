@@ -3,6 +3,7 @@
 #include "AnimatorFactory.h"
 #include "AnimatorQueries.h"
 #include "AnimatorCommands.h"
+#include "AnimatorAssembler.h"
 #include "Frameworks/QueryDispatcher.h"
 #include "Frameworks/CommandBus.h"
 #include "Platforms/MemoryMacro.h"
@@ -137,7 +138,9 @@ void AnimatorRepository::putAnimator(const AnimatorId& id, const std::shared_ptr
     assert(animator);
     assert(m_storeMapper);
     if (id != id.origin()) return;  // only put origin animator to store
-    error er = m_storeMapper->putAnimator(id.origin(), animator->serializeDto());
+    std::shared_ptr<AnimatorAssembler> assembler = animator->assembler();
+    animator->assemble(assembler);
+    error er = m_storeMapper->putAnimator(id.origin(), assembler->assemble());
     if (er)
     {
         Platforms::Debug::ErrorPrintf("put animator %s failed : %s\n", id.name().c_str(), er.message().c_str());

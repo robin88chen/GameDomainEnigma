@@ -13,9 +13,9 @@ TerrainGeometry::TerrainGeometry(const Geometries::GeometryId& id) : TriangleLis
     m_factoryDesc = Engine::FactoryDesc(TerrainGeometry::TYPE_RTTI.getName());
 }
 
-TerrainGeometry::TerrainGeometry(const Geometries::GeometryId& id, const GenericDto& o) : TriangleList(id, o)
-{
-    TerrainGeometryDto dto = TerrainGeometryDto::fromGenericDto(o);
+//TerrainGeometry::TerrainGeometry(const Geometries::GeometryId& id, const GenericDto& o) : TriangleList(id, o)
+//{
+    /*TerrainGeometryDto dto = TerrainGeometryDto::fromGenericDto(o);
     m_numRows = dto.numRows();
     m_numCols = dto.numCols();
     m_minPosition = dto.minPosition();
@@ -35,14 +35,14 @@ TerrainGeometry::TerrainGeometry(const Geometries::GeometryId& id, const Generic
     {
         dto.convertGeometryVertices();
         GeometryData::deserializeGeometryDto(dto);
-    }
-}
+    }*/
+    //}
 
 TerrainGeometry::~TerrainGeometry()
 {
 }
 
-GenericDto TerrainGeometry::serializeDto() const
+/*GenericDto TerrainGeometry::serializeDto() const
 {
     TerrainGeometryDto dto;
     serializeNonVertexAttributes(dto);
@@ -58,11 +58,11 @@ GenericDto TerrainGeometry::serializeDto() const
         dto.heightMap() = m_heightMap;
     }
     return dto.toGenericDto();
-}
+}*/
 
 void TerrainGeometry::updateHeightMapToVertexMemory()
 {
-    rangedUpdateHeightMapToVertexMemory(0, m_heightMap.size());
+    rangedUpdateHeightMapToVertexMemory(0, static_cast<unsigned>(m_heightMap.size()));
 }
 
 void TerrainGeometry::rangedUpdateHeightMapToVertexMemory(unsigned offset, unsigned count)
@@ -80,7 +80,7 @@ void TerrainGeometry::rangedUpdateHeightMapToVertexMemory(unsigned offset, unsig
 
 void TerrainGeometry::updateVertexNormals()
 {
-    rangedUpdateVertexNormals(0, m_heightMap.size());
+    rangedUpdateVertexNormals(0, static_cast<unsigned>(m_heightMap.size()));
 }
 
 void TerrainGeometry::rangedUpdateVertexNormals(unsigned offset, unsigned count)
@@ -155,7 +155,7 @@ void TerrainGeometry::rangedUpdateVertexNormals(unsigned offset, unsigned count)
 Enigma::MathLib::Dimension<float> TerrainGeometry::getCellDimension() const
 {
     assert(m_numCols > 0 && m_numRows > 0);
-    MathLib::Dimension<float> cell_dimension;
+    MathLib::Dimension<float> cell_dimension{ 1.0f, 1.0f };
     cell_dimension.m_width = (m_maxPosition.x() - m_minPosition.x()) / static_cast<float>(m_numCols);
     cell_dimension.m_height = (m_maxPosition.z() - m_minPosition.z()) / static_cast<float>(m_numRows);
 

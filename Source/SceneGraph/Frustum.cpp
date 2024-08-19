@@ -12,7 +12,7 @@ using namespace Enigma::Frameworks;
 
 DEFINE_RTTI_OF_BASE(SceneGraph, Frustum);
 
-Frustum::Frustum() : m_handCoord(GraphicCoordSys::LeftHand), m_projectionType(ProjectionType::Perspective), m_fov(MathLib::Math::PI / 4.0f), m_nearPlaneZ(0.1f), m_farPlaneZ(100.0f), m_aspectRatio(4.0f / 3.0f), m_nearWidth(40.0f), m_nearHeight(30.0f)
+Frustum::Frustum() : m_handCoord(GraphicCoordSys::LeftHand), m_fov(MathLib::Math::PI / 4.0f), m_nearPlaneZ(0.1f), m_farPlaneZ(100.0f), m_aspectRatio(4.0f / 3.0f), m_nearWidth(40.0f), m_nearHeight(30.0f), m_projectionType(ProjectionType::Perspective)
 {
     constructProjectionTransform();
 }

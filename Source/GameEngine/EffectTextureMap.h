@@ -19,6 +19,8 @@ namespace Enigma::Engine
 
     class Texture;
     class GenericDto;
+    class EffectTextureMapAssembler;
+    class EffectTextureMapDisassembler;
 
     class EffectTextureMap
     {
@@ -27,7 +29,6 @@ namespace Enigma::Engine
         using SegmentEffectTextures = std::vector<EffectSemanticTextureTuple>;
     public:
         EffectTextureMap();
-        EffectTextureMap(const GenericDto& dto);
         EffectTextureMap(const EffectSemanticTextureTuple& tuple);
         EffectTextureMap(const SegmentEffectTextures& textures);
         EffectTextureMap(const EffectTextureMap&) = default;
@@ -36,7 +37,8 @@ namespace Enigma::Engine
         EffectTextureMap& operator=(const EffectTextureMap&) = default;
         EffectTextureMap& operator=(EffectTextureMap&&) = default;
 
-        GenericDto serializeDto() const;
+        void assemble(const std::shared_ptr<EffectTextureMapAssembler>& assembler) const;
+        void disassemble(const std::shared_ptr<EffectTextureMapDisassembler>& disassembler);
 
         error bindSemanticTexture(const EffectSemanticTextureTuple& tuple);
         error changeSemanticTexture(const EffectSemanticTextureTuple& tuple);

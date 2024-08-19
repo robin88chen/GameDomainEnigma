@@ -9,7 +9,7 @@
 #define TEXTURE_RESOURCE_PROCESSOR_H
 
 #include "GenericDto.h"
-#include "TextureDto.h"
+#include "TextureAssembler.h"
 #include "Frameworks/EventSubscriber.h"
 #include "Frameworks/CommandSubscriber.h"
 #include "FileSystem/IFile.h"
@@ -33,7 +33,7 @@ namespace Enigma::Engine
         TextureResourceProcessor();
         ~TextureResourceProcessor();
 
-        std::error_code enqueueHydratingDto(const std::shared_ptr<Texture>& texture, const GenericDto& dto);
+        std::error_code enqueueHydratingDisassembler(const std::shared_ptr<Texture>& texture, const std::shared_ptr<TextureDisassembler>& disassembler);
         std::error_code hydrateNextTextureResource();
 
         std::error_code enqueueSavingTexture(const std::shared_ptr<Texture>& texture, const std::shared_ptr<FileSystem::IFile>& file);
@@ -63,7 +63,7 @@ namespace Enigma::Engine
         TextureLoader* m_loader;
         TextureSaver* m_saver;
         TextureImageUpdater* m_imageUpdater;
-        std::queue<std::pair<std::shared_ptr<Texture>, TextureDto>> m_hydratingQueue;
+        std::queue<std::pair<std::shared_ptr<Texture>, std::shared_ptr<TextureDisassembler>>> m_hydratingQueue;
         std::recursive_mutex m_hydratingQueueLock;
         std::shared_ptr<Texture> m_currentHydratingTexture;
 

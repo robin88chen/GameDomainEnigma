@@ -8,15 +8,18 @@
 #ifndef STANDARD_GEOMETRY_ASSEMBLERS_H
 #define STANDARD_GEOMETRY_ASSEMBLERS_H
 
-#include <string>
 #include "MathLib/Vector2.h"
 #include "MathLib/Vector3.h"
-#include "GeometryDataDto.h"
-#include "GraphicKernel/VertexDescription.h"
+#include "GameEngine/GenericDto.h"
+#include "Geometries/GeometryId.h"
+#include <string>
+#include <memory>
+#include <vector>
 
 namespace Enigma::Geometries
 {
     class GeometryData;
+    class TriangleListAssembler;
 
     class SquareQuadAssembler
     {
@@ -28,14 +31,13 @@ namespace Enigma::Geometries
         SquareQuadAssembler& textureCoord(const MathLib::Vector2& left_bottom, const MathLib::Vector2& right_top);
         SquareQuadAssembler& asAsset(const std::string& name, const std::string& filename, const std::string& path_id);
 
-        Engine::GenericDto toGenericDto();
+        Engine::GenericDto assemble() const;
         std::shared_ptr<GeometryData> constitute();
 
     protected:
         GeometryId m_id;
-        TriangleListDto m_dto;
+        std::shared_ptr<TriangleListAssembler> m_assembler;
         MathLib::Vector3 m_normal;
-        Graphics::VertexFormatCode m_format;
     };
 
     class CubeAssembler
@@ -52,13 +54,12 @@ namespace Enigma::Geometries
         CubeAssembler& facedTextureCoord(const MathLib::Vector3& left_bottom_front, const MathLib::Vector3& right_top_back);
         CubeAssembler& asAsset(const std::string& name, const std::string& filename, const std::string& path_id);
 
-        Engine::GenericDto toGenericDto();
+        Engine::GenericDto assemble() const;
         std::shared_ptr<GeometryData> constitute();
 
     protected:
         GeometryId m_id;
-        TriangleListDto m_dto;
-        Graphics::VertexFormatCode m_format;
+        std::shared_ptr<TriangleListAssembler> m_assembler;
     };
 
     class SphereAssembler
@@ -72,13 +73,12 @@ namespace Enigma::Geometries
         SphereAssembler& boxBound();
         SphereAssembler& asAsset(const std::string& name, const std::string& filename, const std::string& path_id);
 
-        Engine::GenericDto toGenericDto();
+        Engine::GenericDto assemble() const;
         std::shared_ptr<GeometryData> constitute();
 
     protected:
         GeometryId m_id;
-        TriangleListDto m_dto;
-        Graphics::VertexFormatCode m_format;
+        std::shared_ptr<TriangleListAssembler> m_assembler;
         MathLib::Vector3 m_center;
         float m_radius;
         std::vector<MathLib::Vector3> m_normals;  //< pre-calculated normals

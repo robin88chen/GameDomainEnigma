@@ -1,4 +1,5 @@
 ﻿#include "GeometryRepository.h"
+#include "GeometryAssembler.h"
 #include "GeometryDataStoreMapper.h"
 #include "TriangleList.h"
 #include "GeometryDataEvents.h"
@@ -26,7 +27,14 @@ GeometryRepository::GeometryRepository(Frameworks::ServiceManager* srv_manager, 
 
     m_factory->registerGeometryFactory(TriangleList::TYPE_RTTI.getName(),
         [=](auto id) { return std::make_shared<TriangleList>(id); },
-        [=](auto id, auto o) { return std::make_shared<TriangleList>(id, o); });
+        [=](auto id, auto o)
+        {
+            auto geometry = std::make_shared<TriangleList>(id);
+            auto disassembler = geometry->disassembler();
+            disassembler->disassemble(o);
+            geometry->disassemble(disassembler);
+            return geometry;
+        });
 }
 
 GeometryRepository::~GeometryRepository()
@@ -198,7 +206,9 @@ void GeometryRepository::putGeometryData(const GeometryId& id, const std::shared
 {
     assert(data);
     assert(m_storeMapper);
-    error er = m_storeMapper->putGeometry(id, data->serializeDto());
+    std::shared_ptr<GeometryAssembler> assembler = data->assembler();
+    data->assemble(assembler);
+    error er = m_storeMapper->putGeometry(id, assembler->assemble());
     if (er)
     {
         Platforms::Debug::ErrorPrintf("put geometry data %s failed : %s\n", id.name().c_str(), er.message().c_str());

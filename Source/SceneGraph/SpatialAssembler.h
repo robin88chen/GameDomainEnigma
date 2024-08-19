@@ -38,7 +38,11 @@ namespace Enigma::SceneGraph
 
         Engine::GenericDto toGenericDto() const;
 
-    private:
+    protected:
+        void assembleModelBound();
+        void assembleWorldBound();
+
+    protected:
         SpatialId m_id;
         SpatialDto m_dto;
         Engine::BoundingVolume m_modelBound;

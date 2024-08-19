@@ -18,11 +18,11 @@ using namespace Enigma::Frameworks;
 
 DEFINE_RTTI_OF_BASE(WorldMap, QuadTreeRoot);
 
-QuadTreeRoot::QuadTreeRoot(const QuadTreeRootId& id) : m_id(id), m_factoryDesc(QuadTreeRoot::TYPE_RTTI)
+QuadTreeRoot::QuadTreeRoot(const QuadTreeRootId& id) : m_factoryDesc(QuadTreeRoot::TYPE_RTTI), m_id(id)
 {
 }
 
-QuadTreeRoot::QuadTreeRoot(const QuadTreeRootId& id, const Engine::GenericDto& o) : m_id(id), m_factoryDesc(QuadTreeRoot::TYPE_RTTI)
+QuadTreeRoot::QuadTreeRoot(const QuadTreeRootId& id, const Engine::GenericDto& o) : m_factoryDesc(QuadTreeRoot::TYPE_RTTI), m_id(id)
 {
     QuadTreeRootDto dto(o);
     assert(dto.id() == m_id);

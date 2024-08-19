@@ -12,7 +12,7 @@
 #include "GameEngine/Texture.h"
 #include "GraphicKernel/ITexture.h"
 #include "GameEngine/TextureEvents.h"
-#include "GameEngine/TextureDto.h"
+#include "GameEngine/TextureAssembler.h"
 #include "GameEngine/TextureQueries.h"
 #include <cassert>
 
@@ -289,24 +289,22 @@ void RenderTarget::createRenderTargetTexture(const Engine::TextureId& texture_id
 {
     if (m_isPrimary) return;
     if ((!m_backSpecification) && (!m_multiBackSpecification)) return;
-    Engine::TextureDto dto;
+    Engine::TextureAssembler assembler(texture_id);
     if (m_backSpecification.has_value())
     {
-        dto.id(texture_id);
-        dto.dimensionOfCreation(m_backSpecification->dimension());
-        dto.dimension(m_backSpecification->dimension());
-        dto.surfaceCount(1);
-        dto.format(m_backSpecification->format());
+        assembler.dimensionOfCreation(m_backSpecification->dimension());
+        assembler.dimension(m_backSpecification->dimension());
+        assembler.surfaceCount(1);
+        assembler.format(m_backSpecification->format());
     }
     else if (m_multiBackSpecification.has_value())
     {
-        dto.id(texture_id);
-        dto.dimensionOfCreation(m_multiBackSpecification->dimension());
-        dto.dimension(m_multiBackSpecification->dimension());
-        dto.surfaceCount(m_multiBackSpecification->surfaceCount());
-        dto.format(m_multiBackSpecification->formats()[0]);
+        assembler.dimensionOfCreation(m_multiBackSpecification->dimension());
+        assembler.dimension(m_multiBackSpecification->dimension());
+        assembler.surfaceCount(m_multiBackSpecification->surfaceCount());
+        assembler.format(m_multiBackSpecification->formats()[0]);
     }
-    m_renderTargetTexture = std::make_shared<Engine::RequestTextureConstitution>(dto.id(), dto.toGenericDto())->dispatch();
+    m_renderTargetTexture = std::make_shared<Engine::RequestTextureConstitution>(texture_id, assembler.assemble())->dispatch();
 }
 
 void RenderTarget::initViewPortSize()

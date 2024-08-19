@@ -8,7 +8,7 @@
 #ifndef BOUNDING_VOLUME_H
 #define BOUNDING_VOLUME_H
 
-#include "BoundingVolumeDto.h"
+#include "GenericDto.h"
 #include "MathLib/Box3.h"
 #include "MathLib/Matrix4.h"
 #include "MathLib/Sphere3.h"
@@ -19,6 +19,7 @@
 
 namespace Enigma::Engine
 {
+    class BoundingVolumeAssembler;
     class BoundingVolume
     {
     public:
@@ -31,7 +32,7 @@ namespace Enigma::Engine
         };
     public:
         BoundingVolume();
-        BoundingVolume(const BoundingVolumeDto& dto);
+        BoundingVolume(const GenericDto& dto);
         BoundingVolume(const MathLib::Box3& box);
         BoundingVolume(const MathLib::Sphere3& sphere);
         BoundingVolume(const BoundingVolume&);
@@ -41,7 +42,7 @@ namespace Enigma::Engine
         BoundingVolume& operator=(const BoundingVolume&);
         BoundingVolume& operator=(BoundingVolume&&) noexcept;
 
-        BoundingVolumeDto serializeDto() const;
+        void assemble(const std::shared_ptr<BoundingVolumeAssembler>& assembler) const;
 
         MathLib::Vector3 Center() const;
 

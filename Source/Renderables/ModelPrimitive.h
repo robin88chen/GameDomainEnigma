@@ -37,7 +37,11 @@ namespace Enigma::Renderables
         ModelPrimitive& operator=(const ModelPrimitive& prim) = delete;
         ModelPrimitive& operator=(ModelPrimitive&& prim) = delete;
 
-        virtual Engine::GenericDto serializeDto() const override;
+        //todo : implement these functions
+        virtual std::shared_ptr<Primitives::PrimitiveAssembler> assembler() const override;
+        virtual void assemble(const std::shared_ptr<Primitives::PrimitiveAssembler>& assembler) const override;
+        virtual std::shared_ptr<Primitives::PrimitiveDisassembler> disassembler() const override;
+        virtual void disassemble(const std::shared_ptr<Primitives::PrimitiveDisassembler>& disassembler) override; ///< that's double
 
         void registerHandlers();
         void unregisterHandlers();

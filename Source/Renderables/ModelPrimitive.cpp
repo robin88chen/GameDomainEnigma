@@ -49,7 +49,7 @@ ModelPrimitive::~ModelPrimitive()
     m_meshPrimitiveIndexCache.clear();
 }
 
-GenericDto ModelPrimitive::serializeDto() const
+/*GenericDto ModelPrimitive::serializeDto() const
 {
     ModelPrimitiveDto dto;
     dto.id() = m_id.origin();
@@ -57,7 +57,7 @@ GenericDto ModelPrimitive::serializeDto() const
     dto.nodeTree() = m_nodeTree.serializeDto();
     if (!m_animatorId.empty()) dto.animatorId() = m_animatorId.origin();
     return dto.toGenericDto();
-}
+}*/
 
 void ModelPrimitive::registerHandlers()
 {

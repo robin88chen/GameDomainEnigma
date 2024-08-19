@@ -1,4 +1,5 @@
 ﻿#include "SpatialDto.h"
+#include "GameEngine/BoundingVolumeAssembler.h"
 #include "Spatial.h"
 
 using namespace Enigma::SceneGraph;
@@ -22,8 +23,10 @@ SpatialDto::SpatialDto() : m_factoryDesc(Spatial::TYPE_RTTI.getName()), m_isTopL
     m_localTransform = Matrix4::IDENTITY;
     m_worldTransform = Matrix4::IDENTITY;
     BoundingVolume bv{ Box3::UNIT_BOX };
-    m_modelBound = bv.serializeDto().toGenericDto();
-    m_worldBound = bv.serializeDto().toGenericDto();
+    std::shared_ptr<BoundingVolumeAssembler> assembler = std::make_shared<BoundingVolumeAssembler>();
+    bv.assemble(assembler);
+    m_modelBound = assembler->assemble();
+    m_worldBound = assembler->assemble();
 }
 
 SpatialDto::SpatialDto(const Engine::GenericDto& dto) : m_factoryDesc(Spatial::TYPE_RTTI.getName()), m_isTopLevel(false), m_graphDepth(0), m_cullingMode(0), m_spatialFlag(0), m_notifyFlag(0)

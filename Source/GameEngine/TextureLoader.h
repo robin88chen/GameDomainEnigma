@@ -10,7 +10,7 @@
 
 #include "Frameworks/EventSubscriber.h"
 #include "Texture.h"
-#include "TextureDto.h"
+#include "TextureAssembler.h"
 #include <memory>
 
 namespace Enigma::Engine
@@ -49,7 +49,7 @@ namespace Enigma::Engine
         TextureLoader& operator=(TextureLoader&) = delete;
         TextureLoader& operator=(TextureLoader&&) = delete;
 
-        void loadImage(const std::shared_ptr<Texture>& texture, const TextureDto& dto);
+        void loadImage(const std::shared_ptr<Texture>& texture, const std::shared_ptr<TextureDisassembler>& disassembler);
 
     private:
         void onDeviceTextureCreated(const Enigma::Frameworks::IEventPtr& e);
@@ -63,7 +63,7 @@ namespace Enigma::Engine
 
         void failLoadingImage(std::error_code er);
     private:
-        TextureDto m_textureDto;
+        std::shared_ptr<TextureDisassembler> m_disassembler;
         std::shared_ptr<Texture> m_contentingTexture;
 
         Enigma::Frameworks::EventSubscriberPtr m_onTextureCreated;

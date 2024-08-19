@@ -1,5 +1,6 @@
 ﻿#include "AvatarRecipeDto.h"
 #include "AvatarRecipes.h"
+#include "GameEngine/TextureMappingAssembler.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::Engine;
@@ -44,7 +45,12 @@ AvatarRecipeChangeTextureDto AvatarRecipeChangeTextureDto::fromGenericDto(const 
 {
     AvatarRecipeChangeTextureDto recipe;
     if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_MESH_ID)) recipe.meshId() = v.value();
-    if (auto v = dto.tryGetValue<GenericDto>(TOKEN_TEXTURE_MAPPING_DTO)) recipe.textureDto() = TextureMappingDto(v.value());
+    if (auto v = dto.tryGetValue<GenericDto>(TOKEN_TEXTURE_MAPPING_DTO))
+    {
+        TextureMappingDisassembler disassembler;
+        disassembler.disassemble(v.value());
+        recipe.textureDto() = disassembler;
+    }
     return recipe;
 }
 
@@ -53,6 +59,6 @@ GenericDto AvatarRecipeChangeTextureDto::toGenericDto() const
     GenericDto dto;
     dto.addRtti(m_factoryDesc);
     dto.addOrUpdate(TOKEN_MESH_ID, m_meshId.tokens());
-    dto.addOrUpdate(TOKEN_TEXTURE_MAPPING_DTO, m_textureDto.toGenericDto());
+    //dto.addOrUpdate(TOKEN_TEXTURE_MAPPING_DTO, m_textureDto.disassemble());
     return dto;
 }

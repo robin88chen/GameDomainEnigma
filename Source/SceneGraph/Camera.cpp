@@ -20,7 +20,7 @@ using namespace Enigma::Frameworks;
 
 DEFINE_RTTI_OF_BASE(SceneGraph, Camera);
 
-Camera::Camera(const SpatialId& id, GraphicCoordSys hand) : m_factoryDesc(TYPE_RTTI.getName()), m_id(id)
+Camera::Camera(const SpatialId& id, GraphicCoordSys hand) : m_id(id), m_factoryDesc(TYPE_RTTI.getName())
 {
     m_handSys = hand;
     m_cullingFrustum = Frustum::fromPerspective(hand, Math::PI / 4.0f, 4.0f / 3.0f, 0.1f, 100.0f);
@@ -30,7 +30,7 @@ Camera::Camera(const SpatialId& id, GraphicCoordSys hand) : m_factoryDesc(TYPE_R
     m_vecRight = Vector3::UNIT_X;
 }
 
-Camera::Camera(const SpatialId& id, const GenericDto& dto) : m_factoryDesc(dto.getRtti()), m_id(id)
+Camera::Camera(const SpatialId& id, const GenericDto& dto) : m_id(id), m_factoryDesc(dto.getRtti())
 {
     CameraDto camera_dto = CameraDto::fromGenericDto(dto);
     m_handSys = camera_dto.HandSystem();

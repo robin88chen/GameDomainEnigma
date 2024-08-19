@@ -26,6 +26,7 @@
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrPrimitiveRay3.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Primitive.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveAssembler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveErrors.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveEvents.h" />

@@ -35,7 +35,7 @@ VertexDeclarationDx11::~VertexDeclarationDx11()
 bool VertexDeclarationDx11::IsMatched(const std::string& data_vertex_format, const Graphics::IVertexShaderPtr& vtx_shader)
 {
     Graphics::VertexFormatCode data_vertex_code;
-    data_vertex_code.FromString(data_vertex_format);
+    data_vertex_code.fromString(data_vertex_format);
     if (data_vertex_code != m_dataVertexFormatCode) return false;
     VertexShaderDx11* shader_dx11 = dynamic_cast<VertexShaderDx11*>(vtx_shader.get());
     assert(shader_dx11);

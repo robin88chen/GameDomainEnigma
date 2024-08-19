@@ -44,6 +44,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderTextureUsage.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TargetViewPort.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\VertexDescription.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\VertexFormatCode.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicAssetStash.cpp" />
@@ -70,5 +71,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IVertexShader.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TargetViewPort.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\VertexDescription.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\VertexFormatCode.cpp" />
   </ItemGroup>
 </Project>

@@ -8,6 +8,7 @@
 #include "SceneGraph/SceneGraphCommands.h"
 #include "Renderables/RenderablePrimitiveBuilder.h"
 #include "SceneGraph/SceneGraphRepository.h"
+#include "Geometries/GeometryAssembler.h"
 #include "TerrainPrimitive.h"
 #include <cassert>
 
@@ -23,7 +24,14 @@ error TerrainInstallingPolicy::install(Frameworks::ServiceManager* service_manag
     assert(geometry_repository);
     geometry_repository->registerGeometryFactory(TerrainGeometry::TYPE_RTTI.getName(),
         [](auto id) { return std::make_shared<TerrainGeometry>(id); },
-        [](auto id, auto dto) { return std::make_shared<TerrainGeometry>(id, dto); });
+        [](auto id, auto dto)
+        {
+            auto geometry = std::make_shared<TerrainGeometry>(id);
+            auto disassembler = geometry->disassembler();
+            disassembler->disassemble(dto);
+            geometry->disassemble(disassembler);
+            return geometry;
+        });
     auto renderable_builder = service_manager->getSystemServiceAs<RenderablePrimitiveBuilder>();
     assert(renderable_builder);
     renderable_builder->registerCustomMeshFactory(TerrainPrimitive::TYPE_RTTI.getName(), TerrainPrimitive::create, TerrainPrimitive::constitute);

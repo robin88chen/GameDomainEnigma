@@ -1,5 +1,4 @@
 ﻿#include "EngineInstallingPolicy.h"
-#include "GenericDtoFactories.h"
 #include "ShaderRepository.h"
 #include "TextureRepository.h"
 #include "RenderBufferRepository.h"
@@ -12,7 +11,6 @@ using namespace Enigma::Engine;
 error EngineInstallingPolicy::install(Frameworks::ServiceManager* service_manager)
 {
     assert(service_manager);
-    service_manager->registerSystemService(std::make_shared<GenericDtoFactories>(service_manager));
     service_manager->registerSystemService(std::make_shared<ShaderRepository>(service_manager));
     //service_manager->registerSystemService(std::make_shared<TextureRepository>(service_manager));
     service_manager->registerSystemService(std::make_shared<RenderBufferRepository>(service_manager));
@@ -27,6 +25,5 @@ error EngineInstallingPolicy::shutdown(Frameworks::ServiceManager* service_manag
     service_manager->shutdownSystemService(RenderBufferRepository::TYPE_RTTI);
     //service_manager->shutdownSystemService(TextureRepository::TYPE_RTTI);
     service_manager->shutdownSystemService(ShaderRepository::TYPE_RTTI);
-    service_manager->shutdownSystemService(GenericDtoFactories::TYPE_RTTI);
     return ErrorCode::ok;
 }

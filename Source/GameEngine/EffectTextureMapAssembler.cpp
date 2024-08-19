@@ -3,21 +3,46 @@
 
 using namespace Enigma::Engine;
 
+static std::string TOKEN_TEXTURE_MAPPINGS = "TextureMappings";
+
 EffectTextureMapAssembler::EffectTextureMapAssembler()
 {
 }
 
-EffectTextureMapAssembler& EffectTextureMapAssembler::textureMapping(const TextureId& id, std::optional<unsigned> array_index, const std::string& semantic)
+void EffectTextureMapAssembler::addTextureMapping(const TextureId& id, std::optional<unsigned int> array_index, const std::string& semantic)
 {
-    TextureMappingDto tex;
-    tex.textureId(id);
-    tex.semantic(semantic);
-    if (array_index) tex.arrayIndex(array_index.value());
-    m_dto.addTextureMapping(tex);
-    return *this;
+    TextureMappingAssembler assembler;
+    assembler.textureId(id);
+    if (array_index) assembler.arrayIndex(array_index.value());
+    assembler.semantic(semantic);
+    m_mappingAssemblers.emplace_back(assembler);
 }
 
-GenericDto EffectTextureMapAssembler::toGenericDto()
+GenericDto EffectTextureMapAssembler::assemble() const
 {
-    return m_dto.toGenericDto();
+    GenericDtoCollection mappings;
+    for (auto& tex : m_mappingAssemblers)
+    {
+        mappings.emplace_back(tex.assemble());
+    }
+    GenericDto dto;
+    dto.addOrUpdate(TOKEN_TEXTURE_MAPPINGS, mappings);
+    return dto;
+}
+
+EffectTextureMapDisassembler::EffectTextureMapDisassembler()
+{
+}
+
+void EffectTextureMapDisassembler::disassemble(const GenericDto& dto)
+{
+    if (const auto v = dto.tryGetValue<GenericDtoCollection>(TOKEN_TEXTURE_MAPPINGS))
+    {
+        for (auto& mapping_dto : v.value())
+        {
+            TextureMappingDisassembler disassembler;
+            disassembler.disassemble(mapping_dto);
+            m_mappingDisassemblers.emplace_back(disassembler);
+        }
+    }
 }

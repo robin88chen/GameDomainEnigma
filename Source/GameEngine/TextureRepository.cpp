@@ -1,6 +1,7 @@
 ﻿#include "TextureRepository.h"
 #include "TextureFactory.h"
 #include "TextureStoreMapper.h"
+#include "TextureAssembler.h"
 #include "Platforms/MemoryMacro.h"
 #include "TextureCommands.h"
 #include "TextureEvents.h"
@@ -120,7 +121,9 @@ void TextureRepository::putTexture(const TextureId& id, const std::shared_ptr<Te
     assert(m_storeMapper);
     assert(texture);
     std::lock_guard locker{ m_textureMapLock };
-    error er = m_storeMapper->putTexture(id, texture->serializeDto());
+    std::shared_ptr<TextureAssembler> assembler = std::make_shared<TextureAssembler>(id);
+    texture->assemble(assembler);
+    error er = m_storeMapper->putTexture(id, assembler->assemble());
     if (er)
     {
         Platforms::Debug::ErrorPrintf("put texture %s failed : %s\n", id.name().c_str(), er.message().c_str());

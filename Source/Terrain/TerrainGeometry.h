@@ -18,14 +18,18 @@ namespace Enigma::Terrain
         DECLARE_EN_RTTI;
     public:
         TerrainGeometry(const Geometries::GeometryId& id);
-        TerrainGeometry(const Geometries::GeometryId& id, const Engine::GenericDto& o);
+        //TerrainGeometry(const Geometries::GeometryId& id, const Engine::GenericDto& o);
         virtual ~TerrainGeometry() override;
         TerrainGeometry(const TerrainGeometry&) = delete;
         TerrainGeometry& operator=(const TerrainGeometry&) = delete;
         TerrainGeometry(TerrainGeometry&&) = delete;
         TerrainGeometry& operator=(TerrainGeometry&&) = delete;
 
-        virtual Engine::GenericDto serializeDto() const override;
+        //todo : implement later
+        virtual std::shared_ptr<Geometries::GeometryAssembler> assembler() const override;
+        virtual void assemble(const std::shared_ptr<Geometries::GeometryAssembler>& assembler) const override;
+        virtual std::shared_ptr<Geometries::GeometryDisassembler> disassembler() override;
+        virtual void disassemble(const std::shared_ptr<Geometries::GeometryDisassembler>& disassembler) override;
 
         void updateHeightMapToVertexMemory();
         void rangedUpdateHeightMapToVertexMemory(unsigned offset, unsigned count);

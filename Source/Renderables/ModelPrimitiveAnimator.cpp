@@ -78,7 +78,7 @@ std::shared_ptr<Animator> ModelPrimitiveAnimator::constitute(const Animators::An
     return std::make_shared<ModelPrimitiveAnimator>(id, dto);
 }
 
-GenericDto ModelPrimitiveAnimator::serializeDto() const
+/*GenericDto ModelPrimitiveAnimator::serializeDto() const
 {
     ModelAnimatorDto dto;
     dto.id() = id();
@@ -91,7 +91,7 @@ GenericDto ModelPrimitiveAnimator::serializeDto() const
         dto.skinOperators().emplace_back(op.serializeDto());
     }
     return dto.toGenericDto();
-}
+}*/
 
 Animator::HasUpdated ModelPrimitiveAnimator::update(const std::unique_ptr<Timer>& timer)
 {

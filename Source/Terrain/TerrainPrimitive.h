@@ -26,7 +26,11 @@ namespace Enigma::Terrain
 
         static std::shared_ptr<Primitives::Primitive> create(const Primitives::PrimitiveId& id);
         static std::shared_ptr<Primitives::Primitive> constitute(const Primitives::PrimitiveId& id, const Engine::GenericDto& dto, const std::shared_ptr<Geometries::GeometryRepository>& geometry_repository);
-        virtual Engine::GenericDto serializeDto() const override;
+        //todo : implement these functions
+        virtual std::shared_ptr<Primitives::PrimitiveAssembler> assembler() const override;
+        virtual void assemble(const std::shared_ptr<Primitives::PrimitiveAssembler>& assembler) const override;
+        virtual std::shared_ptr<Primitives::PrimitiveDisassembler> disassembler() const override;
+        virtual void disassemble(const std::shared_ptr<Primitives::PrimitiveDisassembler>& disassembler) override; ///< that's double dispatch
     };
 }
 

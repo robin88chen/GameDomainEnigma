@@ -11,6 +11,7 @@
 #include <string>
 #include <memory>
 #include "VertexDescription.h"
+#include "VertexFormatCode.h"
 
 namespace Enigma::Graphics
 {

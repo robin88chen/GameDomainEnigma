@@ -19,22 +19,22 @@
     <Filter Include="Queries">
       <UniqueIdentifier>{eb1ff330-0b2d-4125-a74f-e6a654336be7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Dtos">
-      <UniqueIdentifier>{99479165-5079-4cdb-b68a-c5db9b00391a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="FrameListener">
       <UniqueIdentifier>{69eaf2ea-cd4b-4fd9-8b70-68532eff46f0}</UniqueIdentifier>
     </Filter>
     <Filter Include="Installing">
       <UniqueIdentifier>{1d18e4db-ad2f-4d5d-8ddf-4e37810961a1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Assemblers">
+      <UniqueIdentifier>{99479165-5079-4cdb-b68a-c5db9b00391a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAsset.cpp">
       <Filter>Animation Assets</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetDtos.cpp">
-      <Filter>Dtos</Filter>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetAssembler.cpp">
+      <Filter>Assemblers</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetFactory.cpp">
       <Filter>Animation Assets</Filter>
@@ -71,8 +71,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetCommands.h">
       <Filter>Commands</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetDtos.h">
-      <Filter>Dtos</Filter>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetAssembler.h">
+      <Filter>Assemblers</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAssetEvents.h">
       <Filter>Events</Filter>
@@ -127,6 +127,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorFactoryDelegate.h">
       <Filter>Animation Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatorAssembler.h">
+      <Filter>Assemblers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -8,13 +8,13 @@
 #ifndef TERRAIN_GEOMETRY_DTO_H
 #define TERRAIN_GEOMETRY_DTO_H
 
-#include "Geometries/GeometryDataDto.h"
 #include "Frameworks/ExtentTypesDefine.h"
 #include "GameEngine/BoundingVolume.h"
 
 namespace Enigma::Terrain
 {
-    class TerrainGeometryDto : public Geometries::TriangleListDto
+    //todo : refactor to TerrainGeometryAssembler
+    /*class TerrainGeometryDto : public Geometries::TriangleListDto
     {
     public:
         TerrainGeometryDto();
@@ -54,7 +54,7 @@ namespace Enigma::Terrain
         MathLib::Vector2 m_minTextureCoordinate;
         MathLib::Vector2 m_maxTextureCoordinate;
         std::optional<float_buffer> m_heightMap;
-    };
+    };*/
 }
 
 #endif // TERRAIN_GEOMETRY_DTO_H

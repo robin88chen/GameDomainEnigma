@@ -138,6 +138,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DepthStencilSurfaceSpecification.h">
       <Filter>Depth Surface</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\VertexFormatCode.h">
+      <Filter>Shaders\Vertex Declaration</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GraphicErrors.cpp">
@@ -210,6 +213,9 @@
       <Filter>Device States</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\VertexDescription.cpp">
+      <Filter>Shaders\Vertex Declaration</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\VertexFormatCode.cpp">
       <Filter>Shaders\Vertex Declaration</Filter>
     </ClCompile>
   </ItemGroup>

@@ -11,6 +11,7 @@
 #include "RenderablePrimitiveDtos.h"
 #include "Geometries/GeometryDataQueries.h"
 #include "RenderableErrors.h"
+#include "Geometries/GeometryAssembler.h"
 #include <cassert>
 
 using namespace Enigma::Renderables;
@@ -59,7 +60,11 @@ MeshPrimitive::MeshPrimitive(const Primitives::PrimitiveId& id, const Engine::Ge
     m_textures.clear();
     for (auto& tex_map_dto : mesh_dto.textureMaps())
     {
-        m_textures.emplace_back(tex_map_dto);
+        EffectTextureMap tex_map;
+        std::shared_ptr<EffectTextureMapDisassembler> disassembler = std::make_shared<EffectTextureMapDisassembler>();
+        disassembler->disassemble(tex_map_dto);
+        tex_map.disassemble(disassembler);
+        m_textures.emplace_back(tex_map);
     }
 }
 
@@ -71,10 +76,10 @@ MeshPrimitive::~MeshPrimitive()
     m_textures.clear();
 }
 
-GenericDto MeshPrimitive::serializeDto() const
+/*GenericDto MeshPrimitive::serializeDto() const
 {
     return serializeMeshDto().toGenericDto();
-}
+}*/
 
 MeshPrimitiveDto MeshPrimitive::serializeMeshDto() const
 {
@@ -87,7 +92,9 @@ MeshPrimitiveDto MeshPrimitive::serializeMeshDto() const
         if ((m_geometry->factoryDesc().GetInstanceType() == FactoryDesc::InstanceType::Native)
             || (m_geometry->factoryDesc().GetInstanceType() == FactoryDesc::InstanceType::ResourceAsset))
         {
-            dto.geometry() = m_geometry->serializeDto();
+            std::shared_ptr<Geometries::GeometryAssembler> assembler = m_geometry->assembler();
+            m_geometry->assemble(assembler);
+            dto.geometry() = assembler->assemble();
         }
     }
     for (auto& eff : m_effects)
@@ -97,7 +104,9 @@ MeshPrimitiveDto MeshPrimitive::serializeMeshDto() const
     for (auto& tex : m_textures)
     {
         if (!tex.isAllResourceTexture()) continue;
-        dto.textureMaps().emplace_back(tex.serializeDto());
+        std::shared_ptr<EffectTextureMapAssembler> tex_assembler = std::make_shared<EffectTextureMapAssembler>();
+        tex.assemble(tex_assembler);
+        dto.textureMaps().emplace_back(tex_assembler->assemble());
     }
     dto.renderListID() = m_renderListID;
     dto.visualTechniqueSelection() = m_selectedVisualTech;
@@ -398,7 +407,7 @@ std::shared_ptr<Texture> MeshPrimitive::findTextureBySemantic(const std::string&
     {
         auto tex_tuple = eff_tex.findSemanticTexture(semantic);
         if (!tex_tuple) continue;
-        if (auto tex = std::get<std::shared_ptr<Texture>>(tex_tuple.value()))
+        if (const auto& tex = std::get<std::shared_ptr<Texture>>(tex_tuple.value()))
         {
             return tex;
         }

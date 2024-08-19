@@ -3,6 +3,7 @@
 #include "GraphicKernel/VertexDescription.h"
 #include "GeometryErrors.h"
 #include "MathLib/MathAlgorithm.h"
+#include "TriangleListAssembler.h"
 
 using namespace Enigma::Geometries;
 using namespace Enigma::Engine;
@@ -17,19 +18,18 @@ TriangleList::TriangleList(const GeometryId& id) : GeometryData(id)
     m_topology = Graphics::PrimitiveTopology::Topology_TriangleList;
 }
 
-TriangleList::TriangleList(const GeometryId& id, const GenericDto& o) : GeometryData(id, o)
-{
-    m_topology = Graphics::PrimitiveTopology::Topology_TriangleList;
-}
-
 TriangleList::~TriangleList()
 {
 }
 
-GenericDto TriangleList::serializeDto() const
+std::shared_ptr<GeometryAssembler> TriangleList::assembler() const
 {
-    TriangleListDto dto(serializeGeometryDto());
-    return dto.toGenericDto();
+    return std::make_shared<TriangleListAssembler>(m_id);
+}
+
+std::shared_ptr<GeometryDisassembler> TriangleList::disassembler()
+{
+    return std::make_shared<TriangleListDisassembler>();
 }
 
 unsigned TriangleList::getTriangleCount()

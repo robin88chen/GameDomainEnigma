@@ -24,6 +24,8 @@
 namespace Enigma::Primitives
 {
     using error = std::error_code;
+    class PrimitiveAssembler;
+    class PrimitiveDisassembler;
 
     class Primitive : public std::enable_shared_from_this<Primitive>
     {
@@ -51,7 +53,10 @@ namespace Enigma::Primitives
 
         const PrimitiveId& id() const { return m_id; }
 
-        virtual Engine::GenericDto serializeDto() const = 0;
+        virtual std::shared_ptr<PrimitiveAssembler> assembler() const = 0;
+        virtual void assemble(const std::shared_ptr<PrimitiveAssembler>& assembler) const = 0; ///< that's double dispatch
+        virtual std::shared_ptr<PrimitiveDisassembler> disassembler() const = 0;
+        virtual void disassemble(const std::shared_ptr<PrimitiveDisassembler>& disassembler) = 0; ///< that's double dispatch
 
         const Frameworks::LazyStatus& lazyStatus() const { return m_lazyStatus; }
         Frameworks::LazyStatus& lazyStatus() { return m_lazyStatus; }

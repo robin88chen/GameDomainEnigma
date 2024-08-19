@@ -1,6 +1,6 @@
 ﻿#include "EffectTextureMap.h"
 #include "EngineErrors.h"
-#include "EffectTextureMapDto.h"
+#include "EffectTextureMapAssembler.h"
 #include "Texture.h"
 #include <tuple>
 #include <string>
@@ -12,18 +12,6 @@ using namespace Enigma::Engine;
 EffectTextureMap::EffectTextureMap()
 {
 
-}
-
-EffectTextureMap::EffectTextureMap(const GenericDto& dto)
-{
-    EffectTextureMapDto effectTextureMapDto = EffectTextureMapDto(dto);
-    for (auto& mapping : effectTextureMapDto.textureMappings())
-    {
-        if (auto tex = Texture::queryTexture(mapping.textureId()); tex)
-        {
-            m_effectTextures.emplace_back(std::make_tuple(mapping.semantic(), tex, mapping.arrayIndex()));
-        }
-    }
 }
 
 EffectTextureMap::EffectTextureMap(const EffectSemanticTextureTuple& tuple)
@@ -41,22 +29,29 @@ EffectTextureMap::~EffectTextureMap()
     m_effectTextures.clear();
 }
 
-GenericDto EffectTextureMap::serializeDto() const
+void EffectTextureMap::assemble(const std::shared_ptr<EffectTextureMapAssembler>& assembler) const
 {
-    EffectTextureMapDto dto;
+    assert(assembler);
     for (auto& tex : m_effectTextures)
     {
         if (auto& t = std::get<std::shared_ptr<Texture>>(tex))
         {
             if (t->factoryDesc().GetResourceName().empty()) continue; // skip null texture (not resource texture)
-            TextureMappingDto mapping;
-            mapping.textureId(t->id());
-            mapping.semantic(std::get<std::string>(tex));
-            if (auto& v = std::get<std::optional<unsigned>>(tex)) mapping.arrayIndex(v.value());
-            dto.addTextureMapping(mapping);
+            assembler->addTextureMapping(std::get<std::shared_ptr<Texture>>(tex)->id(), std::get<std::optional<unsigned>>(tex), std::get<std::string>(tex));
         }
     }
-    return dto.toGenericDto();
+}
+
+void EffectTextureMap::disassemble(const std::shared_ptr<EffectTextureMapDisassembler>& disassembler)
+{
+    assert(disassembler);
+    for (auto& mapping : disassembler->textureMappings())
+    {
+        if (auto tex = Texture::queryTexture(mapping.textureId()); tex)
+        {
+            m_effectTextures.emplace_back(std::make_tuple(mapping.semantic(), tex, mapping.arrayIndex()));
+        }
+    }
 }
 
 error EffectTextureMap::bindSemanticTexture(const EffectSemanticTextureTuple& tuple)

@@ -251,10 +251,7 @@ Enigma::Engine::BoundingVolume SceneGraphRepository::queryModelBound(const Spati
     auto dto = m_storeMapper->querySpatial(id);
     assert(dto.has_value());
     SpatialDto spatial_dto = SpatialDto(dto.value());
-    BoundingVolumeDto bv_dto = BoundingVolumeDto::fromGenericDto(spatial_dto.modelBound());
-    if (bv_dto.box()) return BoundingVolume{ bv_dto.box().value() };
-    if (bv_dto.sphere()) return BoundingVolume{ bv_dto.sphere().value() };
-    return BoundingVolume{};
+    return BoundingVolume{ spatial_dto.modelBound() };
 }
 
 std::shared_ptr<Spatial> SceneGraphRepository::queryRunningSpatial(const SpatialId& id)

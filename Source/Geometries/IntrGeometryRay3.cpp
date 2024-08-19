@@ -11,7 +11,7 @@ using namespace Enigma::Engine;
 using namespace Enigma::MathLib;
 
 IntrGeometryRay3::IntrGeometryRay3(const GeometryDataPtr& geo, const Ray3& ray) :
-    Intersector(), m_geometry(geo), m_ray(ray)
+    Intersector(), m_ray(ray), m_geometry(geo)
 {
     m_intersectionType = IntersectionType::POINT;
 }

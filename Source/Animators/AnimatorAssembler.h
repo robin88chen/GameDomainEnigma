@@ -38,7 +38,12 @@ namespace Enigma::Animators
         AnimatorDisassembler& operator=(const AnimatorDisassembler&) = default;
         AnimatorDisassembler& operator=(AnimatorDisassembler&&) = default;
 
+        [[nodiscard]] const AnimatorId& id() const { return m_id; }
+
         virtual void disassemble(const Engine::GenericDto& dto) = 0;
+
+    protected:
+        AnimatorId m_id;
     };
 }
 

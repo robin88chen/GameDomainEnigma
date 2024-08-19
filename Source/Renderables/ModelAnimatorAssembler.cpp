@@ -1,52 +1,75 @@
 ﻿#include "ModelAnimatorAssembler.h"
 #include "ModelPrimitiveAnimator.h"
+#include "SkinOperatorAssembler.h"
 #include "Animators/AnimatorQueries.h"
+#include "GameEngine/GenericDto.h"
 
 using namespace Enigma::Renderables;
 using namespace Enigma::Animators;
 
-ModelAnimatorAssembler::ModelAnimatorAssembler(const Animators::AnimatorId& id)
+static std::string TOKEN_ID = "Id";
+static std::string TOKEN_CONTROLLED_PRIMITIVE_ID = "ControlledPrimitiveId";
+static std::string TOKEN_ASSET_ID = "AssetId";
+static std::string TOKEN_SKIN_OPERATORS = "SkinOperators";
+
+ModelAnimatorAssembler::ModelAnimatorAssembler(const Animators::AnimatorId& id) : AnimatorAssembler(id), m_factoryDesc(ModelPrimitiveAnimator::TYPE_RTTI)
 {
-    m_id = id;
-    m_dto.id() = id;
 }
 
-ModelAnimatorAssembler& ModelAnimatorAssembler::controlledPrimitive(const Primitives::PrimitiveId& id)
+void ModelAnimatorAssembler::addSkinOperator(const SkinAnimationOperator& skin_operator)
 {
-    m_dto.controlledPrimitiveId() = id;
-    return *this;
+    m_skinOperators.emplace_back(skin_operator);
 }
 
-ModelAnimatorAssembler& ModelAnimatorAssembler::animationAsset(const Animators::AnimationAssetId& id)
+void ModelAnimatorAssembler::asNative(const std::string& file_at_path)
 {
-    m_dto.animationAssetId() = id;
-    return *this;
+    m_factoryDesc.ClaimAsNative(file_at_path);
 }
 
-ModelAnimatorAssembler& ModelAnimatorAssembler::skinOperator(const SkinOperatorAssembler& skin_operator)
+Enigma::Engine::GenericDto ModelAnimatorAssembler::assemble() const
 {
-    SkinOperatorAssembler assembler = skin_operator;
-    m_dto.skinOperators().emplace_back(assembler.toGenericDto());
-    return *this;
+    Engine::GenericDto dto;
+    dto.addOrUpdate(TOKEN_ID, m_id.tokens());
+    dto.addRtti(m_factoryDesc);
+    if (m_controlledPrimitiveId) dto.addOrUpdate(TOKEN_CONTROLLED_PRIMITIVE_ID, m_controlledPrimitiveId.value().tokens());
+    if (m_animationAssetId) dto.addOrUpdate(TOKEN_ASSET_ID, m_animationAssetId.value().name());
+    if (!m_skinOperators.empty())
+    {
+        Engine::GenericDtoCollection skin_operators;
+        for (const auto& skin_operator : m_skinOperators)
+        {
+            std::shared_ptr<SkinOperatorAssembler> skin_operator_assembler = std::make_shared<SkinOperatorAssembler>();
+            skin_operator.assemble(skin_operator_assembler);
+            skin_operators.emplace_back(skin_operator_assembler->assemble());
+        }
+        dto.addOrUpdate(TOKEN_SKIN_OPERATORS, skin_operators);
+    }
+    return dto;
 }
 
-ModelAnimatorAssembler& ModelAnimatorAssembler::asNative(const std::string& file_at_path)
+ModelAnimatorDisassembler::ModelAnimatorDisassembler() : m_factoryDesc(ModelPrimitiveAnimator::TYPE_RTTI)
 {
-    m_dto.factoryDesc().ClaimAsNative(file_at_path);
-    return *this;
 }
 
-Enigma::Engine::GenericDto ModelAnimatorAssembler::toGenericDto()
+void ModelAnimatorDisassembler::disassemble(const Engine::GenericDto& dto)
 {
-    return m_dto.toGenericDto();
+    m_factoryDesc = dto.getRtti();
+    if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_ID)) m_id = v.value();
+    if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_CONTROLLED_PRIMITIVE_ID)) m_controlledPrimitiveId = v.value();
+    if (auto v = dto.tryGetValue<std::string>(TOKEN_ASSET_ID)) m_animationAssetId = v.value();
+    if (auto v = dto.tryGetValue<Engine::GenericDtoCollection>(TOKEN_SKIN_OPERATORS))
+    {
+        for (const auto& skin_operator_dto : v.value())
+        {
+            std::shared_ptr<SkinOperatorDisassembler> skin_operator_disassembler = std::make_shared<SkinOperatorDisassembler>(skin_operator_dto);
+            SkinAnimationOperator skin_operator;
+            skin_operator.disassemble(skin_operator_disassembler);
+            m_skinOperators.emplace_back(skin_operator);
+        }
+    }
 }
 
-std::shared_ptr<ModelPrimitiveAnimator> ModelAnimatorAssembler::constitute()
-{
-    return std::dynamic_pointer_cast<ModelPrimitiveAnimator>(std::make_shared<RequestAnimatorConstitution>(m_id, toGenericDto())->dispatch());
-}
-
-SkinOperatorAssembler::SkinOperatorAssembler()
+/*SkinOperatorAssembler::SkinOperatorAssembler()
 {
 }
 
@@ -99,5 +122,5 @@ Enigma::Engine::GenericDto SkinOperatorAssembler::toGenericDto()
         m_dto.nodeOffsets() = m_t_posOffsets;
     }
     return m_dto.toGenericDto();
-}
+}*/
 

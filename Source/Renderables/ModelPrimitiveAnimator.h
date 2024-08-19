@@ -28,17 +28,12 @@ namespace Enigma::Renderables
         DECLARE_EN_RTTI
     public:
         ModelPrimitiveAnimator(const Animators::AnimatorId& id);
-        ModelPrimitiveAnimator(const Animators::AnimatorId& id, const Engine::GenericDto& dto);
         ModelPrimitiveAnimator(const ModelPrimitiveAnimator& ani) = delete;
         ModelPrimitiveAnimator(ModelPrimitiveAnimator&& ani) = delete;
         ~ModelPrimitiveAnimator() override;
         ModelPrimitiveAnimator& operator=(const ModelPrimitiveAnimator& ani) = delete;
         ModelPrimitiveAnimator& operator=(ModelPrimitiveAnimator&& ani) = delete;
 
-        static std::shared_ptr<Animator> create(const Animators::AnimatorId& id);
-        static std::shared_ptr<Animator> constitute(const Animators::AnimatorId& id, const Engine::GenericDto& dto);
-
-        //todo : implement these functions
         virtual std::shared_ptr<Animators::AnimatorAssembler> assembler() const override;
         virtual void assemble(const std::shared_ptr<Animators::AnimatorAssembler>& assembler) const override;
         virtual std::shared_ptr<Animators::AnimatorDisassembler> disassembler() const override;

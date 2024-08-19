@@ -10,34 +10,51 @@
 
 #include "Animators/AnimatorId.h"
 #include "Animators/AnimationAssetId.h"
-#include "ModelAnimatorDtos.h"
+#include "Animators/AnimatorAssembler.h"
 #include "Primitives/PrimitiveId.h"
+#include "SkinAnimationOperator.h"
 
 namespace Enigma::Renderables
 {
-    class SkinOperatorAssembler;
-    class ModelPrimitiveAnimator;
-
-    class ModelAnimatorAssembler
+    class ModelAnimatorAssembler : public Animators::AnimatorAssembler
     {
     public:
         ModelAnimatorAssembler(const Animators::AnimatorId& id);
 
-        ModelAnimatorAssembler& controlledPrimitive(const Primitives::PrimitiveId& id);
-        ModelAnimatorAssembler& animationAsset(const Animators::AnimationAssetId& id);
-        ModelAnimatorAssembler& skinOperator(const SkinOperatorAssembler& skin_operator);
-        ModelAnimatorAssembler& asNative(const std::string& file_at_path);
+        void factoryDesc(const Engine::FactoryDesc& desc) { m_factoryDesc = desc; }
+        void controlledPrimitive(const Primitives::PrimitiveId& id) { m_controlledPrimitiveId = id; }
+        void animationAsset(const Animators::AnimationAssetId& id) { m_animationAssetId = id; }
+        void addSkinOperator(const SkinAnimationOperator& skin_operator);
+        void asNative(const std::string& file_at_path);
 
-        Engine::GenericDto toGenericDto();
-
-        std::shared_ptr<ModelPrimitiveAnimator> constitute();
+        virtual Engine::GenericDto assemble() const override;
 
     protected:
-        Animators::AnimatorId m_id;
-        ModelAnimatorDto m_dto;
+        Engine::FactoryDesc m_factoryDesc;
+        std::optional<Primitives::PrimitiveId> m_controlledPrimitiveId;
+        std::optional<Animators::AnimationAssetId> m_animationAssetId;
+        std::vector<SkinAnimationOperator> m_skinOperators;
     };
 
-    class SkinOperatorAssembler
+    class ModelAnimatorDisassembler : public Animators::AnimatorDisassembler
+    {
+    public:
+        ModelAnimatorDisassembler();
+
+        [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
+        [[nodiscard]] const std::optional<Primitives::PrimitiveId>& controlledPrimitiveId() const { return m_controlledPrimitiveId; }
+        [[nodiscard]] const std::optional<Animators::AnimationAssetId>& animationAssetId() const { return m_animationAssetId; }
+        [[nodiscard]] const std::vector<SkinAnimationOperator>& skinOperators() const { return m_skinOperators; }
+
+        virtual void disassemble(const Engine::GenericDto& dto) override;
+
+    protected:
+        Engine::FactoryDesc m_factoryDesc;
+        std::optional<Primitives::PrimitiveId> m_controlledPrimitiveId;
+        std::optional<Animators::AnimationAssetId> m_animationAssetId;
+        std::vector<SkinAnimationOperator> m_skinOperators;
+    };
+    /*class SkinOperatorAssembler
     {
     public:
         SkinOperatorAssembler();
@@ -55,7 +72,7 @@ namespace Enigma::Renderables
         SkinOperatorDto m_dto;
         std::vector<std::string> m_bones;
         std::vector<MathLib::Matrix4> m_t_posOffsets;
-    };
+    };*/
 }
 
 #endif // MODEL_ANIMATOR_ASSEMBLER_H

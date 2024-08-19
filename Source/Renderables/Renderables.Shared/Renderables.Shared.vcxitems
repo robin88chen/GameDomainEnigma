@@ -18,8 +18,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRT.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimationAssembler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimatorAssembler.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimatorFactoryMethods.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderableErrors.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimatorDtos.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshNode.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshNodeTree.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshPrimitive.cpp" />
@@ -37,14 +37,15 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablesInstallingPolicy.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SkinAnimationOperator.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SkinMeshPrimitive.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SkinOperatorAssembler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClip.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRT.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimationAssembler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimatorAssembler.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimatorFactoryMethods.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderableErrors.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimatorDtos.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrModelPrimitiveCache.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshNode.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshNodeTree.h" />
@@ -65,5 +66,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablesInstallingPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SkinAnimationOperator.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SkinMeshPrimitive.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SkinOperatorAssembler.h" />
   </ItemGroup>
 </Project>

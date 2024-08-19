@@ -7,6 +7,7 @@
 #include "ModelPrimitive.h"
 #include "ModelPrimitiveAnimator.h"
 #include "ModelAnimationAsset.h"
+#include "ModelAnimatorFactoryMethods.h"
 #include "Frameworks/CommandBus.h"
 #include "Animators/AnimatorRepository.h"
 #include "Animators/AnimationAssetRepository.h"
@@ -25,7 +26,7 @@ error RenderablesInstallingPolicy::install(Frameworks::ServiceManager* service_m
 
     auto animator_repository = service_manager->getSystemServiceAs<Animators::AnimatorRepository>();
     assert(animator_repository);
-    animator_repository->registerAnimatorFactory(ModelPrimitiveAnimator::TYPE_RTTI.getName(), ModelPrimitiveAnimator::create, ModelPrimitiveAnimator::constitute);
+    animator_repository->registerAnimatorFactory(ModelPrimitiveAnimator::TYPE_RTTI.getName(), createModelPrimitiveAnimator, constituteModelPrimitiveAnimator);
     auto animation_asset_repository = service_manager->getSystemServiceAs<Animators::AnimationAssetRepository>();
     assert(animation_asset_repository);
     animation_asset_repository->registerAnimationAssetFactory(ModelAnimationAsset::TYPE_RTTI.getName(), ModelAnimationAsset::create, ModelAnimationAsset::constitute);

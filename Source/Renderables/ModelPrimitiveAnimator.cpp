@@ -1,11 +1,11 @@
 ﻿#include "ModelPrimitiveAnimator.h"
 #include "ModelAnimationDtos.h"
-#include "ModelAnimatorDtos.h"
+#include "ModelAnimatorAssembler.h"
 #include "Platforms/PlatformLayer.h"
 #include "Renderables/ModelPrimitive.h"
 #include "ModelAnimationAsset.h"
 #include "SkinAnimationOperator.h"
-#include "ModelAnimatorDtos.h"
+#include "SkinOperatorAssembler.h"
 #include <cassert>
 
 using namespace Enigma::Renderables;
@@ -18,7 +18,7 @@ DEFINE_RTTI(Renderables, ModelPrimitiveAnimator, Animator);
 
 ModelPrimitiveAnimator::ModelPrimitiveAnimator(const AnimatorId& id) : Animator(id)
 {
-    m_factoryDesc = FactoryDesc(ModelPrimitiveAnimator::TYPE_RTTI.getName());
+    m_factoryDesc = FactoryDesc(TYPE_RTTI.getName());
     m_animationAsset = nullptr;
     m_meshNodeMapping.clear();
     m_skinAnimOperators.clear();
@@ -29,7 +29,7 @@ ModelPrimitiveAnimator::ModelPrimitiveAnimator(const AnimatorId& id) : Animator(
     m_isOnPlay = false;
 }
 
-ModelPrimitiveAnimator::ModelPrimitiveAnimator(const Animators::AnimatorId& id, const Engine::GenericDto& dto) : Animator(id)
+/*ModelPrimitiveAnimator::ModelPrimitiveAnimator(const AnimatorId& id, const GenericDto& dto) : Animator(id)
 {
     ModelAnimatorDto model_ani_dto(dto);
     m_factoryDesc = model_ani_dto.factoryDesc();
@@ -59,7 +59,7 @@ ModelPrimitiveAnimator::ModelPrimitiveAnimator(const Animators::AnimatorId& id, 
             m_skinAnimOperators.emplace_back(op_dto);
         }
     }
-}
+}*/
 
 ModelPrimitiveAnimator::~ModelPrimitiveAnimator()
 {
@@ -68,14 +68,68 @@ ModelPrimitiveAnimator::~ModelPrimitiveAnimator()
     m_skinAnimOperators.clear();
 }
 
-std::shared_ptr<Animator> ModelPrimitiveAnimator::create(const Animators::AnimatorId& id)
+/*std::shared_ptr<Animator> ModelPrimitiveAnimator::create(const AnimatorId& id)
 {
     return std::make_shared<ModelPrimitiveAnimator>(id);
+}*/
+
+/*std::shared_ptr<Animator> ModelPrimitiveAnimator::constitute(const AnimatorId& id, const GenericDto& dto)
+{
+    std::shared_ptr<ModelPrimitiveAnimator> animator = std::make_shared<ModelPrimitiveAnimator>(id);
+    std::shared_ptr<ModelAnimatorDisassembler> disassembler = std::make_shared<ModelAnimatorDisassembler>();
+    animator->disassemble(disassembler);
+    return animator;
+}*/
+
+std::shared_ptr<AnimatorAssembler> ModelPrimitiveAnimator::assembler() const
+{
+    return std::make_shared<ModelAnimatorAssembler>(m_id);
 }
 
-std::shared_ptr<Animator> ModelPrimitiveAnimator::constitute(const Animators::AnimatorId& id, const Engine::GenericDto& dto)
+void ModelPrimitiveAnimator::assemble(const std::shared_ptr<AnimatorAssembler>& assembler) const
 {
-    return std::make_shared<ModelPrimitiveAnimator>(id, dto);
+    if (auto model_assembler = std::dynamic_pointer_cast<ModelAnimatorAssembler>(assembler))
+    {
+        model_assembler->factoryDesc(m_factoryDesc);
+        if (m_controlledPrimitiveId) model_assembler->controlledPrimitive(m_controlledPrimitiveId.value());
+        if (m_animationAsset) model_assembler->animationAsset(m_animationAsset->id());
+        for (auto& op : m_skinAnimOperators)
+        {
+            model_assembler->addSkinOperator(op);
+        }
+    }
+}
+
+std::shared_ptr<AnimatorDisassembler> ModelPrimitiveAnimator::disassembler() const
+{
+    return std::make_shared<ModelAnimatorDisassembler>();
+}
+
+void ModelPrimitiveAnimator::disassemble(const std::shared_ptr<Animators::AnimatorDisassembler>& disassembler)
+{
+    if (auto model_disassembler = std::dynamic_pointer_cast<ModelAnimatorDisassembler>(disassembler))
+    {
+        m_factoryDesc = model_disassembler->factoryDesc();
+        if (model_disassembler->controlledPrimitiveId())
+        {
+            m_controlledPrimitiveId = model_disassembler->controlledPrimitiveId().value();
+        }
+        if (model_disassembler->animationAssetId())
+        {
+            m_animationAsset = std::dynamic_pointer_cast<ModelAnimationAsset>(ModelAnimationAsset::queryAnimationAsset(model_disassembler->animationAssetId().value()));
+        }
+        else
+        {
+            m_animationAsset = nullptr;
+        }
+        if ((!model_disassembler->skinOperators().empty()) && (m_controlledPrimitiveId))
+        {
+            for (auto& op : model_disassembler->skinOperators())
+            {
+                m_skinAnimOperators.emplace_back(op);
+            }
+        }
+    }
 }
 
 /*GenericDto ModelPrimitiveAnimator::serializeDto() const

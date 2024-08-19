@@ -28,14 +28,14 @@
     <Filter Include="ErrorCodes">
       <UniqueIdentifier>{11038c2a-d22a-427a-937d-d2b62bfb5f98}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Animators\Dto and Assemblers">
-      <UniqueIdentifier>{b64b6472-cbf7-4477-aca2-a706616a9ce2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Primitives\Dto and Assemblers">
       <UniqueIdentifier>{06e7a9c5-c85b-4009-b0e6-5e20db6ad5b6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Events">
       <UniqueIdentifier>{c9a31e1a-36c7-4ef6-a80a-2b5d3b54a322}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Animators\Assemblers">
+      <UniqueIdentifier>{b64b6472-cbf7-4477-aca2-a706616a9ce2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -82,7 +82,7 @@
       <Filter>Animators\AnimationAsset</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimationDtos.cpp">
-      <Filter>Animators\Dto and Assemblers</Filter>
+      <Filter>Animators\Assemblers</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimationAsset.cpp">
       <Filter>Animators\AnimationAsset</Filter>
@@ -93,9 +93,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SkinAnimationOperator.cpp">
       <Filter>Animators</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimatorDtos.cpp">
-      <Filter>Animators\Dto and Assemblers</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderableErrors.cpp">
       <Filter>ErrorCodes</Filter>
     </ClCompile>
@@ -103,10 +100,16 @@
       <Filter>Primitives\Dto and Assemblers</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimationAssembler.cpp">
-      <Filter>Animators\Dto and Assemblers</Filter>
+      <Filter>Animators\Assemblers</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimatorAssembler.cpp">
-      <Filter>Animators\Dto and Assemblers</Filter>
+      <Filter>Animators\Assemblers</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SkinOperatorAssembler.cpp">
+      <Filter>Animators\Assemblers</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimatorFactoryMethods.cpp">
+      <Filter>Animators</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -159,7 +162,7 @@
       <Filter>Animators\AnimationAsset</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimationDtos.h">
-      <Filter>Animators\Dto and Assemblers</Filter>
+      <Filter>Animators\Assemblers</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimationAsset.h">
       <Filter>Animators\AnimationAsset</Filter>
@@ -170,9 +173,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SkinAnimationOperator.h">
       <Filter>Animators</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimatorDtos.h">
-      <Filter>Animators\Dto and Assemblers</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderableErrors.h">
       <Filter>ErrorCodes</Filter>
     </ClInclude>
@@ -180,13 +180,19 @@
       <Filter>Primitives\Dto and Assemblers</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimationAssembler.h">
-      <Filter>Animators\Dto and Assemblers</Filter>
+      <Filter>Animators\Assemblers</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimatorAssembler.h">
-      <Filter>Animators\Dto and Assemblers</Filter>
+      <Filter>Animators\Assemblers</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderableEvents.h">
       <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SkinOperatorAssembler.h">
+      <Filter>Animators\Assemblers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimatorFactoryMethods.h">
+      <Filter>Animators</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

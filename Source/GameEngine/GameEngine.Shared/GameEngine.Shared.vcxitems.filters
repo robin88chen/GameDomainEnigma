@@ -174,14 +174,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GenericDto.h">
       <Filter>DTOs</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GenericDtoFactories.h">
-      <Filter>DTOs</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DtoEvents.h">
       <Filter>Events</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\FactoryCommands.h">
-      <Filter>Commands</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMap.h">
       <Filter>Effect Material\Effect Texture Map</Filter>
@@ -206,9 +200,6 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureEvents.h">
       <Filter>Events</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GenericPolicy.h">
-      <Filter>DTOs</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrBVRay3.h">
       <Filter>Intersect</Filter>
@@ -342,9 +333,6 @@
       <Filter>DTOs</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GenericDto.cpp">
-      <Filter>DTOs</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\GenericDtoFactories.cpp">
       <Filter>DTOs</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectTextureMap.cpp">

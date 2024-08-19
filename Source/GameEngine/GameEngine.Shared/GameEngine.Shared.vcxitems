@@ -29,9 +29,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMap.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineInstallingPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GenericDto.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\FactoryCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DtoDeserializer.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GenericDtoFactories.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DtoEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompiler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingProfile.h" />
@@ -43,7 +41,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EngineErrors.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\FactoryDesc.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GenericBV.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\GenericPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\InstallingPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrBVRay3.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IRenderer.h" />
@@ -93,7 +90,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectTextureMap.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EngineInstallingPolicy.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GenericDto.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\GenericDtoFactories.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompiler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompilingProfile.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterial.cpp" />

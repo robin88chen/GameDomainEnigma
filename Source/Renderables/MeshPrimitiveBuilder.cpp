@@ -17,7 +17,6 @@
 #include "GameEngine/Texture.h"
 #include "GameEngine/EffectTextureMapAssembler.h"
 #include "GameEngine/TextureMappingAssembler.h"
-#include "GameEngine/FactoryCommands.h"
 #include "Platforms/PlatformLayer.h"
 
 using namespace Enigma::Renderables;

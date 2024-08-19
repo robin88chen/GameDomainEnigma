@@ -5,7 +5,7 @@
 #include "FileSystem/FileSystem.h"
 #include "FileSystem/StdMountPath.h"
 #include "Gateways/DtoJsonGateway.h"
-#include "GameEngine/TextureDto.h"
+#include "GameEngine/TextureAssembler.h"
 #include "GameEngine/Texture.h"
 #include "nana/gui/filebox.hpp"
 
@@ -166,21 +166,20 @@ void MainForm::importTextureAsset()
         if (fs::is_regular_file(filepath))
         {
             auto sub_path_filename = filePathOnApkPath(filepath);
-            Enigma::Engine::TextureDto dto;
             auto dot_pos = sub_path_filename.find_last_of('.');
             auto texture_id = sub_path_filename.substr(0, dot_pos);
             auto asset_filename = texture_id + ".tex@APK_PATH";
             auto image_filename = sub_path_filename + "@APK_PATH";
             nana::paint::image img{ filepath.generic_string() };
-            dto.id(texture_id);
-            dto.factoryDesc(Enigma::Engine::FactoryDesc(Enigma::Engine::Texture::TYPE_RTTI.getName()).ClaimAsResourceAsset(texture_id, asset_filename));
-            dto.format(Enigma::Graphics::GraphicFormat::FMT_A8R8G8B8);
-            dto.dimension(Enigma::MathLib::Dimension<unsigned>{ img.size().width, img.size().height });
-            dto.isCubeTexture(false);
-            dto.surfaceCount(1);
-            dto.filePaths({ image_filename });
-            dto.imageFilenamesOfLoad({ image_filename });
-            m_textureFileStoreMapper->putTexture(dto.id(), dto.toGenericDto());
+            Enigma::Engine::TextureAssembler assembler(texture_id);
+            assembler.factoryDesc(Enigma::Engine::FactoryDesc(Enigma::Engine::Texture::TYPE_RTTI.getName()).ClaimAsResourceAsset(texture_id, asset_filename));
+            assembler.format(Enigma::Graphics::GraphicFormat::FMT_A8R8G8B8);
+            assembler.dimension(Enigma::MathLib::Dimension<unsigned>{ img.size().width, img.size().height });
+            assembler.isCubeTexture(false);
+            assembler.surfaceCount(1);
+            assembler.filePaths({ image_filename });
+            assembler.imageFilenamesOfLoad({ image_filename });
+            m_textureFileStoreMapper->putTexture(texture_id, assembler.assemble());
         }
     }
     refreshTextureAssetList();

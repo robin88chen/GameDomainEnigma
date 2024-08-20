@@ -1,6 +1,6 @@
 ﻿#include "AnimationTimeSRT.h"
 #include "MathLib/MathAlgorithm.h"
-#include "ModelAnimationDtos.h"
+#include "AnimationTimeSRTAssembler.h"
 #include <cassert>
 
 using namespace Enigma::MathLib;
@@ -10,73 +10,18 @@ AnimationTimeSRT::AnimationTimeSRT()
 {
 }
 
-AnimationTimeSRT::AnimationTimeSRT(const Engine::GenericDto& dto)
+void AnimationTimeSRT::assemble(const std::shared_ptr<AnimationTimeSRTAssembler>& assembler) const
 {
-    AnimationTimeSRTDto srt_dto(dto);
-    auto& scale_keys = srt_dto.scaleTimeKeys();
-    auto& rotate_keys = srt_dto.rotateTimeKeys();
-    auto& translate_keys = srt_dto.translateTimeKeys();
-    const unsigned scale_size = static_cast<unsigned>(scale_keys.size());
-    const unsigned rotate_size = static_cast<unsigned>(rotate_keys.size());
-    const unsigned translate_size = static_cast<unsigned>(translate_keys.size());
-    assert(scale_size % 4 == 0);
-    assert(rotate_size % 5 == 0);
-    assert(translate_size % 4 == 0);
-    for (unsigned i = 0; i < scale_size; i += 4)
-    {
-        m_scaleKeyVector.emplace_back(std::vector<float>(scale_keys.begin() + i, scale_keys.begin() + i + 4));
-        //m_scaleKeyVector.emplace_back(ScaleKey(scale_keys[i], scale_keys[i + 1], scale_keys[i + 2], scale_keys[i + 3]));
-    }
-    for (unsigned i = 0; i < rotate_size; i += 5)
-    {
-        m_rotationKeyVector.emplace_back(std::vector<float>(rotate_keys.begin() + i, rotate_keys.begin() + i + 5));
-        //m_rotationKeyVector.emplace_back(RotationKey(rotate_keys[i], rotate_keys[i + 1], rotate_keys[i + 2], rotate_keys[i + 3], rotate_keys[i + 4]));
-    }
-    for (unsigned i = 0; i < translate_size; i += 4)
-    {
-        m_translateKeyVector.emplace_back(std::vector<float>(translate_keys.begin() + i, translate_keys.begin() + i + 4));
-        //m_translateKeyVector.emplace_back(TranslateKey(translate_keys[i], translate_keys[i + 1], translate_keys[i + 2], translate_keys[i + 3]));
-    }
+    assembler->scaleKeys(m_scaleKeyVector);
+    assembler->rotationKeys(m_rotationKeyVector);
+    assembler->translationKeys(m_translateKeyVector);
 }
 
-Enigma::Engine::GenericDto AnimationTimeSRT::serializeDto()
+void AnimationTimeSRT::disassemble(const std::shared_ptr<AnimationTimeSRTDisassembler>& disassembler)
 {
-    AnimationTimeSRTDto dto;
-    std::vector<float> scale_keys;
-    for (auto& key : m_scaleKeyVector)
-    {
-        auto values = key.values();
-        scale_keys.insert(scale_keys.end(), values.begin(), values.end());
-        //scale_keys.emplace_back(key.m_time);
-        //scale_keys.emplace_back(key.m_vecKey.x());
-        //scale_keys.emplace_back(key.m_vecKey.y());
-        //scale_keys.emplace_back(key.m_vecKey.z());
-    }
-    dto.scaleTimeKeys() = scale_keys;
-    std::vector<float> rotate_keys;
-    for (auto& key : m_rotationKeyVector)
-    {
-        auto values = key.values();
-        rotate_keys.insert(rotate_keys.end(), values.begin(), values.end());
-        //rotate_keys.emplace_back(key.m_time);
-        //rotate_keys.emplace_back(key.m_qtKey.w());
-        //rotate_keys.emplace_back(key.m_qtKey.x());
-        //rotate_keys.emplace_back(key.m_qtKey.y());
-        //rotate_keys.emplace_back(key.m_qtKey.z());
-    }
-    dto.rotateTimeKeys() = rotate_keys;
-    std::vector<float> translate_keys;
-    for (auto& key : m_translateKeyVector)
-    {
-        auto values = key.values();
-        translate_keys.insert(translate_keys.end(), values.begin(), values.end());
-        //translate_keys.emplace_back(key.m_time);
-        //translate_keys.emplace_back(key.m_vecKey.x());
-        //translate_keys.emplace_back(key.m_vecKey.y());
-        //translate_keys.emplace_back(key.m_vecKey.z());
-    }
-    dto.translateTimeKeys() = translate_keys;
-    return dto.toGenericDto();
+    m_scaleKeyVector = disassembler->scaleKeys();
+    m_rotationKeyVector = disassembler->rotationKeys();
+    m_translateKeyVector = disassembler->translationKeys();
 }
 
 Matrix4 AnimationTimeSRT::calculateTransformMatrix(float off_time)
@@ -141,7 +86,7 @@ void AnimationTimeSRT::appendScaleKeyVector(float time_offset, const ScaleKeyVec
     unsigned int org_size = static_cast<unsigned int>(m_scaleKeyVector.size());
     unsigned int new_size = org_size + static_cast<unsigned int>(scale_key.size());
     m_scaleKeyVector.resize(new_size);
-    for (unsigned int i = 0; i < scale_key.size(); i++)
+    for (size_t i = 0; i < scale_key.size(); i++)
     {
         m_scaleKeyVector[org_size + i].m_time = time_offset + scale_key[i].m_time;
         m_scaleKeyVector[org_size + i].m_vecKey = scale_key[i].m_vecKey;
@@ -153,7 +98,7 @@ void AnimationTimeSRT::appendRotationKeyVector(float time_offset, const Rotation
     unsigned int org_size = static_cast<unsigned int>(m_rotationKeyVector.size());
     unsigned int new_size = org_size + static_cast<unsigned int>(rot_key.size());
     m_rotationKeyVector.resize(new_size);
-    for (unsigned int i = 0; i < rot_key.size(); i++)
+    for (size_t i = 0; i < rot_key.size(); i++)
     {
         m_rotationKeyVector[org_size + i].m_time = time_offset + rot_key[i].m_time;
         m_rotationKeyVector[org_size + i].m_qtKey = rot_key[i].m_qtKey;
@@ -165,7 +110,7 @@ void AnimationTimeSRT::appendTranslateKeyVector(float time_offset, const Transla
     unsigned int org_size = static_cast<unsigned int>(m_translateKeyVector.size());
     unsigned int new_size = org_size + static_cast<unsigned int>(trans_key.size());
     m_translateKeyVector.resize(new_size);
-    for (unsigned int i = 0; i < trans_key.size(); i++)
+    for (size_t i = 0; i < trans_key.size(); i++)
     {
         m_translateKeyVector[org_size + i].m_time = time_offset + trans_key[i].m_time;
         m_translateKeyVector[org_size + i].m_vecKey = trans_key[i].m_vecKey;

@@ -16,7 +16,9 @@
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationClip.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRT.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRTAssembler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimationAssembler.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimationFactoryMethods.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimatorAssembler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimatorFactoryMethods.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderableErrors.cpp" />
@@ -26,7 +28,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveBuilder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveRay3IntersectionFinder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimationAsset.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimationDtos.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelPrimitive.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveAnimator.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveRay3IntersectionFinder.cpp" />
@@ -42,7 +43,9 @@
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClip.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRT.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRTAssembler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimationAssembler.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimationFactoryMethods.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimatorAssembler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimatorFactoryMethods.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderableErrors.h" />
@@ -53,7 +56,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveBuilder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveRay3IntersectionFinder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimationAsset.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimationDtos.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelPrimitive.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveAnimator.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveRay3IntersectionFinder.h" />

@@ -37,6 +37,9 @@
     <Filter Include="Animators\Assemblers">
       <UniqueIdentifier>{b64b6472-cbf7-4477-aca2-a706616a9ce2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Factory Methods">
+      <UniqueIdentifier>{8bbc62e1-1179-4bce-8cc0-0aa65100aecb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshPrimitive.cpp">
@@ -81,9 +84,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRT.cpp">
       <Filter>Animators\AnimationAsset</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimationDtos.cpp">
-      <Filter>Animators\Assemblers</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimationAsset.cpp">
       <Filter>Animators\AnimationAsset</Filter>
     </ClCompile>
@@ -109,7 +109,13 @@
       <Filter>Animators\Assemblers</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimatorFactoryMethods.cpp">
-      <Filter>Animators</Filter>
+      <Filter>Factory Methods</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRTAssembler.cpp">
+      <Filter>Animators\Assemblers</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimationFactoryMethods.cpp">
+      <Filter>Factory Methods</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -161,9 +167,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRT.h">
       <Filter>Animators\AnimationAsset</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimationDtos.h">
-      <Filter>Animators\Assemblers</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimationAsset.h">
       <Filter>Animators\AnimationAsset</Filter>
     </ClInclude>
@@ -192,7 +195,13 @@
       <Filter>Animators\Assemblers</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimatorFactoryMethods.h">
-      <Filter>Animators</Filter>
+      <Filter>Factory Methods</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRTAssembler.h">
+      <Filter>Animators\Assemblers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimationFactoryMethods.h">
+      <Filter>Factory Methods</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

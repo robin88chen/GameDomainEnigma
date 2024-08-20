@@ -1,5 +1,4 @@
 ﻿#include "ModelPrimitiveAnimator.h"
-#include "ModelAnimationDtos.h"
 #include "ModelAnimatorAssembler.h"
 #include "Platforms/PlatformLayer.h"
 #include "Renderables/ModelPrimitive.h"
@@ -29,57 +28,12 @@ ModelPrimitiveAnimator::ModelPrimitiveAnimator(const AnimatorId& id) : Animator(
     m_isOnPlay = false;
 }
 
-/*ModelPrimitiveAnimator::ModelPrimitiveAnimator(const AnimatorId& id, const GenericDto& dto) : Animator(id)
-{
-    ModelAnimatorDto model_ani_dto(dto);
-    m_factoryDesc = model_ani_dto.factoryDesc();
-    m_animationAsset = nullptr;
-    m_meshNodeMapping.clear();
-    m_skinAnimOperators.clear();
-    m_remainFadingTime = 0.0f;
-    m_fadingTime = 0.1f;
-    m_isFading = false;
-    m_isOnPlay = false;
-    if (model_ani_dto.controlledPrimitiveId())
-    {
-        m_controlledPrimitiveId = model_ani_dto.controlledPrimitiveId().value();
-    }
-    if (model_ani_dto.animationAssetId())
-    {
-        m_animationAsset = std::dynamic_pointer_cast<ModelAnimationAsset>(ModelAnimationAsset::queryAnimationAsset(model_ani_dto.animationAssetId().value()));
-    }
-    else
-    {
-        m_animationAsset = nullptr;
-    }
-    if ((!model_ani_dto.skinOperators().empty()) && (m_controlledPrimitiveId))
-    {
-        for (auto& op_dto : model_ani_dto.skinOperators())
-        {
-            m_skinAnimOperators.emplace_back(op_dto);
-        }
-    }
-}*/
-
 ModelPrimitiveAnimator::~ModelPrimitiveAnimator()
 {
     m_animationAsset = nullptr;
     m_meshNodeMapping.clear();
     m_skinAnimOperators.clear();
 }
-
-/*std::shared_ptr<Animator> ModelPrimitiveAnimator::create(const AnimatorId& id)
-{
-    return std::make_shared<ModelPrimitiveAnimator>(id);
-}*/
-
-/*std::shared_ptr<Animator> ModelPrimitiveAnimator::constitute(const AnimatorId& id, const GenericDto& dto)
-{
-    std::shared_ptr<ModelPrimitiveAnimator> animator = std::make_shared<ModelPrimitiveAnimator>(id);
-    std::shared_ptr<ModelAnimatorDisassembler> disassembler = std::make_shared<ModelAnimatorDisassembler>();
-    animator->disassemble(disassembler);
-    return animator;
-}*/
 
 std::shared_ptr<AnimatorAssembler> ModelPrimitiveAnimator::assembler() const
 {
@@ -131,21 +85,6 @@ void ModelPrimitiveAnimator::disassemble(const std::shared_ptr<Animators::Animat
         }
     }
 }
-
-/*GenericDto ModelPrimitiveAnimator::serializeDto() const
-{
-    ModelAnimatorDto dto;
-    dto.id() = id();
-    dto.factoryDesc() = m_factoryDesc;
-    if (m_controlledPrimitiveId) dto.controlledPrimitiveId() = m_controlledPrimitiveId.value();
-    if (!m_animationAsset) return dto.toGenericDto();
-    dto.animationAssetId() = m_animationAsset->id();
-    for (auto& op : m_skinAnimOperators)
-    {
-        dto.skinOperators().emplace_back(op.serializeDto());
-    }
-    return dto.toGenericDto();
-}*/
 
 Animator::HasUpdated ModelPrimitiveAnimator::update(const std::unique_ptr<Timer>& timer)
 {

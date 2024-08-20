@@ -1,89 +1,63 @@
 ﻿#include "ModelAnimationAssembler.h"
 #include "Animators/AnimationAssetQueries.h"
 #include "ModelAnimationAsset.h"
-#include <algorithm>
+#include "AnimationTimeSRTAssembler.h"
 
 using namespace Enigma::Renderables;
 
-AnimationTimeSRTAssembler& AnimationTimeSRTAssembler::scaleKey(const AnimationTimeSRT::ScaleKey& key)
+static std::string TOKEN_MESH_NODE_NAMES = "MeshNodeNames";
+static std::string TOKEN_TIME_SRTS = "TimeSRTs";
+
+ModelAnimationAssembler::ModelAnimationAssembler(const Animators::AnimationAssetId& id) : AnimationAssetAssembler(id)
 {
-    m_scaleKeys.push_back(key);
-    return *this;
+    m_factoryDesc = Engine::FactoryDesc(ModelAnimationAsset::TYPE_RTTI.getName());
 }
 
-AnimationTimeSRTAssembler& AnimationTimeSRTAssembler::rotationKey(const AnimationTimeSRT::RotationKey& key)
+void ModelAnimationAssembler::nodeSRT(const std::string& node_name, const AnimationTimeSRT& srt)
 {
-    m_rotationKeys.push_back(key);
-    return *this;
+    nodeSRT(node_name, AnimationTimeSRTAssembler::make(srt));
 }
 
-AnimationTimeSRTAssembler& AnimationTimeSRTAssembler::translationKey(const AnimationTimeSRT::TranslateKey& key)
-{
-    m_translationKeys.push_back(key);
-    return *this;
-}
-
-Enigma::Engine::GenericDto AnimationTimeSRTAssembler::toGenericDto()
-{
-    std::sort(m_scaleKeys.begin(), m_scaleKeys.end(), [](const AnimationTimeSRT::ScaleKey& a, const AnimationTimeSRT::ScaleKey& b) { return a.m_time < b.m_time; });
-    std::sort(m_rotationKeys.begin(), m_rotationKeys.end(), [](const AnimationTimeSRT::RotationKey& a, const AnimationTimeSRT::RotationKey& b) { return a.m_time < b.m_time; });
-    std::sort(m_translationKeys.begin(), m_translationKeys.end(), [](const AnimationTimeSRT::TranslateKey& a, const AnimationTimeSRT::TranslateKey& b) { return a.m_time < b.m_time; });
-    m_dto.scaleTimeKeys().clear();
-    for (auto& key : m_scaleKeys)
-    {
-        auto values = key.values();
-        m_dto.scaleTimeKeys().insert(m_dto.scaleTimeKeys().end(), values.begin(), values.end());
-    }
-    m_dto.rotateTimeKeys().clear();
-    for (auto& key : m_rotationKeys)
-    {
-        auto values = key.values();
-        m_dto.rotateTimeKeys().insert(m_dto.rotateTimeKeys().end(), values.begin(), values.end());
-    }
-    m_dto.translateTimeKeys().clear();
-    for (auto& key : m_translationKeys)
-    {
-        auto values = key.values();
-        m_dto.translateTimeKeys().insert(m_dto.translateTimeKeys().end(), values.begin(), values.end());
-    }
-
-    return m_dto.toGenericDto();
-}
-
-ModelAnimationAssembler::ModelAnimationAssembler(const Animators::AnimationAssetId& id)
-{
-    m_id = id;
-    //m_dto.id(id);
-}
-
-ModelAnimationAssembler& ModelAnimationAssembler::nodeSRT(const std::string& node_name, const AnimationTimeSRTAssembler& assembler)
+void ModelAnimationAssembler::nodeSRT(const std::string& node_name, const std::shared_ptr<AnimationTimeSRTAssembler>& assembler)
 {
     m_nodeSRTs.emplace_back(node_name, assembler);
-    return *this;
 }
 
-ModelAnimationAssembler& ModelAnimationAssembler::asAsset(const std::string& name, const std::string& filename, const std::string& path_id)
+void ModelAnimationAssembler::asAsset(const std::string& name, const std::string& filename, const std::string& path_id)
 {
-    //Engine::FactoryDesc fd = m_dto.factoryDesc();
-    //fd.ClaimAsResourceAsset(name, filename, path_id);
-    //m_dto.factoryDesc(fd);
-    return *this;
+    m_factoryDesc.ClaimAsResourceAsset(name, filename, path_id);
 }
 
-Enigma::Engine::GenericDto ModelAnimationAssembler::toGenericDto()
+Enigma::Engine::GenericDto ModelAnimationAssembler::assemble() const
 {
-    m_dto.meshNodeNames().clear();
-    m_dto.timeSRTs().clear();
+    std::vector<std::string> meshNodeNames;
+    std::vector<Engine::GenericDto> timeSRTs;
     for (auto& nodeSRT : m_nodeSRTs)
     {
-        m_dto.meshNodeNames().emplace_back(std::get<std::string>(nodeSRT));
-        m_dto.timeSRTs().emplace_back(std::get<AnimationTimeSRTAssembler>(nodeSRT).toGenericDto());
+        meshNodeNames.emplace_back(std::get<std::string>(nodeSRT));
+        timeSRTs.emplace_back(std::get<std::shared_ptr<AnimationTimeSRTAssembler>>(nodeSRT)->assembleWithSorted());
     }
-    return m_dto.toGenericDto();
+    Engine::GenericDto dto;
+    dto.addOrUpdate(TOKEN_MESH_NODE_NAMES, meshNodeNames);
+    dto.addOrUpdate(TOKEN_TIME_SRTS, timeSRTs);
+    return dto;
 }
 
-std::shared_ptr<ModelAnimationAsset> ModelAnimationAssembler::constitute()
+ModelAnimationDisassembler::ModelAnimationDisassembler() : AnimationAssetDisassembler()
 {
-    return std::dynamic_pointer_cast<ModelAnimationAsset>(std::make_shared<Animators::RequestAnimationAssetConstitution>(m_id, toGenericDto())->dispatch());
+    m_factoryDesc = Engine::FactoryDesc(ModelAnimationAsset::TYPE_RTTI.getName());
 }
 
+void ModelAnimationDisassembler::disassemble(const Engine::GenericDto& dto)
+{
+    std::vector<std::string> meshNodeNames;
+    std::vector<Engine::GenericDto> timeSRTs;
+    if (const auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_MESH_NODE_NAMES)) meshNodeNames = v.value();
+    if (const auto v = dto.tryGetValue<Engine::GenericDtoCollection>(TOKEN_TIME_SRTS)) timeSRTs = v.value();
+    assert(meshNodeNames.size() == timeSRTs.size());
+    m_nodeSRTs.reserve(meshNodeNames.size());
+    for (unsigned i = 0; i < meshNodeNames.size(); i++)
+    {
+        m_nodeSRTs.emplace_back(meshNodeNames[i], AnimationTimeSRTDisassembler::srt(timeSRTs[i]));
+    }
+}

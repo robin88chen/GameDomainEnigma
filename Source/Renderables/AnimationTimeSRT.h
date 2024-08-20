@@ -19,7 +19,8 @@ namespace Enigma::Renderables
 {
     using SRTValueTie = std::tuple<MathLib::Vector3, MathLib::Quaternion, MathLib::Vector3>;
 
-    class AnimationTimeSRTDto;
+    class AnimationTimeSRTAssembler;
+    class AnimationTimeSRTDisassembler;
 
     /** Animation Time SRT data */
     class AnimationTimeSRT
@@ -63,9 +64,9 @@ namespace Enigma::Renderables
 
     public:
         AnimationTimeSRT();
-        AnimationTimeSRT(const Engine::GenericDto& dto);
 
-        Engine::GenericDto serializeDto();
+        void assemble(const std::shared_ptr<AnimationTimeSRTAssembler>& assembler) const;
+        void disassemble(const std::shared_ptr<AnimationTimeSRTDisassembler>& disassembler);
 
         MathLib::Matrix4 calculateTransformMatrix(float off_time);
         SRTValueTie calculateLerpedSRT(float off_time);

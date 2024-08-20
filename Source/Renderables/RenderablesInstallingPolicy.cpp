@@ -8,6 +8,7 @@
 #include "ModelPrimitiveAnimator.h"
 #include "ModelAnimationAsset.h"
 #include "ModelAnimatorFactoryMethods.h"
+#include "ModelAnimationFactoryMethods.h"
 #include "Frameworks/CommandBus.h"
 #include "Animators/AnimatorRepository.h"
 #include "Animators/AnimationAssetRepository.h"
@@ -29,7 +30,7 @@ error RenderablesInstallingPolicy::install(Frameworks::ServiceManager* service_m
     animator_repository->registerAnimatorFactory(ModelPrimitiveAnimator::TYPE_RTTI.getName(), createModelPrimitiveAnimator, constituteModelPrimitiveAnimator);
     auto animation_asset_repository = service_manager->getSystemServiceAs<Animators::AnimationAssetRepository>();
     assert(animation_asset_repository);
-    animation_asset_repository->registerAnimationAssetFactory(ModelAnimationAsset::TYPE_RTTI.getName(), ModelAnimationAsset::create, ModelAnimationAsset::constitute);
+    animation_asset_repository->registerAnimationAssetFactory(ModelAnimationAsset::TYPE_RTTI.getName(), createModelAnimationAsset, constituteModelAnimationAsset);
 
     Primitives::PrimitiveRay3IntersectionFinderFactory::registerCreator(ModelPrimitive::TYPE_RTTI.getName(), ModelPrimitiveRay3IntersectionFinder::create);
     Primitives::PrimitiveRay3IntersectionFinderFactory::registerCreator(MeshPrimitive::TYPE_RTTI.getName(), MeshPrimitiveRay3IntersectionFinder::create);

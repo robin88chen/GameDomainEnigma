@@ -1,5 +1,5 @@
 ﻿#include "SkinMeshPrimitive.h"
-#include "RenderablePrimitiveDtos.h"
+#include "SkinMeshPrimitiveAssembler.h"
 #include "GameEngine/EffectMaterial.h"
 
 using namespace Enigma::Renderables;
@@ -18,15 +18,25 @@ SkinMeshPrimitive::SkinMeshPrimitive(const PrimitiveId& id) : MeshPrimitive(id)
     m_ownerNodeRootRefTransform = Matrix4::IDENTITY;
 }
 
-SkinMeshPrimitive::SkinMeshPrimitive(const PrimitiveId& id, const Engine::GenericDto& dto, const std::shared_ptr<Geometries::GeometryRepository>& geometry_repository) : MeshPrimitive(id, dto, geometry_repository)
+/*SkinMeshPrimitive::SkinMeshPrimitive(const PrimitiveId& id, const Engine::GenericDto& dto, const std::shared_ptr<Geometries::GeometryRepository>& geometry_repository) : MeshPrimitive(id, dto, geometry_repository)
 {
     m_factoryDesc = dto.getRtti();
     m_ownerNodeRootRefTransform = Matrix4::IDENTITY;
-}
+}*/
 
 SkinMeshPrimitive::~SkinMeshPrimitive()
 {
     loosePrimitiveBoneMatrix();
+}
+
+std::shared_ptr<PrimitiveAssembler> SkinMeshPrimitive::assembler() const
+{
+    return std::make_shared<SkinMeshPrimitiveAssembler>(m_id.origin());
+}
+
+std::shared_ptr<PrimitiveDisassembler> SkinMeshPrimitive::disassembler() const
+{
+    return std::make_shared<SkinMeshPrimitiveDisassembler>();
 }
 
 /*GenericDto SkinMeshPrimitive::serializeDto() const

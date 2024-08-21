@@ -6,7 +6,7 @@
 
 using namespace Enigma::Renderables;
 
-MeshPrimitiveAssembler::MeshPrimitiveAssembler(const Primitives::PrimitiveId& id)
+/*MeshPrimitiveAssembler::MeshPrimitiveAssembler(const Primitives::PrimitiveId& id)
 {
     m_id = id;
     m_dto.id() = id;
@@ -115,7 +115,7 @@ Enigma::Engine::GenericDto SkinMeshPrimitiveAssembler::toGenericDto()
 std::shared_ptr<SkinMeshPrimitive> SkinMeshPrimitiveAssembler::constitute()
 {
     return std::dynamic_pointer_cast<SkinMeshPrimitive>(std::make_shared<Primitives::RequestPrimitiveConstitution>(m_id, toGenericDto())->dispatch());
-}
+}*/
 
 MeshNodeAssembler::MeshNodeAssembler(const std::string& name)
 {

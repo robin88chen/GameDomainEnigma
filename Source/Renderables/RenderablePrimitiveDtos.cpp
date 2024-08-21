@@ -98,7 +98,7 @@ GenericDto MeshPrimitiveDto::toGenericDto() const
     }
 }*/
 
-void MeshPrimitiveMetaDto::replaceDuplicatedEffects(const std::shared_ptr<MeshPrimitive>& mesh_primitive)
+/*void MeshPrimitiveMetaDto::replaceDuplicatedEffects(const std::shared_ptr<MeshPrimitive>& mesh_primitive)
 {
     if (!mesh_primitive) return;
     m_effects.clear();
@@ -106,27 +106,27 @@ void MeshPrimitiveMetaDto::replaceDuplicatedEffects(const std::shared_ptr<MeshPr
     {
         m_effects.emplace_back(mesh_primitive->getEffectMaterial(i)->id());
     }
-}
+}*/
 
-SkinMeshPrimitiveDto::SkinMeshPrimitiveDto() //: MeshPrimitiveDto()
+/*SkinMeshPrimitiveDto::SkinMeshPrimitiveDto() //: MeshPrimitiveDto()
 {
     //m_factoryDesc = FactoryDesc(SkinMeshPrimitive::TYPE_RTTI.getName());
 }
 
 SkinMeshPrimitiveDto::SkinMeshPrimitiveDto(const Engine::GenericDto& dto) //: MeshPrimitiveDto(dto)
 {
-}
+}*/
 
 /*SkinMeshPrimitiveDto::SkinMeshPrimitiveDto(const MeshPrimitiveDto& mesh) : MeshPrimitiveDto(mesh)
 {
     assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), SkinMeshPrimitive::TYPE_RTTI.getName()));
 }*/
 
-GenericDto SkinMeshPrimitiveDto::toGenericDto() const
+/*GenericDto SkinMeshPrimitiveDto::toGenericDto() const
 {
     GenericDto dto; // = MeshPrimitiveDto::toGenericDto();
     return dto;
-}
+}*/
 
 MeshNodeDto::MeshNodeDto() : m_factoryDesc(MeshNode::TYPE_RTTI.getName())
 {

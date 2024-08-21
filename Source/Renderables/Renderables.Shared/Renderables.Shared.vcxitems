@@ -39,6 +39,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablesInstallingPolicy.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SkinAnimationOperator.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SkinMeshPrimitive.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SkinMeshPrimitiveAssembler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SkinOperatorAssembler.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -70,6 +71,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablesInstallingPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SkinAnimationOperator.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SkinMeshPrimitive.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SkinMeshPrimitiveAssembler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SkinOperatorAssembler.h" />
   </ItemGroup>
 </Project>

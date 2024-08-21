@@ -81,7 +81,7 @@ namespace Enigma::Renderables
         std::vector<Engine::EffectTextureMapDisassembler> m_textureMaps;
     };*/
 
-    class SkinMeshPrimitiveDto // : public MeshPrimitiveDto
+    /*class SkinMeshPrimitiveDto // : public MeshPrimitiveDto
     {
     public:
         SkinMeshPrimitiveDto();
@@ -94,7 +94,7 @@ namespace Enigma::Renderables
         SkinMeshPrimitiveDto& operator=(SkinMeshPrimitiveDto&&) = default;
 
         Engine::GenericDto toGenericDto() const;
-    };
+    };*/
 
     class MeshNodeDto
     {

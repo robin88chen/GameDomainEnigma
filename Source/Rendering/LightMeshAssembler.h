@@ -36,7 +36,7 @@ namespace Enigma::Rendering
         std::shared_ptr<Renderables::MeshPrimitive> assembleAmbientLightMesh(const Primitives::PrimitiveId& mesh_id);
         std::shared_ptr<Renderables::MeshPrimitive> assembleSunLightMesh(const Primitives::PrimitiveId& mesh_id);
         std::shared_ptr<Renderables::MeshPrimitive> assemblePointLightMesh(const Primitives::PrimitiveId& mesh_id, float sphere_radius);
-
+        std::shared_ptr<Primitives::Primitive> assembleLightMesh(const Geometries::GeometryId& geometry_id, const Primitives::PrimitiveId& mesh_id, const Engine::EffectMaterialId& effect_material_id);
         Engine::EffectTextureMapAssembler getGBufferTextureSemantics();
 
     protected:

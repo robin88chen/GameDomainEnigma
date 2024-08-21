@@ -3,7 +3,9 @@
 #include "Frameworks/QueryDispatcher.h"
 #include "LightingMeshQueries.h"
 #include "Geometries/StandardGeometryAssemblers.h"
+#include "Primitives/PrimitiveQueries.h"
 #include "Renderables/RenderablePrimitiveAssembler.h"
+#include "Renderables/MeshPrimitiveAssembler.h"
 
 using namespace Enigma::Rendering;
 using namespace Enigma::Frameworks;
@@ -57,7 +59,7 @@ std::shared_ptr<MeshPrimitive> LightMeshAssembler::assembleAmbientLightMesh(cons
     auto lit_mesh = Primitives::Primitive::queryPrimitive(mesh_id);
     if (!lit_mesh)
     {
-        lit_mesh = MeshPrimitiveAssembler(mesh_id).geometryId(amb_quad_id).asNative(mesh_id.name() + ".mesh@DataPath").effect(m_configuration->ambientEffect()).textureMap(getGBufferTextureSemantics()).renderListID(Renderer::Renderer::RenderListID::DeferredLighting).constitute();
+        lit_mesh = assembleLightMesh(amb_quad_id, mesh_id, m_configuration->ambientEffect());
     }
     return std::dynamic_pointer_cast<MeshPrimitive>(lit_mesh);
 }
@@ -73,7 +75,7 @@ std::shared_ptr<MeshPrimitive> LightMeshAssembler::assembleSunLightMesh(const Pr
     auto lit_mesh = Primitives::Primitive::queryPrimitive(mesh_id);
     if (!lit_mesh)
     {
-        lit_mesh = MeshPrimitiveAssembler(mesh_id).geometryId(sun_quad_id).asNative(mesh_id.name() + ".mesh@DataPath").effect(m_configuration->sunLightEffect()).textureMap(getGBufferTextureSemantics()).renderListID(Renderer::Renderer::RenderListID::DeferredLighting).constitute();
+        lit_mesh = assembleLightMesh(sun_quad_id, mesh_id, m_configuration->sunLightEffect());
     }
     return std::dynamic_pointer_cast<MeshPrimitive>(lit_mesh);
 }
@@ -89,9 +91,20 @@ std::shared_ptr<MeshPrimitive> LightMeshAssembler::assemblePointLightMesh(const 
     auto vol_mesh = Primitives::Primitive::queryPrimitive(mesh_id);
     if (!vol_mesh)
     {
-        vol_mesh = MeshPrimitiveAssembler(mesh_id).geometryId(vol_geo_id).asNative(mesh_id.name() + ".mesh@DataPath").effect(m_configuration->lightVolumeEffect()).textureMap(getGBufferTextureSemantics()).renderListID(Renderer::Renderer::RenderListID::DeferredLighting).constitute();
+        vol_mesh = assembleLightMesh(vol_geo_id, mesh_id, m_configuration->lightVolumeEffect());
     }
     return std::dynamic_pointer_cast<MeshPrimitive>(vol_mesh);
+}
+
+std::shared_ptr<Enigma::Primitives::Primitive> LightMeshAssembler::assembleLightMesh(const Geometries::GeometryId& geometry_id, const Primitives::PrimitiveId& mesh_id, const Engine::EffectMaterialId& effect_material_id)
+{
+    std::shared_ptr<MeshPrimitiveAssembler> assembler = std::make_shared<MeshPrimitiveAssembler>(mesh_id);
+    assembler->geometryId(geometry_id);
+    assembler->addEffect(effect_material_id);
+    assembler->addTextureMap(getGBufferTextureSemantics());
+    assembler->renderListID(Renderer::Renderer::RenderListID::DeferredLighting);
+    assembler->asNative(mesh_id.name() + ".mesh@DataPath");
+    return std::make_shared<Primitives::RequestPrimitiveConstitution>(mesh_id, assembler->assemble())->dispatch();
 }
 
 void LightMeshAssembler::requestAmbientLightMeshAssembly(const IQueryPtr& q)

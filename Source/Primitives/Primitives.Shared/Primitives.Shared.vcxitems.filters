@@ -45,6 +45,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PrimitiveErrors.cpp">
       <Filter>Error Codes</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PrimitiveAssembler.cpp">
+      <Filter>Assemblers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Primitive.h">

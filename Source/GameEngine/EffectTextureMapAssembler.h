@@ -34,6 +34,7 @@ namespace Enigma::Engine
     {
     public:
         EffectTextureMapDisassembler();
+        EffectTextureMapDisassembler(const GenericDto& dto);
 
         [[nodiscard]] const std::vector<TextureMappingDisassembler>& textureMappings() const { return m_mappingDisassemblers; }
 

@@ -23,7 +23,7 @@
 namespace Enigma::Renderables
 {
     class MeshPrimitive;
-    class MeshPrimitiveDto
+    /*class MeshPrimitiveDto
     {
     public:
         MeshPrimitiveDto();
@@ -63,12 +63,12 @@ namespace Enigma::Renderables
         Engine::GenericDtoCollection m_textureMaps;
         Renderer::Renderer::RenderListID m_renderListID;
         std::string m_visualTechniqueSelection;
-    };
+    };*/
 
-    class MeshPrimitiveMetaDto
+    /*class MeshPrimitiveMetaDto
     {
     public:
-        MeshPrimitiveMetaDto(const MeshPrimitiveDto& dto);
+        //MeshPrimitiveMetaDto(const MeshPrimitiveDto& dto);
 
         void replaceDuplicatedEffects(const std::shared_ptr<MeshPrimitive>& mesh_primitive);
 
@@ -79,14 +79,14 @@ namespace Enigma::Renderables
     protected:
         std::vector<Engine::EffectMaterialId> m_effects;
         std::vector<Engine::EffectTextureMapDisassembler> m_textureMaps;
-    };
+    };*/
 
-    class SkinMeshPrimitiveDto : public MeshPrimitiveDto
+    class SkinMeshPrimitiveDto // : public MeshPrimitiveDto
     {
     public:
         SkinMeshPrimitiveDto();
         SkinMeshPrimitiveDto(const Engine::GenericDto& dto);
-        SkinMeshPrimitiveDto(const MeshPrimitiveDto&);
+        //SkinMeshPrimitiveDto(const MeshPrimitiveDto&);
         SkinMeshPrimitiveDto(const SkinMeshPrimitiveDto&) = default;
         SkinMeshPrimitiveDto(SkinMeshPrimitiveDto&&) = default;
         ~SkinMeshPrimitiveDto() = default;

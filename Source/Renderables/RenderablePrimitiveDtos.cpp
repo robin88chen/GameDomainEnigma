@@ -27,7 +27,7 @@ static std::string TOKEN_MESH_NODE_TREE = "MeshNodeTree";
 static std::string TOKEN_MODEL_ANIMATOR_ID = "ModelAnimatorId";
 static std::string TOKEN_VISUAL_TECHNIQUE_SELECTION = "VisualTechniqueSelection";
 
-MeshPrimitiveDto::MeshPrimitiveDto() : m_factoryDesc(MeshPrimitive::TYPE_RTTI.getName()), m_renderListID(Renderer::Renderer::RenderListID::Scene)
+/*MeshPrimitiveDto::MeshPrimitiveDto() : m_factoryDesc(MeshPrimitive::TYPE_RTTI.getName()), m_renderListID(Renderer::Renderer::RenderListID::Scene)
 {
 }
 
@@ -82,9 +82,9 @@ GenericDto MeshPrimitiveDto::toGenericDto() const
         dto.addOrUpdate(TOKEN_VISUAL_TECHNIQUE_SELECTION, m_visualTechniqueSelection);
     }
     return dto;
-}
+}*/
 
-MeshPrimitiveMetaDto::MeshPrimitiveMetaDto(const MeshPrimitiveDto& dto)
+/*MeshPrimitiveMetaDto::MeshPrimitiveMetaDto(const MeshPrimitiveDto& dto)
 {
     for (auto& eff : dto.effects())
     {
@@ -96,7 +96,7 @@ MeshPrimitiveMetaDto::MeshPrimitiveMetaDto(const MeshPrimitiveDto& dto)
         disassembler.disassemble(tex);
         m_textureMaps.emplace_back(disassembler);
     }
-}
+}*/
 
 void MeshPrimitiveMetaDto::replaceDuplicatedEffects(const std::shared_ptr<MeshPrimitive>& mesh_primitive)
 {
@@ -108,23 +108,23 @@ void MeshPrimitiveMetaDto::replaceDuplicatedEffects(const std::shared_ptr<MeshPr
     }
 }
 
-SkinMeshPrimitiveDto::SkinMeshPrimitiveDto() : MeshPrimitiveDto()
+SkinMeshPrimitiveDto::SkinMeshPrimitiveDto() //: MeshPrimitiveDto()
 {
-    m_factoryDesc = FactoryDesc(SkinMeshPrimitive::TYPE_RTTI.getName());
+    //m_factoryDesc = FactoryDesc(SkinMeshPrimitive::TYPE_RTTI.getName());
 }
 
-SkinMeshPrimitiveDto::SkinMeshPrimitiveDto(const Engine::GenericDto& dto) : MeshPrimitiveDto(dto)
+SkinMeshPrimitiveDto::SkinMeshPrimitiveDto(const Engine::GenericDto& dto) //: MeshPrimitiveDto(dto)
 {
 }
 
-SkinMeshPrimitiveDto::SkinMeshPrimitiveDto(const MeshPrimitiveDto& mesh) : MeshPrimitiveDto(mesh)
+/*SkinMeshPrimitiveDto::SkinMeshPrimitiveDto(const MeshPrimitiveDto& mesh) : MeshPrimitiveDto(mesh)
 {
     assert(Frameworks::Rtti::isExactlyOrDerivedFrom(m_factoryDesc.GetRttiName(), SkinMeshPrimitive::TYPE_RTTI.getName()));
-}
+}*/
 
 GenericDto SkinMeshPrimitiveDto::toGenericDto() const
 {
-    GenericDto dto = MeshPrimitiveDto::toGenericDto();
+    GenericDto dto; // = MeshPrimitiveDto::toGenericDto();
     return dto;
 }
 

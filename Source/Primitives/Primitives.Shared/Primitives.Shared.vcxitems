@@ -16,6 +16,7 @@
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrPrimitiveRay3.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Primitive.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PrimitiveAssembler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PrimitiveErrors.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PrimitiveFactory.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PrimitiveId.cpp" />

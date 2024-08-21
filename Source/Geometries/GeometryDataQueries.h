@@ -27,6 +27,16 @@ namespace Enigma::Geometries
     protected:
         GeometryId m_id;
     };
+    class HasGeometryData : public Frameworks::Query<bool>
+    {
+    public:
+        HasGeometryData(const GeometryId& id) : m_id(id) {}
+
+        const GeometryId& id() const { return m_id; }
+
+    protected:
+        GeometryId m_id;
+    };
     class RequestGeometryCreation : public Frameworks::Query<std::shared_ptr<GeometryData>>
     {
     public:

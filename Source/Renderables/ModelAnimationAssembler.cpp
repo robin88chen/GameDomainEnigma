@@ -5,6 +5,7 @@
 
 using namespace Enigma::Renderables;
 
+static std::string TOKEN_ID = "Id";
 static std::string TOKEN_MESH_NODE_NAMES = "MeshNodeNames";
 static std::string TOKEN_TIME_SRTS = "TimeSRTs";
 
@@ -38,6 +39,8 @@ Enigma::Engine::GenericDto ModelAnimationAssembler::assemble() const
         timeSRTs.emplace_back(std::get<std::shared_ptr<AnimationTimeSRTAssembler>>(nodeSRT)->assembleWithSorted());
     }
     Engine::GenericDto dto;
+    dto.addOrUpdate(TOKEN_ID, m_id.name());
+    dto.addRtti(m_factoryDesc);
     dto.addOrUpdate(TOKEN_MESH_NODE_NAMES, meshNodeNames);
     dto.addOrUpdate(TOKEN_TIME_SRTS, timeSRTs);
     return dto;
@@ -50,6 +53,9 @@ ModelAnimationDisassembler::ModelAnimationDisassembler() : AnimationAssetDisasse
 
 void ModelAnimationDisassembler::disassemble(const Engine::GenericDto& dto)
 {
+    if (const auto v = dto.tryGetValue<std::string>(TOKEN_ID)) m_id = Animators::AnimationAssetId(v.value());
+    m_factoryDesc = dto.getRtti();
+
     std::vector<std::string> meshNodeNames;
     std::vector<Engine::GenericDto> timeSRTs;
     if (const auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_MESH_NODE_NAMES)) meshNodeNames = v.value();

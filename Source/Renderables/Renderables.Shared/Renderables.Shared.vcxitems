@@ -17,6 +17,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationClip.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRT.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRTAssembler.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveAssembler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimationAssembler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimationFactoryMethods.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimatorAssembler.cpp" />
@@ -44,6 +45,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClip.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRT.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationTimeSRTAssembler.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveAssembler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimationAssembler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimationFactoryMethods.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimatorAssembler.h" />

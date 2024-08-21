@@ -26,8 +26,6 @@ namespace Enigma::Renderables
 {
     using error = std::error_code;
 
-    class MeshPrimitiveDto;
-
     class MeshPrimitive : public Primitives::Primitive
     {
         DECLARE_EN_RTTI;
@@ -36,20 +34,17 @@ namespace Enigma::Renderables
         using TextureMapList = std::vector<Engine::EffectTextureMap>;
     public:
         MeshPrimitive(const Primitives::PrimitiveId& id);
-        MeshPrimitive(const Primitives::PrimitiveId& id, const Engine::GenericDto& dto, const std::shared_ptr<Geometries::GeometryRepository>& geometry_repository);
         MeshPrimitive(const MeshPrimitive&) = delete;  // non-copyable
         MeshPrimitive(MeshPrimitive&&) = delete;
         ~MeshPrimitive() override;
         MeshPrimitive& operator=(const MeshPrimitive&) = delete;
         MeshPrimitive& operator=(MeshPrimitive&&) = delete;
 
-        //todo : implement these functions
         virtual std::shared_ptr<Primitives::PrimitiveAssembler> assembler() const override;
         virtual void assemble(const std::shared_ptr<Primitives::PrimitiveAssembler>& assembler) const override;
         virtual std::shared_ptr<Primitives::PrimitiveDisassembler> disassembler() const override;
         virtual void disassemble(const std::shared_ptr<Primitives::PrimitiveDisassembler>& disassembler) override; ///< that's double dispatch
 
-        const std::string& getName() const { return m_name; }
         /** get geometry data */
         const Geometries::GeometryDataPtr& getGeometryData() const { return m_geometry; };
 
@@ -114,8 +109,6 @@ namespace Enigma::Renderables
         std::shared_ptr<Engine::Texture> findTextureBySemantic(const std::string& semantic) const;
 
     protected:
-        MeshPrimitiveDto serializeMeshDto() const;
-
         void cleanupGeometry();
 
         /** bind primitive effect texture */
@@ -129,7 +122,6 @@ namespace Enigma::Renderables
 
     protected:
         using RenderElementList = std::vector<std::shared_ptr<Renderer::RenderElement>>;
-        std::string m_name;
         Geometries::GeometryDataPtr m_geometry;
         Engine::RenderBufferPtr m_renderBuffer;
         RenderElementList m_elements;

@@ -47,6 +47,8 @@ ServiceResult GeometryRepository::onInit()
 {
     m_queryGeometryData = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { return this->queryGeometryData(q); });
     QueryDispatcher::subscribe(typeid(QueryGeometryData), m_queryGeometryData);
+    m_hasGeometryData = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { hasGeometryData(q); });
+    QueryDispatcher::subscribe(typeid(HasGeometryData), m_hasGeometryData);
     m_requestGeometryCreation = std::make_shared<QuerySubscriber>([=](const IQueryPtr& r) { requestGeometryCreation(r); });
     QueryDispatcher::subscribe(typeid(RequestGeometryCreation), m_requestGeometryCreation);
     m_requestGeometryConstitution = std::make_shared<QuerySubscriber>([=](const IQueryPtr& r) { requestGeometryConstitution(r); });
@@ -70,6 +72,8 @@ ServiceResult GeometryRepository::onTerm()
 
     QueryDispatcher::unsubscribe(typeid(QueryGeometryData), m_queryGeometryData);
     m_queryGeometryData = nullptr;
+    QueryDispatcher::unsubscribe(typeid(HasGeometryData), m_hasGeometryData);
+    m_hasGeometryData = nullptr;
     QueryDispatcher::unsubscribe(typeid(RequestGeometryCreation), m_requestGeometryCreation);
     m_requestGeometryCreation = nullptr;
     QueryDispatcher::unsubscribe(typeid(RequestGeometryConstitution), m_requestGeometryConstitution);
@@ -119,6 +123,14 @@ void GeometryRepository::queryGeometryData(const Frameworks::IQueryPtr& q)
     const auto query = std::dynamic_pointer_cast<QueryGeometryData, IQuery>(q);
     if (!query) return;
     query->setResult(queryGeometryData(query->id()));
+}
+
+void GeometryRepository::hasGeometryData(const Frameworks::IQueryPtr& q)
+{
+    if (!q) return;
+    const auto query = std::dynamic_pointer_cast<HasGeometryData, IQuery>(q);
+    if (!query) return;
+    query->setResult(hasGeometryData(query->id()));
 }
 
 void GeometryRepository::requestGeometryCreation(const IQueryPtr& r)

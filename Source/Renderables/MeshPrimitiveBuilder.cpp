@@ -1,19 +1,14 @@
 ﻿#include <memory>
 #include "MeshPrimitiveBuilder.h"
 #include "MeshPrimitive.h"
-#include "SkinMeshPrimitive.h"
+#include "MeshPrimitiveAssembler.h"
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/EventPublisher.h"
-#include "Frameworks/QueryDispatcher.h"
-#include "Geometries/GeometryCommands.h"
-#include "Geometries/GeometryDataEvents.h"
 #include "GameEngine/RenderBufferCommands.h"
 #include "GameEngine/RenderBufferEvents.h"
 #include "GameEngine/EffectEvents.h"
-#include "GameEngine/EffectQueries.h"
 #include "GameEngine/TextureCommands.h"
 #include "GameEngine/TextureEvents.h"
-#include "GameEngine/TextureQueries.h"
 #include "GameEngine/Texture.h"
 #include "GameEngine/EffectTextureMapAssembler.h"
 #include "GameEngine/TextureMappingAssembler.h"
@@ -64,9 +59,10 @@ void MeshPrimitiveBuilder::hydrateMeshPrimitive(const std::shared_ptr<MeshPrimit
 {
     Platforms::Debug::Printf("hydrating mesh primitive %s\n", mesh->id().name().c_str());
     cleanupBuildingMeta();
-    m_buildingDto = MeshPrimitiveDto(dto);
-    m_metaDto = std::make_unique<MeshPrimitiveMetaDto>(m_buildingDto.value());
-    m_metaDto->replaceDuplicatedEffects(mesh);
+    m_buildingDisassembler = std::make_shared<MeshPrimitiveDisassembler>();
+    m_buildingDisassembler->disassemble(dto);
+    m_metaDisassembler = std::make_unique<MeshPrimitiveMaterialMetaDisassembler>(m_buildingDisassembler);
+    m_metaDisassembler->replaceDuplicatedEffects(mesh);
     m_builtEffects.clear();
     m_builtTextures.clear();
     m_buildingId = mesh->id();
@@ -92,8 +88,8 @@ void MeshPrimitiveBuilder::hydrateMeshPrimitive(const std::shared_ptr<MeshPrimit
 void MeshPrimitiveBuilder::onRenderBufferBuilt(const Frameworks::IEventPtr& e)
 {
     Platforms::Debug::Printf("on render buffer built of mesh %s\n", m_buildingId.name().c_str());
-    if (!m_metaDto) return;
-    if (!m_buildingDto) return;
+    if (!m_metaDisassembler) return;
+    if (!m_buildingDisassembler) return;
     if (!m_builtGeometry) return;
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<RenderBufferBuilt, IEvent>(e);
@@ -102,7 +98,7 @@ void MeshPrimitiveBuilder::onRenderBufferBuilt(const Frameworks::IEventPtr& e)
     m_builtRenderBuffer = ev->buffer();
     std::dynamic_pointer_cast<MeshPrimitive>(m_builtPrimitive)->linkGeometryData(m_builtGeometry, m_builtRenderBuffer);
     bool all_effect_ready = true;
-    for (auto& id : m_metaDto->effects())
+    for (auto& id : m_metaDisassembler->effects())
     {
         if (auto eff = EffectMaterial::queryEffectMaterial(id))
         {
@@ -113,11 +109,11 @@ void MeshPrimitiveBuilder::onRenderBufferBuilt(const Frameworks::IEventPtr& e)
             }
         }
     }
-    m_builtTextures.resize(m_metaDto->textureMaps().size());
+    m_builtTextures.resize(m_metaDisassembler->textureMaps().size());
     bool all_texture_ready = true;
-    for (unsigned i = 0; i < m_metaDto->textureMaps().size(); i++)
+    for (unsigned i = 0; i < m_metaDisassembler->textureMaps().size(); i++)
     {
-        for (auto& t : m_metaDto->textureMaps()[i].textureMappings())
+        for (auto& t : m_metaDisassembler->textureMaps()[i]->textureMappings())
         {
             m_builtTextures[i].appendTextureSemantic(t.semantic());
             if (auto tex = Texture::queryTexture(t.textureId()))
@@ -139,8 +135,8 @@ void MeshPrimitiveBuilder::onRenderBufferBuilt(const Frameworks::IEventPtr& e)
 void MeshPrimitiveBuilder::onBuildRenderBufferFailed(const Frameworks::IEventPtr& e)
 {
     Platforms::Debug::Printf("on render buffer build failure of mesh %s\n", m_buildingId.name().c_str());
-    if (!m_metaDto) return;
-    if (!m_buildingDto) return;
+    if (!m_metaDisassembler) return;
+    if (!m_buildingDisassembler) return;
     if (!m_builtGeometry) return;
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<BuildRenderBufferFailed, IEvent>(e);
@@ -153,8 +149,8 @@ void MeshPrimitiveBuilder::onEffectMaterialHydrated(const Frameworks::IEventPtr&
 {
     //? 發生奇怪的bug, 兩個 dto 是 empty, 卻沒有return, 一路走到 found_idx 出錯, ev的 id 與 builtEffects 也不符
     Platforms::Debug::Printf("on effect material hydrated of mesh %s\n", m_buildingId.name().c_str());
-    if (!m_metaDto) return;
-    if (!m_buildingDto) return;
+    if (!m_metaDisassembler) return;
+    if (!m_buildingDisassembler) return;
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<EffectMaterialHydrated>(e);
     if (!ev) return;
@@ -171,8 +167,8 @@ void MeshPrimitiveBuilder::onEffectMaterialHydrated(const Frameworks::IEventPtr&
 void MeshPrimitiveBuilder::onHydrateEffectMaterialFailed(const Frameworks::IEventPtr& e)
 {
     Platforms::Debug::Printf("on effect material hydrated failure of mesh %s\n", m_buildingId.name().c_str());
-    if (!m_metaDto) return;
-    if (!m_buildingDto) return;
+    if (!m_metaDisassembler) return;
+    if (!m_buildingDisassembler) return;
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<HydrateEffectMaterialFailed>(e);
     if (!ev) return;
@@ -182,8 +178,8 @@ void MeshPrimitiveBuilder::onHydrateEffectMaterialFailed(const Frameworks::IEven
 void MeshPrimitiveBuilder::onTextureHydrated(const Frameworks::IEventPtr& e)
 {
     Platforms::Debug::Printf("on texture hydrated of mesh %s\n", m_buildingId.name().c_str());
-    if (!m_metaDto) return;
-    if (!m_buildingDto) return;
+    if (!m_metaDisassembler) return;
+    if (!m_buildingDisassembler) return;
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<TextureHydrated>(e);
     if (!ev) return;
@@ -197,8 +193,8 @@ void MeshPrimitiveBuilder::onTextureHydrated(const Frameworks::IEventPtr& e)
 void MeshPrimitiveBuilder::onHydrateTextureFailed(const Frameworks::IEventPtr& e)
 {
     Platforms::Debug::Printf("on texture hydrated failure of mesh %s\n", m_buildingId.name().c_str());
-    if (!m_metaDto) return;
-    if (!m_buildingDto) return;
+    if (!m_metaDisassembler) return;
+    if (!m_buildingDisassembler) return;
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<HydrateTextureFailed>(e);
     if (!ev) return;
@@ -210,7 +206,7 @@ void MeshPrimitiveBuilder::onHydrateTextureFailed(const Frameworks::IEventPtr& e
 
 void MeshPrimitiveBuilder::tryCompletingMesh()
 {
-    if (!m_buildingDto) return;
+    if (!m_buildingDisassembler) return;
     if (!m_builtGeometry) return;
     if (!m_builtRenderBuffer) return;
     for (const auto& eff : m_builtEffects)
@@ -227,8 +223,8 @@ void MeshPrimitiveBuilder::tryCompletingMesh()
     m_builtPrimitive->changeEffectMaterials(m_builtEffects);
     m_builtPrimitive->changeTextureMaps(m_builtTextures);
     m_builtPrimitive->createRenderElements();
-    m_builtPrimitive->renderListId() = m_buildingDto->renderListID();
-    m_builtPrimitive->selectVisualTechnique(m_buildingDto->visualTechniqueSelection());
+    m_builtPrimitive->renderListId() = m_buildingDisassembler->renderListID();
+    m_builtPrimitive->selectVisualTechnique(m_buildingDisassembler->visualTechniqueSelection());
     m_builtPrimitive->lazyStatus().changeStatus(LazyStatus::Status::Ready);
     EventPublisher::enqueue(std::make_shared<MeshPrimitiveHydrated>(m_buildingId, m_buildingId.name(), m_builtPrimitive));
 
@@ -245,22 +241,22 @@ void MeshPrimitiveBuilder::failMeshHydration(const std::error_code er)
 
 std::optional<unsigned> MeshPrimitiveBuilder::findBuildingEffectIndex(const EffectMaterialId& id)
 {
-    assert(m_metaDto);
-    for (unsigned i = 0; i < m_metaDto->effects().size(); i++)
+    assert(m_metaDisassembler);
+    for (unsigned i = 0; i < m_metaDisassembler->effects().size(); i++)
     {
-        if ((m_metaDto->effects()[i] == id) && (m_builtEffects.size() > i) && (m_builtEffects[i] != nullptr)) return i;
+        if ((m_metaDisassembler->effects()[i] == id) && (m_builtEffects.size() > i) && (m_builtEffects[i] != nullptr)) return i;
     }
     return std::nullopt;
 }
 
 std::optional<std::tuple<unsigned, unsigned>> MeshPrimitiveBuilder::findLoadingTextureIndex(const TextureId& id)
 {
-    assert(m_metaDto);
-    for (unsigned tex = 0; tex < m_metaDto->textureMaps().size(); tex++)
+    assert(m_metaDisassembler);
+    for (unsigned tex = 0; tex < m_metaDisassembler->textureMaps().size(); tex++)
     {
-        for (unsigned tp = 0; tp < m_metaDto->textureMaps()[tex].textureMappings().size(); tp++)
+        for (unsigned tp = 0; tp < m_metaDisassembler->textureMaps()[tex]->textureMappings().size(); tp++)
         {
-            if ((m_metaDto->textureMaps()[tex].textureMappings()[tp].textureId() == id)
+            if ((m_metaDisassembler->textureMaps()[tex]->textureMappings()[tp].textureId() == id)
                 && (m_builtTextures.size() > tex) && (m_builtTextures[tex].getTexture(tp))
                 && (m_builtTextures[tex].getTexture(tp)->id() == id) && (m_builtTextures[tex].getTexture(tp)->lazyStatus().isReady()))
                 return std::make_tuple(tex, tp);
@@ -274,8 +270,8 @@ void MeshPrimitiveBuilder::cleanupBuildingMeta()
     m_builtRenderBuffer = nullptr;
     m_builtGeometry = nullptr;
     m_builtPrimitive = nullptr;
-    m_buildingDto = std::nullopt;
-    m_metaDto = nullptr;
+    m_buildingDisassembler = nullptr;
+    m_metaDisassembler = nullptr;
     m_builtEffects.clear();
     m_builtTextures.clear();
     m_buildingId = Primitives::PrimitiveId();

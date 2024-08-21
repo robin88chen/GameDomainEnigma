@@ -40,6 +40,9 @@
     <Filter Include="Factory Methods">
       <UniqueIdentifier>{8bbc62e1-1179-4bce-8cc0-0aa65100aecb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Primitives\Assemblers">
+      <UniqueIdentifier>{8b134bb2-7c89-4304-8eb1-a3a93e296df9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshPrimitive.cpp">
@@ -116,6 +119,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimationFactoryMethods.cpp">
       <Filter>Factory Methods</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveAssembler.cpp">
+      <Filter>Primitives\Assemblers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -202,6 +208,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimationFactoryMethods.h">
       <Filter>Factory Methods</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveAssembler.h">
+      <Filter>Primitives\Assemblers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

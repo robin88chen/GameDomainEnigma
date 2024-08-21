@@ -30,6 +30,11 @@ EffectTextureMapDisassembler::EffectTextureMapDisassembler()
 {
 }
 
+EffectTextureMapDisassembler::EffectTextureMapDisassembler(const GenericDto& dto)
+{
+    disassemble(dto);
+}
+
 void EffectTextureMapDisassembler::disassemble(const GenericDto& dto)
 {
     if (const auto v = dto.tryGetValue<GenericDtoCollection>(TOKEN_TEXTURE_MAPPINGS))

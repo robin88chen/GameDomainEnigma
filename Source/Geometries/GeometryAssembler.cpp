@@ -48,7 +48,7 @@ GeometryAssembler::GeometryAssembler(const GeometryId& id, const Engine::Factory
 {
 }
 
-Enigma::Engine::GenericDto GeometryAssembler::assemble() const
+Enigma::Engine::GenericDto GeometryAssembler::assemble()
 {
     Engine::GenericDto dto;
     dto.addRtti(m_factoryDesc);

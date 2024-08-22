@@ -16,6 +16,7 @@
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainAssemblers.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainGeometry.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainGeometryAssembler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainGeometryDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainInstallingPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPawn.h" />
@@ -26,6 +27,7 @@
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainAssemblers.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainGeometry.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainGeometryAssembler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainGeometryDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainInstallingPolicy.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPawn.cpp" />

@@ -42,6 +42,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainAssemblers.h">
       <Filter>Assemblers</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainGeometryAssembler.h">
+      <Filter>Assemblers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainGeometry.cpp">
@@ -66,6 +69,9 @@
       <Filter>Pawn</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainAssemblers.cpp">
+      <Filter>Assemblers</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainGeometryAssembler.cpp">
       <Filter>Assemblers</Filter>
     </ClCompile>
   </ItemGroup>

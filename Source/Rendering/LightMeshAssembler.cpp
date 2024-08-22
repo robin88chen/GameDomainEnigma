@@ -101,7 +101,7 @@ std::shared_ptr<Enigma::Primitives::Primitive> LightMeshAssembler::assembleLight
     std::shared_ptr<MeshPrimitiveAssembler> assembler = std::make_shared<MeshPrimitiveAssembler>(mesh_id);
     assembler->geometryId(geometry_id);
     assembler->addEffect(effect_material_id);
-    assembler->addTextureMap(getGBufferTextureSemantics());
+    assembler->addTextureMap(std::make_shared<EffectTextureMapAssembler>(getGBufferTextureSemantics()));
     assembler->renderListID(Renderer::Renderer::RenderListID::DeferredLighting);
     assembler->asNative(mesh_id.name() + ".mesh@DataPath");
     return std::make_shared<Primitives::RequestPrimitiveConstitution>(mesh_id, assembler->assemble())->dispatch();

@@ -19,7 +19,7 @@
 
 namespace Enigma::Terrain
 {
-    class TerrainGeometryAssembler
+    /*class TerrainGeometryAssembler
     {
     public:
         TerrainGeometryAssembler(const Geometries::GeometryId& id);
@@ -40,9 +40,9 @@ namespace Enigma::Terrain
         Geometries::GeometryId m_id;
         //TerrainGeometryDto m_dto;
         Engine::BoundingVolume m_geometryBound;
-    };
+    };*/
 
-    class TerrainPrimitiveAssembler
+    /*class TerrainPrimitiveAssembler
     {
     public:
         TerrainPrimitiveAssembler(const Primitives::PrimitiveId& id);
@@ -58,7 +58,7 @@ namespace Enigma::Terrain
         Primitives::PrimitiveId m_id;
         Renderables::MeshPrimitiveAssembler m_meshPrimitiveAssembler;
         TerrainPrimitiveDto m_dto;
-    };
+    };*/
 
     class TerrainPawnAssembler
     {

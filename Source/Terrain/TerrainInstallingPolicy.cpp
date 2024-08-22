@@ -1,4 +1,5 @@
 ﻿#include "TerrainInstallingPolicy.h"
+#include "TerrainGeometryFactoryMethods.h"
 #include "Frameworks/ServiceManager.h"
 #include "Renderables/RenderableErrors.h"
 #include "TerrainGeometry.h"
@@ -22,16 +23,7 @@ error TerrainInstallingPolicy::install(Frameworks::ServiceManager* service_manag
       //  [](auto o) { return new TerrainPawn(o); }));
     auto geometry_repository = service_manager->getSystemServiceAs<Enigma::Geometries::GeometryRepository>();
     assert(geometry_repository);
-    geometry_repository->registerGeometryFactory(TerrainGeometry::TYPE_RTTI.getName(),
-        [](auto id) { return std::make_shared<TerrainGeometry>(id); },
-        [](auto id, auto dto)
-        {
-            auto geometry = std::make_shared<TerrainGeometry>(id);
-            auto disassembler = geometry->disassembler();
-            disassembler->disassemble(dto);
-            geometry->disassemble(disassembler);
-            return geometry;
-        });
+    geometry_repository->registerGeometryFactory(TerrainGeometry::TYPE_RTTI.getName(), createTerrainGeometry, constituteTerrainGeometry);
     auto renderable_builder = service_manager->getSystemServiceAs<RenderablePrimitiveBuilder>();
     assert(renderable_builder);
     renderable_builder->registerCustomMeshFactory(TerrainPrimitive::TYPE_RTTI.getName(), TerrainPrimitive::create, TerrainPrimitive::constitute);

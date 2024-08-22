@@ -14,7 +14,7 @@ namespace Enigma::Terrain
 {
     class TerrainPrimitivePolicy;
 
-    class TerrainPrimitiveDto : public Renderables::MeshPrimitiveDto
+    /*class TerrainPrimitiveDto : public Renderables::MeshPrimitiveDto
     {
     public:
         TerrainPrimitiveDto();
@@ -27,7 +27,7 @@ namespace Enigma::Terrain
         ~TerrainPrimitiveDto() = default;
 
         Engine::GenericDto toGenericDto() const;
-    };
+    };*/
 }
 
 #endif // TERRAIN_PRIMITIVE_DTO_H

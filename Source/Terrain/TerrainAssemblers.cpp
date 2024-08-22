@@ -5,7 +5,7 @@
 using namespace Enigma::Terrain;
 using namespace Enigma::SceneGraph;
 
-TerrainGeometryAssembler::TerrainGeometryAssembler(const Geometries::GeometryId& id)
+/*TerrainGeometryAssembler::TerrainGeometryAssembler(const Geometries::GeometryId& id)
 {
     m_id = id;
     //m_dto.id() = id;
@@ -75,7 +75,7 @@ Enigma::Engine::GenericDto TerrainGeometryAssembler::toGenericDto() const
     return Engine::GenericDto(); // dto().toGenericDto();
 }
 
-/*TerrainGeometryDto TerrainGeometryAssembler::dto() const
+TerrainGeometryDto TerrainGeometryAssembler::dto() const
 {
     TerrainGeometryDto& geo = const_cast<TerrainGeometryDto&>(m_dto);
     geo.geometryBound() = m_geometryBound.serializeDto().toGenericDto();
@@ -83,7 +83,7 @@ Enigma::Engine::GenericDto TerrainGeometryAssembler::toGenericDto() const
 }*/
 
 //------------------------------------------------------------------------------
-TerrainPrimitiveAssembler::TerrainPrimitiveAssembler(const Primitives::PrimitiveId& id) : m_meshPrimitiveAssembler(id)
+/*TerrainPrimitiveAssembler::TerrainPrimitiveAssembler(const Primitives::PrimitiveId& id) : m_meshPrimitiveAssembler(id)
 {
     m_id = id;
 }
@@ -109,7 +109,7 @@ TerrainPrimitiveDto TerrainPrimitiveAssembler::dto() const
 Enigma::Engine::GenericDto TerrainPrimitiveAssembler::toGenericDto() const
 {
     return dto().toGenericDto();
-}
+}*/
 
 //------------------------------------------------------------------------------
 TerrainPawnAssembler::TerrainPawnAssembler(const SpatialId& id) : m_pawnAssembler(id)

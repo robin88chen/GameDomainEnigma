@@ -158,7 +158,7 @@ std::shared_ptr<Primitive> RenderablePrimitiveBuilder::constituteCustomMesh(cons
 {
     assert(m_customMeshConstitutors.find(id.rtti().getName()) != m_customMeshConstitutors.end());
     assert(!m_geometryRepository.expired());
-    auto prim = m_customMeshConstitutors.at(id.rtti().getName())(id, dto, m_geometryRepository.lock());
+    auto prim = m_customMeshConstitutors.at(id.rtti().getName())(id, dto);
     std::lock_guard locker{ m_primitivePlansLock };
     m_primitivePlans.emplace(PrimitiveHydratingPlan{ id, prim, dto });
     prim->lazyStatus().changeStatus(LazyStatus::Status::InQueue);

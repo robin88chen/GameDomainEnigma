@@ -1,6 +1,6 @@
 ﻿#include "MeshNodeTree.h"
-#include "RenderablePrimitiveDtos.h"
 #include "MeshPrimitive.h"
+#include "MeshNodeAssemblers.h"
 
 using namespace Enigma::Renderables;
 using namespace Enigma::Engine;
@@ -12,7 +12,7 @@ MeshNodeTree::MeshNodeTree() : m_factoryDesc(MeshNodeTree::TYPE_RTTI.getName())
     m_meshNodes.clear();
 }
 
-MeshNodeTree::MeshNodeTree(const Engine::GenericDto& dto) : m_factoryDesc(MeshNodeTree::TYPE_RTTI.getName())
+/*MeshNodeTree::MeshNodeTree(const Engine::GenericDto& dto) : m_factoryDesc(MeshNodeTree::TYPE_RTTI.getName())
 {
     MeshNodeTreeDto mesh_node_tree_dto(dto);
     m_factoryDesc = mesh_node_tree_dto.factoryDesc();
@@ -20,7 +20,7 @@ MeshNodeTree::MeshNodeTree(const Engine::GenericDto& dto) : m_factoryDesc(MeshNo
     {
         addMeshNode(node_dto);
     }
-}
+}*/
 
 MeshNodeTree::MeshNodeTree(const MeshNodeTree& tree) : m_factoryDesc(tree.factoryDesc())
 {
@@ -51,7 +51,26 @@ MeshNodeTree& MeshNodeTree::operator=(MeshNodeTree&& tree) noexcept
     return *this;
 }
 
-GenericDto MeshNodeTree::serializeDto() const
+void MeshNodeTree::assemble(const std::shared_ptr<MeshNodeTreeAssembler>& assembler) const
+{
+    assembler->factoryDesc(m_factoryDesc);
+    for (const auto& node : m_meshNodes)
+    {
+        assembler->addNode(node);
+    }
+}
+
+void MeshNodeTree::disassemble(const std::shared_ptr<MeshNodeTreeDisassembler>& disassembler)
+{
+    m_factoryDesc = disassembler->factoryDesc();
+    m_meshNodes.clear();
+    for (const auto& node : disassembler->nodes())
+    {
+        addMeshNode(node);
+    }
+}
+
+/*GenericDto MeshNodeTree::serializeDto() const
 {
     MeshNodeTreeDto dto;
     dto.factoryDesc() = m_factoryDesc;
@@ -60,7 +79,7 @@ GenericDto MeshNodeTree::serializeDto() const
         dto.meshNodes().emplace_back(node.serializeDto());
     }
     return dto.toGenericDto();
-}
+}*/
 
 std::optional<unsigned> MeshNodeTree::findMeshNodeIndex(const std::string& node_name) const
 {

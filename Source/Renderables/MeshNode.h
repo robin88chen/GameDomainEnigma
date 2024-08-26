@@ -16,14 +16,17 @@
 
 namespace Enigma::Renderables
 {
+    class MeshNodeAssembler;
+    class MeshNodeDisassembler;
     class MeshPrimitive;
+
     class MeshNode
     {
         DECLARE_EN_RTTI_NON_BASE;
     public:
+        MeshNode();
         MeshNode(const std::string& name);
         MeshNode(const MeshNode& node);
-        MeshNode(const Engine::GenericDto& dto);
         MeshNode(MeshNode&& node) noexcept;
         ~MeshNode();
         MeshNode& operator=(const MeshNode& node);
@@ -32,7 +35,8 @@ namespace Enigma::Renderables
         const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
-        Engine::GenericDto serializeDto() const;
+        void assemble(const std::shared_ptr<MeshNodeAssembler>& assembler) const;
+        void disassemble(const std::shared_ptr<MeshNodeDisassembler>& disassembler);
 
         const std::string& getName() const { return m_name; }
         void setName(const std::string& name) { m_name = name; }

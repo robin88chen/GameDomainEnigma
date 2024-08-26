@@ -129,6 +129,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshNodeAssemblers.cpp">
       <Filter>Primitives\Assemblers</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveAssembler.cpp">
+      <Filter>Primitives\Assemblers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshPrimitive.h">
@@ -222,6 +225,9 @@
       <Filter>Primitives\Assemblers</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshNodeAssemblers.h">
+      <Filter>Primitives\Assemblers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveAssembler.h">
       <Filter>Primitives\Assemblers</Filter>
     </ClInclude>
   </ItemGroup>

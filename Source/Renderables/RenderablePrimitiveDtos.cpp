@@ -128,7 +128,7 @@ SkinMeshPrimitiveDto::SkinMeshPrimitiveDto(const Engine::GenericDto& dto) //: Me
     return dto;
 }*/
 
-MeshNodeDto::MeshNodeDto() : m_factoryDesc(MeshNode::TYPE_RTTI.getName())
+/*MeshNodeDto::MeshNodeDto() : m_factoryDesc(MeshNode::TYPE_RTTI.getName())
 {
 }
 
@@ -173,9 +173,9 @@ GenericDto MeshNodeTreeDto::toGenericDto() const
     dto.addRtti(m_factoryDesc);
     dto.addOrUpdate(TOKEN_MESH_NODES, m_nodeDtos);
     return dto;
-}
+}*/
 
-ModelPrimitiveDto::ModelPrimitiveDto() : m_factoryDesc(ModelPrimitive::TYPE_RTTI.getName())
+/*ModelPrimitiveDto::ModelPrimitiveDto() : m_factoryDesc(ModelPrimitive::TYPE_RTTI.getName())
 {
 }
 
@@ -196,3 +196,4 @@ GenericDto ModelPrimitiveDto::toGenericDto() const
     if (m_animatorId) dto.addOrUpdate(TOKEN_MODEL_ANIMATOR_ID, m_animatorId.value().tokens());
     return dto;
 }
+*/

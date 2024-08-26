@@ -117,7 +117,7 @@ std::shared_ptr<SkinMeshPrimitive> SkinMeshPrimitiveAssembler::constitute()
     return std::dynamic_pointer_cast<SkinMeshPrimitive>(std::make_shared<Primitives::RequestPrimitiveConstitution>(m_id, toGenericDto())->dispatch());
 }*/
 
-MeshNodeAssembler::MeshNodeAssembler(const std::string& name)
+/*MeshNodeAssembler::MeshNodeAssembler(const std::string& name)
 {
     m_name = name;
     m_dto.name() = name;
@@ -184,9 +184,9 @@ Enigma::Engine::GenericDto MeshNodeTreeAssembler::toGenericDto()
         m_dto.meshNodes().emplace_back(node.toGenericDto());
     }
     return m_dto.toGenericDto();
-}
+}*/
 
-ModelPrimitiveAssembler::ModelPrimitiveAssembler(const Primitives::PrimitiveId& id)
+/*ModelPrimitiveAssembler::ModelPrimitiveAssembler(const Primitives::PrimitiveId& id)
 {
     m_id = id;
     m_dto.id() = id;
@@ -219,4 +219,4 @@ Enigma::Engine::GenericDto ModelPrimitiveAssembler::toGenericDto()
 std::shared_ptr<ModelPrimitive> ModelPrimitiveAssembler::constitute()
 {
     return std::dynamic_pointer_cast<ModelPrimitive>(std::make_shared<Primitives::RequestPrimitiveConstitution>(m_id, toGenericDto())->dispatch());
-}
+}*/

@@ -145,7 +145,11 @@ std::shared_ptr<Primitive> RenderablePrimitiveBuilder::createModel(const Primiti
 
 std::shared_ptr<Primitive> RenderablePrimitiveBuilder::constituteModel(const PrimitiveId& id, const GenericDto& dto)
 {
-    return std::make_shared<ModelPrimitive>(id, dto);
+    auto prim = std::make_shared<ModelPrimitive>(id);
+    auto disassembler = prim->disassembler();
+    disassembler->disassemble(dto);
+    prim->disassemble(disassembler);
+    return prim;
 }
 
 std::shared_ptr<Primitive> RenderablePrimitiveBuilder::createCustomMesh(const Primitives::PrimitiveId& id)

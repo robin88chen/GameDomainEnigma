@@ -17,6 +17,8 @@
 
 namespace Enigma::Renderables
 {
+    class MeshNode;
+
     class MeshNodeAssembler
     {
     public:
@@ -29,6 +31,7 @@ namespace Enigma::Renderables
 
         void factoryDesc(const Engine::FactoryDesc& desc) { m_factoryDesc = desc; }
         void name(const std::string& name) { m_name = name; }
+
         void localT_PosTransform(const MathLib::Matrix4& transform) { m_localT_PosTransform = transform; }
         void meshPrimitiveId(const Primitives::PrimitiveId& id) { m_meshPrimitiveId = id; }
         void parentIndexInArray(unsigned index) { m_parentIndexInArray = index; }
@@ -66,6 +69,49 @@ namespace Enigma::Renderables
         MathLib::Matrix4 m_localT_PosTransform;
         std::optional<Primitives::PrimitiveId> m_meshPrimitiveId;
         std::optional<unsigned> m_parentIndexInArray;
+    };
+    class MeshNodeTreeAssembler
+    {
+    public:
+        MeshNodeTreeAssembler();
+        ~MeshNodeTreeAssembler() = default;
+        MeshNodeTreeAssembler(const MeshNodeTreeAssembler&) = default;
+        MeshNodeTreeAssembler(MeshNodeTreeAssembler&&) = default;
+        MeshNodeTreeAssembler& operator=(const MeshNodeTreeAssembler&) = default;
+        MeshNodeTreeAssembler& operator=(MeshNodeTreeAssembler&&) = default;
+
+        void factoryDesc(const Engine::FactoryDesc& desc) { m_factoryDesc = desc; }
+        void addNodeWithParentName(const MeshNode& node, const std::string& parent_name);
+        void addNode(const MeshNode& node);
+
+        Engine::GenericDto assemble() const;
+
+    protected:
+        std::optional<unsigned> findNodeIndex(const std::string& name) const;
+
+    protected:
+        Engine::FactoryDesc m_factoryDesc;
+        std::vector<std::string> m_nodeNames;
+        std::vector<std::shared_ptr<MeshNodeAssembler>> m_nodesAssemblers;
+    };
+    class MeshNodeTreeDisassembler
+    {
+    public:
+        MeshNodeTreeDisassembler();
+        ~MeshNodeTreeDisassembler() = default;
+        MeshNodeTreeDisassembler(const MeshNodeTreeDisassembler&) = default;
+        MeshNodeTreeDisassembler(MeshNodeTreeDisassembler&&) = default;
+        MeshNodeTreeDisassembler& operator=(const MeshNodeTreeDisassembler&) = default;
+        MeshNodeTreeDisassembler& operator=(MeshNodeTreeDisassembler&&) = default;
+
+        void disassemble(const Engine::GenericDto& dto);
+
+        [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
+        [[nodiscard]] const std::vector<MeshNode>& nodes() const { return m_nodes; }
+
+    protected:
+        Engine::FactoryDesc m_factoryDesc;
+        std::vector<MeshNode> m_nodes;
     };
 }
 

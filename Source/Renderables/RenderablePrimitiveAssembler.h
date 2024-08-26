@@ -69,7 +69,7 @@ namespace Enigma::Renderables
         SkinMeshPrimitiveDto m_dto;
     };*/
 
-    class MeshNodeAssembler
+    /*class MeshNodeAssembler
     {
     public:
         MeshNodeAssembler(const std::string& name);
@@ -104,9 +104,9 @@ namespace Enigma::Renderables
     protected:
         MeshNodeTreeDto m_dto;
         std::vector<MeshNodeAssembler> m_nodes;
-    };
+    };*/
 
-    class ModelPrimitiveAssembler
+    /*class ModelPrimitiveAssembler
     {
     public:
         ModelPrimitiveAssembler(const Primitives::PrimitiveId& id);
@@ -124,7 +124,7 @@ namespace Enigma::Renderables
     protected:
         Primitives::PrimitiveId m_id;
         ModelPrimitiveDto m_dto;
-    };
+    };*/
 }
 
 #endif // RENDERABLE_PRIMITIVE_ASSEMBLER_H

@@ -96,7 +96,7 @@ namespace Enigma::Renderables
         Engine::GenericDto toGenericDto() const;
     };*/
 
-    class MeshNodeDto
+    /*class MeshNodeDto
     {
     public:
         MeshNodeDto();
@@ -184,7 +184,7 @@ namespace Enigma::Renderables
         Engine::FactoryDesc m_factoryDesc;
         Engine::GenericDto m_nodeTreeDto;
         std::optional<Animators::AnimatorId> m_animatorId;
-    };
+    };*/
 }
 
 #endif // _RENDERABLE_PRIMITIVE_DTOS_H

@@ -23,6 +23,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimationFactoryMethods.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimatorAssembler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimatorFactoryMethods.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveAssembler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderableErrors.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshNode.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshNodeTree.cpp" />
@@ -53,6 +54,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimationFactoryMethods.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimatorAssembler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimatorFactoryMethods.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveAssembler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderableErrors.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrModelPrimitiveCache.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MeshNode.h" />

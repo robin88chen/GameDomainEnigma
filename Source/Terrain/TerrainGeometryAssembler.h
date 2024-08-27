@@ -54,6 +54,35 @@ namespace Enigma::Terrain
         MathLib::Vector2 m_maxTextureCoordinate;
         std::optional<float_buffer> m_heightMap;
     };
+    class TerrainGeometryDisassembler : public Geometries::TriangleListDisassembler
+    {
+    public:
+        TerrainGeometryDisassembler();
+        virtual ~TerrainGeometryDisassembler() override = default;
+        TerrainGeometryDisassembler(const TerrainGeometryDisassembler&) = default;
+        TerrainGeometryDisassembler(TerrainGeometryDisassembler&&) = default;
+        TerrainGeometryDisassembler& operator=(const TerrainGeometryDisassembler&) = default;
+        TerrainGeometryDisassembler& operator=(TerrainGeometryDisassembler&&) = default;
+
+        void disassemble(const Engine::GenericDto& dto) override;
+
+        [[nodiscard]] unsigned numRows() const { return m_numRows; }
+        [[nodiscard]] unsigned numCols() const { return m_numCols; }
+        [[nodiscard]] const MathLib::Vector3& minPosition() const { return m_minPosition; }
+        [[nodiscard]] const MathLib::Vector3& maxPosition() const { return m_maxPosition; }
+        [[nodiscard]] const MathLib::Vector2& minTextureCoordinate() const { return m_minTextureCoordinate; }
+        [[nodiscard]] const MathLib::Vector2& maxTextureCoordinate() const { return m_maxTextureCoordinate; }
+        [[nodiscard]] const std::optional<float_buffer>& heightMap() const { return m_heightMap; }
+
+    protected:
+        unsigned m_numRows;
+        unsigned m_numCols;
+        MathLib::Vector3 m_minPosition;
+        MathLib::Vector3 m_maxPosition;
+        MathLib::Vector2 m_minTextureCoordinate;
+        MathLib::Vector2 m_maxTextureCoordinate;
+        std::optional<float_buffer> m_heightMap;
+    };
 }
 
 #endif // TERRAIN_GEOMETRY_ASSEMBLER_H

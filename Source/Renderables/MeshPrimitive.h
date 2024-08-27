@@ -125,6 +125,7 @@ namespace Enigma::Renderables
         Geometries::GeometryDataPtr m_geometry;
         Engine::RenderBufferPtr m_renderBuffer;
         RenderElementList m_elements;
+        //todo: 每個 segment 中的 effect 和 texture map 是一個 value object, 不該分開
         EffectMaterialList m_effects;
         TextureMapList m_textures;
         Renderer::Renderer::RenderListID m_renderListID;  ///< default : render group scene

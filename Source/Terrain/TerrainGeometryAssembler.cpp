@@ -124,3 +124,20 @@ BoundingVolume TerrainGeometryAssembler::calculateGeometryBounding()
     const Box3 bb_box = ContainmentBox3::ComputeAlignedBox(box_corner, 2);
     return BoundingVolume{ bb_box };
 }
+
+TerrainGeometryDisassembler::TerrainGeometryDisassembler() : TriangleListDisassembler()
+{
+    m_numRows = m_numCols = 1;
+}
+
+void TerrainGeometryDisassembler::disassemble(const Engine::GenericDto& dto)
+{
+    TriangleListDisassembler::disassemble(dto);
+    if (auto v = dto.tryGetValue<unsigned>(TOKEN_NUM_ROWS)) m_numRows = v.value();
+    if (auto v = dto.tryGetValue<unsigned>(TOKEN_NUM_COLS)) m_numCols = v.value();
+    if (auto v = dto.tryGetValue<Vector3>(TOKEN_MIN_POSITION)) m_minPosition = v.value();
+    if (auto v = dto.tryGetValue<Vector3>(TOKEN_MAX_POSITION)) m_maxPosition = v.value();
+    if (auto v = dto.tryGetValue<Vector2>(TOKEN_MIN_TEXTURE_COORDINATE)) m_minTextureCoordinate = v.value();
+    if (auto v = dto.tryGetValue<Vector2>(TOKEN_MAX_TEXTURE_COORDINATE)) m_maxTextureCoordinate = v.value();
+    if (auto v = dto.tryGetValue<float_buffer>(TOKEN_HEIGHT_MAP)) m_heightMap = v.value();
+}

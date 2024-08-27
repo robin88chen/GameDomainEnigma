@@ -1,6 +1,6 @@
 ﻿#include "TerrainGeometry.h"
-#include "TerrainGeometryDto.h"
 #include "Platforms/PlatformLayer.h"
+#include "TerrainGeometryAssembler.h"
 
 using namespace Enigma::Terrain;
 using namespace Enigma::Engine;
@@ -59,6 +59,65 @@ TerrainGeometry::~TerrainGeometry()
     }
     return dto.toGenericDto();
 }*/
+
+std::shared_ptr<Enigma::Geometries::GeometryAssembler> TerrainGeometry::assembler() const
+{
+    return std::make_shared<TerrainGeometryAssembler>(m_id);
+}
+
+void TerrainGeometry::assemble(const std::shared_ptr<Geometries::GeometryAssembler>& assembler) const
+{
+    TriangleList::assemble(assembler);
+    if (auto terrainAssembler = std::dynamic_pointer_cast<TerrainGeometryAssembler>(assembler))
+    {
+        terrainAssembler->numRows(m_numRows);
+        terrainAssembler->numCols(m_numCols);
+        terrainAssembler->minPosition(m_minPosition);
+        terrainAssembler->maxPosition(m_maxPosition);
+        terrainAssembler->minTextureCoordinate(m_minTextureCoordinate);
+        terrainAssembler->maxTextureCoordinate(m_maxTextureCoordinate);
+        if (!m_heightMap.empty())
+        {
+            terrainAssembler->heightMap(m_heightMap);
+        }
+    }
+    else
+    {
+        assert(false);
+    }
+}
+
+std::shared_ptr<Enigma::Geometries::GeometryDisassembler> TerrainGeometry::disassembler()
+{
+    return std::make_shared<TerrainGeometryDisassembler>();
+}
+
+void TerrainGeometry::disassemble(const std::shared_ptr<Geometries::GeometryDisassembler>& disassembler)
+{
+    TriangleList::disassemble(disassembler);
+    if (auto terrainDisassembler = std::dynamic_pointer_cast<TerrainGeometryDisassembler>(disassembler))
+    {
+        m_numRows = terrainDisassembler->numRows();
+        m_numCols = terrainDisassembler->numCols();
+        m_minPosition = terrainDisassembler->minPosition();
+        m_maxPosition = terrainDisassembler->maxPosition();
+        m_minTextureCoordinate = terrainDisassembler->minTextureCoordinate();
+        m_maxTextureCoordinate = terrainDisassembler->maxTextureCoordinate();
+        if (terrainDisassembler->heightMap())
+        {
+            m_heightMap = terrainDisassembler->heightMap().value();
+        }
+        else
+        {
+            m_heightMap = std::vector<float>((m_numRows + 1) * (m_numCols + 1));
+            std::memset(m_heightMap.data(), 0, m_heightMap.size() * sizeof(float));
+        }
+    }
+    else
+    {
+        assert(false);
+    }
+}
 
 void TerrainGeometry::updateHeightMapToVertexMemory()
 {

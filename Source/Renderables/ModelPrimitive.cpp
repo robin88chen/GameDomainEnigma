@@ -73,6 +73,8 @@ std::shared_ptr<PrimitiveDisassembler> ModelPrimitive::disassembler() const
 
 void ModelPrimitive::disassemble(const std::shared_ptr<Primitives::PrimitiveDisassembler>& disassembler)
 {
+    assert(disassembler);
+    assert(m_id.origin() == disassembler->id().origin()); // id is already set in the constructor
     if (const auto model_disassembler = std::dynamic_pointer_cast<ModelPrimitiveDisassembler>(disassembler))
     {
         m_factoryDesc = model_disassembler->factoryDesc();

@@ -98,6 +98,7 @@ void GeometryData::assemble(const std::shared_ptr<GeometryAssembler>& assembler)
 void GeometryData::disassemble(const std::shared_ptr<GeometryDisassembler>& disassembler)
 {
     assert(disassembler);
+    assert(m_id == disassembler->id()); // id is already set in the constructor
     disassembleNonVertexAttributes(disassembler);
     disassembleVertexAttributes(disassembler);
 }

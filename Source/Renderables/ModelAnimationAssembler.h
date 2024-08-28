@@ -31,7 +31,6 @@ namespace Enigma::Renderables
         virtual Engine::GenericDto assemble() const override;
 
     protected:
-        Animators::AnimationAssetId m_id;
         std::vector<std::tuple<std::string, std::shared_ptr<AnimationTimeSRTAssembler>>> m_nodeSRTs;
     };
 

@@ -63,6 +63,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorRepository.cpp">
       <Filter>Animators</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorAssembler.cpp">
+      <Filter>Assemblers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationAsset.h">

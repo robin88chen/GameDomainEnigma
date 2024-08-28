@@ -118,7 +118,7 @@ std::shared_ptr<Enigma::Primitives::PrimitiveDisassembler> MeshPrimitive::disass
 void MeshPrimitive::disassemble(const std::shared_ptr<Primitives::PrimitiveDisassembler>& disassembler)
 {
     assert(disassembler);
-    //m_id = disassembler->id(); // id is already set in the constructor
+    assert(m_id.origin() == disassembler->id().origin()); // id is already set in the constructor
     m_factoryDesc = disassembler->factoryDesc();
     const auto mesh_disassembler = std::dynamic_pointer_cast<MeshPrimitiveDisassembler, Primitives::PrimitiveDisassembler>(disassembler);
     m_geometry = nullptr;

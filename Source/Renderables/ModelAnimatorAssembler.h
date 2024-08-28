@@ -21,7 +21,6 @@ namespace Enigma::Renderables
     public:
         ModelAnimatorAssembler(const Animators::AnimatorId& id);
 
-        void factoryDesc(const Engine::FactoryDesc& desc) { m_factoryDesc = desc; }
         void controlledPrimitive(const Primitives::PrimitiveId& id) { m_controlledPrimitiveId = id; }
         void animationAsset(const Animators::AnimationAssetId& id) { m_animationAssetId = id; }
         void addSkinOperator(const SkinAnimationOperator& skin_operator);
@@ -30,7 +29,6 @@ namespace Enigma::Renderables
         virtual Engine::GenericDto assemble() const override;
 
     protected:
-        Engine::FactoryDesc m_factoryDesc;
         std::optional<Primitives::PrimitiveId> m_controlledPrimitiveId;
         std::optional<Animators::AnimationAssetId> m_animationAssetId;
         std::vector<SkinAnimationOperator> m_skinOperators;
@@ -41,7 +39,6 @@ namespace Enigma::Renderables
     public:
         ModelAnimatorDisassembler();
 
-        [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         [[nodiscard]] const std::optional<Primitives::PrimitiveId>& controlledPrimitiveId() const { return m_controlledPrimitiveId; }
         [[nodiscard]] const std::optional<Animators::AnimationAssetId>& animationAssetId() const { return m_animationAssetId; }
         [[nodiscard]] const std::vector<SkinAnimationOperator>& skinOperators() const { return m_skinOperators; }
@@ -49,7 +46,6 @@ namespace Enigma::Renderables
         virtual void disassemble(const Engine::GenericDto& dto) override;
 
     protected:
-        Engine::FactoryDesc m_factoryDesc;
         std::optional<Primitives::PrimitiveId> m_controlledPrimitiveId;
         std::optional<Animators::AnimationAssetId> m_animationAssetId;
         std::vector<SkinAnimationOperator> m_skinOperators;

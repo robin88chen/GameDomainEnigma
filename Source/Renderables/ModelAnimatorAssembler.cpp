@@ -12,8 +12,9 @@ static std::string TOKEN_CONTROLLED_PRIMITIVE_ID = "ControlledPrimitiveId";
 static std::string TOKEN_ASSET_ID = "AssetId";
 static std::string TOKEN_SKIN_OPERATORS = "SkinOperators";
 
-ModelAnimatorAssembler::ModelAnimatorAssembler(const Animators::AnimatorId& id) : AnimatorAssembler(id), m_factoryDesc(ModelPrimitiveAnimator::TYPE_RTTI)
+ModelAnimatorAssembler::ModelAnimatorAssembler(const Animators::AnimatorId& id) : AnimatorAssembler(id)
 {
+    m_factoryDesc = Engine::FactoryDesc(ModelPrimitiveAnimator::TYPE_RTTI);
 }
 
 void ModelAnimatorAssembler::addSkinOperator(const SkinAnimationOperator& skin_operator)
@@ -47,8 +48,9 @@ Enigma::Engine::GenericDto ModelAnimatorAssembler::assemble() const
     return dto;
 }
 
-ModelAnimatorDisassembler::ModelAnimatorDisassembler() : m_factoryDesc(ModelPrimitiveAnimator::TYPE_RTTI)
+ModelAnimatorDisassembler::ModelAnimatorDisassembler() : AnimatorDisassembler()
 {
+    m_factoryDesc = Engine::FactoryDesc(ModelPrimitiveAnimator::TYPE_RTTI);
 }
 
 void ModelAnimatorDisassembler::disassemble(const Engine::GenericDto& dto)

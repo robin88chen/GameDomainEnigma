@@ -37,7 +37,7 @@ ModelPrimitiveAnimator::~ModelPrimitiveAnimator()
 
 std::shared_ptr<AnimatorAssembler> ModelPrimitiveAnimator::assembler() const
 {
-    return std::make_shared<ModelAnimatorAssembler>(m_id);
+    return std::make_shared<ModelAnimatorAssembler>(m_id.origin());
 }
 
 void ModelPrimitiveAnimator::assemble(const std::shared_ptr<AnimatorAssembler>& assembler) const
@@ -61,6 +61,8 @@ std::shared_ptr<AnimatorDisassembler> ModelPrimitiveAnimator::disassembler() con
 
 void ModelPrimitiveAnimator::disassemble(const std::shared_ptr<Animators::AnimatorDisassembler>& disassembler)
 {
+    assert(disassembler);
+    assert(m_id.origin() == disassembler->id().origin()); // id is already set in the constructor
     if (auto model_disassembler = std::dynamic_pointer_cast<ModelAnimatorDisassembler>(disassembler))
     {
         m_factoryDesc = model_disassembler->factoryDesc();

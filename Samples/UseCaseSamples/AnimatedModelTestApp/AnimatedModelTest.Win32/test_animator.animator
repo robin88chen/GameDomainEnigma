@@ -17,10 +17,6 @@
             "Type": "StringArray",
             "Value": ["test_model", "0", "En.Renderables.ModelPrimitive"]
         },
-        "SkinOperators": {
-            "Type": "DataObjectArray",
-            "Value": []
-        },
         "AssetId": {
             "Type": "String",
             "Value": "test_animation"

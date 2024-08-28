@@ -20,6 +20,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationAssetRepository.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationFrameListener.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Animator.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorAssembler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorErrors.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorFactory.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatorId.cpp" />

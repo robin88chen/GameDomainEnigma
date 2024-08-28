@@ -28,7 +28,10 @@ namespace Enigma::Renderables
         ModelPrimitiveAssembler& operator=(ModelPrimitiveAssembler&&) = default;
 
         void meshNodeTree(const MeshNodeTree& tree);
+        void meshNodeTree(const std::shared_ptr<MeshNodeTreeAssembler>& tree) { m_treeAssembler = tree; }
         void modelAnimatorId(const Animators::AnimatorId& id) { m_modelAnimatorId = id; }
+        void asNative(const std::string& file_at_path);
+
         virtual Engine::GenericDto assemble() const override;
 
     protected:

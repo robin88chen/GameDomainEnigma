@@ -45,7 +45,7 @@ std::shared_ptr<AnimationAssetDisassembler> ModelAnimationAsset::disassembler() 
 void ModelAnimationAsset::disassemble(const std::shared_ptr<Animators::AnimationAssetDisassembler>& disassembler)
 {
     assert(disassembler);
-    m_id = disassembler->id();
+    //m_id = disassembler->id(); // id is already set in the constructor
     m_factoryDesc = disassembler->factoryDesc();
     std::shared_ptr<ModelAnimationDisassembler> model_disassembler = std::dynamic_pointer_cast<ModelAnimationDisassembler>(disassembler);
     if (!model_disassembler) return;

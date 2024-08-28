@@ -77,6 +77,12 @@ void MeshNodeTreeAssembler::addNode(const MeshNode& node)
     m_nodesAssemblers.emplace_back(node_assembler);
 }
 
+void MeshNodeTreeAssembler::addNode(const std::string& node_name, const std::shared_ptr<MeshNodeAssembler>& assembler)
+{
+    m_nodeNames.emplace_back(node_name);
+    m_nodesAssemblers.emplace_back(assembler);
+}
+
 Enigma::Engine::GenericDto MeshNodeTreeAssembler::assemble() const
 {
     Engine::GenericDto dto;

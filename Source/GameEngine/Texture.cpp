@@ -76,7 +76,7 @@ void Texture::assemble(const std::shared_ptr<TextureAssembler>& assembler) const
 
 void Texture::disassemble(const std::shared_ptr<TextureDisassembler>& disassembler)
 {
-    m_id = disassembler->id();
+    //m_id = disassembler->id(); // id is already set in the constructor
     m_factoryDesc = disassembler->factoryDesc();
     m_format = disassembler->format();
     m_dimension = disassembler->dimension();

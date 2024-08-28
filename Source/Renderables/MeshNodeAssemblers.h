@@ -83,6 +83,7 @@ namespace Enigma::Renderables
         void factoryDesc(const Engine::FactoryDesc& desc) { m_factoryDesc = desc; }
         void addNodeWithParentName(const MeshNode& node, const std::string& parent_name);
         void addNode(const MeshNode& node);
+        void addNode(const std::string& node_name, const std::shared_ptr<MeshNodeAssembler>& assembler);
 
         Engine::GenericDto assemble() const;
 

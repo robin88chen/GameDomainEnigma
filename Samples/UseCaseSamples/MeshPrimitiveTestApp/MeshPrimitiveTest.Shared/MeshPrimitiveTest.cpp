@@ -35,6 +35,8 @@
 #include "Animators/AnimatorInstallingPolicy.h"
 #include "FileStorage/AnimationAssetFileStoreMapper.h"
 #include "FileStorage/AnimatorFileStoreMapper.h"
+#include "Geometries/GeometryCommands.h"
+#include "Primitives/PrimitiveCommands.h"
 
 using namespace Enigma::FileSystem;
 using namespace Enigma::Controllers;
@@ -173,8 +175,10 @@ void MeshPrimitiveTest::makeMesh()
 {
     m_cubeId = GeometryId("test_geometry");
     auto cube = CubeGeometryMaker::makeCube(m_cubeId);
+    if (cube) CommandBus::enqueue(std::make_shared<PutGeometry>(m_cubeId, cube));
     m_meshId = PrimitiveId("test_mesh", MeshPrimitive::TYPE_RTTI);
     m_mesh = MeshPrimitiveMaker::makeCubeMeshPrimitive(m_meshId, m_cubeId);
+    if (m_mesh) CommandBus::enqueue(std::make_shared<PutPrimitive>(m_meshId, m_mesh));
 }
 
 void MeshPrimitiveTest::onCameraConstituted(const Enigma::Frameworks::IEventPtr& e)

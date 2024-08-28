@@ -19,6 +19,11 @@ void ModelPrimitiveAssembler::meshNodeTree(const MeshNodeTree& tree)
     tree.assemble(m_treeAssembler);
 }
 
+void ModelPrimitiveAssembler::asNative(const std::string& file_at_path)
+{
+    m_factoryDesc.ClaimAsNative(file_at_path);
+}
+
 Enigma::Engine::GenericDto ModelPrimitiveAssembler::assemble() const
 {
     Engine::GenericDto dto;

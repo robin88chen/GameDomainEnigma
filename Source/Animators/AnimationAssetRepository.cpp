@@ -5,6 +5,7 @@
 #include "AnimationAssetQueries.h"
 #include "AnimationAssetEvents.h"
 #include "AnimatorErrors.h"
+#include "AnimationAssetAssembler.h"
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/QueryDispatcher.h"
 #include "Frameworks/EventPublisher.h"
@@ -121,7 +122,9 @@ void AnimationAssetRepository::putAnimationAsset(const AnimationAssetId& id, con
     assert(asset);
     assert(m_storeMapper);
     std::lock_guard locker{ m_animationAssetLock };
-    error er = m_storeMapper->putAnimationAsset(id, asset->serializeDto());
+    std::shared_ptr<AnimationAssetAssembler> assembler = asset->assembler();
+    asset->assemble(assembler);
+    error er = m_storeMapper->putAnimationAsset(id, assembler->assemble());
     if (er)
     {
         Platforms::Debug::ErrorPrintf("put animation asset %s failed : %s\n", id.name().c_str(), er.message().c_str());

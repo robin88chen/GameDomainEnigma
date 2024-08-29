@@ -16,6 +16,9 @@
 
 namespace Enigma::Animators
 {
+    class AnimationAssetAssembler;
+    class AnimationAssetDisassembler;
+
     class AnimationAsset
     {
         DECLARE_EN_RTTI_OF_BASE
@@ -29,7 +32,10 @@ namespace Enigma::Animators
 
         const AnimationAssetId& id() { return m_id; }
 
-        virtual Engine::GenericDto serializeDto() = 0;
+        virtual std::shared_ptr<AnimationAssetAssembler> assembler() const = 0;
+        virtual void assemble(const std::shared_ptr<AnimationAssetAssembler>& assembler) const = 0; ///< that's double dispatch
+        virtual std::shared_ptr<AnimationAssetDisassembler> disassembler() const = 0;
+        virtual void disassemble(const std::shared_ptr<AnimationAssetDisassembler>& disassembler) = 0; ///< that's double dispatch
 
         static std::shared_ptr<AnimationAsset> queryAnimationAsset(const AnimationAssetId& id);
 

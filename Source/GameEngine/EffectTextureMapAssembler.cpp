@@ -11,11 +11,7 @@ EffectTextureMapAssembler::EffectTextureMapAssembler()
 
 void EffectTextureMapAssembler::addTextureMapping(const TextureId& id, std::optional<unsigned int> array_index, const std::string& semantic)
 {
-    TextureMappingAssembler assembler;
-    assembler.textureId(id);
-    if (array_index) assembler.arrayIndex(array_index.value());
-    assembler.semantic(semantic);
-    m_mappingAssemblers.emplace_back(assembler);
+    m_mappingAssemblers.emplace_back(TextureMappingAssembler(id, array_index, semantic));
 }
 
 GenericDto EffectTextureMapAssembler::assemble() const
@@ -34,15 +30,18 @@ EffectTextureMapDisassembler::EffectTextureMapDisassembler()
 {
 }
 
+EffectTextureMapDisassembler::EffectTextureMapDisassembler(const GenericDto& dto)
+{
+    disassemble(dto);
+}
+
 void EffectTextureMapDisassembler::disassemble(const GenericDto& dto)
 {
     if (const auto v = dto.tryGetValue<GenericDtoCollection>(TOKEN_TEXTURE_MAPPINGS))
     {
         for (auto& mapping_dto : v.value())
         {
-            TextureMappingDisassembler disassembler;
-            disassembler.disassemble(mapping_dto);
-            m_mappingDisassemblers.emplace_back(disassembler);
+            m_mappingDisassemblers.emplace_back(TextureMappingDisassembler(mapping_dto));
         }
     }
 }

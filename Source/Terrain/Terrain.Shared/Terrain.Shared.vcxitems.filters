@@ -16,6 +16,9 @@
     <Filter Include="Assemblers">
       <UniqueIdentifier>{15e3fd43-ed8c-4da7-83fc-a2c3c112bd39}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Factory Methods">
+      <UniqueIdentifier>{dbe7c7c6-8e7b-4abe-b081-1e94c5ca278f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainGeometry.h">
@@ -42,6 +45,18 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainAssemblers.h">
       <Filter>Assemblers</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainGeometryAssembler.h">
+      <Filter>Assemblers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPrimitiveAssembler.h">
+      <Filter>Assemblers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainGeometryFactoryMethods.h">
+      <Filter>Factory Methods</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPrimitiveFactoryMethods.h">
+      <Filter>Factory Methods</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainGeometry.cpp">
@@ -67,6 +82,18 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainAssemblers.cpp">
       <Filter>Assemblers</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainGeometryAssembler.cpp">
+      <Filter>Assemblers</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPrimitiveAssembler.cpp">
+      <Filter>Assemblers</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainGeometryFactoryMethods.cpp">
+      <Filter>Factory Methods</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPrimitiveFactoryMethods.cpp">
+      <Filter>Factory Methods</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

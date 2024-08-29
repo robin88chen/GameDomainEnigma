@@ -53,7 +53,7 @@ namespace Enigma::Animators
     protected:
         std::shared_ptr<AnimationAssetStoreMapper> m_storeMapper;
         AnimationAssetFactory* m_factory;
-        //! ADR: 在 repository 中，map 是存放已生成 asset 的 cache, 不擁有asset, 所以改用 weak_ptr 
+        //! ADR: 在 repository 中，map 是存放已生成 asset 的 cache, 不擁有asset, 所以改用 weak_ptr
         std::unordered_map<AnimationAssetId, std::weak_ptr<AnimationAsset>, AnimationAssetId::hash> m_animationAssets;
         std::recursive_mutex m_animationAssetLock;
 

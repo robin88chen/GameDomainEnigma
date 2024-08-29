@@ -33,17 +33,16 @@ namespace Enigma::Renderables
         };
     public:
         ModelAnimationAsset(const Animators::AnimationAssetId& id);
-        ModelAnimationAsset(const Animators::AnimationAssetId& id, const Engine::GenericDto& dto);
         ModelAnimationAsset(const ModelAnimationAsset&) = delete;
         ModelAnimationAsset(ModelAnimationAsset&&) = delete;
         virtual ~ModelAnimationAsset() override;
         ModelAnimationAsset& operator=(const ModelAnimationAsset&) = delete;
         ModelAnimationAsset& operator=(ModelAnimationAsset&&) = delete;
 
-        static std::shared_ptr<AnimationAsset> create(const Animators::AnimationAssetId& id);
-        static std::shared_ptr<AnimationAsset> constitute(const Animators::AnimationAssetId& id, const Engine::GenericDto& dto);
-
-        Engine::GenericDto serializeDto() override;
+        virtual std::shared_ptr<Animators::AnimationAssetAssembler> assembler() const override;
+        virtual void assemble(const std::shared_ptr<Animators::AnimationAssetAssembler>& assembler) const override; ///< that's double dispatch
+        virtual std::shared_ptr<Animators::AnimationAssetDisassembler> disassembler() const override;
+        virtual void disassemble(const std::shared_ptr<Animators::AnimationAssetDisassembler>& disassembler) override; ///< that's double dispatch
 
         /** reserve data array capacity */
         void reserveCapacity(unsigned int mesh_node_count);

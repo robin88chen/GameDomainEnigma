@@ -1,11 +1,10 @@
 ﻿#include "RenderablePrimitiveBuilder.h"
 #include "MeshPrimitiveBuilder.h"
-#include "Renderer/RendererErrors.h"
+#include "Primitives/PrimitiveAssembler.h"
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/EventPublisher.h"
 #include "Platforms/MemoryMacro.h"
 #include "Platforms/PlatformLayer.h"
-#include "Primitives/PrimitiveCommands.h"
 #include "MeshPrimitive.h"
 #include "SkinMeshPrimitive.h"
 #include "ModelPrimitive.h"
@@ -107,7 +106,10 @@ std::shared_ptr<Primitive> RenderablePrimitiveBuilder::createMesh(const Primitiv
 std::shared_ptr<Primitive> RenderablePrimitiveBuilder::constituteMesh(const PrimitiveId& id, const GenericDto& dto)
 {
     assert(!m_geometryRepository.expired());
-    auto prim = std::make_shared<MeshPrimitive>(id, dto, m_geometryRepository.lock());
+    auto prim = std::make_shared<MeshPrimitive>(id);
+    auto disassembler = prim->disassembler();
+    disassembler->disassemble(dto);
+    prim->disassemble(disassembler);
     std::lock_guard locker{ m_primitivePlansLock };
     m_primitivePlans.emplace(PrimitiveHydratingPlan{ id, prim, dto });
     prim->lazyStatus().changeStatus(LazyStatus::Status::InQueue);
@@ -123,7 +125,10 @@ std::shared_ptr<Primitive> RenderablePrimitiveBuilder::createSkinMesh(const Prim
 std::shared_ptr<Primitive> RenderablePrimitiveBuilder::constituteSkinMesh(const PrimitiveId& id, const GenericDto& dto)
 {
     assert(!m_geometryRepository.expired());
-    auto prim = std::make_shared<SkinMeshPrimitive>(id, dto, m_geometryRepository.lock());
+    auto prim = std::make_shared<SkinMeshPrimitive>(id);
+    auto disassembler = prim->disassembler();
+    disassembler->disassemble(dto);
+    prim->disassemble(disassembler);
     std::lock_guard locker{ m_primitivePlansLock };
     m_primitivePlans.emplace(PrimitiveHydratingPlan{ id, prim, dto });
     prim->lazyStatus().changeStatus(LazyStatus::Status::InQueue);
@@ -138,7 +143,11 @@ std::shared_ptr<Primitive> RenderablePrimitiveBuilder::createModel(const Primiti
 
 std::shared_ptr<Primitive> RenderablePrimitiveBuilder::constituteModel(const PrimitiveId& id, const GenericDto& dto)
 {
-    return std::make_shared<ModelPrimitive>(id, dto);
+    auto prim = std::make_shared<ModelPrimitive>(id);
+    auto disassembler = prim->disassembler();
+    disassembler->disassemble(dto);
+    prim->disassemble(disassembler);
+    return prim;
 }
 
 std::shared_ptr<Primitive> RenderablePrimitiveBuilder::createCustomMesh(const Primitives::PrimitiveId& id)
@@ -151,7 +160,7 @@ std::shared_ptr<Primitive> RenderablePrimitiveBuilder::constituteCustomMesh(cons
 {
     assert(m_customMeshConstitutors.find(id.rtti().getName()) != m_customMeshConstitutors.end());
     assert(!m_geometryRepository.expired());
-    auto prim = m_customMeshConstitutors.at(id.rtti().getName())(id, dto, m_geometryRepository.lock());
+    auto prim = m_customMeshConstitutors.at(id.rtti().getName())(id, dto);
     std::lock_guard locker{ m_primitivePlansLock };
     m_primitivePlans.emplace(PrimitiveHydratingPlan{ id, prim, dto });
     prim->lazyStatus().changeStatus(LazyStatus::Status::InQueue);

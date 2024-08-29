@@ -46,6 +46,7 @@ TextureDisassembler::TextureDisassembler() : m_factoryDesc(Texture::TYPE_RTTI.ge
 
 void TextureDisassembler::disassemble(const Engine::GenericDto& dto)
 {
+    m_factoryDesc = dto.getRtti();
     if (const auto v = dto.tryGetValue<std::string>(TOKEN_ID)) m_id = v.value();
     if (const auto v = dto.tryGetValue<unsigned>(TOKEN_FORMAT)) m_format.fmt = v.value();
     if (const auto v = dto.tryGetValue<unsigned>(TOKEN_WIDTH)) m_dimension.m_width = v.value();

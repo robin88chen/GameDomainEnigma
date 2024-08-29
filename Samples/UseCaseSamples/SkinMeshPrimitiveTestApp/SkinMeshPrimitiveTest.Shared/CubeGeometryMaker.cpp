@@ -3,11 +3,10 @@
 #include "MathLib/Vector3.h"
 #include "MathLib/ContainmentBox3.h"
 #include "GameEngine/BoundingVolume.h"
-#include "GameEngine/BoundingVolumeDto.h"
 #include "FileSystem/FileSystem.h"
 #include "Gateways/DtoJsonGateway.h"
 #include "Frameworks/ExtentTypesDefine.h"
-#include "Geometries/GeometryDataDto.h"
+#include "Geometries/TriangleListAssembler.h"
 #include "GraphicKernel/GraphicAPITypes.h"
 #include "Geometries/TriangleList.h"
 #include "Frameworks/CommandBus.h"
@@ -124,31 +123,25 @@ std::shared_ptr<GeometryData> CubeGeometryMaker::makeCube(const GeometryId& id)
         0.0f,0.0f,0.0f,0.0f,
         0.0f,0.0f,0.0f,0.0f,
     };
-    TextureCoordDto tex_dto;
-    tex_dto.texture2DCoords() = vtx_uv;
-    TriangleListDto dto;
-    dto.position3s() = vtx_pos;
+    TriangleListAssembler assembler(id);
+    assembler.addTexture2DCoords(vtx_uv);
+    assembler.position3s(vtx_pos);
     for (auto& n : vtx_nor)
     {
         n.normalizeSelf();
     }
-    dto.normals() = vtx_nor;
-    dto.textureCoords().emplace_back(tex_dto.toGenericDto());
-    dto.indices() = vtx_idx;
-    dto.paletteIndices() = palette;
-    dto.weights() = weight0;
-    dto.segments() = { 0, 16, 0, 84 };
-    dto.vertexCapacity() = 16;
-    dto.vertexUsedCount() = 16;
-    dto.indexCapacity() = 84;
-    dto.indexUsedCount() = 84;
-    dto.id() = id;
-    dto.vertexFormat() = "xyzb2_nor_tex1(2)_betabyte";
-    dto.topology() = static_cast<unsigned>(Enigma::Graphics::PrimitiveTopology::Topology_TriangleList);
-    Box3 box = ContainmentBox3::ComputeAlignedBox(&vtx_pos[0], static_cast<unsigned>(vtx_pos.size()));
-    BoundingVolume bv{ box };
-    dto.geometryBound() = bv.serializeDto().toGenericDto();
-    dto.factoryDesc() = FactoryDesc(TriangleList::TYPE_RTTI.getName()).ClaimAsResourceAsset(id.name(), id.name() + ".geo", "DataPath");
+    assembler.normals(vtx_nor);
+    assembler.indices(vtx_idx);
+    assembler.paletteIndices(palette);
+    assembler.weights(weight0, 1);
+    assembler.addSegment({ 0, 16, 0, 84 });
+    assembler.vertexCapacity(16);
+    assembler.vertexUsedCount(16);
+    assembler.indexCapacity(84);
+    assembler.indexUsedCount(84);
+    assembler.topology(Enigma::Graphics::PrimitiveTopology::Topology_TriangleList);
+    assembler.asAsset(id.name(), id.name() + ".geo", "DataPath");
+    assembler.computeAlignedBox();
 
-    return std::make_shared<RequestGeometryConstitution>(id, dto.toGenericDto(), PersistenceLevel::Store)->dispatch();
+    return std::make_shared<RequestGeometryConstitution>(id, assembler.assemble())->dispatch();
 }

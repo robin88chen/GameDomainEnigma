@@ -35,6 +35,8 @@
 #include "Animators/AnimatorInstallingPolicy.h"
 #include "FileStorage/AnimationAssetFileStoreMapper.h"
 #include "FileStorage/AnimatorFileStoreMapper.h"
+#include "Geometries/GeometryCommands.h"
+#include "Primitives/PrimitiveCommands.h"
 
 using namespace Enigma::FileSystem;
 using namespace Enigma::Controllers;
@@ -106,7 +108,7 @@ void MeshPrimitiveTest::installEngine()
     auto geometry_policy = std::make_shared<GeometryInstallingPolicy>(std::make_shared<GeometryDataFileStoreMapper>("geometries.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
     auto primitive_policy = std::make_shared<PrimitiveRepositoryInstallingPolicy>(std::make_shared<PrimitiveFileStoreMapper>("primitives.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
     auto animator_policy = std::make_shared<AnimatorInstallingPolicy>(std::make_shared<AnimatorFileStoreMapper>("animators.db.txt@DataPath", std::make_shared<DtoJsonGateway>()), std::make_shared<AnimationAssetFileStoreMapper>("animation_assets.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
-    auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(std::make_shared<JsonFileDtoDeserializer>(), std::make_shared<SceneGraphFileStoreMapper>("scene_graph.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
+    auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(std::make_shared<SceneGraphFileStoreMapper>("scene_graph.db.txt@DataPath", "lazied_scene.db.txt@DataPath", "lazy_", std::make_shared<DtoJsonGateway>()));
     auto effect_material_source_policy = std::make_shared<EffectMaterialSourceRepositoryInstallingPolicy>(std::make_shared<EffectMaterialSourceFileStoreMapper>("effect_materials.db.txt@APK_PATH"));
     auto texture_policy = std::make_shared<TextureRepositoryInstallingPolicy>(std::make_shared<TextureFileStoreMapper>("textures.db.txt@APK_PATH", std::make_shared<DtoJsonGateway>()));
     auto renderables_policy = std::make_shared<RenderablesInstallingPolicy>();
@@ -146,11 +148,11 @@ void MeshPrimitiveTest::frameUpdate()
 void MeshPrimitiveTest::renderFrame()
 {
     if (!m_renderer) return;
-    m_renderer->BeginScene();
-    m_renderer->ClearRenderTarget();
-    m_renderer->DrawScene();
-    m_renderer->EndScene();
-    m_renderer->Flip();
+    m_renderer->beginScene();
+    m_renderer->clearRenderTarget();
+    m_renderer->drawScene();
+    m_renderer->endScene();
+    m_renderer->flip();
 }
 
 void MeshPrimitiveTest::makeCamera()
@@ -161,7 +163,7 @@ void MeshPrimitiveTest::makeCamera()
     if (query->getResult())
     {
         m_camera = query->getResult();
-        if ((m_camera) && (m_renderer)) m_renderer->SetAssociatedCamera(m_camera);
+        if ((m_camera) && (m_renderer)) m_renderer->setAssociatedCamera(m_camera);
     }
     else
     {
@@ -173,8 +175,10 @@ void MeshPrimitiveTest::makeMesh()
 {
     m_cubeId = GeometryId("test_geometry");
     auto cube = CubeGeometryMaker::makeCube(m_cubeId);
+    if (cube) CommandBus::enqueue(std::make_shared<PutGeometry>(m_cubeId, cube));
     m_meshId = PrimitiveId("test_mesh", MeshPrimitive::TYPE_RTTI);
     m_mesh = MeshPrimitiveMaker::makeCubeMeshPrimitive(m_meshId, m_cubeId);
+    if (m_mesh) CommandBus::enqueue(std::make_shared<PutPrimitive>(m_meshId, m_mesh));
 }
 
 void MeshPrimitiveTest::onCameraConstituted(const Enigma::Frameworks::IEventPtr& e)
@@ -185,8 +189,8 @@ void MeshPrimitiveTest::onCameraConstituted(const Enigma::Frameworks::IEventPtr&
     if (ev->id() != m_cameraId) return;
     if (ev->isPersisted()) return;
     m_camera = ev->camera();
-    if ((m_camera) && (m_renderer)) m_renderer->SetAssociatedCamera(m_camera);
-    CommandBus::post(std::make_shared<PutCamera>(m_cameraId, m_camera));
+    if ((m_camera) && (m_renderer)) m_renderer->setAssociatedCamera(m_camera);
+    CommandBus::enqueue(std::make_shared<PutCamera>(m_cameraId, m_camera));
 }
 
 void MeshPrimitiveTest::onRendererCreated(const Enigma::Frameworks::IEventPtr& e)
@@ -194,9 +198,9 @@ void MeshPrimitiveTest::onRendererCreated(const Enigma::Frameworks::IEventPtr& e
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<RendererCreated, IEvent>(e);
     if (!ev) return;
-    m_renderer = std::dynamic_pointer_cast<Renderer, IRenderer>(ev->GetRenderer());
-    m_renderer->SetAssociatedCamera(m_camera);
-    if ((m_renderer) && (m_renderTarget)) m_renderer->SetRenderTarget(m_renderTarget);
+    m_renderer = std::dynamic_pointer_cast<Renderer, IRenderer>(ev->renderer());
+    m_renderer->setAssociatedCamera(m_camera);
+    if ((m_renderer) && (m_renderTarget)) m_renderer->setRenderTarget(m_renderTarget);
 }
 
 void MeshPrimitiveTest::onRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e)
@@ -204,6 +208,6 @@ void MeshPrimitiveTest::onRenderTargetCreated(const Enigma::Frameworks::IEventPt
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<PrimaryRenderTargetCreated, IEvent>(e);
     if (!ev) return;
-    m_renderTarget = ev->GetRenderTarget();
-    if ((m_renderer) && (m_renderTarget)) m_renderer->SetRenderTarget(m_renderTarget);
+    m_renderTarget = ev->renderTarget();
+    if ((m_renderer) && (m_renderTarget)) m_renderer->setRenderTarget(m_renderTarget);
 }

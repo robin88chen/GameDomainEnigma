@@ -13,14 +13,15 @@
 #include "GameEngine/EffectMaterial.h"
 #include "Frameworks/EventSubscriber.h"
 #include "GameEngine/EffectTextureMap.h"
-#include "RenderablePrimitiveDtos.h"
 #include "Primitives/PrimitiveId.h"
+#include "GameEngine/TextureId.h"
 #include <memory>
 
 namespace Enigma::Renderables
 {
     class MeshPrimitive;
-    class MeshPrimitiveMetaDto;
+    class MeshPrimitiveDisassembler;
+    class MeshPrimitiveMaterialMetaDisassembler;
 
     class MeshPrimitiveBuilder
     {
@@ -83,8 +84,8 @@ namespace Enigma::Renderables
 
     protected:
         Primitives::PrimitiveId m_buildingId;
-        std::optional<MeshPrimitiveDto> m_buildingDto;
-        std::unique_ptr<MeshPrimitiveMetaDto> m_metaDto;
+        std::shared_ptr<MeshPrimitiveDisassembler> m_buildingDisassembler;
+        std::unique_ptr<MeshPrimitiveMaterialMetaDisassembler> m_metaDisassembler;
 
         std::shared_ptr<MeshPrimitive> m_builtPrimitive;
         std::shared_ptr<Geometries::GeometryData> m_builtGeometry;

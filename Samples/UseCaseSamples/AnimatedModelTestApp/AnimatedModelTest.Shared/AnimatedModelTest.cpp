@@ -1,6 +1,7 @@
 ﻿#include "AnimatedModelTest.h"
 #include "Animators/AnimationAssetEvents.h"
 #include "Animators/AnimatorCommands.h"
+#include "Animators/AnimationAssetCommands.h"
 #include "Animators/AnimatorEvents.h"
 #include "Animators/AnimatorInstallingPolicy.h"
 #include "CameraMaker.h"
@@ -26,10 +27,12 @@
 #include "Geometries/GeometryData.h"
 #include "Geometries/GeometryDataEvents.h"
 #include "Geometries/GeometryInstallingPolicy.h"
+#include "Geometries/GeometryCommands.h"
 #include "ModelAnimatorMaker.h"
 #include "ModelPrimitiveMaker.h"
 #include "Platforms/AndroidBridge.h"
 #include "Primitives/PrimitiveRepositoryInstallingPolicy.h"
+#include "Primitives/PrimitiveCommands.h"
 #include "Renderables/MeshPrimitive.h"
 #include "Renderables/ModelPrimitiveAnimator.h"
 #include "Renderables/RenderablesInstallingPolicy.h"
@@ -109,7 +112,7 @@ void AnimatedModelTest::installEngine()
     auto geometry_policy = std::make_shared<GeometryInstallingPolicy>(std::make_shared<GeometryDataFileStoreMapper>("geometries.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
     auto primitive_policy = std::make_shared<PrimitiveRepositoryInstallingPolicy>(std::make_shared<PrimitiveFileStoreMapper>("primitives.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
     auto animator_policy = std::make_shared<AnimatorInstallingPolicy>(std::make_shared<AnimatorFileStoreMapper>("animators.db.txt@DataPath", std::make_shared<DtoJsonGateway>()), std::make_shared<AnimationAssetFileStoreMapper>("animation_assets.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
-    auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(std::make_shared<JsonFileDtoDeserializer>(), std::make_shared<SceneGraphFileStoreMapper>("scene_graph.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
+    auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(std::make_shared<SceneGraphFileStoreMapper>("scene_graph.db.txt@DataPath", "lazied_scene.db.txt@DataPath", "lazy_", std::make_shared<DtoJsonGateway>()));
     auto effect_material_source_policy = std::make_shared<EffectMaterialSourceRepositoryInstallingPolicy>(std::make_shared<EffectMaterialSourceFileStoreMapper>("effect_materials.db.txt@APK_PATH"));
     auto texture_policy = std::make_shared<TextureRepositoryInstallingPolicy>(std::make_shared<TextureFileStoreMapper>("textures.db.txt@APK_PATH", std::make_shared<DtoJsonGateway>()));
     auto renderables_policy = std::make_shared<RenderablesInstallingPolicy>();
@@ -179,16 +182,21 @@ void AnimatedModelTest::makeCamera()
 void AnimatedModelTest::makeModel()
 {
     auto animation = ModelAnimatorMaker::makeModelAnimationAsset(m_animationId, m_meshNodeNames[0]);
+    if (animation) std::make_shared<PutAnimationAsset>(m_animationId, animation)->execute();
     auto animator = ModelAnimatorMaker::makeModelAnimator(m_animatorId, m_animationId, m_modelId.origin());
+    if (animator) std::make_shared<PutAnimator>(m_animatorId, animator)->execute();
     auto cube = CubeGeometryMaker::makeCube(m_cubeId);
+    if (cube) std::make_shared<PutGeometry>(m_cubeId, cube)->execute();
     auto mesh = ModelPrimitiveMaker::makeCubeMeshPrimitive(m_meshId, m_cubeId);
+    if (mesh) std::make_shared<PutPrimitive>(m_meshId, mesh)->execute();
     m_model = ModelPrimitiveMaker::makeModelPrimitive(m_modelId.origin(), m_meshId, m_animatorId, m_meshNodeNames);
+    if (m_model) std::make_shared<PutPrimitive>(m_modelId.origin(), m_model)->execute();
     m_animatorId = m_model->animatorId();
     if (const auto animator = std::dynamic_pointer_cast<ModelPrimitiveAnimator>(Animator::queryAnimator(m_animatorId)))
     {
         animator->playAnimation(Enigma::Renderables::AnimationClip{ 0.0f, 4.0f, Enigma::Renderables::AnimationClip::WarpMode::Loop, 0 });
     }
-    CommandBus::post(std::make_shared<AddListeningAnimator>(m_animatorId));
+    CommandBus::enqueue(std::make_shared<AddListeningAnimator>(m_animatorId));
     m_model->updateWorldTransform(Matrix4::IDENTITY);
 }
 
@@ -201,7 +209,7 @@ void AnimatedModelTest::onCameraConstituted(const IEventPtr& e)
     if (ev->isPersisted()) return;
     m_camera = ev->camera();
     if ((m_camera) && (m_renderer)) m_renderer->setAssociatedCamera(m_camera);
-    CommandBus::post(std::make_shared<PutCamera>(m_cameraId, m_camera));
+    CommandBus::enqueue(std::make_shared<PutCamera>(m_cameraId, m_camera));
 }
 
 void AnimatedModelTest::onRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e)

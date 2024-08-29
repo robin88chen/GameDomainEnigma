@@ -1,9 +1,10 @@
 ﻿#include "ModelPrimitiveMaker.h"
 #include "Renderables/ModelPrimitive.h"
-#include "Renderables/RenderablePrimitiveDtos.h"
+#include "Renderables/ModelPrimitiveAssembler.h"
+#include "Renderables/MeshNodeAssemblers.h"
 #include "Frameworks/StringFormat.h"
 #include "Renderables/MeshPrimitive.h"
-#include "GameEngine/EffectDtoHelper.h"
+#include "Renderables/MeshPrimitiveAssembler.h"
 #include "Primitives/PrimitiveQueries.h"
 
 using namespace Enigma::Engine;
@@ -20,27 +21,27 @@ std::shared_ptr<ModelPrimitive> ModelPrimitiveMaker::makeModelPrimitive(const En
     {
         return std::dynamic_pointer_cast<ModelPrimitive>(model);
     }
-    MeshNodeTreeDto tree;
+    std::shared_ptr<MeshNodeTreeAssembler> tree = std::make_shared<MeshNodeTreeAssembler>();
     for (unsigned i = 0; i < 4; i++)
     {
-        MeshNodeDto node;
-        node.name() = string_format("%s_node_%d", model_id.name().c_str(), i);
-        node.localT_PosTransform() = Matrix4::MakeTranslateTransform((float)i * 0.5f, (float)i * 0.3f, (float)i * 0.2f);
+        std::string name = string_format("%s_node_%d", model_id.name().c_str(), i);
+        std::shared_ptr<MeshNodeAssembler> node_assembler = std::make_shared<MeshNodeAssembler>();
+        node_assembler->name(name);
+        node_assembler->localT_PosTransform(Matrix4::MakeTranslateTransform((float)i * 0.5f, (float)i * 0.3f, (float)i * 0.2f));
         if (i != 0)
         {
-            node.parentIndexInArray() = (unsigned)(i - 1);
+            node_assembler->parentIndexInArray((unsigned)(i - 1));
         }
         if ((i == 0) || (i == 3))
         {
-            node.meshPrimitiveId() = mesh_id;
+            node_assembler->meshPrimitiveId(mesh_id);
         }
-        tree.meshNodes().emplace_back(node.toGenericDto());
+        tree->addNode(name, node_assembler);
     }
-    ModelPrimitiveDto model_dto;
-    model_dto.id() = model_id;
-    model_dto.factoryDesc() = FactoryDesc(ModelPrimitive::TYPE_RTTI.getName()).ClaimAsNative(model_id.name() + ".model@DataPath");
-    model_dto.nodeTree() = tree.toGenericDto();
-    return std::dynamic_pointer_cast<ModelPrimitive>(std::make_shared<RequestPrimitiveConstitution>(model_id, model_dto.toGenericDto(), PersistenceLevel::Store)->dispatch());
+    ModelPrimitiveAssembler model_assembler(model_id);
+    model_assembler.meshNodeTree(tree);
+    model_assembler.asNative(model_id.name() + ".model@DataPath");
+    return std::dynamic_pointer_cast<ModelPrimitive>(std::make_shared<RequestPrimitiveConstitution>(model_id, model_assembler.assemble())->dispatch());
 }
 
 std::shared_ptr<MeshPrimitive> ModelPrimitiveMaker::makeCubeMeshPrimitive(const Enigma::Primitives::PrimitiveId& mesh_id, const Enigma::Geometries::GeometryId& geo_id)
@@ -49,16 +50,15 @@ std::shared_ptr<MeshPrimitive> ModelPrimitiveMaker::makeCubeMeshPrimitive(const 
     {
         return std::dynamic_pointer_cast<MeshPrimitive>(mesh);
     };
-    MeshPrimitiveDto mesh_dto;
-    mesh_dto.id() = mesh_id;
-    mesh_dto.geometryId() = geo_id;
-    mesh_dto.factoryDesc() = FactoryDesc(MeshPrimitive::TYPE_RTTI.getName()).ClaimAsNative(mesh_id.name() + ".mesh@DataPath");
-    mesh_dto.effects().emplace_back(EffectMaterialId("basic_vtx_tex"));
-    EffectTextureMapDtoHelper texture_helper;
-    texture_helper.textureMapping(TextureId("earth"), std::nullopt, "DiffuseMap");
-    mesh_dto.textureMaps().emplace_back(texture_helper.toGenericDto());
-    mesh_dto.renderListID() = Renderer::RenderListID::Scene;
-    mesh_dto.visualTechniqueSelection() = "Default";
+    MeshPrimitiveAssembler mesh_assembler(mesh_id);
+    mesh_assembler.geometryId(geo_id);
+    mesh_assembler.asNative(mesh_id.name() + ".mesh@DataPath");
+    std::shared_ptr<EffectTextureMapAssembler> texture_assembler = std::make_shared<EffectTextureMapAssembler>();
+    texture_assembler->addTextureMapping(TextureId("earth"), std::nullopt, "DiffuseMap");
+    mesh_assembler.addEffect(EffectMaterialId("basic_vtx_tex"));
+    mesh_assembler.addTextureMap(texture_assembler);
+    mesh_assembler.renderListID(Renderer::RenderListID::Scene);
+    mesh_assembler.visualTechnique("Default");
 
-    return std::dynamic_pointer_cast<MeshPrimitive>(std::make_shared<RequestPrimitiveConstitution>(mesh_id, mesh_dto.toGenericDto(), PersistenceLevel::Store)->dispatch());
+    return std::dynamic_pointer_cast<MeshPrimitive>(std::make_shared<RequestPrimitiveConstitution>(mesh_id, mesh_assembler.assemble())->dispatch());
 }

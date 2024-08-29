@@ -9,45 +9,42 @@
 #define MODEL_ANIMATION_ASSEMBLER_H
 
 #include "Animators/AnimationAssetId.h"
-#include "ModelAnimationDtos.h"
+#include "Animators/AnimationAssetAssembler.h"
+#include "ModelAnimationAsset.h"
 #include "AnimationTimeSRT.h"
 
 namespace Enigma::Renderables
 {
     class ModelAnimationAsset;
+    class AnimationTimeSRTAssembler;
+    class AnimationTimeSRTDisassembler;
 
-    class AnimationTimeSRTAssembler
-    {
-    public:
-        AnimationTimeSRTAssembler& scaleKey(const AnimationTimeSRT::ScaleKey& key);
-        AnimationTimeSRTAssembler& rotationKey(const AnimationTimeSRT::RotationKey& key);
-        AnimationTimeSRTAssembler& translationKey(const AnimationTimeSRT::TranslateKey& key);
-
-        Engine::GenericDto toGenericDto();
-
-    protected:
-        std::vector<AnimationTimeSRT::ScaleKey> m_scaleKeys;
-        std::vector<AnimationTimeSRT::RotationKey> m_rotationKeys;
-        std::vector<AnimationTimeSRT::TranslateKey> m_translationKeys;
-        AnimationTimeSRTDto m_dto;
-    };
-
-    class ModelAnimationAssembler
+    class ModelAnimationAssembler : public Animators::AnimationAssetAssembler
     {
     public:
         ModelAnimationAssembler(const Animators::AnimationAssetId& id);
 
-        ModelAnimationAssembler& nodeSRT(const std::string& node_name, const AnimationTimeSRTAssembler& assembler);
-        ModelAnimationAssembler& asAsset(const std::string& name, const std::string& filename, const std::string& path_id);
+        void nodeSRT(const std::string& node_name, const AnimationTimeSRT& srt);
+        void nodeSRT(const std::string& node_name, const std::shared_ptr<AnimationTimeSRTAssembler>& assembler);
+        void asAsset(const std::string& name, const std::string& filename, const std::string& path_id);
 
-        Engine::GenericDto toGenericDto();
-
-        std::shared_ptr<ModelAnimationAsset> constitute();
+        virtual Engine::GenericDto assemble() const override;
 
     protected:
-        Animators::AnimationAssetId m_id;
-        std::vector<std::tuple<std::string, AnimationTimeSRTAssembler>> m_nodeSRTs;
-        ModelAnimationAssetDto m_dto;
+        std::vector<std::tuple<std::string, std::shared_ptr<AnimationTimeSRTAssembler>>> m_nodeSRTs;
+    };
+
+    class ModelAnimationDisassembler : public Animators::AnimationAssetDisassembler
+    {
+    public:
+        ModelAnimationDisassembler();
+
+        [[nodiscard]] const std::vector<std::tuple<std::string, AnimationTimeSRT>>& nodeSRTs() const { return m_nodeSRTs; }
+
+        virtual void disassemble(const Engine::GenericDto& dto) override;
+
+    protected:
+        std::vector<std::tuple<std::string, AnimationTimeSRT>> m_nodeSRTs;
     };
 }
 

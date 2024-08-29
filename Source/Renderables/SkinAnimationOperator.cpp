@@ -1,29 +1,15 @@
 ﻿#include "SkinAnimationOperator.h"
 #include "Platforms/PlatformLayer.h"
 #include "Renderables/SkinMeshPrimitive.h"
-#include "ModelAnimatorDtos.h"
+#include "SkinOperatorAssembler.h"
+
 using namespace Enigma::Renderables;
 using namespace Enigma::MathLib;
 
 DEFINE_RTTI_OF_BASE(Renderables, SkinAnimationOperator);
 
-SkinAnimationOperator::SkinAnimationOperator() : m_factoryDesc(SkinAnimationOperator::TYPE_RTTI.getName())
+SkinAnimationOperator::SkinAnimationOperator() : m_factoryDesc(TYPE_RTTI.getName())
 {
-}
-
-SkinAnimationOperator::SkinAnimationOperator(const Engine::GenericDto& dto) : m_factoryDesc(SkinAnimationOperator::TYPE_RTTI.getName())
-{
-    SkinOperatorDto skin_op_dto(dto);
-    m_factoryDesc = skin_op_dto.factoryDesc();
-    if (skin_op_dto.skinMeshId())
-    {
-        m_skinMeshId = skin_op_dto.skinMeshId().value();
-        m_boneNodeNames = skin_op_dto.boneNodeNames();
-    }
-    if (skin_op_dto.nodeOffsets())
-    {
-        m_t_posNodeOffsets = skin_op_dto.nodeOffsets().value();
-    }
 }
 
 SkinAnimationOperator::SkinAnimationOperator(const SkinAnimationOperator& op) : m_factoryDesc(op.m_factoryDesc)
@@ -71,21 +57,36 @@ SkinAnimationOperator& SkinAnimationOperator::operator=(SkinAnimationOperator&& 
     return *this;
 }
 
-Enigma::Engine::GenericDto SkinAnimationOperator::serializeDto() const
+void SkinAnimationOperator::assemble(const std::shared_ptr<SkinOperatorAssembler>& assembler) const
 {
-    SkinOperatorDto dto;
-    dto.factoryDesc() = m_factoryDesc;
-    dto.skinMeshId() = m_skinMeshId;
-    dto.boneNodeNames() = m_boneNodeNames;
+    assembler->factoryDesc(m_factoryDesc);
+    if (m_skinMeshId) assembler->operatedSkin(m_skinMeshId.value());
     if (!m_t_posNodeOffsets.empty())
     {
-        dto.nodeOffsets() = m_t_posNodeOffsets; // m_nodeOffsets;
+        assembler->bones(m_boneNodeNames, m_t_posNodeOffsets);
     }
     else if (!m_nodeOffsets.empty())
     {
-        dto.nodeOffsets() = m_nodeOffsets;
+        assembler->bones(m_boneNodeNames, m_nodeOffsets);
     }
-    return dto.toGenericDto();
+    else
+    {
+        assembler->bones(m_boneNodeNames);
+    }
+}
+
+void SkinAnimationOperator::disassemble(const std::shared_ptr<SkinOperatorDisassembler>& disassembler)
+{
+    m_factoryDesc = disassembler->factoryDesc();
+    if (disassembler->operatedSkin())
+    {
+        m_skinMeshId = disassembler->operatedSkin().value();
+        m_boneNodeNames = disassembler->bones();
+    }
+    if (disassembler->t_posOffsets())
+    {
+        m_t_posNodeOffsets = disassembler->t_posOffsets().value();
+    }
 }
 
 void SkinAnimationOperator::updateSkinMeshBoneMatrix(const MeshNodeTree& mesh_node_tree)

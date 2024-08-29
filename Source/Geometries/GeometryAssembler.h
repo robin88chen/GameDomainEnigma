@@ -36,7 +36,7 @@ namespace Enigma::Geometries
         GeometryAssembler& operator=(const GeometryAssembler&) = default;
         GeometryAssembler& operator=(GeometryAssembler&&) = default;
 
-        virtual Engine::GenericDto assemble() const;
+        virtual Engine::GenericDto assemble();
 
         void asAsset(const std::string& name, const std::string& filename, const std::string& path_id);
         void factoryDesc(const Engine::FactoryDesc& desc) { m_factoryDesc = desc; }

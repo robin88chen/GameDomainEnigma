@@ -1,5 +1,5 @@
 ﻿#include "TerrainPrimitive.h"
-#include "TerrainPrimitiveDto.h"
+#include "TerrainPrimitiveAssembler.h"
 
 using namespace Enigma::Terrain;
 using namespace Enigma::Renderer;
@@ -11,28 +11,18 @@ TerrainPrimitive::TerrainPrimitive(const Primitives::PrimitiveId& id) : MeshPrim
     m_factoryDesc = Engine::FactoryDesc(TerrainPrimitive::TYPE_RTTI.getName()).ClaimAsInstanced(id.name() + ".terrain");
 }
 
-TerrainPrimitive::TerrainPrimitive(const Primitives::PrimitiveId& id, const Engine::GenericDto& dto, const std::shared_ptr<Geometries::GeometryRepository>& geometry_repository) : MeshPrimitive(id, dto, geometry_repository)
-{
-}
-
 TerrainPrimitive::~TerrainPrimitive()
 {
 
 }
 
-std::shared_ptr<Enigma::Primitives::Primitive> TerrainPrimitive::create(const Primitives::PrimitiveId& id)
+std::shared_ptr<Enigma::Primitives::PrimitiveAssembler> TerrainPrimitive::assembler() const
 {
-    return std::make_shared<TerrainPrimitive>(id);
+    return std::make_shared<TerrainPrimitiveAssembler>(m_id.origin());
 }
 
-std::shared_ptr<Enigma::Primitives::Primitive> TerrainPrimitive::constitute(const Primitives::PrimitiveId& id, const Engine::GenericDto& dto, const std::shared_ptr<Geometries::GeometryRepository>& geometry_repository)
+std::shared_ptr<Enigma::Primitives::PrimitiveDisassembler> TerrainPrimitive::disassembler() const
 {
-    return std::make_shared<TerrainPrimitive>(id, dto, geometry_repository);
+    return std::make_shared<TerrainPrimitiveDisassembler>();
 }
-
-/*Enigma::Engine::GenericDto TerrainPrimitive::serializeDto() const
-{
-    TerrainPrimitiveDto dto(serializeMeshDto());
-    return dto.toGenericDto();
-}*/
 

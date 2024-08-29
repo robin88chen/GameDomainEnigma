@@ -1,6 +1,6 @@
 ﻿#include "MeshNode.h"
-#include "RenderablePrimitiveDtos.h"
 #include "SkinMeshPrimitive.h"
+#include "MeshNodeAssemblers.h"
 
 using namespace Enigma::Renderables;
 using namespace Enigma::MathLib;
@@ -8,6 +8,17 @@ using namespace Enigma::Primitives;
 using namespace Enigma::Engine;
 
 DEFINE_RTTI_OF_BASE(Renderables, MeshNode);
+
+MeshNode::MeshNode() : m_factoryDesc(TYPE_RTTI.getName())
+{
+    m_name = "";
+    m_mxT_PosTransform = Matrix4::IDENTITY;
+    m_mxLocalTransform = Matrix4::IDENTITY;
+    m_mxRootRefTransform = Matrix4::IDENTITY;
+    m_meshPrimitive = nullptr;
+    m_hasSkinMeshPrimitive = false;
+
+}
 
 MeshNode::MeshNode(const std::string& name) : m_factoryDesc(TYPE_RTTI.getName())
 {
@@ -28,29 +39,6 @@ MeshNode::MeshNode(const MeshNode& node) : m_factoryDesc(node.factoryDesc())
     m_hasSkinMeshPrimitive = node.m_hasSkinMeshPrimitive;
     m_meshPrimitive = node.m_meshPrimitive;
     m_parentIndexInArray = node.m_parentIndexInArray;
-}
-
-MeshNode::MeshNode(const GenericDto& dto) : m_factoryDesc(TYPE_RTTI.getName())
-{
-    MeshNodeDto mesh_node_dto(dto);
-    m_name = mesh_node_dto.name();
-    m_mxT_PosTransform = mesh_node_dto.localT_PosTransform();
-    m_mxLocalTransform = m_mxT_PosTransform;
-    m_mxRootRefTransform = m_mxT_PosTransform;
-    //m_mxRootRefTransform = mesh_node_dto.RootRefTransform();
-    m_hasSkinMeshPrimitive = false;
-    if (mesh_node_dto.meshPrimitiveId())
-    {
-        m_meshPrimitive = std::dynamic_pointer_cast<MeshPrimitive>(Primitive::queryPrimitive(mesh_node_dto.meshPrimitiveId().value().next()));
-        if ((m_meshPrimitive) && (m_meshPrimitive->typeInfo().isDerived(SkinMeshPrimitive::TYPE_RTTI)))
-        {
-            m_hasSkinMeshPrimitive = true;
-        }
-    }
-    if (mesh_node_dto.parentIndexInArray())
-    {
-        m_parentIndexInArray = mesh_node_dto.parentIndexInArray().value();
-    }
 }
 
 MeshNode::MeshNode(MeshNode&& node) noexcept : m_factoryDesc(std::move(node.factoryDesc()))
@@ -96,22 +84,41 @@ MeshNode& MeshNode::operator=(MeshNode&& node) noexcept
     return *this;
 }
 
-GenericDto MeshNode::serializeDto() const
+void MeshNode::assemble(const std::shared_ptr<MeshNodeAssembler>& assembler) const
 {
-    MeshNodeDto dto;
-    dto.factoryDesc() = m_factoryDesc;
-    dto.name() = m_name;
-    dto.localT_PosTransform() = m_mxT_PosTransform;
-    //dto.RootRefTransform() = m_mxRootRefTransform;
+    assembler->factoryDesc(m_factoryDesc);
+    assembler->name(m_name);
+    assembler->localT_PosTransform(m_mxT_PosTransform);
     if (m_meshPrimitive)
     {
-        dto.meshPrimitiveId() = m_meshPrimitive->id().origin();
+        assembler->meshPrimitiveId(m_meshPrimitive->id().origin());
     }
     if (m_parentIndexInArray)
     {
-        dto.parentIndexInArray() = m_parentIndexInArray.value();
+        assembler->parentIndexInArray(m_parentIndexInArray.value());
     }
-    return dto.toGenericDto();
+}
+
+void MeshNode::disassemble(const std::shared_ptr<MeshNodeDisassembler>& disassembler)
+{
+    m_name = disassembler->name();
+    m_mxT_PosTransform = disassembler->localT_PosTransform();
+    m_mxLocalTransform = m_mxT_PosTransform;
+    m_mxRootRefTransform = m_mxT_PosTransform;
+    //m_mxRootRefTransform = mesh_node_dto.RootRefTransform();
+    m_hasSkinMeshPrimitive = false;
+    if (disassembler->meshPrimitiveId())
+    {
+        m_meshPrimitive = std::dynamic_pointer_cast<MeshPrimitive>(Primitive::queryPrimitive(disassembler->meshPrimitiveId().value().next()));
+        if ((m_meshPrimitive) && (m_meshPrimitive->typeInfo().isDerived(SkinMeshPrimitive::TYPE_RTTI)))
+        {
+            m_hasSkinMeshPrimitive = true;
+        }
+    }
+    if (disassembler->parentIndexInArray())
+    {
+        m_parentIndexInArray = disassembler->parentIndexInArray().value();
+    }
 }
 
 void MeshNode::setMeshPrimitive(const std::shared_ptr<MeshPrimitive>& mesh)

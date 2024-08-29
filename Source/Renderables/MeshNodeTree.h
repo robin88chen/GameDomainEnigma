@@ -12,19 +12,20 @@
 #include "MeshNode.h"
 #include "MathLib/Matrix4.h"
 #include "Frameworks/optional_ref.hpp"
-#include "GameEngine/GenericDto.h"
 #include "Primitives/Primitive.h"
 #include <vector>
 #include <optional>
 
 namespace Enigma::Renderables
 {
+    class MeshNodeTreeAssembler;
+    class MeshNodeTreeDisassembler;
+
     class MeshNodeTree
     {
         DECLARE_EN_RTTI_NON_BASE;
     public:
         MeshNodeTree();
-        MeshNodeTree(const Engine::GenericDto& dto);
         MeshNodeTree(const MeshNodeTree& tree);
         MeshNodeTree(MeshNodeTree&& tree) noexcept;
         ~MeshNodeTree();
@@ -34,7 +35,8 @@ namespace Enigma::Renderables
         const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
-        Engine::GenericDto serializeDto() const;
+        void assemble(const std::shared_ptr<MeshNodeTreeAssembler>& assembler) const;
+        void disassemble(const std::shared_ptr<MeshNodeTreeDisassembler>& disassembler);
 
         std::optional<unsigned> findMeshNodeIndex(const std::string& node_name) const;
         std::optional<Primitives::PrimitiveId> findInstancedPrimitiveId(const Primitives::PrimitiveId& original_id) const;

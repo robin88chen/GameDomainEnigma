@@ -1,11 +1,9 @@
 ﻿#include "ModelPrimitiveAnimator.h"
-#include "ModelAnimationDtos.h"
-#include "ModelAnimatorDtos.h"
+#include "ModelAnimatorAssembler.h"
 #include "Platforms/PlatformLayer.h"
 #include "Renderables/ModelPrimitive.h"
 #include "ModelAnimationAsset.h"
 #include "SkinAnimationOperator.h"
-#include "ModelAnimatorDtos.h"
 #include <cassert>
 
 using namespace Enigma::Renderables;
@@ -18,7 +16,7 @@ DEFINE_RTTI(Renderables, ModelPrimitiveAnimator, Animator);
 
 ModelPrimitiveAnimator::ModelPrimitiveAnimator(const AnimatorId& id) : Animator(id)
 {
-    m_factoryDesc = FactoryDesc(ModelPrimitiveAnimator::TYPE_RTTI.getName());
+    m_factoryDesc = FactoryDesc(TYPE_RTTI.getName());
     m_animationAsset = nullptr;
     m_meshNodeMapping.clear();
     m_skinAnimOperators.clear();
@@ -27,38 +25,6 @@ ModelPrimitiveAnimator::ModelPrimitiveAnimator(const AnimatorId& id) : Animator(
     m_fadingTime = 0.1f;
     m_isFading = false;
     m_isOnPlay = false;
-}
-
-ModelPrimitiveAnimator::ModelPrimitiveAnimator(const Animators::AnimatorId& id, const Engine::GenericDto& dto) : Animator(id)
-{
-    ModelAnimatorDto model_ani_dto(dto);
-    m_factoryDesc = model_ani_dto.factoryDesc();
-    m_animationAsset = nullptr;
-    m_meshNodeMapping.clear();
-    m_skinAnimOperators.clear();
-    m_remainFadingTime = 0.0f;
-    m_fadingTime = 0.1f;
-    m_isFading = false;
-    m_isOnPlay = false;
-    if (model_ani_dto.controlledPrimitiveId())
-    {
-        m_controlledPrimitiveId = model_ani_dto.controlledPrimitiveId().value();
-    }
-    if (model_ani_dto.animationAssetId())
-    {
-        m_animationAsset = std::dynamic_pointer_cast<ModelAnimationAsset>(ModelAnimationAsset::queryAnimationAsset(model_ani_dto.animationAssetId().value()));
-    }
-    else
-    {
-        m_animationAsset = nullptr;
-    }
-    if ((!model_ani_dto.skinOperators().empty()) && (m_controlledPrimitiveId))
-    {
-        for (auto& op_dto : model_ani_dto.skinOperators())
-        {
-            m_skinAnimOperators.emplace_back(op_dto);
-        }
-    }
 }
 
 ModelPrimitiveAnimator::~ModelPrimitiveAnimator()
@@ -68,30 +34,58 @@ ModelPrimitiveAnimator::~ModelPrimitiveAnimator()
     m_skinAnimOperators.clear();
 }
 
-std::shared_ptr<Animator> ModelPrimitiveAnimator::create(const Animators::AnimatorId& id)
+std::shared_ptr<AnimatorAssembler> ModelPrimitiveAnimator::assembler() const
 {
-    return std::make_shared<ModelPrimitiveAnimator>(id);
+    return std::make_shared<ModelAnimatorAssembler>(m_id.origin());
 }
 
-std::shared_ptr<Animator> ModelPrimitiveAnimator::constitute(const Animators::AnimatorId& id, const Engine::GenericDto& dto)
+void ModelPrimitiveAnimator::assemble(const std::shared_ptr<AnimatorAssembler>& assembler) const
 {
-    return std::make_shared<ModelPrimitiveAnimator>(id, dto);
-}
-
-/*GenericDto ModelPrimitiveAnimator::serializeDto() const
-{
-    ModelAnimatorDto dto;
-    dto.id() = id();
-    dto.factoryDesc() = m_factoryDesc;
-    if (m_controlledPrimitiveId) dto.controlledPrimitiveId() = m_controlledPrimitiveId.value();
-    if (!m_animationAsset) return dto.toGenericDto();
-    dto.animationAssetId() = m_animationAsset->id();
-    for (auto& op : m_skinAnimOperators)
+    if (auto model_assembler = std::dynamic_pointer_cast<ModelAnimatorAssembler>(assembler))
     {
-        dto.skinOperators().emplace_back(op.serializeDto());
+        model_assembler->factoryDesc(m_factoryDesc);
+        if (m_controlledPrimitiveId) model_assembler->controlledPrimitive(m_controlledPrimitiveId.value());
+        if (m_animationAsset) model_assembler->animationAsset(m_animationAsset->id());
+        for (auto& op : m_skinAnimOperators)
+        {
+            model_assembler->addSkinOperator(op);
+        }
     }
-    return dto.toGenericDto();
-}*/
+}
+
+std::shared_ptr<AnimatorDisassembler> ModelPrimitiveAnimator::disassembler() const
+{
+    return std::make_shared<ModelAnimatorDisassembler>();
+}
+
+void ModelPrimitiveAnimator::disassemble(const std::shared_ptr<Animators::AnimatorDisassembler>& disassembler)
+{
+    assert(disassembler);
+    assert(m_id.origin() == disassembler->id().origin()); // id is already set in the constructor
+    if (auto model_disassembler = std::dynamic_pointer_cast<ModelAnimatorDisassembler>(disassembler))
+    {
+        m_factoryDesc = model_disassembler->factoryDesc();
+        if (model_disassembler->controlledPrimitiveId())
+        {
+            m_controlledPrimitiveId = model_disassembler->controlledPrimitiveId().value();
+        }
+        if (model_disassembler->animationAssetId())
+        {
+            m_animationAsset = std::dynamic_pointer_cast<ModelAnimationAsset>(ModelAnimationAsset::queryAnimationAsset(model_disassembler->animationAssetId().value()));
+        }
+        else
+        {
+            m_animationAsset = nullptr;
+        }
+        if ((!model_disassembler->skinOperators().empty()) && (m_controlledPrimitiveId))
+        {
+            for (auto& op : model_disassembler->skinOperators())
+            {
+                m_skinAnimOperators.emplace_back(op);
+            }
+        }
+    }
+}
 
 Animator::HasUpdated ModelPrimitiveAnimator::update(const std::unique_ptr<Timer>& timer)
 {

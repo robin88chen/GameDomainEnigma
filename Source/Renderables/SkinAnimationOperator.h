@@ -10,24 +10,26 @@
 
 #include "SkinMeshPrimitive.h"
 #include "ModelPrimitive.h"
-#include "ModelAnimatorDtos.h"
 #include "GameEngine/FactoryDesc.h"
 
 namespace Enigma::Renderables
 {
+    class SkinOperatorAssembler;
+    class SkinOperatorDisassembler;
+
     class SkinAnimationOperator
     {
         DECLARE_EN_RTTI_NON_BASE
     public:
         SkinAnimationOperator();
-        SkinAnimationOperator(const Engine::GenericDto& dto);
         SkinAnimationOperator(const SkinAnimationOperator& op);
         SkinAnimationOperator(SkinAnimationOperator&& op) noexcept;
         ~SkinAnimationOperator();
         SkinAnimationOperator& operator=(const SkinAnimationOperator& op);
         SkinAnimationOperator& operator=(SkinAnimationOperator&& op) noexcept;
 
-        Engine::GenericDto serializeDto() const;
+        void assemble(const std::shared_ptr<SkinOperatorAssembler>& assembler) const;
+        void disassemble(const std::shared_ptr<SkinOperatorDisassembler>& disassembler);
 
         const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }

@@ -1,22 +1,13 @@
 ﻿#include "CubeGeometryMaker.h"
 #include "MathLib/Vector2.h"
 #include "MathLib/Vector3.h"
-#include "MathLib/ContainmentBox3.h"
-#include "GameEngine/BoundingVolume.h"
-#include "GameEngine/BoundingVolumeDto.h"
-#include "FileSystem/FileSystem.h"
-#include "Gateways/DtoJsonGateway.h"
 #include "Frameworks/ExtentTypesDefine.h"
-#include "Geometries/GeometryDataDto.h"
+#include "Geometries/TriangleListAssembler.h"
 #include "GraphicKernel/GraphicAPITypes.h"
-#include "Geometries/TriangleList.h"
-#include "Frameworks/CommandBus.h"
 #include "Geometries/GeometryDataQueries.h"
 
 using namespace Enigma::MathLib;
 using namespace Enigma::Engine;
-using namespace Enigma::FileSystem;
-using namespace Enigma::Gateways;
 using namespace Enigma::Geometries;
 
 std::shared_ptr<GeometryData> CubeGeometryMaker::makeCube(const GeometryId& id)
@@ -59,24 +50,18 @@ std::shared_ptr<GeometryData> CubeGeometryMaker::makeCube(const GeometryId& id)
         4, 6, 5, 4, 7, 6,
         0, 1, 2, 0, 2, 3,
     };
-    TextureCoordDto tex_dto;
-    tex_dto.texture2DCoords() = vtx_uv;
-    TriangleListDto dto;
-    dto.position3s() = vtx_pos;
-    dto.textureCoords().emplace_back(tex_dto.toGenericDto());
-    dto.indices() = vtx_idx;
-    dto.segments() = { 0, 8, 0, 36 };
-    dto.vertexCapacity() = 8;
-    dto.vertexUsedCount() = 8;
-    dto.indexCapacity() = 36;
-    dto.indexUsedCount() = 36;
-    dto.id() = id;
-    dto.vertexFormat() = "xyz_tex1(2)";
-    dto.topology() = static_cast<unsigned>(Enigma::Graphics::PrimitiveTopology::Topology_TriangleList);
-    Box3 box = ContainmentBox3::ComputeAlignedBox(&vtx_pos[0], vtx_pos.size());
-    BoundingVolume bv{ box };
-    dto.geometryBound() = bv.serializeDto().toGenericDto();
-    dto.factoryDesc() = FactoryDesc(TriangleList::TYPE_RTTI.getName()).ClaimAsResourceAsset(id.name(), id.name() + ".geo", "DataPath");
+    TriangleListAssembler assembler(id);
+    assembler.position3s(vtx_pos);
+    assembler.addTexture2DCoords(vtx_uv);
+    assembler.indices(vtx_idx);
+    assembler.addSegment({ 0, 8, 0, 36 });
+    assembler.vertexCapacity(8);
+    assembler.vertexUsedCount(8);
+    assembler.indexCapacity(36);
+    assembler.indexUsedCount(36);
+    assembler.topology(Enigma::Graphics::PrimitiveTopology::Topology_TriangleList);
+    assembler.computeAlignedBox();
+    assembler.asAsset(id.name(), id.name() + ".geo", "DataPath");
 
-    return std::make_shared<RequestGeometryConstitution>(id, dto.toGenericDto(), RequestGeometryConstitution::PersistenceLevel::Store)->dispatch();
+    return std::make_shared<RequestGeometryConstitution>(id, assembler.assemble())->dispatch();
 }

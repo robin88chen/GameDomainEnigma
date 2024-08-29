@@ -1,5 +1,6 @@
 ﻿#include "ModelAnimationAsset.h"
-#include "ModelAnimationDtos.h"
+#include "AnimationTimeSRTAssembler.h"
+#include "ModelAnimationAssembler.h"
 
 using namespace Enigma::Renderables;
 using namespace Enigma::MathLib;
@@ -13,47 +14,47 @@ ModelAnimationAsset::ModelAnimationAsset(const AnimationAssetId& id) : Animation
     m_factoryDesc = FactoryDesc(TYPE_RTTI.getName());
 }
 
-ModelAnimationAsset::ModelAnimationAsset(const AnimationAssetId& id, const GenericDto& dto) : AnimationAsset(id)
-{
-    ModelAnimationAssetDto model_dto(dto);
-    //m_factoryDesc = model_dto.factoryDesc();
-    m_meshNodeKeyArray.reserve(model_dto.meshNodeNames().size());
-    for (unsigned i = 0; i < model_dto.meshNodeNames().size(); i++)
-    {
-        addMeshNodeTimeSRTData(model_dto.meshNodeNames()[i], AnimationTimeSRT(model_dto.timeSRTs()[i]));
-    }
-}
-
 ModelAnimationAsset::~ModelAnimationAsset()
 {
     m_meshNodeKeyArray.clear();
 }
 
-std::shared_ptr<AnimationAsset> ModelAnimationAsset::create(const Animators::AnimationAssetId& id)
+std::shared_ptr<AnimationAssetAssembler> ModelAnimationAsset::assembler() const
 {
-    return std::make_shared<ModelAnimationAsset>(id);
+    return std::make_shared<ModelAnimationAssembler>(m_id);
 }
 
-std::shared_ptr<AnimationAsset> ModelAnimationAsset::constitute(const Animators::AnimationAssetId& id, const Engine::GenericDto& dto)
+void ModelAnimationAsset::assemble(const std::shared_ptr<Animators::AnimationAssetAssembler>& assembler) const
 {
-    return std::make_shared<ModelAnimationAsset>(id, dto);
-}
+    assert(assembler);
+    std::shared_ptr<ModelAnimationAssembler> model_assembler = std::dynamic_pointer_cast<ModelAnimationAssembler>(assembler);
+    if (!model_assembler) return;
 
-GenericDto ModelAnimationAsset::serializeDto()
-{
-    ModelAnimationAssetDto dto;
-    //dto.id(m_id);
-    //dto.factoryDesc(m_factoryDesc);
-    std::vector<std::string> names;
-    GenericDtoCollection srts;
+    model_assembler->factoryDesc(m_factoryDesc);
     for (auto& key : m_meshNodeKeyArray)
     {
-        names.emplace_back(key.m_meshNodeName);
-        srts.emplace_back(key.m_timeSRTData.serializeDto());
+        model_assembler->nodeSRT(key.m_meshNodeName, key.m_timeSRTData);
     }
-    dto.meshNodeNames() = names;
-    dto.timeSRTs() = srts;
-    return dto.toGenericDto();
+}
+
+std::shared_ptr<AnimationAssetDisassembler> ModelAnimationAsset::disassembler() const
+{
+    return std::make_shared<ModelAnimationDisassembler>();
+}
+
+void ModelAnimationAsset::disassemble(const std::shared_ptr<Animators::AnimationAssetDisassembler>& disassembler)
+{
+    assert(disassembler);
+    assert(m_id == disassembler->id()); // id is already set in the constructor
+    m_factoryDesc = disassembler->factoryDesc();
+    std::shared_ptr<ModelAnimationDisassembler> model_disassembler = std::dynamic_pointer_cast<ModelAnimationDisassembler>(disassembler);
+    if (!model_disassembler) return;
+    if (model_disassembler->nodeSRTs().size() == 0) return;
+    m_meshNodeKeyArray.reserve(model_disassembler->nodeSRTs().size());
+    for (const auto& node_srt : model_disassembler->nodeSRTs())
+    {
+        addMeshNodeTimeSRTData(std::get<std::string>(node_srt), std::get<AnimationTimeSRT>(node_srt));
+    }
 }
 
 void ModelAnimationAsset::reserveCapacity(unsigned mesh_node_count)

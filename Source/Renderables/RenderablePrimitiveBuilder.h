@@ -10,7 +10,6 @@
 
 #include "Frameworks/SystemService.h"
 #include "Frameworks/EventSubscriber.h"
-#include "Frameworks/CommandSubscriber.h"
 #include "Primitives/Primitive.h"
 #include "Primitives/PrimitiveId.h"
 #include "Geometries/GeometryRepository.h"
@@ -33,7 +32,7 @@ namespace Enigma::Renderables
         DECLARE_EN_RTTI;
     public:
         using CustomMeshCreator = std::function<std::shared_ptr<Primitives::Primitive>(const Primitives::PrimitiveId&)>;
-        using CustomMeshConstitutor = std::function<std::shared_ptr<Primitives::Primitive>(const Primitives::PrimitiveId&, const Engine::GenericDto&, const std::shared_ptr<Geometries::GeometryRepository>&)>;
+        using CustomMeshConstitutor = std::function<std::shared_ptr<Primitives::Primitive>(const Primitives::PrimitiveId&, const Engine::GenericDto&)>;
     public:
         RenderablePrimitiveBuilder(Frameworks::ServiceManager* mngr, const std::shared_ptr<Primitives::PrimitiveRepository>& primitive_repository, const std::shared_ptr<Geometries::GeometryRepository>& geometry_repository);
         RenderablePrimitiveBuilder(const RenderablePrimitiveBuilder&) = delete;

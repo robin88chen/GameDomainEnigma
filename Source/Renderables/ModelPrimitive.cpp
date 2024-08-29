@@ -4,8 +4,10 @@
 #include "RenderableErrors.h"
 #include "RenderableEvents.h"
 #include "MathLib/Matrix4.h"
-#include "RenderablePrimitiveDtos.h"
 #include "ModelPrimitiveAnimator.h"
+#include "ModelPrimitiveAssembler.h"
+#include "MeshNodeAssemblers.h"
+#include "MeshNodeTree.h"
 #include "Frameworks/EventPublisher.h"
 #include <memory>
 
@@ -26,18 +28,6 @@ ModelPrimitive::ModelPrimitive(const PrimitiveId& id) : Primitive(id)
     registerHandlers();
 }
 
-ModelPrimitive::ModelPrimitive(const PrimitiveId& id, const GenericDto& dto) : Primitive(id)
-{
-    ModelPrimitiveDto primDto(dto);
-    m_factoryDesc = primDto.factoryDesc();
-    m_nodeTree = MeshNodeTree(primDto.nodeTree());
-    if (primDto.animatorId())
-    {
-        ModelPrimitive::animatorId(primDto.animatorId().value());
-    }
-    registerHandlers();
-}
-
 ModelPrimitive::~ModelPrimitive()
 {
     if (m_modelPrimitiveAnimator)
@@ -49,15 +39,40 @@ ModelPrimitive::~ModelPrimitive()
     m_meshPrimitiveIndexCache.clear();
 }
 
-/*GenericDto ModelPrimitive::serializeDto() const
+std::shared_ptr<PrimitiveAssembler> ModelPrimitive::assembler() const
 {
-    ModelPrimitiveDto dto;
-    dto.id() = m_id.origin();
-    dto.factoryDesc() = m_factoryDesc;
-    dto.nodeTree() = m_nodeTree.serializeDto();
-    if (!m_animatorId.empty()) dto.animatorId() = m_animatorId.origin();
-    return dto.toGenericDto();
-}*/
+    return std::make_shared<ModelPrimitiveAssembler>(m_id.origin());
+}
+
+void ModelPrimitive::assemble(const std::shared_ptr<Primitives::PrimitiveAssembler>& assembler) const
+{
+    if (const auto model_assembler = std::dynamic_pointer_cast<ModelPrimitiveAssembler>(assembler))
+    {
+        model_assembler->factoryDesc(m_factoryDesc);
+        model_assembler->meshNodeTree(m_nodeTree);
+        if (m_modelPrimitiveAnimator) model_assembler->modelAnimatorId(m_modelPrimitiveAnimator->id());
+    }
+}
+
+std::shared_ptr<PrimitiveDisassembler> ModelPrimitive::disassembler() const
+{
+    return std::make_shared<ModelPrimitiveDisassembler>();
+}
+
+void ModelPrimitive::disassemble(const std::shared_ptr<Primitives::PrimitiveDisassembler>& disassembler)
+{
+    assert(disassembler);
+    assert(m_id.origin() == disassembler->id().origin()); // id is already set in the constructor
+    if (const auto model_disassembler = std::dynamic_pointer_cast<ModelPrimitiveDisassembler>(disassembler))
+    {
+        m_factoryDesc = model_disassembler->factoryDesc();
+        m_nodeTree = model_disassembler->meshNodeTree();
+        if (model_disassembler->modelAnimatorId())
+        {
+            ModelPrimitive::animatorId(model_disassembler->modelAnimatorId().value());
+        }
+    }
+}
 
 void ModelPrimitive::registerHandlers()
 {

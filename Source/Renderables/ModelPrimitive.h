@@ -30,14 +30,12 @@ namespace Enigma::Renderables
         DECLARE_EN_RTTI;
     public:
         ModelPrimitive(const Primitives::PrimitiveId& id);
-        ModelPrimitive(const Primitives::PrimitiveId& id, const Engine::GenericDto& dto);
         ModelPrimitive(const ModelPrimitive& prim) = delete;
         ModelPrimitive(ModelPrimitive&& prim) = delete;
         ~ModelPrimitive() override;
         ModelPrimitive& operator=(const ModelPrimitive& prim) = delete;
         ModelPrimitive& operator=(ModelPrimitive&& prim) = delete;
 
-        //todo : implement these functions
         virtual std::shared_ptr<Primitives::PrimitiveAssembler> assembler() const override;
         virtual void assemble(const std::shared_ptr<Primitives::PrimitiveAssembler>& assembler) const override;
         virtual std::shared_ptr<Primitives::PrimitiveDisassembler> disassembler() const override;

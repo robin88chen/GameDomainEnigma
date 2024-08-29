@@ -16,21 +16,29 @@
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainAssemblers.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainGeometry.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainGeometryAssembler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainGeometryDto.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainGeometryFactoryMethods.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainInstallingPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPawn.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPawnDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPrimitive.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPrimitiveAssembler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPrimitiveDto.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPrimitiveFactoryMethods.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainAssemblers.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainGeometry.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainGeometryAssembler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainGeometryDto.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainGeometryFactoryMethods.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainInstallingPolicy.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPawn.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPawnDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPrimitive.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPrimitiveAssembler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPrimitiveDto.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPrimitiveFactoryMethods.cpp" />
   </ItemGroup>
 </Project>

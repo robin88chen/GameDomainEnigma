@@ -82,6 +82,7 @@ namespace Enigma::Renderables
 
         void factoryDesc(const Engine::FactoryDesc& desc) { m_factoryDesc = desc; }
         void addNodeWithParentName(const MeshNode& node, const std::string& parent_name);
+        void addNodeWithParentName(const std::string& node_name, const std::shared_ptr<MeshNodeAssembler>& assembler, const std::string& parent_name);
         void addNode(const MeshNode& node);
         void addNode(const std::string& node_name, const std::shared_ptr<MeshNodeAssembler>& assembler);
 
@@ -93,7 +94,7 @@ namespace Enigma::Renderables
     protected:
         Engine::FactoryDesc m_factoryDesc;
         std::vector<std::string> m_nodeNames;
-        std::vector<std::shared_ptr<MeshNodeAssembler>> m_nodesAssemblers;
+        std::vector<std::shared_ptr<MeshNodeAssembler>> m_nodeAssemblers;
     };
     class MeshNodeTreeDisassembler
     {

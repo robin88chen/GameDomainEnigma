@@ -49,12 +49,12 @@ MeshNodeTreeAssembler::MeshNodeTreeAssembler() : m_factoryDesc(MeshNodeTree::TYP
 
 void MeshNodeTreeAssembler::addNodeWithParentName(const MeshNode& node, const std::string& parent_name)
 {
-    if (m_nodesAssemblers.empty())
+    if (m_nodeAssemblers.empty())
     {
         auto node_assembler = std::make_shared<MeshNodeAssembler>();
         node.assemble(node_assembler);
         m_nodeNames.emplace_back(node.getName());
-        m_nodesAssemblers.emplace_back(node_assembler);
+        m_nodeAssemblers.emplace_back(node_assembler);
     }
     else
     {
@@ -65,8 +65,19 @@ void MeshNodeTreeAssembler::addNodeWithParentName(const MeshNode& node, const st
             if (auto parent_index = findNodeIndex(parent_name)) node_assembler->parentIndexInArray(parent_index.value());
         }
         m_nodeNames.emplace_back(node.getName());
-        m_nodesAssemblers.emplace_back(node_assembler);
+        m_nodeAssemblers.emplace_back(node_assembler);
     }
+}
+
+void MeshNodeTreeAssembler::addNodeWithParentName(const std::string& node_name, const std::shared_ptr<MeshNodeAssembler>& assembler, const std::string& parent_name)
+{
+    assert(!m_nodeAssemblers.empty()); // Must have at least one node, to add a parent
+    if (!parent_name.empty())
+    {
+        if (auto parent_index = findNodeIndex(parent_name)) assembler->parentIndexInArray(parent_index.value());
+    }
+    m_nodeNames.emplace_back(node_name);
+    m_nodeAssemblers.emplace_back(assembler);
 }
 
 void MeshNodeTreeAssembler::addNode(const MeshNode& node)
@@ -74,13 +85,13 @@ void MeshNodeTreeAssembler::addNode(const MeshNode& node)
     auto node_assembler = std::make_shared<MeshNodeAssembler>();
     node.assemble(node_assembler);
     m_nodeNames.emplace_back(node.getName());
-    m_nodesAssemblers.emplace_back(node_assembler);
+    m_nodeAssemblers.emplace_back(node_assembler);
 }
 
 void MeshNodeTreeAssembler::addNode(const std::string& node_name, const std::shared_ptr<MeshNodeAssembler>& assembler)
 {
     m_nodeNames.emplace_back(node_name);
-    m_nodesAssemblers.emplace_back(assembler);
+    m_nodeAssemblers.emplace_back(assembler);
 }
 
 Enigma::Engine::GenericDto MeshNodeTreeAssembler::assemble() const
@@ -88,7 +99,7 @@ Enigma::Engine::GenericDto MeshNodeTreeAssembler::assemble() const
     Engine::GenericDto dto;
     dto.addRtti(m_factoryDesc);
     std::vector<Engine::GenericDto> node_dtos;
-    for (const auto& node : m_nodesAssemblers)
+    for (const auto& node : m_nodeAssemblers)
     {
         node_dtos.emplace_back(node->assemble());
     }

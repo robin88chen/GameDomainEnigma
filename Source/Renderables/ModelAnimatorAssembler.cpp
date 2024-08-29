@@ -19,7 +19,14 @@ ModelAnimatorAssembler::ModelAnimatorAssembler(const Animators::AnimatorId& id) 
 
 void ModelAnimatorAssembler::addSkinOperator(const SkinAnimationOperator& skin_operator)
 {
-    m_skinOperators.emplace_back(skin_operator);
+    std::shared_ptr<SkinOperatorAssembler> skin_operator_assembler = std::make_shared<SkinOperatorAssembler>();
+    skin_operator.assemble(skin_operator_assembler);
+    m_skinOperatorAssemblers.emplace_back(skin_operator_assembler);
+}
+
+void ModelAnimatorAssembler::addSkinOperator(const std::shared_ptr<SkinOperatorAssembler>& skin_operator)
+{
+    m_skinOperatorAssemblers.emplace_back(skin_operator);
 }
 
 void ModelAnimatorAssembler::asNative(const std::string& file_at_path)
@@ -34,14 +41,12 @@ Enigma::Engine::GenericDto ModelAnimatorAssembler::assemble() const
     dto.addRtti(m_factoryDesc);
     if (m_controlledPrimitiveId) dto.addOrUpdate(TOKEN_CONTROLLED_PRIMITIVE_ID, m_controlledPrimitiveId.value().tokens());
     if (m_animationAssetId) dto.addOrUpdate(TOKEN_ASSET_ID, m_animationAssetId.value().name());
-    if (!m_skinOperators.empty())
+    if (!m_skinOperatorAssemblers.empty())
     {
         Engine::GenericDtoCollection skin_operators;
-        for (const auto& skin_operator : m_skinOperators)
+        for (const auto& operator_assembler : m_skinOperatorAssemblers)
         {
-            std::shared_ptr<SkinOperatorAssembler> skin_operator_assembler = std::make_shared<SkinOperatorAssembler>();
-            skin_operator.assemble(skin_operator_assembler);
-            skin_operators.emplace_back(skin_operator_assembler->assemble());
+            skin_operators.emplace_back(operator_assembler->assemble());
         }
         dto.addOrUpdate(TOKEN_SKIN_OPERATORS, skin_operators);
     }

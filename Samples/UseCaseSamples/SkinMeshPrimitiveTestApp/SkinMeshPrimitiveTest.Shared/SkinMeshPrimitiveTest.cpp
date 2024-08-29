@@ -11,7 +11,6 @@
 #include "SkinMeshModelMaker.h"
 #include "SkinAnimationMaker.h"
 #include "Platforms/AndroidBridge.h"
-#include "Animators/AnimatorCommands.h"
 #include "Renderables/ModelPrimitiveAnimator.h"
 #include "GameEngine/DeviceCreatingPolicy.h"
 #include "GameEngine/EffectMaterialSourceRepositoryInstallingPolicy.h"
@@ -34,6 +33,10 @@
 #include "SceneGraph/SceneGraphInstallingPolicy.h"
 #include "SceneGraph/CameraFrustumCommands.h"
 #include "SceneGraph/CameraFrustumEvents.h"
+#include "Animators/AnimationAssetCommands.h"
+#include "Animators/AnimatorCommands.h"
+#include "Geometries/GeometryCommands.h"
+#include "Primitives/PrimitiveCommands.h"
 #include <string>
 
 using namespace Enigma::Controllers;
@@ -107,7 +110,7 @@ void SkinMeshPrimitiveTest::installEngine()
     auto geometry_policy = std::make_shared<GeometryInstallingPolicy>(std::make_shared<GeometryDataFileStoreMapper>("geometries.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
     auto primitive_policy = std::make_shared<PrimitiveRepositoryInstallingPolicy>(std::make_shared<PrimitiveFileStoreMapper>("primitives.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
     auto animator_policy = std::make_shared<AnimatorInstallingPolicy>(std::make_shared<AnimatorFileStoreMapper>("animators.db.txt@DataPath", std::make_shared<DtoJsonGateway>()), std::make_shared<AnimationAssetFileStoreMapper>("animation_assets.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
-    auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(std::make_shared<JsonFileDtoDeserializer>(), std::make_shared<SceneGraphFileStoreMapper>("scene_graph.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
+    auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(std::make_shared<SceneGraphFileStoreMapper>("scene_graph.db.txt@DataPath", "lazied_scene.db.txt@DataPath", "lazy_", std::make_shared<DtoJsonGateway>()));
     auto effect_material_source_policy = std::make_shared<EffectMaterialSourceRepositoryInstallingPolicy>(std::make_shared<EffectMaterialSourceFileStoreMapper>("effect_materials.db.txt@APK_PATH"));
     auto texture_policy = std::make_shared<TextureRepositoryInstallingPolicy>(std::make_shared<TextureFileStoreMapper>("textures.db.txt@APK_PATH", std::make_shared<DtoJsonGateway>()));
     auto renderables_policy = std::make_shared<RenderablesInstallingPolicy>();
@@ -178,16 +181,21 @@ void SkinMeshPrimitiveTest::makeCamera()
 void SkinMeshPrimitiveTest::makeModel()
 {
     auto animation = SkinAnimationMaker::makeSkinMeshAnimationAsset(m_animationId, m_meshNodeNames);
+    if (animation) std::make_shared<PutAnimationAsset>(m_animationId, animation)->execute();
     auto animator = SkinAnimationMaker::makeModelAnimator(m_animatorId, m_animationId, m_modelId.origin(), m_meshId, m_meshNodeNames);
+    if (animator) std::make_shared<PutAnimator>(m_animatorId, animator)->execute();
     auto cube = CubeGeometryMaker::makeCube(m_cubeId);
+    if (cube) std::make_shared<PutGeometry>(m_cubeId, cube)->execute();
     auto mesh = SkinMeshModelMaker::makeCubeMeshPrimitive(m_meshId, m_cubeId);
+    if (mesh) std::make_shared<PutPrimitive>(m_meshId, mesh)->execute();
     m_model = SkinMeshModelMaker::makeModelPrimitive(m_modelId.origin(), m_meshId, m_animatorId, m_meshNodeNames);
+    if (m_model) std::make_shared<PutPrimitive>(m_modelId.origin(), m_model)->execute();
     m_animatorId = m_model->animatorId();
     if (const auto animator = std::dynamic_pointer_cast<ModelPrimitiveAnimator>(Animator::queryAnimator(m_animatorId)))
     {
         animator->playAnimation(Enigma::Renderables::AnimationClip{ 0.0f, 2.5f, Enigma::Renderables::AnimationClip::WarpMode::Loop, 0 });
     }
-    CommandBus::post(std::make_shared<AddListeningAnimator>(m_animatorId));
+    CommandBus::enqueue(std::make_shared<AddListeningAnimator>(m_animatorId));
     m_model->updateWorldTransform(Matrix4::IDENTITY);
 }
 
@@ -200,7 +208,7 @@ void SkinMeshPrimitiveTest::onCameraConstituted(const Enigma::Frameworks::IEvent
     if (ev->isPersisted()) return;
     m_camera = ev->camera();
     if ((m_camera) && (m_renderer)) m_renderer->setAssociatedCamera(m_camera);
-    CommandBus::post(std::make_shared<PutCamera>(m_cameraId, m_camera));
+    CommandBus::enqueue(std::make_shared<PutCamera>(m_cameraId, m_camera));
 }
 
 void SkinMeshPrimitiveTest::onRendererCreated(const IEventPtr& e)

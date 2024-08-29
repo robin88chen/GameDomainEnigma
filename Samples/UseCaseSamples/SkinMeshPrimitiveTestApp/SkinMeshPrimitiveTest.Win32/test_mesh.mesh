@@ -46,6 +46,10 @@
                     "Type": "Uint32",
                     "Value": 84
                 },
+                "Segments": {
+                    "Type": "Uint32Array",
+                    "Value": [0, 16, 0, 84]
+                },
                 "GeometryBound": {
                     "Type": "DataObject",
                     "Value": {
@@ -54,10 +58,6 @@
                             "Value": [0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.5, 1.5, 0.5]
                         }
                     }
-                },
-                "Segments": {
-                    "Type": "Uint32Array",
-                    "Value": [0, 16, 0, 84]
                 },
                 "VertexCapacity": {
                     "Type": "Uint32",
@@ -103,16 +103,16 @@
                 "Indices": {
                     "Type": "Uint32Array",
                     "Value": [0, 1, 2, 0, 2, 3, 0, 5, 1, 0, 4, 5, 1, 6, 2, 1, 5, 6, 2, 7, 3, 2, 6, 7, 3, 4, 0, 3, 7, 4, 4, 9, 5, 4, 8, 9, 5, 10, 6, 5, 9, 10, 6, 11, 7, 6, 10, 11, 7, 8, 4, 7, 11, 8, 8, 13, 9, 8, 12, 13, 9, 14, 10, 9, 13, 14, 10, 15, 11, 10, 14, 15, 11, 12, 8, 11, 15, 12, 12, 14, 13, 12, 15, 14]
-                },
-                "Name": {
-                    "Type": "String",
-                    "Value": "test_geometry"
                 }
             }
         },
         "Effects": {
             "Type": "StringArray",
             "Value": ["skin_mesh_prim_test"]
+        },
+        "VisualTechniqueSelection": {
+            "Type": "String",
+            "Value": "Default"
         },
         "TextureMaps": {
             "Type": "DataObjectArray",

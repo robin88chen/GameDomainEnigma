@@ -1,7 +1,6 @@
 ﻿#include "CameraMaker.h"
-#include "SceneGraph/CameraFrustumDtos.h"
+#include "SceneGraph/CameraDtos.h"
 #include "MathLib/MathGlobal.h"
-#include "Frameworks/CommandBus.h"
 #include "SceneGraph/SceneGraphQueries.h"
 
 using namespace Enigma::SceneGraph;
@@ -28,5 +27,5 @@ std::shared_ptr<Camera> CameraMaker::makeCamera(const SpatialId& id)
     camera_dto.UpVector() = Vector3::UNIT_Y;
     camera_dto.Frustum() = frustum_dto.toGenericDto();
     camera_dto.factoryDesc() = Enigma::Engine::FactoryDesc(Camera::TYPE_RTTI.getName()).ClaimAsNative(id.name() + ".cam@DataPath");
-    return std::make_shared<RequestCameraConstitution>(id, camera_dto.toGenericDto(), PersistenceLevel::Store)->dispatch();
+    return std::make_shared<RequestCameraConstitution>(id, camera_dto.toGenericDto())->dispatch();
 }

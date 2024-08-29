@@ -36,8 +36,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveRay3IntersectionFinder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderableBoundFilter.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveBuilder.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveAssembler.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveDtos.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablesInstallingPolicy.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SkinAnimationOperator.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SkinMeshPrimitive.cpp" />
@@ -70,8 +68,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderableBoundFilter.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderableEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveBuilder.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveAssembler.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveDtos.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablesInstallingPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SkinAnimationOperator.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SkinMeshPrimitive.h" />

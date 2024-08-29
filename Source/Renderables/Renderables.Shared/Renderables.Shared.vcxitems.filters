@@ -28,9 +28,6 @@
     <Filter Include="ErrorCodes">
       <UniqueIdentifier>{11038c2a-d22a-427a-937d-d2b62bfb5f98}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Primitives\Dto and Assemblers">
-      <UniqueIdentifier>{06e7a9c5-c85b-4009-b0e6-5e20db6ad5b6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Events">
       <UniqueIdentifier>{c9a31e1a-36c7-4ef6-a80a-2b5d3b54a322}</UniqueIdentifier>
     </Filter>
@@ -66,9 +63,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveBuilder.cpp">
       <Filter>Primitives\Primitive Builders</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveDtos.cpp">
-      <Filter>Primitives\Dto and Assemblers</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshPrimitiveRay3IntersectionFinder.cpp">
       <Filter>Primitives\Intersection</Filter>
     </ClCompile>
@@ -98,9 +92,6 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderableErrors.cpp">
       <Filter>ErrorCodes</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveAssembler.cpp">
-      <Filter>Primitives\Dto and Assemblers</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelAnimationAssembler.cpp">
       <Filter>Animators\Assemblers</Filter>
@@ -158,9 +149,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveBuilder.h">
       <Filter>Primitives\Primitive Builders</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveDtos.h">
-      <Filter>Primitives\Dto and Assemblers</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrModelPrimitiveCache.h">
       <Filter>Primitives\Intersection</Filter>
     </ClInclude>
@@ -193,9 +181,6 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderableErrors.h">
       <Filter>ErrorCodes</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveAssembler.h">
-      <Filter>Primitives\Dto and Assemblers</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelAnimationAssembler.h">
       <Filter>Animators\Assemblers</Filter>

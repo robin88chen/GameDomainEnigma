@@ -12,9 +12,6 @@
 #include "Geometries/GeometryData.h"
 #include "GameEngine/RenderBuffer.h"
 #include "GameEngine/EffectTextureMap.h"
-#include "GameEngine/GenericDto.h"
-#include "Geometries/GeometryRepository.h"
-#include "Frameworks/LazyStatus.h"
 #include "Renderer/Renderer.h"
 #include "Renderer/RenderElement.h"
 #include <string>

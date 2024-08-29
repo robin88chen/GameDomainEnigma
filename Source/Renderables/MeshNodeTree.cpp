@@ -1,6 +1,7 @@
 ﻿#include "MeshNodeTree.h"
 #include "MeshPrimitive.h"
 #include "MeshNodeAssemblers.h"
+#include "MeshNode.h"
 
 using namespace Enigma::Renderables;
 using namespace Enigma::Engine;
@@ -11,16 +12,6 @@ MeshNodeTree::MeshNodeTree() : m_factoryDesc(MeshNodeTree::TYPE_RTTI.getName())
 {
     m_meshNodes.clear();
 }
-
-/*MeshNodeTree::MeshNodeTree(const Engine::GenericDto& dto) : m_factoryDesc(MeshNodeTree::TYPE_RTTI.getName())
-{
-    MeshNodeTreeDto mesh_node_tree_dto(dto);
-    m_factoryDesc = mesh_node_tree_dto.factoryDesc();
-    for (auto& node_dto : mesh_node_tree_dto.meshNodes())
-    {
-        addMeshNode(node_dto);
-    }
-}*/
 
 MeshNodeTree::MeshNodeTree(const MeshNodeTree& tree) : m_factoryDesc(tree.factoryDesc())
 {
@@ -69,17 +60,6 @@ void MeshNodeTree::disassemble(const std::shared_ptr<MeshNodeTreeDisassembler>& 
         addMeshNode(node);
     }
 }
-
-/*GenericDto MeshNodeTree::serializeDto() const
-{
-    MeshNodeTreeDto dto;
-    dto.factoryDesc() = m_factoryDesc;
-    for (auto& node : m_meshNodes)
-    {
-        dto.meshNodes().emplace_back(node.serializeDto());
-    }
-    return dto.toGenericDto();
-}*/
 
 std::optional<unsigned> MeshNodeTree::findMeshNodeIndex(const std::string& node_name) const
 {

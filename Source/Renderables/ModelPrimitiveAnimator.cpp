@@ -4,7 +4,6 @@
 #include "Renderables/ModelPrimitive.h"
 #include "ModelAnimationAsset.h"
 #include "SkinAnimationOperator.h"
-#include "SkinOperatorAssembler.h"
 #include <cassert>
 
 using namespace Enigma::Renderables;

@@ -10,7 +10,6 @@
 
 #include "Frameworks/SystemService.h"
 #include "Frameworks/EventSubscriber.h"
-#include "Frameworks/CommandSubscriber.h"
 #include "Primitives/Primitive.h"
 #include "Primitives/PrimitiveId.h"
 #include "Geometries/GeometryRepository.h"

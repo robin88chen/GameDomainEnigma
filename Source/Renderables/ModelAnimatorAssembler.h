@@ -52,25 +52,6 @@ namespace Enigma::Renderables
         std::optional<Animators::AnimationAssetId> m_animationAssetId;
         std::vector<SkinAnimationOperator> m_skinOperators;
     };
-    /*class SkinOperatorAssembler
-    {
-    public:
-        SkinOperatorAssembler();
-
-        SkinOperatorAssembler& operatedSkin(const Primitives::PrimitiveId& id);
-        SkinOperatorAssembler& skinNodeName(const std::string& name);
-        SkinOperatorAssembler& bone(const std::string& name, const MathLib::Matrix4& t_pos_offset);
-        SkinOperatorAssembler& bone(const std::string& name);
-        SkinOperatorAssembler& bones(const std::vector<std::string>& names, const std::vector<MathLib::Matrix4>& t_pos_offsets);
-        SkinOperatorAssembler& bones(const std::vector<std::string>& names);
-
-        Engine::GenericDto toGenericDto();
-
-    protected:
-        SkinOperatorDto m_dto;
-        std::vector<std::string> m_bones;
-        std::vector<MathLib::Matrix4> m_t_posOffsets;
-    };*/
 }
 
 #endif // MODEL_ANIMATOR_ASSEMBLER_H

@@ -28,18 +28,6 @@ ModelPrimitive::ModelPrimitive(const PrimitiveId& id) : Primitive(id)
     registerHandlers();
 }
 
-/*ModelPrimitive::ModelPrimitive(const PrimitiveId& id, const GenericDto& dto) : Primitive(id)
-{
-    ModelPrimitiveDto primDto(dto);
-    m_factoryDesc = primDto.factoryDesc();
-    m_nodeTree = MeshNodeTree(primDto.nodeTree());
-    if (primDto.animatorId())
-    {
-        ModelPrimitive::animatorId(primDto.animatorId().value());
-    }
-    registerHandlers();
-}*/
-
 ModelPrimitive::~ModelPrimitive()
 {
     if (m_modelPrimitiveAnimator)
@@ -85,16 +73,6 @@ void ModelPrimitive::disassemble(const std::shared_ptr<Primitives::PrimitiveDisa
         }
     }
 }
-
-/*GenericDto ModelPrimitive::serializeDto() const
-{
-    ModelPrimitiveDto dto;
-    dto.id() = m_id.origin();
-    dto.factoryDesc() = m_factoryDesc;
-    dto.nodeTree() = m_nodeTree.serializeDto();
-    if (!m_animatorId.empty()) dto.animatorId() = m_animatorId.origin();
-    return dto.toGenericDto();
-}*/
 
 void ModelPrimitive::registerHandlers()
 {

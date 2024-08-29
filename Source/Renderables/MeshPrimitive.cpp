@@ -9,7 +9,6 @@
 #include "GameEngine/IRenderer.h"
 #include "Renderer/RenderElement.h"
 #include "Platforms/PlatformLayer.h"
-#include "RenderablePrimitiveDtos.h"
 #include "Geometries/GeometryDataQueries.h"
 #include "RenderableErrors.h"
 #include "Geometries/GeometryAssembler.h"
@@ -32,41 +31,6 @@ MeshPrimitive::MeshPrimitive(const Primitives::PrimitiveId& id) : Primitive(id)
     m_effects.clear();
     m_textures.clear();
 }
-
-/*MeshPrimitive::MeshPrimitive(const Primitives::PrimitiveId& id, const Engine::GenericDto& dto, const std::shared_ptr<Geometries::GeometryRepository>& geometry_repository) : Primitive(id)
-{
-    assert(geometry_repository);
-    MeshPrimitiveDto mesh_dto(dto);
-    m_factoryDesc = mesh_dto.factoryDesc();
-    m_name = id.name();
-    m_geometry = nullptr;
-    if (geometry_repository->hasGeometryData(mesh_dto.geometryId()))
-    {
-        m_geometry = geometry_repository->queryGeometryData(mesh_dto.geometryId());
-    }
-    else if (mesh_dto.geometry())
-    {
-        m_geometry = std::make_shared<Geometries::RequestGeometryConstitution>(mesh_dto.geometryId(), mesh_dto.geometry().value())->dispatch();
-    }
-    m_lazyStatus.changeStatus(Frameworks::LazyStatus::Status::Ghost);
-    m_renderBuffer = nullptr;
-    m_renderListID = mesh_dto.renderListID();
-    m_elements.clear();
-    m_effects.clear();
-    for (auto& eff_id : mesh_dto.effects())
-    {
-        m_effects.emplace_back(EffectMaterial::queryEffectMaterial(eff_id));
-    }
-    m_textures.clear();
-    for (auto& tex_map_dto : mesh_dto.textureMaps())
-    {
-        EffectTextureMap tex_map;
-        std::shared_ptr<EffectTextureMapDisassembler> disassembler = std::make_shared<EffectTextureMapDisassembler>();
-        disassembler->disassemble(tex_map_dto);
-        tex_map.disassemble(disassembler);
-        m_textures.emplace_back(tex_map);
-    }
-}*/
 
 MeshPrimitive::~MeshPrimitive()
 {
@@ -148,43 +112,6 @@ void MeshPrimitive::disassemble(const std::shared_ptr<Primitives::PrimitiveDisas
     m_renderListID = mesh_disassembler->renderListID();
     m_selectedVisualTech = mesh_disassembler->visualTechniqueSelection();
 }
-
-/*GenericDto MeshPrimitive::serializeDto() const
-{
-    return serializeMeshDto().toGenericDto();
-}*/
-
-/*MeshPrimitiveDto MeshPrimitive::serializeMeshDto() const
-{
-    MeshPrimitiveDto dto;
-    dto.factoryDesc() = m_factoryDesc;
-    dto.id() = m_id.origin();
-    if (m_geometry)
-    {
-        dto.geometryId() = m_geometry->id();
-        if ((m_geometry->factoryDesc().GetInstanceType() == FactoryDesc::InstanceType::Native)
-            || (m_geometry->factoryDesc().GetInstanceType() == FactoryDesc::InstanceType::ResourceAsset))
-        {
-            std::shared_ptr<Geometries::GeometryAssembler> assembler = m_geometry->assembler();
-            m_geometry->assemble(assembler);
-            dto.geometry() = assembler->assemble();
-        }
-    }
-    for (auto& eff : m_effects)
-    {
-        dto.effects().emplace_back(eff->id());
-    }
-    for (auto& tex : m_textures)
-    {
-        if (!tex.isAllResourceTexture()) continue;
-        std::shared_ptr<EffectTextureMapAssembler> tex_assembler = std::make_shared<EffectTextureMapAssembler>();
-        tex.assemble(tex_assembler);
-        dto.textureMaps().emplace_back(tex_assembler->assemble());
-    }
-    dto.renderListID() = m_renderListID;
-    dto.visualTechniqueSelection() = m_selectedVisualTech;
-    return dto;
-}*/
 
 std::shared_ptr<EffectMaterial> MeshPrimitive::getEffectMaterial(unsigned index)
 {

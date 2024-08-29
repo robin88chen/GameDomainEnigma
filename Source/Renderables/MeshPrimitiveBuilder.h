@@ -13,8 +13,8 @@
 #include "GameEngine/EffectMaterial.h"
 #include "Frameworks/EventSubscriber.h"
 #include "GameEngine/EffectTextureMap.h"
-#include "RenderablePrimitiveDtos.h"
 #include "Primitives/PrimitiveId.h"
+#include "GameEngine/TextureId.h"
 #include <memory>
 
 namespace Enigma::Renderables

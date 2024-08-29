@@ -12,21 +12,6 @@ SkinAnimationOperator::SkinAnimationOperator() : m_factoryDesc(TYPE_RTTI.getName
 {
 }
 
-/*SkinAnimationOperator::SkinAnimationOperator(const Engine::GenericDto& dto) : m_factoryDesc(TYPE_RTTI.getName())
-{
-    SkinOperatorDto skin_op_dto(dto);
-    m_factoryDesc = skin_op_dto.factoryDesc();
-    if (skin_op_dto.skinMeshId())
-    {
-        m_skinMeshId = skin_op_dto.skinMeshId().value();
-        m_boneNodeNames = skin_op_dto.boneNodeNames();
-    }
-    if (skin_op_dto.nodeOffsets())
-    {
-        m_t_posNodeOffsets = skin_op_dto.nodeOffsets().value();
-    }
-}*/
-
 SkinAnimationOperator::SkinAnimationOperator(const SkinAnimationOperator& op) : m_factoryDesc(op.m_factoryDesc)
 {
     m_skinMeshId = op.m_skinMeshId;
@@ -103,23 +88,6 @@ void SkinAnimationOperator::disassemble(const std::shared_ptr<SkinOperatorDisass
         m_t_posNodeOffsets = disassembler->t_posOffsets().value();
     }
 }
-
-/*Enigma::Engine::GenericDto SkinAnimationOperator::serializeDto() const
-{
-    SkinOperatorDto dto;
-    dto.factoryDesc() = m_factoryDesc;
-    dto.skinMeshId() = m_skinMeshId;
-    dto.boneNodeNames() = m_boneNodeNames;
-    if (!m_t_posNodeOffsets.empty())
-    {
-        dto.nodeOffsets() = m_t_posNodeOffsets; // m_nodeOffsets;
-    }
-    else if (!m_nodeOffsets.empty())
-    {
-        dto.nodeOffsets() = m_nodeOffsets;
-    }
-    return dto.toGenericDto();
-}*/
 
 void SkinAnimationOperator::updateSkinMeshBoneMatrix(const MeshNodeTree& mesh_node_tree)
 {

@@ -8,8 +8,6 @@
 #ifndef TERRAIN_PRIMITIVE_DTO_H
 #define TERRAIN_PRIMITIVE_DTO_H
 
-#include "Renderables/RenderablePrimitiveDtos.h"
-
 namespace Enigma::Terrain
 {
     class TerrainPrimitivePolicy;

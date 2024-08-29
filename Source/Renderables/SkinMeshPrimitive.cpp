@@ -18,12 +18,6 @@ SkinMeshPrimitive::SkinMeshPrimitive(const PrimitiveId& id) : MeshPrimitive(id)
     m_ownerNodeRootRefTransform = Matrix4::IDENTITY;
 }
 
-/*SkinMeshPrimitive::SkinMeshPrimitive(const PrimitiveId& id, const Engine::GenericDto& dto, const std::shared_ptr<Geometries::GeometryRepository>& geometry_repository) : MeshPrimitive(id, dto, geometry_repository)
-{
-    m_factoryDesc = dto.getRtti();
-    m_ownerNodeRootRefTransform = Matrix4::IDENTITY;
-}*/
-
 SkinMeshPrimitive::~SkinMeshPrimitive()
 {
     loosePrimitiveBoneMatrix();
@@ -38,12 +32,6 @@ std::shared_ptr<PrimitiveDisassembler> SkinMeshPrimitive::disassembler() const
 {
     return std::make_shared<SkinMeshPrimitiveDisassembler>();
 }
-
-/*GenericDto SkinMeshPrimitive::serializeDto() const
-{
-    SkinMeshPrimitiveDto dto(serializeMeshDto());
-    return dto.toGenericDto();
-}*/
 
 void SkinMeshPrimitive::bindOwnerRootRefTransform(const MathLib::Matrix4& mx)
 {

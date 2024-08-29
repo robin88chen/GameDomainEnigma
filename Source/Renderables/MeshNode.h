@@ -10,9 +10,9 @@
 
 #include "Frameworks/Rtti.h"
 #include "GameEngine/FactoryDesc.h"
-#include "GameEngine/GenericDto.h"
 #include "MathLib/Matrix4.h"
 #include <string>
+#include <optional>
 
 namespace Enigma::Renderables
 {

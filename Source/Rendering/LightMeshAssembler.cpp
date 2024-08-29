@@ -4,7 +4,6 @@
 #include "LightingMeshQueries.h"
 #include "Geometries/StandardGeometryAssemblers.h"
 #include "Primitives/PrimitiveQueries.h"
-#include "Renderables/RenderablePrimitiveAssembler.h"
 #include "Renderables/MeshPrimitiveAssembler.h"
 
 using namespace Enigma::Rendering;

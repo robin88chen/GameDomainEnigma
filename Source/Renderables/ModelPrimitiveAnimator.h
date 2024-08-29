@@ -13,7 +13,6 @@
 #include "Animators/AnimatorAssembler.h"
 #include "AnimationClip.h"
 #include "ModelPrimitive.h"
-#include "SkinMeshPrimitive.h"
 #include "SkinAnimationOperator.h"
 #include "MeshNodeTree.h"
 #include <optional>

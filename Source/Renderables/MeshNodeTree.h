@@ -12,7 +12,6 @@
 #include "MeshNode.h"
 #include "MathLib/Matrix4.h"
 #include "Frameworks/optional_ref.hpp"
-#include "GameEngine/GenericDto.h"
 #include "Primitives/Primitive.h"
 #include <vector>
 #include <optional>

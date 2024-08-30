@@ -14,7 +14,7 @@
 
 namespace Enigma::SceneGraph
 {
-    class CameraDto
+    /*class CameraDto
     {
     public:
         CameraDto();
@@ -51,9 +51,9 @@ namespace Enigma::SceneGraph
         MathLib::Vector3 m_lookAtDir;
         MathLib::Vector3 m_up;
         Engine::GenericDto m_frustumDto;
-    };
+    };*/
 
-    class FrustumDto
+    /*class FrustumDto
     {
     public:
         FrustumDto();
@@ -97,7 +97,7 @@ namespace Enigma::SceneGraph
         float m_aspectRatio;
         float m_nearWidth;
         float m_nearHeight;
-    };
+    };*/
 }
 
 #endif // _CAMERA_DTOS_H

@@ -201,7 +201,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphFactoryDelegate.h">
       <Filter>Repository</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\CameraAssemblers.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\CameraAssembler.h">
       <Filter>DTO &amp; Assemblers</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialDto.h">
@@ -230,6 +230,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphOwnership.h">
       <Filter>Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\FrustumAssembler.h">
+      <Filter>DTO &amp; Assemblers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -344,7 +347,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalSceneGraph.cpp">
       <Filter>Scene Graph</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\CameraAssemblers.cpp">
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\CameraAssembler.cpp">
       <Filter>DTO &amp; Assemblers</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialDto.cpp">
@@ -367,6 +370,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphOwnership.cpp">
       <Filter>Repository</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\FrustumAssembler.cpp">
+      <Filter>DTO &amp; Assemblers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

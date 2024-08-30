@@ -11,6 +11,7 @@
 
 #include "SceneGraphDefines.h"
 #include "MathLib/Matrix4.h"
+#include "MathLib/Radian.h"
 #include "Frameworks/Rtti.h"
 #include "GameEngine/GenericDto.h"
 #include <memory>
@@ -20,6 +21,9 @@
 namespace Enigma::SceneGraph
 {
     using error = std::error_code;
+
+    class FrustumAssembler;
+    class FrustumDisassembler;
 
     /** Frustum class */
     class Frustum
@@ -35,22 +39,22 @@ namespace Enigma::SceneGraph
 
     public:
         Frustum();
-        Frustum(const Engine::GenericDto& dto);
         Frustum(const Frustum&) = default;
         Frustum(Frustum&&) = default;
         virtual ~Frustum() = default;
         Frustum& operator=(const Frustum&) = default;
         Frustum& operator=(Frustum&&) = default;
 
-        static Frustum fromPerspective(GraphicCoordSys hand, float fov, float aspect, float n_plane, float f_plane);
+        static Frustum fromPerspective(GraphicCoordSys hand, MathLib::Radian fov, float aspect, float n_plane, float f_plane);
         static Frustum fromOrtho(GraphicCoordSys hand, float near_w, float near_h, float n_plane, float f_plane);
 
-        Engine::GenericDto serializeDto();
+        void assemble(const std::shared_ptr<FrustumAssembler>& assembler) const;
+        void disassemble(const std::shared_ptr<FrustumDisassembler>& disassembler);
 
         GraphicCoordSys getCoordHandSys() const { return m_handCoord; }
 
         /** get fov */
-        float fov() const { return m_fov; };
+        MathLib::Radian fov() const { return m_fov; };
         /** get near plane z */
         float nearPlaneZ() const { return m_nearPlaneZ; };
         /** get far plane z */
@@ -71,14 +75,14 @@ namespace Enigma::SceneGraph
         Frustum(GraphicCoordSys hand, ProjectionType proj);
         void constructProjectionTransform();
         /** 設定透視投影矩陣 */
-        error setPerspectiveProjection(float fov, float aspect, float n_plane, float f_plane);
+        error setPerspectiveProjection(MathLib::Radian fov, float aspect, float n_plane, float f_plane);
         /**  設定平行投影矩陣 */
         error setOrthoProjection(float near_w, float near_h, float n_plane, float f_plane);
 
     protected:
         GraphicCoordSys m_handCoord;
 
-        float m_fov;  ///< fov角度(弳度), default = pi/4
+        MathLib::Radian m_fov;  ///< fov角度(弳度), default = pi/4
         float m_nearPlaneZ;  ///< Near plane distance, default = 0.1
         float m_farPlaneZ;  ///< far plane distance, default = 100
         float m_aspectRatio;  ///< aspect ratio (width/height), default = 4/3

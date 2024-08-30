@@ -10,6 +10,7 @@
 #include "SceneGraphQueries.h"
 #include "Frameworks/QueryDispatcher.h"
 #include "MathLib/Quaternion.h"
+#include "CameraAssembler.h"
 #include <cassert>
 #include <memory>
 
@@ -20,23 +21,27 @@ using namespace Enigma::Frameworks;
 
 DEFINE_RTTI_OF_BASE(SceneGraph, Camera);
 
+Camera::Camera(const SpatialId& id) : Camera(id, GraphicCoordSys::LeftHand)
+{
+}
+
 Camera::Camera(const SpatialId& id, GraphicCoordSys hand) : m_id(id), m_factoryDesc(TYPE_RTTI.getName())
 {
     m_handSys = hand;
-    m_cullingFrustum = Frustum::fromPerspective(hand, Math::PI / 4.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+    m_cullingFrustum = Frustum::fromPerspective(hand, Radian(Math::PI / 4.0f), 4.0f / 3.0f, 0.1f, 100.0f);
     m_vecLocation = Vector3::ZERO;
     m_vecEyeToLookAt = Vector3::UNIT_Z;
     m_vecUp = Vector3::UNIT_Y;
     m_vecRight = Vector3::UNIT_X;
 }
 
-Camera::Camera(const SpatialId& id, const GenericDto& dto) : m_id(id), m_factoryDesc(dto.getRtti())
+/*Camera::Camera(const SpatialId& id, const GenericDto& dto) : m_id(id), m_factoryDesc(dto.getRtti())
 {
     CameraDto camera_dto = CameraDto::fromGenericDto(dto);
     m_handSys = camera_dto.HandSystem();
     changeCameraFrame(camera_dto.EyePosition(), camera_dto.LookAtDirection(), camera_dto.UpVector());
     m_cullingFrustum = Frustum(camera_dto.Frustum());
-}
+}*/
 
 Camera::~Camera()
 {
@@ -48,7 +53,25 @@ std::shared_ptr<Camera> Camera::queryCamera(const SpatialId& id)
     return std::make_shared<QueryCamera>(id)->dispatch();
 }
 
-GenericDto Camera::serializeDto()
+void Camera::assemble(const std::shared_ptr<CameraAssembler>& assembler) const
+{
+    assembler->factoryDesc(m_factoryDesc);
+    assembler->handSystem(m_handSys);
+    assembler->eyePosition(m_vecLocation);
+    assembler->lookAt(m_vecEyeToLookAt);
+    assembler->upDirection(m_vecUp);
+    assembler->frustum(m_cullingFrustum);
+}
+
+void Camera::disassemble(const std::shared_ptr<CameraDisassembler>& disassembler)
+{
+    m_factoryDesc = disassembler->factoryDesc();
+    m_handSys = disassembler->handSystem();
+    changeCameraFrame(disassembler->eyePosition(), disassembler->lookAt(), disassembler->upDirection());
+    m_cullingFrustum = disassembler->frustum();
+}
+
+/*GenericDto Camera::serializeDto()
 {
     CameraDto dto;
     dto.factoryDesc() = m_factoryDesc;
@@ -61,7 +84,7 @@ GenericDto Camera::serializeDto()
     GenericDto generic_dto = dto.toGenericDto();
     generic_dto.addName(m_id.name());
     return generic_dto;
-}
+}*/
 
 error Camera::changeCameraFrame(const std::optional<Vector3>& eye,
     const std::optional<Vector3>& eye_to_lookat, const std::optional<Vector3>& up)
@@ -207,7 +230,7 @@ void Camera::changeFrustumNearPlane(float near_z)
     }
 }
 
-void Camera::changeFrustumFov(float fov)
+void Camera::changeFrustumFov(Radian fov)
 {
     assert(m_cullingFrustum.projectionType() == Frustum::ProjectionType::Perspective);
     m_cullingFrustum = Frustum::fromPerspective(m_handSys, fov, m_cullingFrustum.aspectRatio(), m_cullingFrustum.nearPlaneZ(), m_cullingFrustum.farPlaneZ());

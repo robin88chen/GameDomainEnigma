@@ -21,6 +21,7 @@
 #include "CameraFrustumEvents.h"
 #include "SceneGraphQueries.h"
 #include "SceneGraphDtos.h"
+#include "CameraAssembler.h"
 #include <cassert>
 
 using namespace Enigma::SceneGraph;
@@ -342,7 +343,9 @@ void SceneGraphRepository::putCamera(const std::shared_ptr<Camera>& camera)
 {
     assert(m_storeMapper);
     assert(camera);
-    auto camera_dto = camera->serializeDto();
+    std::shared_ptr<CameraAssembler> assembler = std::make_shared<CameraAssembler>(camera->id());
+    camera->assemble(assembler);
+    auto camera_dto = assembler->assemble();
     auto er = m_storeMapper->putCamera(camera->id(), { camera_dto });
     if (!er)
     {

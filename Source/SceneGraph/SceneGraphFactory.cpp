@@ -11,6 +11,7 @@
 #include "Frameworks/EventPublisher.h"
 #include "Platforms/PlatformLayer.h"
 #include "SceneGraphOwnership.h"
+#include "CameraAssembler.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Frameworks;
@@ -58,7 +59,10 @@ std::shared_ptr<Camera> SceneGraphFactory::createCamera(const SpatialId& id)
 
 std::shared_ptr<Camera> SceneGraphFactory::constituteCamera(const SpatialId& id, const Engine::GenericDto& dto, bool is_persisted)
 {
-    auto camera = std::make_shared<Camera>(id, dto);
+    auto camera = std::make_shared<Camera>(id);
+    std::shared_ptr<CameraDisassembler> disassembler = std::make_shared<CameraDisassembler>();
+    disassembler->disassemble(dto);
+    camera->disassemble(disassembler);
     EventPublisher::enqueue(std::make_shared<CameraConstituted>(id, camera, is_persisted));
     return camera;
 }

@@ -20,7 +20,7 @@ static std::string TOKEN_ASPECT_RATIO = "AspectRatio";
 static std::string TOKEN_NEAR_WIDTH = "NearWidth";
 static std::string TOKEN_NEAR_HEIGHT = "NearHeight";
 
-CameraDto::CameraDto() : m_handSys(GraphicCoordSys::LeftHand), m_factoryDesc(Camera::TYPE_RTTI.getName()), m_id(SpatialId("", Camera::TYPE_RTTI))
+/*CameraDto::CameraDto() : m_handSys(GraphicCoordSys::LeftHand), m_factoryDesc(Camera::TYPE_RTTI.getName()), m_id(SpatialId("", Camera::TYPE_RTTI))
 {
 }
 
@@ -48,9 +48,9 @@ GenericDto CameraDto::toGenericDto()
     dto.addOrUpdate(TOKEN_UP_VECTOR, m_up);
     dto.addOrUpdate(TOKEN_FRUSTUM, m_frustumDto);
     return dto;
-}
+}*/
 
-FrustumDto::FrustumDto() : m_handSys(GraphicCoordSys::LeftHand), m_projectionType(Frustum::ProjectionType::Perspective),
+/*FrustumDto::FrustumDto() : m_handSys(GraphicCoordSys::LeftHand), m_projectionType(Frustum::ProjectionType::Perspective),
 m_fov(MathLib::Math::PI / 4.0f), m_nearPlaneZ(0.1f), m_farPlaneZ(100.0f), m_aspectRatio(4.0f / 3.0f), m_nearWidth(40.0f), m_nearHeight(30.0f), m_factoryDesc(Frustum::TYPE_RTTI.getName())
 {
 }
@@ -83,4 +83,4 @@ GenericDto FrustumDto::toGenericDto()
     dto.addOrUpdate(TOKEN_NEAR_WIDTH, m_nearWidth);
     dto.addOrUpdate(TOKEN_NEAR_HEIGHT, m_nearHeight);
     return dto;
-}
+}*/

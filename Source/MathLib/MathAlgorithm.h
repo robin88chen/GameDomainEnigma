@@ -1,7 +1,7 @@
 ﻿/********************************************************************
  * \file   MathAlgorithm.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   May 2022
  *********************************************************************/
@@ -11,6 +11,7 @@
 #include "Vector3.h"
 #include "Vector2.h"
 #include "Matrix4.h"
+#include "Radian.h"
 
 namespace Enigma::MathLib
 {
@@ -39,7 +40,7 @@ namespace Enigma::MathLib
         xScale = yScale / aspect ratio
         </pre>
         */
-        static Matrix4 MakePerspectiveProjectionFovLH(float fovy, float aspect, float nearPlane, float farPlane);
+        static Matrix4 MakePerspectiveProjectionFovLH(Radian fovy, float aspect, float nearPlane, float farPlane);
 
         /** Make Perspective Projection (Fov, Right Hand Coord.)
         @param fovy y方向fov
@@ -57,7 +58,7 @@ namespace Enigma::MathLib
         xScale = yScale / aspect ratio
         </pre>
         */
-        static Matrix4 MakePerspectiveProjectionFovRH(float fovy, float aspect, float nearPlane, float farPlane);
+        static Matrix4 MakePerspectiveProjectionFovRH(Radian fovy, float aspect, float nearPlane, float farPlane);
 
         /** Make Perspective Projection (Near plane width & height, Left Hand Coord.)
         @param w near plane width

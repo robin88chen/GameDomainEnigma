@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   MathGlobal.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   April 2022
  *********************************************************************/
@@ -35,8 +35,6 @@ namespace Enigma
             static const float HALF_PI;
             static const float INV_PI;
             static const float INV_TWO_PI;
-            static const float DEG_TO_RAD;  ///< pi/180
-            static const float RAD_TO_DEG;  ///< 180/pi
         };
     }
 }

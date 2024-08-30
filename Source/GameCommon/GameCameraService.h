@@ -50,7 +50,7 @@ namespace Enigma::GameCommon
         void changeAspectRatio(float ratio);
         void changeFrustumFarPlane(float far_z);
         void changeFrustumNearPlane(float near_z);
-        void changeFrustumFov(float fov);
+        void changeFrustumFov(MathLib::Radian fov);
         //@}
         MathLib::Ray3 getPickerRay(float clip_space_x, float clip_space_y);
 

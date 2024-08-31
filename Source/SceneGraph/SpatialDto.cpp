@@ -18,7 +18,7 @@ static std::string TOKEN_SPATIAL_FLAG = "SpatialFlag";
 static std::string TOKEN_NOTIFY_FLAG = "NotifyFlag";
 static std::string TOKEN_PARENT_ID = "ParentId";
 
-SpatialDto::SpatialDto() : m_factoryDesc(Spatial::TYPE_RTTI.getName()), m_isTopLevel(false), m_graphDepth(0), m_cullingMode(0), m_spatialFlag(0), m_notifyFlag(0)
+/*SpatialDto::SpatialDto() : m_factoryDesc(Spatial::TYPE_RTTI.getName()), m_isTopLevel(false), m_graphDepth(0), m_cullingMode(0), m_spatialFlag(0), m_notifyFlag(0)
 {
     m_localTransform = Matrix4::IDENTITY;
     m_worldTransform = Matrix4::IDENTITY;
@@ -63,4 +63,4 @@ GenericDto SpatialDto::toGenericDto() const
     dto.addOrUpdate(TOKEN_NOTIFY_FLAG, m_notifyFlag);
     if (m_parentId.has_value()) dto.addOrUpdate(TOKEN_PARENT_ID, m_parentId.value().tokens());
     return dto;
-}
+}*/

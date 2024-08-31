@@ -30,7 +30,8 @@ namespace Enigma::SceneGraph
     using error = std::error_code;
     class Culler;
     class Node;
-    class SpatialDto;
+    class SpatialAssembler;
+    class SpatialDisassembler;
 
     /** Scene Graph Spatial Object */
     class Spatial : public std::enable_shared_from_this<Spatial>
@@ -73,14 +74,16 @@ namespace Enigma::SceneGraph
 
     public:
         Spatial(const SpatialId& id);
-        Spatial(const SpatialId& id, const Engine::GenericDto& dto);
         Spatial(const Spatial&) = delete;
         Spatial(Spatial&&) = delete;
         virtual ~Spatial();
         Spatial& operator=(const Spatial&) = delete;
         Spatial& operator=(Spatial&&) = delete;
 
-        virtual Engine::GenericDto serializeDto();
+        virtual std::shared_ptr<SpatialAssembler> assembler() const;
+        virtual void assemble(const std::shared_ptr<SpatialAssembler>& assembler);
+        virtual std::shared_ptr<SpatialDisassembler> disassembler() const;
+        virtual void disassemble(const std::shared_ptr<SpatialDisassembler>& disassembler);
 
         static std::shared_ptr<Spatial> querySpatial(const SpatialId& id);
 
@@ -237,7 +240,7 @@ namespace Enigma::SceneGraph
         }
 
     protected:
-        SpatialDto serializeSpatialDto();
+        //SpatialDto serializeSpatialDto();
 
     protected:
         SpatialId m_id;

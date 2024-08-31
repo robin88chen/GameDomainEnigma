@@ -1,4 +1,5 @@
 ﻿#include "Spatial.h"
+#include "SpatialAssembler.h"
 #include "Node.h"
 #include "SceneGraphErrors.h"
 #include "Culler.h"
@@ -43,7 +44,7 @@ Spatial::Spatial(const SpatialId& id) : m_factoryDesc(Spatial::TYPE_RTTI.getName
     m_notifyFlags = Notify_All;
 
 }
-Spatial::Spatial(const SpatialId& id, const GenericDto& o) : m_factoryDesc(o.getRtti()), m_id(id)
+/*Spatial::Spatial(const SpatialId& id, const GenericDto& o) : m_factoryDesc(o.getRtti()), m_id(id)
 {
     SpatialDto dto{ o };
     m_graphDepth = dto.graphDepth();
@@ -64,15 +65,64 @@ Spatial::Spatial(const SpatialId& id, const GenericDto& o) : m_factoryDesc(o.get
     std::tie(angles, std::ignore) = m_mxLocalRotation.ToEulerAnglesXYZ();
     m_vecLocalEulerAngle = Vector3(angles.m_x, angles.m_y, angles.m_z);
     m_vecWorldPosition = m_mxWorldTransform.UnMatrixTranslate();
-}
+}*/
 
 Spatial::~Spatial()
 {
 }
 
-Enigma::Engine::GenericDto Spatial::serializeDto()
+/*Enigma::Engine::GenericDto Spatial::serializeDto()
 {
     return serializeSpatialDto().toGenericDto();
+}*/
+
+std::shared_ptr<SpatialAssembler> Spatial::assembler() const
+{
+    return std::make_shared<SpatialAssembler>(m_id);
+}
+
+void Spatial::assemble(const std::shared_ptr<SpatialAssembler>& assembler)
+{
+    assert(assembler);
+    assembler->factory(m_factoryDesc);
+    assembler->localTransform(m_mxLocalTransform);
+    assembler->worldTransform(m_mxWorldTransform);
+    assembler->modelBound(m_modelBound);
+    assembler->cullingMode(m_cullingMode);
+    assembler->spatialFlags(m_spatialFlags);
+    assembler->notifyFlags(m_notifyFlags);
+    assembler->graphDepth(m_graphDepth);
+    if (m_parent) assembler->parentId(m_parent.value());
+}
+
+std::shared_ptr<SpatialDisassembler> Spatial::disassembler() const
+{
+    return std::make_shared<SpatialDisassembler>();
+}
+
+void Spatial::disassemble(const std::shared_ptr<SpatialDisassembler>& disassembler)
+{
+    assert(disassembler);
+    assert(m_id == disassembler->id());
+    m_factoryDesc = disassembler->factory();
+    m_graphDepth = disassembler->graphDepth();
+    m_cullingMode = disassembler->cullingMode();
+    m_spatialFlags = disassembler->spatialFlags();
+    m_notifyFlags = disassembler->notifyFlags();
+    m_mxLocalTransform = disassembler->localTransform();
+    assert(m_mxLocalTransform != Matrix4::ZERO);
+    m_mxWorldTransform = disassembler->worldTransform();
+    assert(m_mxWorldTransform != Matrix4::ZERO);
+    m_modelBound = disassembler->modelBound();
+    m_worldBound = disassembler->worldBound();
+    assert(!m_modelBound.isEmpty());
+    assert(!m_worldBound.isEmpty());
+    std::tie(m_vecLocalScale, m_qtLocalQuaternion, m_vecLocalPosition) = m_mxLocalTransform.UnMatrixSRT();
+    m_mxLocalRotation = m_qtLocalQuaternion.ToRotationMatrix();
+    EulerAngles angles{ 0.0f, 0.0f, 0.0f };
+    std::tie(angles, std::ignore) = m_mxLocalRotation.ToEulerAnglesXYZ();
+    m_vecLocalEulerAngle = Vector3(angles.m_x, angles.m_y, angles.m_z);
+    m_vecWorldPosition = m_mxWorldTransform.UnMatrixTranslate();
 }
 
 std::shared_ptr<Spatial> Spatial::querySpatial(const SpatialId& id)
@@ -81,7 +131,7 @@ std::shared_ptr<Spatial> Spatial::querySpatial(const SpatialId& id)
     return std::make_shared<QuerySpatial>(id)->dispatch();
 }
 
-SpatialDto Spatial::serializeSpatialDto()
+/*SpatialDto Spatial::serializeSpatialDto()
 {
     SpatialDto dto;
     dto.factoryDesc(m_factoryDesc);
@@ -101,7 +151,7 @@ SpatialDto Spatial::serializeSpatialDto()
     dto.modelBound(model_assembler->assemble());
     dto.worldBound(world_assembler->assemble());
     return dto;
-}
+}*/
 
 void Spatial::linkParent(const std::optional<SpatialId>& parent)
 {

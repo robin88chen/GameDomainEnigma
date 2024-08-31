@@ -20,6 +20,8 @@
 namespace Enigma::Engine
 {
     class BoundingVolumeAssembler;
+    class BoundingVolumeDisassembler;
+
     class BoundingVolume
     {
     public:
@@ -43,6 +45,7 @@ namespace Enigma::Engine
         BoundingVolume& operator=(BoundingVolume&&) noexcept;
 
         void assemble(const std::shared_ptr<BoundingVolumeAssembler>& assembler) const;
+        void disassemble(const std::shared_ptr<BoundingVolumeDisassembler>& disassembler);
 
         MathLib::Vector3 Center() const;
 

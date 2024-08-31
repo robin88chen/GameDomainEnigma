@@ -15,7 +15,7 @@
 
 namespace Enigma::SceneGraph
 {
-    class SpatialDto
+    /*class SpatialDto
     {
     public:
         SpatialDto();
@@ -64,7 +64,7 @@ namespace Enigma::SceneGraph
         unsigned int m_spatialFlag;
         unsigned int m_notifyFlag;
         std::optional<SpatialId> m_parentId;
-    };
+    };*/
 }
 
 #endif // SPATIAL_DTO_H

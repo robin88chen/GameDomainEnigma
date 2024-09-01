@@ -1,6 +1,6 @@
 ﻿#include "Light.h"
 #include "LightInfo.h"
-#include "LightDtos.h"
+#include "LightAssemblers.h"
 #include "SceneGraphErrors.h"
 #include "LightEvents.h"
 #include "Frameworks/EventPublisher.h"
@@ -15,11 +15,11 @@ Light::Light(const SpatialId& id, const LightInfo& lightInfo) : Spatial(id), m_l
     m_factoryDesc = Engine::FactoryDesc(Light::TYPE_RTTI.getName());
 }
 
-Light::Light(const SpatialId& id, const Engine::GenericDto& o) : Spatial(id, o)
+/*Light::Light(const SpatialId& id, const Engine::GenericDto& o) : Spatial(id, o)
 {
     LightDto dto{ o };
     m_lightInfo = LightInfo(dto.lightInfo());
-}
+}*/
 
 Light::~Light()
 {
@@ -33,15 +33,47 @@ std::shared_ptr<Light> Light::create(const SpatialId& id, const LightInfo& light
 
 std::shared_ptr<Light> Light::constitute(const SpatialId& id, const Engine::GenericDto& dto)
 {
-    return std::make_shared<Light>(id, dto);
+    auto light = std::make_shared<Light>(id, LightInfo::LightType::Unknown);
+    auto disassembler = light->disassembler();
+    disassembler->disassemble(dto);
+    light->disassemble(disassembler);
+    return light;
 }
 
-Enigma::Engine::GenericDto Light::serializeDto()
+std::shared_ptr<SpatialAssembler> Light::assembler() const
+{
+    return std::make_shared<LightAssembler>(m_id, m_lightInfo.lightType());
+}
+
+void Light::assemble(const std::shared_ptr<SpatialAssembler>& assembler)
+{
+    Spatial::assemble(assembler);
+    if (auto lightAssembler = std::dynamic_pointer_cast<LightAssembler>(assembler))
+    {
+        lightAssembler->lightInfo(m_lightInfo);
+    }
+}
+
+std::shared_ptr<SpatialDisassembler> Light::disassembler() const
+{
+    return std::make_shared<LightDisassembler>();
+}
+
+void Light::disassemble(const std::shared_ptr<SpatialDisassembler>& disassembler)
+{
+    Spatial::disassemble(disassembler);
+    if (auto lightDisassembler = std::dynamic_pointer_cast<LightDisassembler>(disassembler))
+    {
+        m_lightInfo = lightDisassembler->lightInfo();
+    }
+}
+
+/*Enigma::Engine::GenericDto Light::serializeDto()
 {
     LightDto dto(serializeSpatialDto());
     dto.lightInfo(m_lightInfo.serializeDto().toGenericDto());
     return dto.toGenericDto();
-}
+}*/
 
 error Light::onCullingVisible(Culler*, bool)
 {
@@ -52,7 +84,7 @@ error Light::_updateWorldData(const MathLib::Matrix4& mxParentWorld)
 {
     error er = Spatial::_updateWorldData(mxParentWorld);
     if (er) return er;
-    m_lightInfo.setLightPosition(m_vecWorldPosition);
+    m_lightInfo.position(m_vecWorldPosition);
 
     _propagateSpatialRenderState();
 
@@ -60,31 +92,31 @@ error Light::_updateWorldData(const MathLib::Matrix4& mxParentWorld)
 }
 void Light::setLightColor(const MathLib::ColorRGBA& color)
 {
-    info().setLightColor(color);
+    info().color(color);
     Frameworks::EventPublisher::enqueue(std::make_shared<LightInfoUpdated>(thisLight(), LightInfoUpdated::NotifyCode::Color));
 }
 
 void Light::setLightPosition(const MathLib::Vector3& vec)
 {
-    info().setLightPosition(vec);
+    info().position(vec);
     Frameworks::EventPublisher::enqueue(std::make_shared<LightInfoUpdated>(thisLight(), LightInfoUpdated::NotifyCode::Position));
 }
 
 void Light::setLightDirection(const MathLib::Vector3& vec)
 {
-    info().setLightDirection(vec);
+    info().direction(vec);
     Frameworks::EventPublisher::enqueue(std::make_shared<LightInfoUpdated>(thisLight(), LightInfoUpdated::NotifyCode::Direction));
 }
 
 void Light::setLightAttenuation(const MathLib::Vector3& attenuation)
 {
-    info().setLightAttenuation(attenuation);
+    info().attenuation(attenuation);
     Frameworks::EventPublisher::enqueue(std::make_shared<LightInfoUpdated>(thisLight(), LightInfoUpdated::NotifyCode::Attenuation));
 }
 
 void Light::setLightRange(float range)
 {
-    info().setLightRange(range);
+    info().range(range);
     Frameworks::EventPublisher::enqueue(std::make_shared<LightInfoUpdated>(thisLight(), LightInfoUpdated::NotifyCode::Range));
 }
 

@@ -35,8 +35,8 @@ void SpatialLightInfoQuery::test(const LightInfo& info)
 
     if (info.lightType() == LightInfo::LightType::Point)
     {
-        float length = (info.getLightPosition() - m_spatialPos).length();
-        if (length > info.getLightRange()) return;
+        float length = (info.position() - m_spatialPos).length();
+        if (length > info.range()) return;
         m_countPointLight++;
         m_listLightInfo.emplace_back(LightInfoDistance{ info, length });
     }

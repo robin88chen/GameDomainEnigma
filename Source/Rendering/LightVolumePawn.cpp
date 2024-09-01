@@ -98,9 +98,9 @@ error LightVolumePawn::_updateSpatialRenderState()
     if (!isRenderable()) return ErrorCode::ok;  // only renderable entity need
     if (m_hostLight.expired()) return ErrorCode::nullHostLight;
 
-    Vector4 vecLightPosRange(m_hostLight.lock()->info().getLightPosition(), m_hostLight.lock()->info().getLightRange());
-    ColorRGBA colorLight(m_hostLight.lock()->info().getLightColor());
-    Vector4 vecLightAtten(m_hostLight.lock()->info().getLightAttenuation(), 1.0f);
+    Vector4 vecLightPosRange(m_hostLight.lock()->info().position(), m_hostLight.lock()->info().range());
+    ColorRGBA colorLight(m_hostLight.lock()->info().color());
+    Vector4 vecLightAtten(m_hostLight.lock()->info().attenuation(), 1.0f);
     RenderLightingState lighting_state;
     lighting_state.setPointLightArray({ vecLightPosRange }, { colorLight }, { vecLightAtten });
     m_spatialRenderState = SpatialRenderState(lighting_state);

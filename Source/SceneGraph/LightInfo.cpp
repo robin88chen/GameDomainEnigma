@@ -1,5 +1,5 @@
 ﻿#include "LightInfo.h"
-#include "LightDtos.h"
+#include "LightAssemblers.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::MathLib;
@@ -21,7 +21,7 @@ LightInfo::LightInfo(LightType type)
     m_isEnable = true;
 }
 
-LightInfo::LightInfo(const Engine::GenericDto& o) : LightInfo(LightInfoDto::fromGenericDto(o).lightType())
+/*LightInfo::LightInfo(const Engine::GenericDto& o) : LightInfo(LightInfoDto::fromGenericDto(o).lightType())
 {
     LightInfoDto dto = LightInfoDto::fromGenericDto(o);
     m_type = dto.lightType();
@@ -44,29 +44,66 @@ LightInfoDto LightInfo::serializeDto()
     dto.range(m_range);
     dto.isEnable(m_isEnable);
     return dto;
+}*/
+
+std::shared_ptr<LightInfoAssembler> LightInfo::assembler() const
+{
+    return std::make_shared<LightInfoAssembler>(m_type);
 }
 
-void LightInfo::setLightColor(const MathLib::ColorRGBA& color)
+void LightInfo::assemble(const std::shared_ptr<LightInfoAssembler>& assembler) const
+{
+    assembler->color(m_color);
+    if (m_type == LightType::Point)
+    {
+        assembler->position(m_position);
+        assembler->range(m_range);
+        assembler->attenuation(m_attenuation);
+    }
+    else if (m_type == LightType::Directional || m_type == LightType::SunLight)
+    {
+        assembler->direction(m_dir);
+    }
+    assembler->isEnable(m_isEnable);
+}
+
+std::shared_ptr<LightInfoDisassembler> LightInfo::disassembler() const
+{
+    return std::make_shared<LightInfoDisassembler>();
+}
+
+void LightInfo::disassemble(const std::shared_ptr<LightInfoDisassembler>& disassembler)
+{
+    m_type = disassembler->lightType();
+    m_color = disassembler->color();
+    m_position = disassembler->position();
+    m_dir = disassembler->direction();
+    m_range = disassembler->range();
+    m_attenuation = disassembler->attenuation();
+    m_isEnable = disassembler->isEnable();
+}
+
+void LightInfo::color(const MathLib::ColorRGBA& color)
 {
     m_color = color;
 }
 
-void LightInfo::setLightPosition(const MathLib::Vector3& vec)
+void LightInfo::position(const MathLib::Vector3& vec)
 {
     m_position = vec;
 }
 
-void LightInfo::setLightDirection(const MathLib::Vector3& vec)
+void LightInfo::direction(const MathLib::Vector3& vec)
 {
     m_dir = vec.normalize();
 }
 
-void LightInfo::setLightAttenuation(const MathLib::Vector3& attenuation)
+void LightInfo::attenuation(const MathLib::Vector3& attenuation)
 {
     m_attenuation = attenuation;
 }
 
-void LightInfo::setLightRange(float range)
+void LightInfo::range(float range)
 {
     m_range = range;
 }

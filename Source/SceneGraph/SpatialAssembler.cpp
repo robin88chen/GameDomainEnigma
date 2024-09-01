@@ -21,6 +21,13 @@ SpatialAssembler::SpatialAssembler(const SpatialId& id) : m_id(id), m_factoryDes
 {
 }
 
+void SpatialAssembler::factory(const Engine::FactoryDesc& factory)
+{
+    m_factoryDesc = factory;
+    //! 不可因為設 factory 而失去原本的 native file path
+    if (m_nativeFileAtPath) m_factoryDesc.ClaimAsNative(m_nativeFileAtPath.value());
+}
+
 void SpatialAssembler::localTransform(const MathLib::Matrix4& local_transform)
 {
     m_localTransform = local_transform;
@@ -41,6 +48,12 @@ void SpatialAssembler::modelBound(const Engine::BoundingVolume& model_bound)
 void SpatialAssembler::calculateWorldBound()
 {
     m_worldBound = Engine::BoundingVolume::CreateFromTransform(m_modelBound, m_worldTransform);
+}
+
+void SpatialAssembler::asNative(const std::string& file_at_path)
+{
+    m_nativeFileAtPath = file_at_path;
+    m_factoryDesc.ClaimAsNative(file_at_path);
 }
 
 Enigma::Engine::GenericDto SpatialAssembler::assemble() const

@@ -13,7 +13,7 @@ static std::string TOKEN_LIGHT_ATTENUATION = "LightAttenuation";
 static std::string TOKEN_LIGHT_ENABLE = "LightIsEnable";
 static std::string TOKEN_LIGHT_INFO = "LightInfo";
 
-LightInfoDto::LightInfoDto()
+/*LightInfoDto::LightInfoDto()
 {
     m_type = LightInfo::LightType::Unknown;
     m_range = 0.0f;
@@ -44,9 +44,9 @@ GenericDto LightInfoDto::toGenericDto() const
     dto.addOrUpdate(TOKEN_LIGHT_ATTENUATION, m_attenuation);
     dto.addOrUpdate(TOKEN_LIGHT_ENABLE, m_isEnable);
     return dto;
-}
+}*/
 
-LightDto::LightDto() : SpatialDto()
+/*LightDto::LightDto() : SpatialDto()
 {
     m_factoryDesc = FactoryDesc(Light::TYPE_RTTI.getName());
 }
@@ -68,4 +68,4 @@ GenericDto LightDto::toGenericDto() const
     dto.addOrUpdate(TOKEN_LIGHT_INFO, m_lightInfo);
 
     return dto;
-}
+}*/

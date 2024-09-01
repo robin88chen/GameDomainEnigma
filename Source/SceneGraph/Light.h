@@ -18,14 +18,12 @@
 namespace Enigma::SceneGraph
 {
     using error = std::error_code;
-    class LightDto;
 
     class Light : public Spatial
     {
         DECLARE_EN_RTTI
     public:
         Light(const SpatialId& id, const LightInfo& lightInfo);
-        Light(const SpatialId& id, const Engine::GenericDto& dto);
         Light(const Light&) = delete;
         Light(Light&&) = delete;
         virtual ~Light() override;
@@ -34,7 +32,11 @@ namespace Enigma::SceneGraph
 
         static std::shared_ptr<Light> create(const SpatialId& id, const LightInfo& light_info);
         static std::shared_ptr<Light> constitute(const SpatialId& id, const Engine::GenericDto& dto);
-        virtual Engine::GenericDto serializeDto() override;
+
+        virtual std::shared_ptr<SpatialAssembler> assembler() const override;
+        virtual void assemble(const std::shared_ptr<SpatialAssembler>& assembler) override;
+        virtual std::shared_ptr<SpatialDisassembler> disassembler() const override;
+        virtual void disassemble(const std::shared_ptr<SpatialDisassembler>& disassembler) override;
 
         const LightInfo& info() const { return m_lightInfo; };
         LightInfo& info() { return m_lightInfo; }
@@ -44,20 +46,20 @@ namespace Enigma::SceneGraph
         virtual error _updateWorldData(const MathLib::Matrix4& mxParentWorld) override;
 
         void setLightColor(const MathLib::ColorRGBA& color);
-        const MathLib::ColorRGBA& getLightColor() { return info().getLightColor(); };
+        const MathLib::ColorRGBA& getLightColor() { return info().color(); };
 
         void setLightPosition(const MathLib::Vector3& vec);
-        const MathLib::Vector3& getLightPosition() { return info().getLightPosition(); };
+        const MathLib::Vector3& getLightPosition() { return info().position(); };
 
         void setLightDirection(const MathLib::Vector3& vec);
-        const MathLib::Vector3& getLightDirection() { return info().getLightDirection(); };
+        const MathLib::Vector3& getLightDirection() { return info().direction(); };
 
         void setLightRange(float range);
-        float getLightRange() { return info().getLightRange(); };
+        float getLightRange() { return info().range(); };
 
         /// x,y,z : 0次,1次,2次係數
         void setLightAttenuation(const MathLib::Vector3& vecAttenuation);
-        const MathLib::Vector3& getLightAttenuation() { return info().getLightAttenuation(); };
+        const MathLib::Vector3& getLightAttenuation() { return info().attenuation(); };
 
         void setEnable(bool flag);
         bool isEnable() { return info().isEnable(); };

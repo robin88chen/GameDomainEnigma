@@ -16,7 +16,7 @@
 
 namespace Enigma::SceneGraph
 {
-    class LightInfoDto
+    /*class LightInfoDto
     {
     public:
         LightInfoDto();
@@ -52,8 +52,8 @@ namespace Enigma::SceneGraph
         float m_range;
         MathLib::Vector3 m_attenuation;
         bool m_isEnable;
-    };
-    class LightDto : public SpatialDto
+    };*/
+    /*class LightDto : public SpatialDto
     {
     public:
         LightDto();
@@ -67,7 +67,7 @@ namespace Enigma::SceneGraph
 
     protected:
         Engine::GenericDto m_lightInfo;
-    };
+    };*/
 }
 
 #endif // LIGHT_INFO_DTOS_H

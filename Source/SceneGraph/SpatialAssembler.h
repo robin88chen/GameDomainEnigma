@@ -25,7 +25,7 @@ namespace Enigma::SceneGraph
         SpatialAssembler& operator=(SpatialAssembler&&) noexcept = default;
         virtual ~SpatialAssembler() = default;
 
-        void factory(const Engine::FactoryDesc& factory) { m_factoryDesc = factory; }
+        void factory(const Engine::FactoryDesc& factory);
         void localTransform(const MathLib::Matrix4& local_transform);
         void worldTransform(const MathLib::Matrix4& world_transform);
         void modelBound(const Engine::BoundingVolume& model_bound);
@@ -35,6 +35,7 @@ namespace Enigma::SceneGraph
         void spatialFlags(Spatial::SpatialFlags spatial_flags) { m_spatialFlag = spatial_flags; }
         void graphDepth(unsigned graph_depth) { m_graphDepth = graph_depth; }
         void parentId(const SpatialId& parent_id) { m_parentId = parent_id; }
+        void asNative(const std::string& file_at_path);
 
         virtual Engine::GenericDto assemble() const;
 
@@ -54,6 +55,7 @@ namespace Enigma::SceneGraph
         Spatial::SpatialFlags m_spatialFlag;
         Spatial::NotifyFlags m_notifyFlag;
         std::optional<SpatialId> m_parentId;
+        std::optional<std::string> m_nativeFileAtPath;
     };
     class SpatialDisassembler
     {

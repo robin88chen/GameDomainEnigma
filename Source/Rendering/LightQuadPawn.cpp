@@ -60,7 +60,7 @@ error LightQuadPawn::_updateSpatialRenderState()
     if (!isRenderable()) return ErrorCode::ok;  // only renderable entity need
     if (m_hostLight.expired()) return ErrorCode::nullHostLight;
 
-    ColorRGBA colorLight(m_hostLight.lock()->info().getLightColor());
+    ColorRGBA colorLight(m_hostLight.lock()->info().color());
     RenderLightingState lighting_state;
     if (m_hostLight.lock()->info().lightType() == LightInfo::LightType::Ambient)
     {
@@ -68,7 +68,7 @@ error LightQuadPawn::_updateSpatialRenderState()
     }
     else if (m_hostLight.lock()->info().lightType() == LightInfo::LightType::SunLight)
     {
-        Vector3 lightDir = m_hostLight.lock()->info().getLightDirection();
+        Vector3 lightDir = m_hostLight.lock()->info().direction();
         lighting_state.setSunLight(lightDir, colorLight);
     }
     m_spatialRenderState = SpatialRenderState(lighting_state);

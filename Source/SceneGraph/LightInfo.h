@@ -10,11 +10,12 @@
 
 #include "MathLib/ColorRGBA.h"
 #include "MathLib/Vector3.h"
-#include "GameEngine/GenericDto.h"
+#include <memory>
 
 namespace Enigma::SceneGraph
 {
-    class LightInfoDto;
+    class LightInfoAssembler;
+    class LightInfoDisassembler;
 
     class LightInfo
     {
@@ -34,32 +35,34 @@ namespace Enigma::SceneGraph
     public:
         LightInfo();
         LightInfo(LightType type);
-        LightInfo(const Engine::GenericDto& dto);
         LightInfo(const LightInfo&) = default;
         LightInfo(LightInfo&&) = default;
         virtual ~LightInfo() = default;
         LightInfo& operator=(const LightInfo&) = default;
         LightInfo& operator=(LightInfo&&) = default;
 
-        LightInfoDto serializeDto();
+        std::shared_ptr<LightInfoAssembler> assembler() const;
+        void assemble(const std::shared_ptr<LightInfoAssembler>& assembler) const;
+        std::shared_ptr<LightInfoDisassembler> disassembler() const;
+        void disassemble(const std::shared_ptr<LightInfoDisassembler>& disassembler);
 
         LightType lightType() const { return m_type; };
 
-        void setLightColor(const MathLib::ColorRGBA& color);
-        const MathLib::ColorRGBA& getLightColor() const { return m_color; };
+        void color(const MathLib::ColorRGBA& color);
+        const MathLib::ColorRGBA& color() const { return m_color; };
 
-        void setLightPosition(const MathLib::Vector3& vec);
-        const MathLib::Vector3& getLightPosition() const { return m_position; };
+        void position(const MathLib::Vector3& vec);
+        const MathLib::Vector3& position() const { return m_position; };
 
-        void setLightDirection(const MathLib::Vector3& vec);
-        const MathLib::Vector3& getLightDirection() const { return m_dir; };
+        void direction(const MathLib::Vector3& vec);
+        const MathLib::Vector3& direction() const { return m_dir; };
 
-        void setLightRange(float range);
-        float getLightRange() const { return m_range; };
+        void range(float range);
+        float range() const { return m_range; };
 
         /// x,y,z : 0次,1次,2次係數
-        void setLightAttenuation(const MathLib::Vector3& vecAttenuation);
-        const MathLib::Vector3& getLightAttenuation() const { return m_attenuation; };
+        void attenuation(const MathLib::Vector3& vecAttenuation);
+        const MathLib::Vector3& attenuation() const { return m_attenuation; };
 
         void setEnable(bool flag);
         bool isEnable() const { return m_isEnable; };

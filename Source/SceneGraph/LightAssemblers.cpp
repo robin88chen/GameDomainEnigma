@@ -5,84 +5,150 @@
 
 using namespace Enigma::SceneGraph;
 
-LightAssembler::LightAssembler(const SpatialId& id, const LightInfo::LightType& type) : m_factory(Light::TYPE_RTTI), m_spatialAssembler(id)
+static std::string TOKEN_LIGHT_TYPE = "LightType";
+static std::string TOKEN_LIGHT_COLOR = "LightColor";
+static std::string TOKEN_LIGHT_POSITION = "LightPosition";
+static std::string TOKEN_LIGHT_DIRECTION = "LightDirection";
+static std::string TOKEN_LIGHT_RANGE = "LightRange";
+static std::string TOKEN_LIGHT_ATTENUATION = "LightAttenuation";
+static std::string TOKEN_LIGHT_ENABLE = "LightIsEnable";
+static std::string TOKEN_LIGHT_INFO = "LightInfo";
+
+LightInfoAssembler::LightInfoAssembler(const LightInfo::LightType& type) : m_type(type)
 {
-    m_id = id;
-    m_info.lightType(type);
 }
 
-SpatialAssembler& LightAssembler::spatial()
+void LightInfoAssembler::position(const MathLib::Vector3& position)
 {
-    return m_spatialAssembler;
+    assert(m_type == LightInfo::LightType::Point);
+    m_position = position;
 }
 
-LightAssembler& LightAssembler::factory(const Engine::FactoryDesc& factory)
+void LightInfoAssembler::direction(const MathLib::Vector3& direction)
 {
-    m_factory = factory;
-    m_spatialAssembler.factory(factory);
-    return *this;
+    assert((m_type == LightInfo::LightType::Directional) || (m_type == LightInfo::LightType::SunLight));
+    m_direction = direction;
 }
 
-LightAssembler& LightAssembler::asNative(const std::string& file_at_path)
+void LightInfoAssembler::range(float range)
 {
-    m_factory.ClaimAsNative(file_at_path);
-    m_spatialAssembler.factory(m_factory);
-    return *this;
+    assert(m_type == LightInfo::LightType::Point);
+    m_range = range;
 }
 
-LightAssembler& LightAssembler::color(const MathLib::ColorRGBA& color)
+void LightInfoAssembler::attenuation(const MathLib::Vector3& attenuation)
 {
-    m_info.color(color);
-    return *this;
+    assert(m_type == LightInfo::LightType::Point);
+    m_attenuation = attenuation;
 }
 
-LightAssembler& LightAssembler::position(const MathLib::Vector3& position)
+Enigma::Engine::GenericDto LightInfoAssembler::assemble() const
 {
-    assert(m_info.lightType() == LightInfo::LightType::Point);
-    m_info.position(position);
-    return *this;
-}
-
-LightAssembler& LightAssembler::direction(const MathLib::Vector3& direction)
-{
-    assert((m_info.lightType() == LightInfo::LightType::Directional) || (m_info.lightType() == LightInfo::LightType::SunLight));
-    m_info.direction(direction);
-    return *this;
-}
-
-LightAssembler& LightAssembler::range(float range)
-{
-    assert(m_info.lightType() == LightInfo::LightType::Point);
-    m_info.range(range);
-    return *this;
-}
-
-LightAssembler& LightAssembler::attenuation(const MathLib::Vector3& attenuation)
-{
-    assert(m_info.lightType() == LightInfo::LightType::Point);
-    m_info.attenuation(attenuation);
-    return *this;
-}
-
-LightAssembler& LightAssembler::isEnable(bool is_enable)
-{
-    m_info.isEnable(is_enable);
-    return *this;
-}
-
-LightDto LightAssembler::toLightDto() const
-{
-    LightDto dto(m_spatialAssembler.toGenericDto());
-    dto.lightInfo(m_info.toGenericDto());
+    Engine::GenericDto dto;
+    dto.addOrUpdate(TOKEN_LIGHT_TYPE, static_cast<unsigned int>(m_type));
+    dto.addOrUpdate(TOKEN_LIGHT_COLOR, m_color);
+    dto.addOrUpdate(TOKEN_LIGHT_POSITION, m_position);
+    dto.addOrUpdate(TOKEN_LIGHT_DIRECTION, m_direction);
+    dto.addOrUpdate(TOKEN_LIGHT_RANGE, m_range);
+    dto.addOrUpdate(TOKEN_LIGHT_ATTENUATION, m_attenuation);
+    dto.addOrUpdate(TOKEN_LIGHT_ENABLE, m_isEnable);
     return dto;
 }
 
-Enigma::Engine::GenericDto LightAssembler::toGenericDto() const
+LightInfoDisassembler::LightInfoDisassembler()
 {
-    return toLightDto().toGenericDto();
+    m_type = LightInfo::LightType::Unknown;
+    m_range = 0.0f;
+    m_isEnable = false;
 }
 
-std::shared_ptr<Light> LightAssembler::constitute()
+void LightInfoDisassembler::disassemble(const Engine::GenericDto& dto)
 {
-    return std::dynamic_pointer_cast<Light>(std::make_shared<RequestSpatialConstitution>(m_id, toGenericDto())->dispatch());
+    if (auto v = dto.tryGetValue<unsigned>(TOKEN_LIGHT_TYPE)) m_type = static_cast<LightInfo::LightType>(v.value());
+    if (auto v = dto.tryGetValue<MathLib::ColorRGBA>(TOKEN_LIGHT_COLOR)) m_color = v.value();
+    if (auto v = dto.tryGetValue<MathLib::Vector3>(TOKEN_LIGHT_POSITION)) m_position = v.value();
+    if (auto v = dto.tryGetValue<MathLib::Vector3>(TOKEN_LIGHT_DIRECTION)) m_direction = v.value();
+    if (auto v = dto.tryGetValue<float>(TOKEN_LIGHT_RANGE)) m_range = v.value();
+    if (auto v = dto.tryGetValue<MathLib::Vector3>(TOKEN_LIGHT_ATTENUATION)) m_attenuation = v.value();
+    if (auto v = dto.tryGetValue<bool>(TOKEN_LIGHT_ENABLE)) m_isEnable = v.value();
+}
+
+LightAssembler::LightAssembler(const SpatialId& id, const LightInfo::LightType& type) : SpatialAssembler(id)
+{
+    m_factoryDesc = Engine::FactoryDesc(Light::TYPE_RTTI.getName());
+    m_infoAssembler = std::make_shared<LightInfoAssembler>(type);
+}
+
+void LightAssembler::color(const MathLib::ColorRGBA& color)
+{
+    assert(m_infoAssembler);
+    m_infoAssembler->color(color);
+}
+
+void LightAssembler::position(const MathLib::Vector3& position)
+{
+    assert(m_infoAssembler);
+    m_infoAssembler->position(position);
+}
+
+void LightAssembler::direction(const MathLib::Vector3& direction)
+{
+    assert(m_infoAssembler);
+    m_infoAssembler->direction(direction);
+}
+
+void LightAssembler::range(float range)
+{
+    assert(m_infoAssembler);
+    m_infoAssembler->range(range);
+}
+
+void LightAssembler::attenuation(const MathLib::Vector3& attenuation)
+{
+    assert(m_infoAssembler);
+    m_infoAssembler->attenuation(attenuation);
+}
+
+void LightAssembler::isEnable(bool is_enable)
+{
+    assert(m_infoAssembler);
+    m_infoAssembler->isEnable(is_enable);
+}
+
+void LightAssembler::lightInfo(const LightInfo& info)
+{
+    assert(m_infoAssembler);
+    assert(info.lightType() == m_infoAssembler->lightType());
+    info.assemble(m_infoAssembler);
+}
+
+void LightAssembler::lightInfo(const std::shared_ptr<LightInfoAssembler>& info_assembler)
+{
+    assert(info_assembler);
+    assert(m_infoAssembler);
+    assert(info_assembler->lightType() == m_infoAssembler->lightType());
+    m_infoAssembler = info_assembler;
+}
+
+Enigma::Engine::GenericDto LightAssembler::assemble() const
+{
+    Engine::GenericDto dto = SpatialAssembler::assemble();
+    dto.addOrUpdate(TOKEN_LIGHT_INFO, m_infoAssembler->assemble());
+    return dto;
+}
+
+LightDisassembler::LightDisassembler() : SpatialDisassembler()
+{
+    m_factoryDesc = Engine::FactoryDesc(Light::TYPE_RTTI.getName());
+}
+
+void LightDisassembler::disassemble(const Engine::GenericDto& dto)
+{
+    SpatialDisassembler::disassemble(dto);
+    if (auto v = dto.tryGetValue<Engine::GenericDto>(TOKEN_LIGHT_INFO))
+    {
+        std::shared_ptr<LightInfoDisassembler> disassembler = std::make_shared<LightInfoDisassembler>();
+        disassembler->disassemble(v.value());
+        m_info.disassemble();
+    }
 }

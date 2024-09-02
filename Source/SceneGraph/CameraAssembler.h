@@ -15,6 +15,7 @@
 
 namespace Enigma::SceneGraph
 {
+    class Camera;
     class Frustum;
     class FrustumAssembler;
 
@@ -33,6 +34,9 @@ namespace Enigma::SceneGraph
         void asNative(const std::string& file_at_path);
 
         Engine::GenericDto assemble();
+
+        static std::shared_ptr<CameraAssembler> assembledAssemblerOf(const std::shared_ptr<Camera>& camera);
+        static Engine::GenericDto assemble(const std::shared_ptr<Camera>& camera);
 
     protected:
         Engine::FactoryDesc m_factoryDesc;
@@ -58,6 +62,9 @@ namespace Enigma::SceneGraph
         const Frustum& frustum() const;
 
         void disassemble(const Engine::GenericDto& dto);
+
+        static std::shared_ptr<CameraDisassembler> disassembledDisassemblerOf(const std::shared_ptr<Camera>& camera, const Engine::GenericDto& dto);
+        static void disassemble(const std::shared_ptr<Camera>& camera, const Engine::GenericDto& dto);
 
     protected:
         Engine::FactoryDesc m_factoryDesc;

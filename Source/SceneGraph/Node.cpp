@@ -1,4 +1,5 @@
 ﻿#include "Node.h"
+#include "NodeAssembler.h"
 #include "Culler.h"
 #include "Spatial.h"
 #include "SceneGraphErrors.h"
@@ -22,7 +23,7 @@ Node::Node(const SpatialId& id) : Spatial(id)
     m_factoryDesc = FactoryDesc(TYPE_RTTI.getName());
 }
 
-Node::Node(const SpatialId& id, const GenericDto& dto) : Spatial(id, dto)
+/*Node::Node(const SpatialId& id, const GenericDto& dto) : Spatial(id, dto)
 {
     NodeDto nodeDto{ dto };
     for (auto& child : nodeDto.children())
@@ -35,7 +36,7 @@ Node::Node(const SpatialId& id, const GenericDto& dto) : Spatial(id, dto)
         }
         if (child_spatial) m_childList.push_back(child_spatial);
     }
-}
+}*/
 
 Node::~Node()
 {
@@ -47,6 +48,55 @@ Node::~Node()
         child = nullptr;
     }
     m_childList.clear();
+}
+
+std::shared_ptr<SpatialAssembler> Node::assembler() const
+{
+    return std::make_shared<NodeAssembler>(m_id);
+}
+
+void Node::assemble(const std::shared_ptr<SpatialAssembler>& assembler)
+{
+    assert(assembler);
+    Spatial::assemble(assembler);
+    if (auto nodeAssembler = std::dynamic_pointer_cast<NodeAssembler>(assembler))
+    {
+        for (const auto& child : m_childList)
+        {
+            if (!child) continue;
+            if (child->persistenceLevel() == PersistenceLevel::Store)
+            {
+                nodeAssembler->child(child->id());
+            }
+            else
+            {
+                nodeAssembler->child(child);
+            }
+        }
+    }
+}
+
+std::shared_ptr<SpatialDisassembler> Node::disassembler() const
+{
+    return std::make_shared<NodeDisassembler>();
+}
+
+void Node::disassemble(const std::shared_ptr<SpatialDisassembler>& disassembler)
+{
+    assert(disassembler);
+    Spatial::disassemble(disassembler);
+    std::shared_ptr<NodeDisassembler> nodeDisassembler = std::dynamic_pointer_cast<NodeDisassembler>(disassembler);
+    if (!nodeDisassembler) return;
+    for (auto& [child_id, child_dto] : nodeDisassembler->children())
+    {
+        auto child_spatial = std::make_shared<QuerySpatial>(child_id)->dispatch();
+        if (!child_spatial)
+        {
+            assert(child_dto.has_value());
+            child_spatial = std::make_shared<RequestSpatialConstitution>(child_id, child_dto.value())->dispatch();
+        }
+        if (child_spatial) m_childList.push_back(child_spatial);
+    }
 }
 
 std::shared_ptr<Node> Node::queryNode(const SpatialId& id)
@@ -62,10 +112,12 @@ std::shared_ptr<Node> Node::create(const SpatialId& id)
 
 std::shared_ptr<Node> Node::constitute(const SpatialId& id, const GenericDto& dto)
 {
-    return std::make_shared<Node>(id, dto);
+    auto node = std::make_shared<Node>(id);
+    SpatialDisassembler::disassemble(node, dto);
+    return node;
 }
 
-GenericDto Node::serializeDto()
+/*GenericDto Node::serializeDto()
 {
     return serializeNodeDto().toGenericDto();
 }
@@ -86,9 +138,9 @@ NodeDto Node::serializeNodeDto()
         }
     }
     return dto;
-}
+}*/
 
-GenericDtoCollection Node::serializeFlattenedTree()
+/*GenericDtoCollection Node::serializeFlattenedTree()
 {
     GenericDtoCollection collection;
     SceneFlattenTraversal flatten;
@@ -100,7 +152,7 @@ GenericDtoCollection Node::serializeFlattenedTree()
     }
     collection[0].asTopLevel(true);
     return collection;
-}
+}*/
 
 error Node::onCullingVisible(Culler* culler, bool noCull)
 {

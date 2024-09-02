@@ -34,9 +34,7 @@ std::shared_ptr<Light> Light::create(const SpatialId& id, const LightInfo& light
 std::shared_ptr<Light> Light::constitute(const SpatialId& id, const Engine::GenericDto& dto)
 {
     auto light = std::make_shared<Light>(id, LightInfo::LightType::Unknown);
-    auto disassembler = light->disassembler();
-    disassembler->disassemble(dto);
-    light->disassemble(disassembler);
+    SpatialDisassembler::disassemble(light, dto);
     return light;
 }
 

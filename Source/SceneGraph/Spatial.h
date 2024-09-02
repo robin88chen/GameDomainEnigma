@@ -80,8 +80,10 @@ namespace Enigma::SceneGraph
         Spatial& operator=(const Spatial&) = delete;
         Spatial& operator=(Spatial&&) = delete;
 
+        //! ADR : 這裡傳回空的 assembler, 而不是已組裝的。如果要傳回已組裝的，會讓 disassembler 有概念侵入問題，在SpatialAssembler中實作靜態函式
         virtual std::shared_ptr<SpatialAssembler> assembler() const;
         virtual void assemble(const std::shared_ptr<SpatialAssembler>& assembler);
+        //! ADR : 這裡傳回空的 disassembler, 而不是已拆解的。如果要傳回已拆解的，必須把 DTO 參數傳入，這樣會讓 DTO 概念侵入，在SpatialDisassembler中實作靜態函式
         virtual std::shared_ptr<SpatialDisassembler> disassembler() const;
         virtual void disassemble(const std::shared_ptr<SpatialDisassembler>& disassembler);
 

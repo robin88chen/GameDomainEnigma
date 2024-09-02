@@ -65,7 +65,7 @@ std::shared_ptr<Pawn> PawnAssembler::constitute()
     return std::dynamic_pointer_cast<Pawn>(std::make_shared<RequestSpatialConstitution>(m_id, toGenericDto())->dispatch());
 }
 
-NodeAssembler::NodeAssembler(const SpatialId& id) : m_spatialAssembler(id)
+/*NodeAssembler::NodeAssembler(const SpatialId& id) : m_spatialAssembler(id)
 {
     m_id = id;
     m_dto.id(id);
@@ -162,7 +162,7 @@ Enigma::Engine::GenericDto NodeAssembler::toGenericDto() const
 std::shared_ptr<Node> NodeAssembler::constitute()
 {
     return std::dynamic_pointer_cast<Node>(std::make_shared<RequestSpatialConstitution>(m_id, toGenericDto())->dispatch());
-}
+}*/
 
 LazyNodeAssembler::LazyNodeAssembler(const SpatialId& id) : m_nodeAssembler(id)
 {

@@ -19,7 +19,7 @@
 
 namespace Enigma::SceneGraph
 {
-    class NodeDto : public SpatialDto
+    /*class NodeDto : public SpatialDto
     {
     public:
         class ChildDto
@@ -55,7 +55,7 @@ namespace Enigma::SceneGraph
 
     protected:
         std::vector<ChildDto> m_children;
-    };
+    };*/
 
     class PawnDto : public SpatialDto
     {

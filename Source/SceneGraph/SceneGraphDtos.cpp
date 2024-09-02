@@ -15,7 +15,7 @@ static std::string TOKEN_NATIVE_DTO = "NativeDto";
 static std::string TOKEN_PAWN_PRIMITIVE_ID = "PawnPrimitiveId";
 
 
-NodeDto::ChildDto::ChildDto(const Engine::GenericDto& dto_from)
+/*NodeDto::ChildDto::ChildDto(const Engine::GenericDto& dto_from)
 {
     if (auto v = dto_from.tryGetValue<std::vector<std::string>>(TOKEN_ID)) m_id = v.value();
     if (auto v = dto_from.tryGetValue<GenericDto>(TOKEN_NATIVE_DTO)) m_dto = v.value();
@@ -90,7 +90,7 @@ std::vector<std::string> NodeDto::idsToTokens(const std::vector<SpatialId> child
         child_tokens.insert(child_tokens.end(), tokens.begin(), tokens.end());
     }
     return child_tokens;
-}
+}*/
 
 
 PawnDto::PawnDto() : SpatialDto()

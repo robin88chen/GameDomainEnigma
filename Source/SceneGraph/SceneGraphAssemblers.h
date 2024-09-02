@@ -47,7 +47,7 @@ namespace Enigma::SceneGraph
         PawnDto m_dto;
     };
 
-    class NodeAssembler
+    /*class NodeAssembler
     {
     public:
         NodeAssembler(const SpatialId& id);
@@ -75,7 +75,7 @@ namespace Enigma::SceneGraph
         NodeDto m_dto;
         std::vector<SpatialAssembler*> m_children;
         std::vector<NodeAssembler*> m_childNodes;
-    };
+    };*/
 
     class LazyNodeAssembler
     {

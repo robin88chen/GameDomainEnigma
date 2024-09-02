@@ -25,10 +25,14 @@ namespace Enigma::SceneGraph
         SpatialAssembler& operator=(SpatialAssembler&&) noexcept = default;
         virtual ~SpatialAssembler() = default;
 
+        [[nodiscard]] const SpatialId& id() const { return m_id; }
+
         void factory(const Engine::FactoryDesc& factory);
         void localTransform(const MathLib::Matrix4& local_transform);
         void worldTransform(const MathLib::Matrix4& world_transform);
+        void parentWorldTransform(const MathLib::Matrix4& parent_world_transform);
         void modelBound(const Engine::BoundingVolume& model_bound);
+        void mergeModelBoundingTo(Engine::BoundingVolume* target_bound) const;
         void topLevel(bool top_level) { m_isTopLevel = top_level; }
         void cullingMode(Spatial::CullingMode cull_mode) { m_cullingMode = cull_mode; }
         void notifyFlags(Spatial::NotifyFlags notify_flags) { m_notifyFlag = notify_flags; }
@@ -38,6 +42,9 @@ namespace Enigma::SceneGraph
         void asNative(const std::string& file_at_path);
 
         virtual Engine::GenericDto assemble() const;
+
+        static std::shared_ptr<SpatialAssembler> assembledAssemblerOf(const std::shared_ptr<Spatial>& spatial);
+        static Engine::GenericDto assemble(const std::shared_ptr<Spatial>& spatial);
 
     protected:
         void calculateWorldBound();
@@ -81,6 +88,9 @@ namespace Enigma::SceneGraph
         [[nodiscard]] const std::optional<SpatialId>& parentId() const { return m_parentId; }
 
         virtual void disassemble(const Engine::GenericDto& dto);
+
+        static std::shared_ptr<SpatialDisassembler> disassembledDisassemblerOf(const std::shared_ptr<Spatial>& spatial, const Engine::GenericDto& dto);
+        static void disassemble(const std::shared_ptr<Spatial>& spatial, const Engine::GenericDto& dto);
 
     protected:
         SpatialId m_id;

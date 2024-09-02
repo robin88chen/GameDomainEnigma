@@ -6,7 +6,6 @@
 using namespace Enigma::SceneGraph;
 
 static std::string TOKEN_ID = "Id";
-static std::string TOKEN_PARENT_NAME = "ParentName";
 static std::string TOKEN_LOCAL_TRANSFORM = "LocalTransform";
 static std::string TOKEN_WORLD_TRANSFORM = "WorldTransform";
 static std::string TOKEN_GRAPH_DEPTH = "GraphDepth";
@@ -39,10 +38,22 @@ void SpatialAssembler::worldTransform(const MathLib::Matrix4& world_transform)
     calculateWorldBound();
 }
 
+void SpatialAssembler::parentWorldTransform(const MathLib::Matrix4& parent_world_transform)
+{
+    m_worldTransform = parent_world_transform * m_localTransform;
+    calculateWorldBound();
+}
+
 void SpatialAssembler::modelBound(const Engine::BoundingVolume& model_bound)
 {
     m_modelBound = model_bound;
     calculateWorldBound();
+}
+
+void SpatialAssembler::mergeModelBoundingTo(Engine::BoundingVolume* target_bound) const
+{
+    assert(target_bound);
+    target_bound->Merge(m_localTransform, m_modelBound);
 }
 
 void SpatialAssembler::calculateWorldBound()
@@ -78,6 +89,20 @@ Enigma::Engine::GenericDto SpatialAssembler::assemble() const
     return dto;
 }
 
+std::shared_ptr<SpatialAssembler> SpatialAssembler::assembledAssemblerOf(const std::shared_ptr<Spatial>& spatial)
+{
+    assert(spatial);
+    std::shared_ptr<SpatialAssembler> assembler = spatial->assembler();
+    spatial->assemble(assembler);
+    return assembler;
+}
+
+Enigma::Engine::GenericDto SpatialAssembler::assemble(const std::shared_ptr<Spatial>& spatial)
+{
+    assert(spatial);
+    return assembledAssemblerOf(spatial)->assemble();
+}
+
 SpatialDisassembler::SpatialDisassembler() : m_factoryDesc(Spatial::TYPE_RTTI), m_isTopLevel(false), m_localTransform(MathLib::Matrix4::IDENTITY), m_worldTransform(MathLib::Matrix4::IDENTITY), m_graphDepth(0), m_modelBound(Engine::BoundingVolume{ MathLib::Box3::UNIT_BOX }), m_worldBound(Engine::BoundingVolume{ MathLib::Box3::UNIT_BOX }), m_cullingMode(Spatial::CullingMode::Dynamic), m_spatialFlag(Spatial::Spatial_Unlit), m_notifyFlag(Spatial::NotifyBit::Notify_All)
 {
 }
@@ -106,4 +131,18 @@ void SpatialDisassembler::disassemble(const Engine::GenericDto& dto)
     if (auto v = dto.tryGetValue<unsigned int>(TOKEN_SPATIAL_FLAG)) m_spatialFlag = v.value();
     if (auto v = dto.tryGetValue<unsigned int>(TOKEN_NOTIFY_FLAG)) m_notifyFlag = v.value();
     if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_PARENT_ID)) m_parentId = SpatialId(v.value());
+}
+
+std::shared_ptr<SpatialDisassembler> SpatialDisassembler::disassembledDisassemblerOf(const std::shared_ptr<Spatial>& spatial, const Engine::GenericDto& dto)
+{
+    assert(spatial);
+    std::shared_ptr<SpatialDisassembler> disassembler = spatial->disassembler();
+    disassembler->disassemble(dto);
+    return disassembler;
+}
+
+void SpatialDisassembler::disassemble(const std::shared_ptr<Spatial>& spatial, const Engine::GenericDto& dto)
+{
+    assert(spatial);
+    spatial->disassemble(disassembledDisassemblerOf(spatial, dto));
 }

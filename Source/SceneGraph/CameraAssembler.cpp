@@ -45,6 +45,20 @@ Enigma::Engine::GenericDto CameraAssembler::assemble()
     return dto;
 }
 
+std::shared_ptr<CameraAssembler> CameraAssembler::assembledAssemblerOf(const std::shared_ptr<Camera>& camera)
+{
+    assert(camera);
+    std::shared_ptr<CameraAssembler> assembler = std::make_shared<CameraAssembler>(camera->id());
+    camera->assemble(assembler);
+    return assembler;
+}
+
+Enigma::Engine::GenericDto CameraAssembler::assemble(const std::shared_ptr<Camera>& camera)
+{
+    assert(camera);
+    return assembledAssemblerOf(camera)->assemble();
+}
+
 CameraDisassembler::CameraDisassembler() : m_factoryDesc(Camera::TYPE_RTTI)
 {
 }
@@ -75,4 +89,18 @@ void CameraDisassembler::disassemble(const Engine::GenericDto& dto)
         m_frustum = std::make_shared<Frustum>();
         m_frustum->disassemble(disassembler);
     }
+}
+
+std::shared_ptr<CameraDisassembler> CameraDisassembler::disassembledDisassemblerOf(const std::shared_ptr<Camera>& camera, const Engine::GenericDto& dto)
+{
+    assert(camera);
+    std::shared_ptr<CameraDisassembler> disassembler = std::make_shared<CameraDisassembler>();
+    disassembler->disassemble(dto);
+    return disassembler;
+}
+
+void CameraDisassembler::disassemble(const std::shared_ptr<Camera>& camera, const Engine::GenericDto& dto)
+{
+    assert(camera);
+    camera->disassemble(disassembledDisassemblerOf(camera, dto));
 }

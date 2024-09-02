@@ -37,6 +37,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightDtos.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\NodalSceneGraph.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Node.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\NodeAssembler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\OutRegionNode.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Pawn.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Portal.h" />
@@ -95,6 +96,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightInfoTraversal.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\NodalSceneGraph.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Node.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\NodeAssembler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\OutRegionNode.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Pawn.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Portal.cpp" />

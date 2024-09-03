@@ -9,8 +9,9 @@
 #define SPATIAL_ASSEMBLER_H
 
 #include "SpatialId.h"
-#include "SpatialDto.h"
 #include "GameEngine/BoundingVolume.h"
+#include "GameEngine/FactoryDesc.h"
+#include "GameEngine/GenericDto.h"
 #include "Spatial.h"
 
 namespace Enigma::SceneGraph
@@ -27,7 +28,7 @@ namespace Enigma::SceneGraph
 
         [[nodiscard]] const SpatialId& id() const { return m_id; }
 
-        void factory(const Engine::FactoryDesc& factory);
+        virtual void factory(const Engine::FactoryDesc& factory);
         void localTransform(const MathLib::Matrix4& local_transform);
         void worldTransform(const MathLib::Matrix4& world_transform);
         void parentWorldTransform(const MathLib::Matrix4& parent_world_transform);
@@ -39,7 +40,7 @@ namespace Enigma::SceneGraph
         void spatialFlags(Spatial::SpatialFlags spatial_flags) { m_spatialFlag = spatial_flags; }
         void graphDepth(unsigned graph_depth) { m_graphDepth = graph_depth; }
         void parentId(const SpatialId& parent_id) { m_parentId = parent_id; }
-        void asNative(const std::string& file_at_path);
+        virtual void persist(const std::string& filename, const std::string& path_id);
 
         virtual Engine::GenericDto assemble() const;
 
@@ -62,7 +63,8 @@ namespace Enigma::SceneGraph
         Spatial::SpatialFlags m_spatialFlag;
         Spatial::NotifyFlags m_notifyFlag;
         std::optional<SpatialId> m_parentId;
-        std::optional<std::string> m_nativeFileAtPath;
+        std::optional<std::string> m_persistFilename;
+        std::optional<std::string> m_persistPathId;
     };
     class SpatialDisassembler
     {
@@ -90,6 +92,7 @@ namespace Enigma::SceneGraph
         virtual void disassemble(const Engine::GenericDto& dto);
 
         static std::shared_ptr<SpatialDisassembler> disassembledDisassemblerOf(const std::shared_ptr<Spatial>& spatial, const Engine::GenericDto& dto);
+        static std::shared_ptr<SpatialDisassembler> disassembledDisassembler(const Engine::GenericDto& dto);
         static void disassemble(const std::shared_ptr<Spatial>& spatial, const Engine::GenericDto& dto);
 
     protected:

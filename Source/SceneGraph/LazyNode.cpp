@@ -5,6 +5,7 @@
 #include "Frameworks/Rtti.h"
 #include "GameEngine/FactoryDesc.h"
 #include "SceneGraphQueries.h"
+#include "LazyNodeAssembler.h"
 #include "SceneGraphCommands.h"
 
 using namespace Enigma::SceneGraph;
@@ -19,18 +20,18 @@ LazyNode::LazyNode(const SpatialId& id) : Node(id)
     m_lazyStatus.changeStatus(Frameworks::LazyStatus::Status::Ghost);
 }
 
-LazyNode::LazyNode(const SpatialId& id, const Engine::GenericDto& o) : Node(id, o)
+/*LazyNode::LazyNode(const SpatialId& id, const Engine::GenericDto& o) : Node(id, o)
 {
     LazyNodeDto lazy_node_dto{ o };
     m_factoryDesc = lazy_node_dto.factoryDesc();
     m_lazyStatus.changeStatus(Frameworks::LazyStatus::Status::Ghost);
-}
+}*/
 
 LazyNode::~LazyNode()
 {
 }
 
-std::shared_ptr<LazyNode> LazyNode::create(const SpatialId& id)
+/*std::shared_ptr<LazyNode> LazyNode::create(const SpatialId& id)
 {
     return std::make_shared<LazyNode>(id);
 }
@@ -38,9 +39,9 @@ std::shared_ptr<LazyNode> LazyNode::create(const SpatialId& id)
 std::shared_ptr<LazyNode> LazyNode::constitute(const SpatialId& id, const Engine::GenericDto& dto)
 {
     return std::make_shared<LazyNode>(id, dto);
-}
+}*/
 
-std::error_code LazyNode::hydrate(const Engine::GenericDto& dto)
+/*std::error_code LazyNode::hydrate(const Engine::GenericDto& dto)
 {
     LazyNodeDto lazy_node_dto{ dto };
     for (auto& child : lazy_node_dto.children())
@@ -63,9 +64,60 @@ std::error_code LazyNode::hydrate(const Engine::GenericDto& dto)
     }
     m_lazyStatus.changeStatus(Frameworks::LazyStatus::Status::Ready);
     return ErrorCode::ok;
+}*/
+
+std::shared_ptr<SpatialAssembler> LazyNode::assembler() const
+{
+    return std::make_shared<DehydratedLazyNodeAssembler>(m_id);
 }
 
-GenericDto LazyNode::serializeDto()
+std::shared_ptr<SpatialDisassembler> LazyNode::disassembler() const
+{
+    return std::make_shared<DehydratedLazyNodeDisassembler>();
+}
+
+std::shared_ptr<HydratedLazyNodeAssembler> LazyNode::assemblerOfLaziedContent() const
+{
+    return std::make_shared<HydratedLazyNodeAssembler>(m_id);
+}
+
+std::shared_ptr<HydratedLazyNodeDisassembler> LazyNode::disassemblerOfLaziedContent() const
+{
+    return std::make_shared<HydratedLazyNodeDisassembler>();
+}
+
+void LazyNode::assembleLaziedContent(const std::shared_ptr<HydratedLazyNodeAssembler>& assembler)
+{
+    assert(assembler);
+    Node::assemble(assembler);
+}
+
+std::error_code LazyNode::hydrate(const std::shared_ptr<HydratedLazyNodeDisassembler>& disassembler)
+{
+    assert(disassembler);
+    for (auto& [child_id, child_dto] : disassembler->children())
+    {
+        auto child_spatial = std::make_shared<QuerySpatial>(child_id)->dispatch();
+        if (!child_spatial)
+        {
+            if (!child_dto.has_value()) return ErrorCode::childDtoNotFound;
+            child_spatial = std::make_shared<RequestSpatialConstitution>(child_id, child_dto.value())->dispatch();
+        }
+        if (child_spatial)
+        {
+            auto er = attachChild(child_spatial, child_spatial->getLocalTransform());
+            if (er)
+            {
+                m_lazyStatus.changeStatus(Frameworks::LazyStatus::Status::Failed);
+                return er;
+            }
+        }
+    }
+    m_lazyStatus.changeStatus(Frameworks::LazyStatus::Status::Ready);
+    return ErrorCode::ok;
+}
+
+/*GenericDto LazyNode::serializeDto()
 {
     return serializeAsLaziness();
 }
@@ -113,7 +165,7 @@ Enigma::Engine::GenericDtoCollection LazyNode::serializeFlattenedTree()
         }
     }
     return collection;
-}
+}*/
 
 bool LazyNode::canVisited()
 {

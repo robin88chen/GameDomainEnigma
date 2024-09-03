@@ -8,7 +8,6 @@
 #include "MathLib/MathGlobal.h"
 #include "Frameworks/EventPublisher.h"
 #include "SceneGraphQueries.h"
-#include "Frameworks/QueryDispatcher.h"
 #include "MathLib/Quaternion.h"
 #include "CameraAssembler.h"
 #include <cassert>

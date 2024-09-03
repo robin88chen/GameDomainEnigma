@@ -1,5 +1,6 @@
 ﻿#include "FrustumAssembler.h"
 #include "Frustum.h"
+#include "GameEngine/GenericDto.h"
 #include <cassert>
 
 using namespace Enigma::SceneGraph;

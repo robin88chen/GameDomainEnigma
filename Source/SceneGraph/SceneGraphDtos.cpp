@@ -119,7 +119,7 @@ GenericDto PawnDto::toGenericDto() const
     return dto;
 }
 
-LazyNodeDto::LazyNodeDto() : NodeDto()
+/*LazyNodeDto::LazyNodeDto() : NodeDto()
 {
     m_factoryDesc = FactoryDesc(LazyNode::TYPE_RTTI.getName());
 }
@@ -137,7 +137,7 @@ GenericDto LazyNodeDto::toGenericDto() const
 {
     GenericDto dto = NodeDto::toGenericDto();
     return dto;
-}
+}*/
 
 VisibilityManagedNodeDto::VisibilityManagedNodeDto() : LazyNodeDto()
 {

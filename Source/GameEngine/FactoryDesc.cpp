@@ -2,10 +2,10 @@
 
 using namespace Enigma::Engine;
 
-FactoryDesc& FactoryDesc::ClaimAsNative(const std::string& name)
+FactoryDesc& FactoryDesc::ClaimAsNative(const std::string& filename, const std::string& path_id)
 {
     m_type = InstanceType::Native;
-    if (!name.empty()) m_prefab_deferredFilename = name;
+    m_prefab_deferredFilename = combineFilenameAtPath(filename, path_id);
     return *this;
 }
 
@@ -19,34 +19,14 @@ FactoryDesc& FactoryDesc::ClaimByPrefab(const std::string& prefab_name)
 FactoryDesc& FactoryDesc::ClaimAsDeferred(const std::string& filename, const std::string& path_id)
 {
     m_type = InstanceType::Deferred;
-    if (!filename.empty())
-    {
-        if (path_id.empty())
-        {
-            m_prefab_deferredFilename = filename;
-        }
-        else
-        {
-            m_prefab_deferredFilename = filename + "@" + path_id;
-        }
-    }
+    m_prefab_deferredFilename = combineFilenameAtPath(filename, path_id);
     return *this;
 }
 
 FactoryDesc& FactoryDesc::ClaimAsInstanced(const std::string& filename, const std::string& path_id)
 {
     m_type = InstanceType::Instanced;
-    if (!filename.empty())
-    {
-        if (path_id.empty())
-        {
-            m_prefab_deferredFilename = filename;
-        }
-        else
-        {
-            m_prefab_deferredFilename = filename + "@" + path_id;
-        }
-    }
+    m_prefab_deferredFilename = combineFilenameAtPath(filename, path_id);
     return *this;
 }
 
@@ -54,17 +34,7 @@ FactoryDesc& FactoryDesc::ClaimAsResourceAsset(const std::string& name, const st
 {
     m_type = InstanceType::ResourceAsset;
     if (!name.empty()) m_resourceName = name;
-    if (!filename.empty())
-    {
-        if (path_id.empty())
-        {
-            m_resourceFilename = filename;
-        }
-        else
-        {
-            m_resourceFilename = filename + "@" + path_id;
-        }
-    }
+    m_resourceFilename = combineFilenameAtPath(filename, path_id);
     return *this;
 }
 
@@ -72,17 +42,7 @@ FactoryDesc& FactoryDesc::ClaimFromResource(const std::string& name, const std::
 {
     m_type = InstanceType::FromResource;
     if (!name.empty()) m_resourceName = name;
-    if (!filename.empty())
-    {
-        if (path_id.empty())
-        {
-            m_resourceFilename = filename;
-        }
-        else
-        {
-            m_resourceFilename = filename + "@" + path_id;
-        }
-    }
+    m_resourceFilename = combineFilenameAtPath(filename, path_id);
     return *this;
 }
 
@@ -143,4 +103,11 @@ std::string FactoryDesc::PathId() const
         }
     }
     return "";
+}
+
+std::string FactoryDesc::combineFilenameAtPath(const std::string& filename, const std::string& path_id) const
+{
+    if (filename.empty()) return filename;
+    if (path_id.empty()) return filename;
+    return filename + "@" + path_id;
 }

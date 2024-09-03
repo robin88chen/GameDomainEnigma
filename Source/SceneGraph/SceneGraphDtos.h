@@ -73,7 +73,7 @@ namespace Enigma::SceneGraph
         std::optional<Primitives::PrimitiveId> m_primitiveId;
     };
 
-    class LazyNodeDto : public NodeDto
+    /*class LazyNodeDto : public NodeDto
     {
     public:
         LazyNodeDto();
@@ -81,7 +81,7 @@ namespace Enigma::SceneGraph
         LazyNodeDto(const Engine::GenericDto& dto);
 
         Engine::GenericDto toGenericDto() const;
-    };
+    };*/
 
     class VisibilityManagedNodeDto : public LazyNodeDto
     {

@@ -164,7 +164,7 @@ std::shared_ptr<Node> NodeAssembler::constitute()
     return std::dynamic_pointer_cast<Node>(std::make_shared<RequestSpatialConstitution>(m_id, toGenericDto())->dispatch());
 }*/
 
-LazyNodeAssembler::LazyNodeAssembler(const SpatialId& id) : m_nodeAssembler(id)
+/*LazyNodeAssembler::LazyNodeAssembler(const SpatialId& id) : m_nodeAssembler(id)
 {
     m_id = id;
     m_dto.id(id);
@@ -228,7 +228,7 @@ Enigma::Engine::GenericDto LazyNodeAssembler::toDeHydratedGenericDto() const
 std::shared_ptr<LazyNode> LazyNodeAssembler::constituteDeHydrated()
 {
     return std::dynamic_pointer_cast<LazyNode>(std::make_shared<RequestSpatialConstitution>(m_id, toDeHydratedGenericDto())->dispatch());
-}
+}*/
 
 
 VisibilityManagedNodeAssembler::VisibilityManagedNodeAssembler(const SpatialId& id) : m_lazyNodeAssembler(id)

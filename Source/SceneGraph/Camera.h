@@ -11,13 +11,11 @@
 #include "SceneGraphDefines.h"
 #include "SpatialId.h"
 #include "MathLib/Vector3.h"
-#include "GameEngine/GenericDto.h"
 #include "Frameworks/Rtti.h"
 #include "MathLib/Matrix4.h"
-#include "Frameworks/EventSubscriber.h"
+#include "GameEngine/FactoryDesc.h"
 #include "Frustum.h"
 #include <memory>
-#include <string>
 #include <system_error>
 #include <optional>
 

@@ -40,8 +40,6 @@ namespace Enigma::SceneGraph
         virtual void disassemble(const std::shared_ptr<SpatialDisassembler>& disassembler) override;
 
         static std::shared_ptr<Node> queryNode(const SpatialId& id);
-        static std::shared_ptr<Node> create(const SpatialId& id);
-        static std::shared_ptr<Node> constitute(const SpatialId& id, const Engine::GenericDto& dto);
 
         //todo: remove
         //virtual Engine::GenericDtoCollection serializeFlattenedTree();

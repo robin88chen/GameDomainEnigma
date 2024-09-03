@@ -13,7 +13,6 @@
 #include "MathLib/Matrix4.h"
 #include "MathLib/Radian.h"
 #include "Frameworks/Rtti.h"
-#include "GameEngine/GenericDto.h"
 #include <memory>
 #include <string>
 #include <system_error>

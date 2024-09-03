@@ -9,6 +9,8 @@
 #define FRUSTUM_ASSEMBLER_H
 
 #include "Frustum.h"
+#include "GameEngine/GenericDto.h"
+#include "GameEngine/FactoryDesc.h"
 
 namespace Enigma::SceneGraph
 {

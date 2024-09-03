@@ -77,7 +77,7 @@ namespace Enigma::SceneGraph
         std::vector<NodeAssembler*> m_childNodes;
     };*/
 
-    class LazyNodeAssembler
+    /*class LazyNodeAssembler
     {
     public:
         LazyNodeAssembler(const SpatialId& id);
@@ -100,7 +100,7 @@ namespace Enigma::SceneGraph
         SpatialId m_id;
         NodeAssembler m_nodeAssembler;
         LazyNodeDto m_dto;
-    };
+    };*/
 
 
     class VisibilityManagedNodeAssembler

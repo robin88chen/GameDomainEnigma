@@ -105,18 +105,6 @@ std::shared_ptr<Node> Node::queryNode(const SpatialId& id)
     return std::dynamic_pointer_cast<Node, Spatial>(std::make_shared<QuerySpatial>(id)->dispatch());
 }
 
-std::shared_ptr<Node> Node::create(const SpatialId& id)
-{
-    return std::make_shared<Node>(id);
-}
-
-std::shared_ptr<Node> Node::constitute(const SpatialId& id, const GenericDto& dto)
-{
-    auto node = std::make_shared<Node>(id);
-    SpatialDisassembler::disassemble(node, dto);
-    return node;
-}
-
 /*GenericDto Node::serializeDto()
 {
     return serializeNodeDto().toGenericDto();

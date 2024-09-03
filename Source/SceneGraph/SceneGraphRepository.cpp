@@ -22,7 +22,11 @@
 #include "SceneGraphQueries.h"
 #include "SceneGraphDtos.h"
 #include "CameraAssembler.h"
+#include "SpatialAssembler.h"
+#include "LazyNodeCreationMethods.h"
 #include <cassert>
+
+#include "LazyNodeAssembler.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Frameworks;
@@ -241,8 +245,7 @@ Enigma::MathLib::Matrix4 SceneGraphRepository::queryWorldTransform(const Spatial
     if (auto spatial = findCachedSpatial(id); spatial) return spatial->getWorldTransform();
     auto dto = m_storeMapper->querySpatial(id);
     assert(dto.has_value());
-    SpatialDto spatial_dto = SpatialDto(dto.value());
-    return spatial_dto.worldTransform();
+    return SpatialDisassembler::disassembledDisassembler(dto.value())->worldTransform();
 }
 
 Enigma::Engine::BoundingVolume SceneGraphRepository::queryModelBound(const SpatialId& id)
@@ -251,8 +254,7 @@ Enigma::Engine::BoundingVolume SceneGraphRepository::queryModelBound(const Spati
     if (auto spatial = findCachedSpatial(id); spatial) return spatial->getModelBound();
     auto dto = m_storeMapper->querySpatial(id);
     assert(dto.has_value());
-    SpatialDto spatial_dto = SpatialDto(dto.value());
-    return BoundingVolume{ spatial_dto.modelBound() };
+    return SpatialDisassembler::disassembledDisassembler(dto.value())->modelBound();
 }
 
 std::shared_ptr<Spatial> SceneGraphRepository::queryRunningSpatial(const SpatialId& id)
@@ -379,8 +381,7 @@ void SceneGraphRepository::putSpatial(const std::shared_ptr<Spatial>& spatial)
     assert(spatial);
     std::lock_guard locker{ m_spatialMapLock };
     spatial->persistenceLevel(PersistenceLevel::Store);
-    auto dto = spatial->serializeDto();
-    auto er = m_storeMapper->putSpatial(spatial->id(), { dto });
+    auto er = m_storeMapper->putSpatial(spatial->id(), { SpatialAssembler::assemble(spatial) });
     if (!er)
     {
         EventPublisher::enqueue(std::make_shared<SpatialPut>(spatial->id()));
@@ -395,8 +396,9 @@ void SceneGraphRepository::putLaziedContent(const std::shared_ptr<LazyNode>& laz
 {
     assert(m_storeMapper);
     assert(lazy_node);
-    auto dto = lazy_node->serializeLaziedContent();
-    auto er = m_storeMapper->putLaziedContent(lazy_node->id(), dto);
+    std::shared_ptr<HydratedLazyNodeAssembler> assembler = lazy_node->assemblerOfLaziedContent();
+    lazy_node->assembleLaziedContent(assembler);
+    auto er = m_storeMapper->putLaziedContent(lazy_node->id(), assembler->assemble());
     if (!er)
     {
         EventPublisher::enqueue(std::make_shared<LaziedContentPut>(lazy_node->id()));
@@ -600,7 +602,7 @@ void SceneGraphRepository::hydrateLazyNode(const SpatialId& id)
         EventPublisher::enqueue(std::make_shared<LazyNodeHydrationFailed>(id, ErrorCode::laziedContentNotFound));
         return;
     }
-    if (error er = lazy_node->hydrate(content.value()))
+    if (error er = LazyNodeCreationMethod::hydrate(lazy_node, content.value()))
     {
         EventPublisher::enqueue(std::make_shared<LazyNodeHydrationFailed>(id, er));
     }

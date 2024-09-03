@@ -24,7 +24,7 @@ void SpatialAssembler::factory(const Engine::FactoryDesc& factory)
 {
     m_factoryDesc = factory;
     //! 不可因為設 factory 而失去原本的 native file path
-    if (m_nativeFileAtPath) m_factoryDesc.ClaimAsNative(m_nativeFileAtPath.value());
+    if ((m_persistFilename) && (m_persistPathId)) m_factoryDesc.ClaimAsNative(m_persistFilename.value(), m_persistPathId.value());
 }
 
 void SpatialAssembler::localTransform(const MathLib::Matrix4& local_transform)
@@ -61,10 +61,11 @@ void SpatialAssembler::calculateWorldBound()
     m_worldBound = Engine::BoundingVolume::CreateFromTransform(m_modelBound, m_worldTransform);
 }
 
-void SpatialAssembler::asNative(const std::string& file_at_path)
+void SpatialAssembler::persist(const std::string& filename, const std::string& path_id)
 {
-    m_nativeFileAtPath = file_at_path;
-    m_factoryDesc.ClaimAsNative(file_at_path);
+    m_persistFilename = filename;
+    m_persistPathId = path_id;
+    m_factoryDesc.ClaimAsNative(filename, path_id);
 }
 
 Enigma::Engine::GenericDto SpatialAssembler::assemble() const
@@ -137,6 +138,13 @@ std::shared_ptr<SpatialDisassembler> SpatialDisassembler::disassembledDisassembl
 {
     assert(spatial);
     std::shared_ptr<SpatialDisassembler> disassembler = spatial->disassembler();
+    disassembler->disassemble(dto);
+    return disassembler;
+}
+
+std::shared_ptr<SpatialDisassembler> SpatialDisassembler::disassembledDisassembler(const Engine::GenericDto& dto)
+{
+    std::shared_ptr<SpatialDisassembler> disassembler = std::make_shared<SpatialDisassembler>();
     disassembler->disassemble(dto);
     return disassembler;
 }

@@ -93,7 +93,7 @@ std::vector<std::string> NodeDto::idsToTokens(const std::vector<SpatialId> child
 }*/
 
 
-PawnDto::PawnDto() : SpatialDto()
+/*PawnDto::PawnDto() : SpatialDto()
 {
     m_factoryDesc = FactoryDesc(Pawn::TYPE_RTTI.getName());
 }
@@ -117,7 +117,7 @@ GenericDto PawnDto::toGenericDto() const
         dto.addOrUpdate(TOKEN_PAWN_PRIMITIVE_ID, m_primitiveId.value().tokens());
     }
     return dto;
-}
+}*/
 
 /*LazyNodeDto::LazyNodeDto() : NodeDto()
 {
@@ -139,7 +139,7 @@ GenericDto LazyNodeDto::toGenericDto() const
     return dto;
 }*/
 
-VisibilityManagedNodeDto::VisibilityManagedNodeDto() : LazyNodeDto()
+/*VisibilityManagedNodeDto::VisibilityManagedNodeDto() : LazyNodeDto()
 {
     m_factoryDesc = FactoryDesc(VisibilityManagedNode::TYPE_RTTI.getName());
 }
@@ -157,4 +157,4 @@ GenericDto VisibilityManagedNodeDto::toGenericDto() const
 {
     GenericDto dto = LazyNodeDto::toGenericDto();
     return dto;
-}
+}*/

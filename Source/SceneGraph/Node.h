@@ -24,7 +24,7 @@ namespace Enigma::SceneGraph
     {
         DECLARE_EN_RTTI;
     public:
-        using ChildList = std::list<SpatialPtr>;
+        using ChildList = std::list<std::shared_ptr<Spatial>>;
 
     public:
         Node(const SpatialId& id);
@@ -89,8 +89,6 @@ namespace Enigma::SceneGraph
         //todo : rethink -- mutex for lock list??
         ChildList m_childList;
     };
-
-    using NodePtr = std::shared_ptr<Node>;
 };
 
 

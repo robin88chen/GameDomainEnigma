@@ -149,6 +149,6 @@ void LightDisassembler::disassemble(const Engine::GenericDto& dto)
     {
         std::shared_ptr<LightInfoDisassembler> disassembler = std::make_shared<LightInfoDisassembler>();
         disassembler->disassemble(v.value());
-        m_info.disassemble();
+        m_info.disassemble(disassembler);
     }
 }

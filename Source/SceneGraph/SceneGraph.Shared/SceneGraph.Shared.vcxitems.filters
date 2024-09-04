@@ -261,6 +261,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LazyNodeCreationMethods.h">
       <Filter>CreationMethods</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\VisibilityManagedNodeAssembler.h">
+      <Filter>Assemblers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PawnAssembler.h">
+      <Filter>Assemblers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp">
@@ -415,6 +421,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LazyNodeCreationMethods.cpp">
       <Filter>CreationMethods</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PawnAssembler.cpp">
+      <Filter>Assemblers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -25,10 +25,11 @@ error SceneGraphInstallingPolicy::install(Frameworks::ServiceManager* service_ma
     const auto timer = service_manager->getSystemServiceAs<Engine::TimerService>();
     assert(timer);
     auto scene_graph_repository = std::make_shared<SceneGraphRepository>(service_manager, m_storeMapper);
+    //! ADR: constitution methods 好像可以不需要
     scene_graph_repository->registerSpatialFactory(Pawn::TYPE_RTTI.getName(), Pawn::create, Pawn::constitute);
     scene_graph_repository->registerSpatialFactory(Node::TYPE_RTTI.getName(), NodeCreationMethod::create, NodeCreationMethod::constitute);
     scene_graph_repository->registerSpatialFactory(LazyNode::TYPE_RTTI.getName(), LazyNodeCreationMethod::create, LazyNodeCreationMethod::constitute);
-    scene_graph_repository->registerSpatialFactory(VisibilityManagedNode::TYPE_RTTI.getName(), VisibilityManagedNode::create, VisibilityManagedNode::constitute);
+    scene_graph_repository->registerSpatialFactory(VisibilityManagedNode::TYPE_RTTI.getName(), VisibilityManagedNodeCreationMethod::create, VisibilityManagedNodeCreationMethod::constitute);
     scene_graph_repository->registerSpatialFactory(PortalManagementNode::TYPE_RTTI.getName(), PortalManagementNode::create, PortalManagementNode::constitute);
     scene_graph_repository->registerSpatialFactory(Portal::TYPE_RTTI.getName(), Portal::create, Portal::constitute);
     scene_graph_repository->registerSpatialFactory(PortalZoneNode::TYPE_RTTI.getName(), PortalZoneNode::create, PortalZoneNode::constitute);

@@ -2,7 +2,7 @@
 #include "Culler.h"
 #include "SceneGraphErrors.h"
 #include "GameEngine/BoundingVolume.h"
-#include "SceneGraphDtos.h"
+#include "PawnAssembler.h"
 #include "Frameworks/CommandBus.h"
 #include "Primitives/Primitive.h"
 #include "SceneGraphQueries.h"
@@ -19,18 +19,54 @@ Pawn::Pawn(const SpatialId& id) : Spatial(id)
     removeSpatialFlag(Spatial_Unlit);
 }
 
-Pawn::Pawn(const SpatialId& id, const Engine::GenericDto& dto) : Spatial(id, dto)
+/*Pawn::Pawn(const SpatialId& id, const Engine::GenericDto& dto) : Spatial(id, dto)
 {
     PawnDto pawn_dto{ dto };
     if (pawn_dto.primitiveId()) m_primitive = Primitives::Primitive::queryPrimitive(pawn_dto.primitiveId().value());
-}
+}*/
 
 Pawn::~Pawn()
 {
     m_primitive = nullptr;
 }
 
-std::shared_ptr<Pawn> Pawn::create(const SpatialId& id)
+std::shared_ptr<SpatialAssembler> Pawn::assembler() const
+{
+    return std::make_shared<PawnAssembler>(m_id);
+}
+
+void Pawn::assemble(const std::shared_ptr<SpatialAssembler>& assembler)
+{
+    assert(assembler);
+    Spatial::assemble(assembler);
+    if (auto pawn_assembler = std::dynamic_pointer_cast<PawnAssembler>(assembler))
+    {
+        if (m_primitive)
+        {
+            pawn_assembler->primitiveId(m_primitive->id());
+        }
+    }
+}
+
+std::shared_ptr<SpatialDisassembler> Pawn::disassembler() const
+{
+    return std::make_shared<PawnDisassembler>();
+}
+
+void Pawn::disassemble(const std::shared_ptr<SpatialDisassembler>& disassembler)
+{
+    assert(disassembler);
+    Spatial::disassemble(disassembler);
+    if (auto pawn_disassembler = std::dynamic_pointer_cast<PawnDisassembler>(disassembler))
+    {
+        if (pawn_disassembler->primitiveId())
+        {
+            m_primitive = Primitives::Primitive::queryPrimitive(pawn_disassembler->primitiveId().value());
+        }
+    }
+}
+
+/*std::shared_ptr<Pawn> Pawn::create(const SpatialId& id)
 {
     return std::make_shared<Pawn>(id);
 }
@@ -38,7 +74,7 @@ std::shared_ptr<Pawn> Pawn::create(const SpatialId& id)
 std::shared_ptr<Pawn> Pawn::constitute(const SpatialId& id, const Engine::GenericDto& dto)
 {
     return std::make_shared<Pawn>(id, dto);
-}
+}*/
 
 std::shared_ptr<Pawn> Pawn::queryPawn(const SpatialId& id)
 {
@@ -46,7 +82,7 @@ std::shared_ptr<Pawn> Pawn::queryPawn(const SpatialId& id)
     return std::dynamic_pointer_cast<Pawn>(std::make_shared<QuerySpatial>(id)->dispatch());
 }
 
-Enigma::Engine::GenericDto Pawn::serializeDto()
+/*Enigma::Engine::GenericDto Pawn::serializeDto()
 {
     return SerializePawnDto().toGenericDto();
 }
@@ -59,7 +95,7 @@ PawnDto Pawn::SerializePawnDto()
         dto.primitiveId(m_primitive->id());
     }
     return dto;
-}
+}*/
 
 error Pawn::onCullingVisible(Culler* culler, bool noCull)
 {

@@ -57,7 +57,7 @@ namespace Enigma::SceneGraph
         std::vector<ChildDto> m_children;
     };*/
 
-    class PawnDto : public SpatialDto
+    /*class PawnDto : public SpatialDto
     {
     public:
         PawnDto();
@@ -71,7 +71,7 @@ namespace Enigma::SceneGraph
 
     protected:
         std::optional<Primitives::PrimitiveId> m_primitiveId;
-    };
+    };*/
 
     /*class LazyNodeDto : public NodeDto
     {
@@ -83,7 +83,7 @@ namespace Enigma::SceneGraph
         Engine::GenericDto toGenericDto() const;
     };*/
 
-    class VisibilityManagedNodeDto : public LazyNodeDto
+    /*class VisibilityManagedNodeDto : public LazyNodeDto
     {
     public:
         VisibilityManagedNodeDto();
@@ -91,7 +91,7 @@ namespace Enigma::SceneGraph
         VisibilityManagedNodeDto(const Engine::GenericDto& dto);
 
         Engine::GenericDto toGenericDto() const;
-    };
+    };*/
 }
 
 #endif // SCENE_GRAPH_DTOS_H

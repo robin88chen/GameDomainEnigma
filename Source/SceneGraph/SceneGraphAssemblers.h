@@ -24,7 +24,7 @@ namespace Enigma::SceneGraph
     class PortalZoneNode;
     class Portal;
 
-    class PawnAssembler
+    /*class PawnAssembler
     {
     public:
         PawnAssembler(const SpatialId& id);
@@ -45,7 +45,7 @@ namespace Enigma::SceneGraph
         SpatialId m_id;
         SpatialAssembler m_spatialAssembler;
         PawnDto m_dto;
-    };
+    };*/
 
     /*class NodeAssembler
     {
@@ -103,7 +103,7 @@ namespace Enigma::SceneGraph
     };*/
 
 
-    class VisibilityManagedNodeAssembler
+    /*class VisibilityManagedNodeAssembler
     {
     public:
         VisibilityManagedNodeAssembler(const SpatialId& id);
@@ -126,7 +126,7 @@ namespace Enigma::SceneGraph
         SpatialId m_id;
         LazyNodeAssembler m_lazyNodeAssembler;
         VisibilityManagedNodeDto m_dto;
-    };
+    };*/
 }
 
 #endif // SCENE_GRAPH_ASSEMBLERS_H

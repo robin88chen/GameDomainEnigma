@@ -44,6 +44,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\NodeCreationMethods.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\OutRegionNode.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Pawn.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PawnAssembler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Portal.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalAssemblers.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalCommands.h" />
@@ -78,6 +79,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialLightInfoQuery.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialRenderState.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\VisibilityManagedNode.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\VisibilityManagedNodeAssembler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\VisibleSet.h" />
   </ItemGroup>
   <ItemGroup>
@@ -108,6 +110,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\NodeCreationMethods.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\OutRegionNode.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Pawn.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PawnAssembler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Portal.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalAssemblers.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalDtos.cpp" />

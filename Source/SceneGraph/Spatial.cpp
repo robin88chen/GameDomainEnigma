@@ -168,7 +168,7 @@ std::shared_ptr<Spatial> Spatial::getParent() const
 void Spatial::detachFromParent()
 {
     if (!m_parent.has_value()) return;
-    const NodePtr parent_node = Node::queryNode(m_parent.value());
+    const std::shared_ptr<Node> parent_node = Node::queryNode(m_parent.value());
     if (!parent_node) return;
     parent_node->detachChild(thisSpatial());
 }
@@ -269,7 +269,7 @@ error Spatial::setLocalTransform(const MathLib::Matrix4& mx)
 void Spatial::changeWorldPosition(const MathLib::Vector3& vecWorldPos, const std::optional<std::shared_ptr<Node>>& new_parent_option)
 {
     Vector3 vecLocalPos = vecWorldPos;
-    NodePtr targetParentNode = std::dynamic_pointer_cast<Node, Spatial>(getParent());
+    std::shared_ptr<Node> targetParentNode = std::dynamic_pointer_cast<Node, Spatial>(getParent());
     if (new_parent_option) targetParentNode = new_parent_option.value();  // if New Parent Node is null opt, we no change parent node
     if (targetParentNode) // 有parent node, 取得local pos
     {
@@ -281,7 +281,7 @@ void Spatial::changeWorldPosition(const MathLib::Vector3& vecWorldPos, const std
     // change parent node or not?
     if (getParent() != targetParentNode)
     {
-        NodePtr node = std::dynamic_pointer_cast<Node, Spatial>(getParent());
+        std::shared_ptr<Node> node = std::dynamic_pointer_cast<Node, Spatial>(getParent());
         if (node) node->detachChild(thisSpatial());
         if (targetParentNode)
         {

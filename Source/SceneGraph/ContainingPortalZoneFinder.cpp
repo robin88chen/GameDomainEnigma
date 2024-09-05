@@ -20,7 +20,7 @@ SceneTraveler::TravelResult ContainingPortalZoneFinder::travelTo(const SpatialPt
     if ((!spatial) || (spatial->getWorldBound().isEmpty())) return SceneTraveler::TravelResult::InterruptError;
     if (spatial->getWorldBound().PointInside(m_targetWorldPos) == false) return SceneTraveler::TravelResult::TestFail;
 
-    PortalZoneNodePtr node = std::dynamic_pointer_cast<PortalZoneNode, Spatial>(spatial);
+    std::shared_ptr<PortalZoneNode> node = std::dynamic_pointer_cast<PortalZoneNode, Spatial>(spatial);
     if (node)
     {
         m_containingPortalZone = node;

@@ -64,6 +64,12 @@
     <Filter Include="Communication\Queries">
       <UniqueIdentifier>{1afd4c29-661a-4759-b666-b605a72f0cac}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Assemblers\CameraFrustum">
+      <UniqueIdentifier>{205b86f6-8526-4c0f-a320-0769f904e6fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assemblers\PortalSystem">
+      <UniqueIdentifier>{734167ef-e9b7-40cb-822b-8c42270145cb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.h">
@@ -231,12 +237,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphOwnership.h">
       <Filter>Repository</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\CameraAssembler.h">
-      <Filter>Assemblers</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\FrustumAssembler.h">
-      <Filter>Assemblers</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightAssemblers.h">
       <Filter>Assemblers</Filter>
     </ClInclude>
@@ -266,6 +266,24 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PawnAssembler.h">
       <Filter>Assemblers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\FrustumAssembler.h">
+      <Filter>Assemblers\CameraFrustum</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\CameraAssembler.h">
+      <Filter>Assemblers\CameraFrustum</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalManagementNodeAssembler.h">
+      <Filter>Assemblers\PortalSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\OutRegionNodeAssembler.h">
+      <Filter>Assemblers\PortalSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalZoneNodeAssembler.h">
+      <Filter>Assemblers\PortalSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalAssembler.h">
+      <Filter>Assemblers\PortalSystem</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -395,12 +413,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphOwnership.cpp">
       <Filter>Repository</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\CameraAssembler.cpp">
-      <Filter>Assemblers</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\FrustumAssembler.cpp">
-      <Filter>Assemblers</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightAssemblers.cpp">
       <Filter>Assemblers</Filter>
     </ClCompile>
@@ -424,6 +436,24 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PawnAssembler.cpp">
       <Filter>Assemblers</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\CameraAssembler.cpp">
+      <Filter>Assemblers\CameraFrustum</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\FrustumAssembler.cpp">
+      <Filter>Assemblers\CameraFrustum</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalManagementNodeAssembler.cpp">
+      <Filter>Assemblers\PortalSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\OutRegionNodeAssembler.cpp">
+      <Filter>Assemblers\PortalSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalZoneNodeAssembler.cpp">
+      <Filter>Assemblers\PortalSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalAssembler.cpp">
+      <Filter>Assemblers\PortalSystem</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

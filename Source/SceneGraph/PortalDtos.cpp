@@ -13,7 +13,7 @@ static std::string TOKEN_IS_PORTAL_OPEN = "IsPortalOpen";
 static std::string TOKEN_OUTSIDE_NODE_ID = "OutsideNodeID";
 static std::string TOKEN_OWNER_MANAGEMENT_ID = "OwnerManagementID";
 
-PortalZoneNodeDto::PortalZoneNodeDto() : LazyNodeDto()
+/*PortalZoneNodeDto::PortalZoneNodeDto() : LazyNodeDto()
 {
     m_factoryDesc = FactoryDesc(PortalZoneNode::TYPE_RTTI.getName());
 }
@@ -34,9 +34,9 @@ GenericDto PortalZoneNodeDto::toGenericDto() const
     GenericDto dto = LazyNodeDto::toGenericDto();
     if (!m_portalParentId.empty()) dto.addOrUpdate(TOKEN_PORTAL_PARENT_ID, m_portalParentId.tokens());
     return dto;
-}
+}*/
 
-OutRegionNodeDto::OutRegionNodeDto() : LazyNodeDto()
+/*OutRegionNodeDto::OutRegionNodeDto() : LazyNodeDto()
 {
     m_factoryDesc = FactoryDesc(OutRegionNode::TYPE_RTTI.getName());
 }
@@ -57,9 +57,9 @@ GenericDto OutRegionNodeDto::toGenericDto() const
     GenericDto dto = LazyNodeDto::toGenericDto();
     if (!m_ownerManagementId.empty()) dto.addOrUpdate(TOKEN_OWNER_MANAGEMENT_ID, m_ownerManagementId.tokens());
     return dto;
-}
+}*/
 
-PortalDto::PortalDto() : SpatialDto(), m_isOpen(false)
+/*PortalDto::PortalDto() : SpatialDto(), m_isOpen(false)
 {
     m_factoryDesc = FactoryDesc(Portal::TYPE_RTTI.getName());
 }
@@ -82,9 +82,9 @@ GenericDto PortalDto::toGenericDto()
     if (!m_adjacentZoneNodeId.empty()) dto.addOrUpdate(TOKEN_ADJACENT_NODE_ID, m_adjacentZoneNodeId.tokens());
     dto.addOrUpdate(TOKEN_IS_PORTAL_OPEN, m_isOpen);
     return dto;
-}
+}*/
 
-PortalManagementNodeDto::PortalManagementNodeDto() : NodeDto()
+/*PortalManagementNodeDto::PortalManagementNodeDto() : NodeDto()
 {
     m_factoryDesc = FactoryDesc(PortalManagementNode::TYPE_RTTI.getName());
 }
@@ -105,4 +105,4 @@ GenericDto PortalManagementNodeDto::toGenericDto()
     GenericDto dto = NodeDto::toGenericDto();
     if (m_outsideRegionId) dto.addOrUpdate(TOKEN_OUTSIDE_NODE_ID, m_outsideRegionId.value().tokens());
     return dto;
-}
+}*/

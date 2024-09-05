@@ -1,5 +1,5 @@
 ﻿#include "PortalManagementNode.h"
-#include "PortalDtos.h"
+#include "PortalManagementNodeAssembler.h"
 #include "SceneGraphErrors.h"
 #include "PortalZoneNode.h"
 #include "OutRegionNode.h"
@@ -21,28 +21,56 @@ PortalManagementNode::PortalManagementNode(const SpatialId& id) : Node(id)
 {
     m_outsideRegion = nullptr;
     m_factoryDesc = FactoryDesc(TYPE_RTTI.getName());
-    m_attachOutsideRegion = std::make_shared<Frameworks::CommandSubscriber>([=](const Frameworks::ICommandPtr& c) { attachOutsideRegion(c); });
-    Frameworks::CommandBus::subscribe(typeid(AttachManagementOutsideRegion), m_attachOutsideRegion);
+    subscribeOutRegionAttachment();
 }
 
-PortalManagementNode::PortalManagementNode(const SpatialId& id, const Engine::GenericDto& o) : Node(id, o)
+/*PortalManagementNode::PortalManagementNode(const SpatialId& id, const Engine::GenericDto& o) : Node(id, o)
 {
     m_outsideRegion = nullptr;
     PortalManagementNodeDto dto{ o };
     if (dto.outsideRegionId()) m_outsideRegionId = dto.outsideRegionId().value();
-    m_attachOutsideRegion = std::make_shared<Frameworks::CommandSubscriber>([=](const Frameworks::ICommandPtr& c) { attachOutsideRegion(c); });
-    Frameworks::CommandBus::subscribe(typeid(AttachManagementOutsideRegion), m_attachOutsideRegion);
-}
+    subscribeOutRegionAttachment();
+}*/
 
 PortalManagementNode::~PortalManagementNode()
 {
-    Frameworks::CommandBus::unsubscribe(typeid(AttachManagementOutsideRegion), m_attachOutsideRegion);
-    m_attachOutsideRegion = nullptr;
+    unsubscribeOutRegionAttachment();
 
     m_outsideRegion = nullptr;
 }
 
-std::shared_ptr<PortalManagementNode> PortalManagementNode::create(const SpatialId& id)
+std::shared_ptr<SpatialAssembler> PortalManagementNode::assembler() const
+{
+    return std::make_shared<PortalManagementNodeAssembler>(m_id);
+}
+
+void PortalManagementNode::assemble(const std::shared_ptr<SpatialAssembler>& assembler)
+{
+    assert(assembler);
+    Node::assemble(assembler);
+    if (auto portal_assembler = std::dynamic_pointer_cast<PortalManagementNodeAssembler>(assembler))
+    {
+        if (!m_outsideRegionId.empty()) portal_assembler->outsideRegionId(m_outsideRegionId);
+    }
+}
+
+std::shared_ptr<SpatialDisassembler> PortalManagementNode::disassembler() const
+{
+    return std::make_shared<PortalManagementNodeDisassembler>();
+}
+
+void PortalManagementNode::disassemble(const std::shared_ptr<SpatialDisassembler>& disassembler)
+{
+    assert(disassembler);
+    Node::disassemble(disassembler);
+    if (auto portal_disassembler = std::dynamic_pointer_cast<PortalManagementNodeDisassembler>(disassembler))
+    {
+        if (portal_disassembler->outsideRegionId()) m_outsideRegionId = portal_disassembler->outsideRegionId().value();
+        subscribeOutRegionAttachment();
+    }
+}
+
+/*std::shared_ptr<PortalManagementNode> PortalManagementNode::create(const SpatialId& id)
 {
     return std::make_shared<PortalManagementNode>(id);
 }
@@ -57,7 +85,7 @@ GenericDto PortalManagementNode::serializeDto()
     PortalManagementNodeDto dto(serializeNodeDto());
     if (!m_outsideRegionId.empty()) dto.outsideRegionId(m_outsideRegionId);
     return dto.toGenericDto();
-}
+}*/
 
 void PortalManagementNode::attachOutsideRegion(const std::shared_ptr<OutRegionNode>& node)
 {
@@ -76,7 +104,7 @@ error PortalManagementNode::onCullingVisible(Culler* culler, bool noCull)
     if (!noCull)
     {
         culler->Insert(thisSpatial());
-        PortalZoneNodePtr startZone;
+        std::shared_ptr<PortalZoneNode> startZone;
         Vector3 camPos = culler->GetCamera()->location();
         if ((m_cachedStartZone.lock()) && (m_cachedStartZone.lock()->getWorldBound().PointInside(camPos)))
         {
@@ -147,4 +175,16 @@ std::shared_ptr<OutRegionNode> PortalManagementNode::outsideRegion()
         if (outside_region) attachOutsideRegion(outside_region);
     }
     return m_outsideRegion;
+}
+
+void PortalManagementNode::subscribeOutRegionAttachment()
+{
+    m_attachOutsideRegion = std::make_shared<Frameworks::CommandSubscriber>([=](const Frameworks::ICommandPtr& c) { attachOutsideRegion(c); });
+    Frameworks::CommandBus::subscribe(typeid(AttachManagementOutsideRegion), m_attachOutsideRegion);
+}
+
+void PortalManagementNode::unsubscribeOutRegionAttachment()
+{
+    Frameworks::CommandBus::unsubscribe(typeid(AttachManagementOutsideRegion), m_attachOutsideRegion);
+    m_attachOutsideRegion = nullptr;
 }

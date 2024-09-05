@@ -25,17 +25,16 @@ namespace Enigma::SceneGraph
         DECLARE_EN_RTTI;
     public:
         PortalManagementNode(const SpatialId& id);
-        PortalManagementNode(const SpatialId& id, const Engine::GenericDto& o);
         PortalManagementNode(const PortalManagementNode&) = delete;
         PortalManagementNode(PortalManagementNode&&) = delete;
         PortalManagementNode& operator=(const PortalManagementNode&) = delete;
         PortalManagementNode& operator=(PortalManagementNode&&) = delete;
         virtual ~PortalManagementNode() override;
 
-        static std::shared_ptr<PortalManagementNode> create(const SpatialId& id);
-        static std::shared_ptr<PortalManagementNode> constitute(const SpatialId& id, const Engine::GenericDto& dto);
-
-        virtual Engine::GenericDto serializeDto() override;
+        virtual std::shared_ptr<SpatialAssembler> assembler() const override;
+        virtual void assemble(const std::shared_ptr<SpatialAssembler>& assembler) override;
+        virtual std::shared_ptr<SpatialDisassembler> disassembler() const override;
+        virtual void disassemble(const std::shared_ptr<SpatialDisassembler>& disassembler) override;
 
         void attachOutsideRegion(const std::shared_ptr<OutRegionNode>& node);
 
@@ -46,6 +45,8 @@ namespace Enigma::SceneGraph
     protected:
         void attachOutsideRegion(const Frameworks::ICommandPtr& c);
         std::shared_ptr<OutRegionNode> outsideRegion();
+        void subscribeOutRegionAttachment();
+        void unsubscribeOutRegionAttachment();
 
     protected:
         SpatialId m_outsideRegionId;

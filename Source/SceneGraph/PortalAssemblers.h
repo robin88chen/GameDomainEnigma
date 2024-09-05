@@ -17,7 +17,7 @@ namespace Enigma::SceneGraph
     class Portal;
     class PortalZoneNode;
 
-    class PortalAssembler
+    /*class PortalAssembler
     {
     public:
         PortalAssembler(const SpatialId& id);
@@ -39,9 +39,9 @@ namespace Enigma::SceneGraph
         SpatialId m_id;
         SpatialAssembler m_spatialAssembler;
         PortalDto m_dto;
-    };
+    };*/
 
-    class PortalZoneNodeAssembler
+    /*class PortalZoneNodeAssembler
     {
     public:
         PortalZoneNodeAssembler(const SpatialId& id);
@@ -65,9 +65,9 @@ namespace Enigma::SceneGraph
         SpatialId m_id;
         LazyNodeAssembler m_lazyNodeAssembler;
         PortalZoneNodeDto m_dto;
-    };
+    };*/
 
-    class OutRegionNodeAssembler
+    /*class OutRegionNodeAssembler
     {
     public:
         OutRegionNodeAssembler(const SpatialId& id);
@@ -91,9 +91,9 @@ namespace Enigma::SceneGraph
         SpatialId m_id;
         LazyNodeAssembler m_lazyNodeAssembler;
         OutRegionNodeDto m_dto;
-    };
+    };*/
 
-    class PortalManagementNodeAssembler
+    /*class PortalManagementNodeAssembler
     {
     public:
         PortalManagementNodeAssembler(const SpatialId& id);
@@ -114,7 +114,7 @@ namespace Enigma::SceneGraph
         SpatialId m_id;
         NodeAssembler m_nodeAssembler;
         PortalManagementNodeDto m_dto;
-    };
+    };*/
 }
 
 #endif // PORTALASSEMBLERS_H

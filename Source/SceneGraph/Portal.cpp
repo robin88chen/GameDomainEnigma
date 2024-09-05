@@ -1,5 +1,5 @@
 ﻿#include "Portal.h"
-#include "PortalDtos.h"
+#include "PortalAssembler.h"
 #include "PortalZoneNode.h"
 #include "SceneGraphErrors.h"
 #include "Culler.h"
@@ -29,14 +29,14 @@ Portal::Portal(const SpatialId& id) : Spatial(id)
     m_zoneLoadStatus = ZoneLoadStatus::None;
 }
 
-Portal::Portal(const SpatialId& id, const Engine::GenericDto& o) : Spatial(id, o)
+/*Portal::Portal(const SpatialId& id, const Engine::GenericDto& o) : Spatial(id, o)
 {
     m_adjacentPortalZone = nullptr;
     PortalDto dto{ o };
     m_isOpen = dto.isOpen();
     m_adjacentZoneId = dto.adjacentZoneNodeId();
     m_zoneLoadStatus = ZoneLoadStatus::None;
-}
+}*/
 
 Portal::~Portal()
 {
@@ -48,7 +48,39 @@ std::shared_ptr<Portal> Portal::queryPortal(const SpatialId& id)
     return std::dynamic_pointer_cast<Portal, Spatial>(std::make_shared<QuerySpatial>(id)->dispatch());
 }
 
-std::shared_ptr<Portal> Portal::create(const SpatialId& id)
+std::shared_ptr<SpatialAssembler> Portal::assembler() const
+{
+    return std::make_shared<PortalAssembler>(m_id);
+}
+
+void Portal::assemble(const std::shared_ptr<SpatialAssembler>& assembler)
+{
+    assert(assembler);
+    Spatial::assemble(assembler);
+    if (auto portal_assembler = std::dynamic_pointer_cast<PortalAssembler>(assembler))
+    {
+        if (!m_adjacentZoneId.empty()) portal_assembler->adjacentNodeId(m_adjacentZoneId);
+        portal_assembler->isOpen(m_isOpen);
+    }
+}
+
+std::shared_ptr<SpatialDisassembler> Portal::disassembler() const
+{
+    return std::make_shared<PortalDisassembler>();
+}
+
+void Portal::disassemble(const std::shared_ptr<SpatialDisassembler>& disassembler)
+{
+    assert(disassembler);
+    Spatial::disassemble(disassembler);
+    if (auto portal_disassembler = std::dynamic_pointer_cast<PortalDisassembler>(disassembler))
+    {
+        if (portal_disassembler->adjacentNodeId()) m_adjacentZoneId = portal_disassembler->adjacentNodeId().value();
+        m_isOpen = portal_disassembler->isOpen();
+    }
+}
+
+/*std::shared_ptr<Portal> Portal::create(const SpatialId& id)
 {
     return std::make_shared<Portal>(id);
 }
@@ -64,7 +96,7 @@ Enigma::Engine::GenericDto Portal::serializeDto()
     dto.isOpen(m_isOpen);
     dto.adjacentZoneNodeId(m_adjacentZoneId);
     return dto.toGenericDto();
-}
+}*/
 
 void Portal::adjacentZone(const std::shared_ptr<PortalZoneNode>& zone)
 {

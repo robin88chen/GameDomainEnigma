@@ -13,7 +13,7 @@
 
 namespace Enigma::SceneGraph
 {
-    class PortalZoneNodeDto : public LazyNodeDto
+    /*class PortalZoneNodeDto : public LazyNodeDto
     {
     public:
         PortalZoneNodeDto();
@@ -27,9 +27,9 @@ namespace Enigma::SceneGraph
 
     protected:
         SpatialId m_portalParentId;
-    };
+    };*/
 
-    class OutRegionNodeDto : public LazyNodeDto
+    /*class OutRegionNodeDto : public LazyNodeDto
     {
     public:
         OutRegionNodeDto();
@@ -43,9 +43,9 @@ namespace Enigma::SceneGraph
 
     protected:
         SpatialId m_ownerManagementId;
-    };
+    };*/
 
-    class PortalDto : public SpatialDto
+    /*class PortalDto : public SpatialDto
     {
     public:
         PortalDto();
@@ -63,9 +63,9 @@ namespace Enigma::SceneGraph
     protected:
         SpatialId m_adjacentZoneNodeId;
         bool m_isOpen;
-    };
+    };*/
 
-    class PortalManagementNodeDto : public NodeDto
+    /*class PortalManagementNodeDto : public NodeDto
     {
     public:
         PortalManagementNodeDto();
@@ -79,7 +79,7 @@ namespace Enigma::SceneGraph
 
     protected:
         std::optional<SpatialId> m_outsideRegionId;
-    };
+    };*/
 }
 
 #endif // _PORTAL_DTOS_H

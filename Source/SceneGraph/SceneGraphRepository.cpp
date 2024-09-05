@@ -20,9 +20,9 @@
 #include "CameraFrustumCommands.h"
 #include "CameraFrustumEvents.h"
 #include "SceneGraphQueries.h"
-#include "SceneGraphDtos.h"
 #include "CameraAssembler.h"
 #include "SpatialAssembler.h"
+#include "PawnAssembler.h"
 #include "LazyNodeCreationMethods.h"
 #include <cassert>
 
@@ -283,8 +283,9 @@ std::optional<Enigma::Primitives::PrimitiveId> SceneGraphRepository::queryPawnPr
     assert(dto.has_value());
     if (Rtti::isDerivedFrom(dto->getRtti().GetRttiName(), Pawn::TYPE_RTTI.getName()))
     {
-        PawnDto pawn_dto = PawnDto(dto.value());
-        return pawn_dto.primitiveId();
+        std::shared_ptr<PawnDisassembler> pawn_disassembler = std::dynamic_pointer_cast<PawnDisassembler>(SpatialDisassembler::disassembledDisassembler(dto.value()));
+        if (!pawn_disassembler) return std::nullopt;
+        return pawn_disassembler->primitiveId();
     }
     return std::nullopt;
 }

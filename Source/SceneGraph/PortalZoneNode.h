@@ -20,19 +20,19 @@ namespace Enigma::SceneGraph
         DECLARE_EN_RTTI;
     public:
         PortalZoneNode(const SpatialId& id);
-        PortalZoneNode(const SpatialId& id, const Engine::GenericDto& o);
         PortalZoneNode(const PortalZoneNode&) = delete;
         PortalZoneNode(PortalZoneNode&&) = delete;
         PortalZoneNode& operator=(const PortalZoneNode&) = delete;
         PortalZoneNode& operator=(PortalZoneNode&&) = delete;
         virtual ~PortalZoneNode() override;
 
-        static std::shared_ptr<PortalZoneNode> create(const SpatialId& id);
-        static std::shared_ptr<PortalZoneNode> constitute(const SpatialId& id, const Engine::GenericDto& dto);
-
-        virtual Engine::GenericDto serializeDto() override;
-        virtual Engine::GenericDto serializeLaziedContent() override;
-        virtual Engine::GenericDto serializeAsLaziness() override;
+        virtual std::shared_ptr<SpatialAssembler> assembler() const override;
+        virtual void assemble(const std::shared_ptr<SpatialAssembler>& assembler) override;
+        virtual std::shared_ptr<SpatialDisassembler> disassembler() const override;
+        virtual void disassemble(const std::shared_ptr<SpatialDisassembler>& disassembler) override;
+        virtual std::shared_ptr<HydratedLazyNodeAssembler> assemblerOfLaziedContent() const override;
+        virtual std::shared_ptr<HydratedLazyNodeDisassembler> disassemblerOfLaziedContent() const override;
+        virtual void assembleLaziedContent(const std::shared_ptr<HydratedLazyNodeAssembler>& assembler) override;
 
         virtual error onCullingVisible(Culler* culler, bool noCull) override;
 
@@ -43,7 +43,6 @@ namespace Enigma::SceneGraph
         std::optional<SpatialId> m_portalParentId; // either portal or portal management node
         bool m_hasTraversed;
     };
-    using PortalZoneNodePtr = std::shared_ptr<PortalZoneNode>;
 }
 
 #endif // _PORTAL_ZONE_NODE_H

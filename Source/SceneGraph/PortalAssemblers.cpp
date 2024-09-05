@@ -6,7 +6,7 @@
 
 using namespace Enigma::SceneGraph;
 
-PortalAssembler::PortalAssembler(const SpatialId& id) : m_spatialAssembler(id)
+/*PortalAssembler::PortalAssembler(const SpatialId& id) : m_spatialAssembler(id)
 {
     m_id = id;
     m_dto.id(id);
@@ -65,9 +65,9 @@ Enigma::Engine::GenericDto PortalAssembler::toGenericDto() const
 std::shared_ptr<Portal> PortalAssembler::constitute()
 {
     return std::dynamic_pointer_cast<Portal>(std::make_shared<RequestSpatialConstitution>(m_id, toGenericDto())->dispatch());
-}
+}*/
 
-PortalZoneNodeAssembler::PortalZoneNodeAssembler(const SpatialId& id) : m_lazyNodeAssembler(id)
+/*PortalZoneNodeAssembler::PortalZoneNodeAssembler(const SpatialId& id) : m_lazyNodeAssembler(id)
 {
     m_id = id;
     m_dto.id(id);
@@ -138,9 +138,9 @@ Enigma::Engine::GenericDto PortalZoneNodeAssembler::toDeHydratedGenericDto() con
 std::shared_ptr<PortalZoneNode> PortalZoneNodeAssembler::constituteDeHydrated()
 {
     return std::dynamic_pointer_cast<PortalZoneNode>(std::make_shared<RequestSpatialConstitution>(m_id, toDeHydratedGenericDto())->dispatch());
-}
+}*/
 
-OutRegionNodeAssembler::OutRegionNodeAssembler(const SpatialId& id) : m_lazyNodeAssembler(id)
+/*OutRegionNodeAssembler::OutRegionNodeAssembler(const SpatialId& id) : m_lazyNodeAssembler(id)
 {
     m_id = id;
     m_dto.id(id);
@@ -211,9 +211,9 @@ Enigma::Engine::GenericDto OutRegionNodeAssembler::toDeHydratedGenericDto() cons
 std::shared_ptr<OutRegionNode> OutRegionNodeAssembler::constituteDeHydrated()
 {
     return std::dynamic_pointer_cast<OutRegionNode>(std::make_shared<RequestSpatialConstitution>(m_id, toDeHydratedGenericDto())->dispatch());
-}
+}*/
 
-PortalManagementNodeAssembler::PortalManagementNodeAssembler(const SpatialId& id) : m_nodeAssembler(id)
+/*PortalManagementNodeAssembler::PortalManagementNodeAssembler(const SpatialId& id) : m_nodeAssembler(id)
 {
     m_id = id;
     m_dto.id(id);
@@ -260,4 +260,4 @@ PortalManagementNodeDto PortalManagementNodeAssembler::toPortalManagementNodeDto
 Enigma::Engine::GenericDto PortalManagementNodeAssembler::toGenericDto() const
 {
     return toPortalManagementNodeDto().toGenericDto();
-}
+}*/

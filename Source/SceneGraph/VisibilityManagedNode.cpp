@@ -26,6 +26,11 @@ VisibilityManagedNode::~VisibilityManagedNode()
 
 }
 
+std::shared_ptr<VisibilityManagedNode> VisibilityManagedNode::create(const SpatialId& id)
+{
+    return std::make_shared<VisibilityManagedNode>(id);
+}
+
 std::shared_ptr<SpatialAssembler> VisibilityManagedNode::assembler() const
 {
     return std::make_shared<DehydratedVisibilityManagedNodeAssembler>(m_id);

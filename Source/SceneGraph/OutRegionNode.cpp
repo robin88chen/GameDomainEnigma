@@ -23,6 +23,11 @@ OutRegionNode::~OutRegionNode()
 {
 }
 
+std::shared_ptr<OutRegionNode> OutRegionNode::create(const SpatialId& id)
+{
+    return std::make_shared<OutRegionNode>(id);
+}
+
 std::shared_ptr<SpatialAssembler> OutRegionNode::assembler() const
 {
     return std::make_shared<DehydratedOutRegionNodeAssembler>(m_id);

@@ -66,6 +66,11 @@ std::shared_ptr<LazyNode> LazyNode::constitute(const SpatialId& id, const Engine
     return ErrorCode::ok;
 }*/
 
+std::shared_ptr<LazyNode> LazyNode::create(const SpatialId& id)
+{
+    return std::make_shared<LazyNode>(id);
+}
+
 std::shared_ptr<SpatialAssembler> LazyNode::assembler() const
 {
     return std::make_shared<DehydratedLazyNodeAssembler>(m_id);

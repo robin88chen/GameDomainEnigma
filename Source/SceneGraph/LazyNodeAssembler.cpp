@@ -26,3 +26,12 @@ Enigma::Engine::GenericDto DehydratedLazyNodeAssembler::assemble() const
     const_cast<DehydratedLazyNodeAssembler*>(this)->consistChildrenLocationBounding(); //< still need update model bound
     return SpatialAssembler::assemble();
 }
+
+std::error_code LazyNodeDisassembler::hydrate(const std::shared_ptr<LazyNode>& node, const Engine::GenericDto& dto)
+{
+    assert(node);
+    std::shared_ptr<HydratedLazyNodeDisassembler> disassembler = node->disassemblerOfLaziedContent();
+    assert(disassembler);
+    disassembler->disassemble(dto);
+    return node->hydrate(disassembler);
+}

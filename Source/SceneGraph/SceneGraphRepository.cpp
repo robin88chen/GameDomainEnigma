@@ -23,7 +23,6 @@
 #include "CameraAssembler.h"
 #include "SpatialAssembler.h"
 #include "PawnAssembler.h"
-#include "LazyNodeCreationMethods.h"
 #include <cassert>
 
 #include "LazyNodeAssembler.h"
@@ -166,16 +165,16 @@ GraphicCoordSys SceneGraphRepository::getCoordinateSystem()
     return m_handSystem;
 }
 
-void SceneGraphRepository::registerSpatialFactory(const std::string& rtti, const SpatialCreator& creator, const SpatialConstitutor& constitutor)
+void SceneGraphRepository::registerSpatialFactory(const std::string& rtti, const SpatialCreator& creator)
 {
     assert(m_factory);
-    m_factory->registerSpatialFactory(rtti, creator, constitutor);
+    m_factory->registerSpatialFactory(rtti, creator);
 }
 
-void SceneGraphRepository::registerSpatialLightFactory(const std::string& rtti, const LightCreator& creator, const LightConstitutor& constitutor)
+void SceneGraphRepository::registerSpatialLightFactory(const std::string& rtti, const LightCreator& creator)
 {
     assert(m_factory);
-    m_factory->registerLightFactory(rtti, creator, constitutor);
+    m_factory->registerLightFactory(rtti, creator);
 }
 
 bool SceneGraphRepository::hasCamera(const SpatialId& id)
@@ -603,7 +602,7 @@ void SceneGraphRepository::hydrateLazyNode(const SpatialId& id)
         EventPublisher::enqueue(std::make_shared<LazyNodeHydrationFailed>(id, ErrorCode::laziedContentNotFound));
         return;
     }
-    if (error er = LazyNodeCreationMethod::hydrate(lazy_node, content.value()))
+    if (error er = LazyNodeDisassembler::hydrate(lazy_node, content.value()))
     {
         EventPublisher::enqueue(std::make_shared<LazyNodeHydrationFailed>(id, er));
     }

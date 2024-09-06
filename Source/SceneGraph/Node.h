@@ -34,6 +34,8 @@ namespace Enigma::SceneGraph
         Node& operator=(const Node&) = delete;
         Node& operator=(Node&&) = delete;
 
+        static std::shared_ptr<Node> create(const SpatialId& id);
+
         virtual std::shared_ptr<SpatialAssembler> assembler() const override;
         virtual void assemble(const std::shared_ptr<SpatialAssembler>& assembler) override;
         virtual std::shared_ptr<SpatialDisassembler> disassembler() const override;

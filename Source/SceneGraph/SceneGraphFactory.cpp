@@ -12,6 +12,7 @@
 #include "Platforms/PlatformLayer.h"
 #include "SceneGraphOwnership.h"
 #include "CameraAssembler.h"
+#include "SpatialAssembler.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Frameworks;
@@ -84,14 +85,15 @@ std::shared_ptr<Spatial> SceneGraphFactory::createSpatial(const SpatialId& id)
 
 std::shared_ptr <Spatial> SceneGraphFactory::constituteSpatial(const SpatialId& id, const Engine::GenericDto& dto, bool is_persisted)
 {
-    auto constitutor = m_constitutors.find(dto.getRtti().GetRttiName());
-    if (constitutor == m_constitutors.end())
+    auto creator = m_creators.find(id.rtti().getName());
+    if (creator == m_creators.end())
     {
-        Platforms::Debug::Printf("Can't find constitutor of %s\n", dto.getRtti().GetRttiName().c_str());
+        Platforms::Debug::Printf("Can't find creator of %s\n", id.rtti().getName().c_str());
         EventPublisher::enqueue(std::make_shared<ConstituteSpatialFailed>(id, ErrorCode::spatialFactoryNotFound));
         return nullptr;
     }
-    auto spatial = constitutor->second(id, dto);
+    auto spatial = creator->second(id);
+    SpatialDisassembler::disassemble(spatial, dto);
     reattachOwnership(spatial);
     EventPublisher::enqueue(std::make_shared<SpatialConstituted>(id, spatial, is_persisted));
     return spatial;
@@ -116,20 +118,21 @@ std::shared_ptr<Light> SceneGraphFactory::createLight(const SpatialId& id, const
 std::shared_ptr<Light> SceneGraphFactory::constituteLight(const SpatialId& id, const Engine::GenericDto& dto, bool is_persisted)
 {
     assert(id.rtti().isDerived(Light::TYPE_RTTI));
-    auto constitutor = m_lightConstitutors.find(dto.getRtti().GetRttiName());
-    if (constitutor == m_lightConstitutors.end())
+    auto creator = m_lightCreators.find(id.rtti().getName());
+    if (creator == m_lightCreators.end())
     {
-        Platforms::Debug::Printf("Can't find constitutor of %s\n", dto.getRtti().GetRttiName().c_str());
+        Platforms::Debug::Printf("Can't find creator of %s\n", id.rtti().getName().c_str());
         EventPublisher::enqueue(std::make_shared<ConstituteSpatialFailed>(id, ErrorCode::spatialFactoryNotFound));
         return nullptr;
     }
-    auto light = constitutor->second(id, dto);
+    auto light = creator->second(id, LightInfo());
+    SpatialDisassembler::disassemble(light, dto);
     reattachOwnership(light);
     EventPublisher::enqueue(std::make_shared<SpatialConstituted>(id, light, is_persisted));
     return light;
 }
 
-void SceneGraphFactory::registerSpatialFactory(const std::string& rtti, const SpatialCreator& creator, const SpatialConstitutor& constitutor)
+void SceneGraphFactory::registerSpatialFactory(const std::string& rtti, const SpatialCreator& creator)
 {
     if (m_creators.find(rtti) != m_creators.end())
     {
@@ -137,7 +140,6 @@ void SceneGraphFactory::registerSpatialFactory(const std::string& rtti, const Sp
         return;
     }
     m_creators[rtti] = creator;
-    m_constitutors[rtti] = constitutor;
 }
 
 void SceneGraphFactory::unregisterSpatialFactory(const std::string& rtti)
@@ -148,10 +150,9 @@ void SceneGraphFactory::unregisterSpatialFactory(const std::string& rtti)
         return;
     }
     m_creators.erase(rtti);
-    m_constitutors.erase(rtti);
 }
 
-void SceneGraphFactory::registerLightFactory(const std::string& rtti, const LightCreator& creator, const LightConstitutor& constitutor)
+void SceneGraphFactory::registerLightFactory(const std::string& rtti, const LightCreator& creator)
 {
     if (m_lightCreators.find(rtti) != m_lightCreators.end())
     {
@@ -159,7 +160,6 @@ void SceneGraphFactory::registerLightFactory(const std::string& rtti, const Ligh
         return;
     }
     m_lightCreators[rtti] = creator;
-    m_lightConstitutors[rtti] = constitutor;
 }
 
 void SceneGraphFactory::unregisterLightFactory(const std::string& rtti)
@@ -170,7 +170,6 @@ void SceneGraphFactory::unregisterLightFactory(const std::string& rtti)
         return;
     }
     m_lightCreators.erase(rtti);
-    m_lightConstitutors.erase(rtti);
 }
 
 void SceneGraphFactory::registerSpatialFactory(const Frameworks::ICommandPtr& c)
@@ -178,7 +177,7 @@ void SceneGraphFactory::registerSpatialFactory(const Frameworks::ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<RegisterSpatialFactory>(c);
     if (!cmd) return;
-    registerSpatialFactory(cmd->rttiName(), cmd->creator(), cmd->constitutor());
+    registerSpatialFactory(cmd->rttiName(), cmd->creator());
 }
 
 void SceneGraphFactory::unregisterSpatialFactory(const Frameworks::ICommandPtr& c)
@@ -194,7 +193,7 @@ void SceneGraphFactory::registerLightFactory(const Frameworks::ICommandPtr& c)
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<RegisterSpatialLightFactory>(c);
     if (!cmd) return;
-    registerLightFactory(cmd->rttiName(), cmd->creator(), cmd->constitutor());
+    registerLightFactory(cmd->rttiName(), cmd->creator());
 }
 
 void SceneGraphFactory::unregisterLightFactory(const Frameworks::ICommandPtr& c)

@@ -25,6 +25,8 @@ namespace Enigma::SceneGraph
         VisibilityManagedNode& operator=(const VisibilityManagedNode&) = delete;
         VisibilityManagedNode& operator=(VisibilityManagedNode&&) = delete;
 
+        static std::shared_ptr<VisibilityManagedNode> create(const SpatialId& id);
+
         virtual std::shared_ptr<SpatialAssembler> assembler() const override;
         virtual std::shared_ptr<SpatialDisassembler> disassembler() const override;
         virtual std::shared_ptr<HydratedLazyNodeAssembler> assemblerOfLaziedContent() const override;

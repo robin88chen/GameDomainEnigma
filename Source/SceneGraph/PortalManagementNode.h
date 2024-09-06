@@ -31,6 +31,8 @@ namespace Enigma::SceneGraph
         PortalManagementNode& operator=(PortalManagementNode&&) = delete;
         virtual ~PortalManagementNode() override;
 
+        static std::shared_ptr<PortalManagementNode> create(const SpatialId& id);
+
         virtual std::shared_ptr<SpatialAssembler> assembler() const override;
         virtual void assemble(const std::shared_ptr<SpatialAssembler>& assembler) override;
         virtual std::shared_ptr<SpatialDisassembler> disassembler() const override;

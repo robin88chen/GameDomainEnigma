@@ -28,6 +28,8 @@ namespace Enigma::SceneGraph
         LazyNode& operator=(const LazyNode&) = delete;
         LazyNode& operator=(LazyNode&&) = delete;
 
+        static std::shared_ptr<LazyNode> create(const SpatialId& id);
+
         //virtual std::error_code hydrate(const Engine::GenericDto& dto);
 
         virtual std::shared_ptr<SpatialAssembler> assembler() const override;

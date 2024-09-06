@@ -30,6 +30,11 @@ Pawn::~Pawn()
     m_primitive = nullptr;
 }
 
+std::shared_ptr<Pawn> Pawn::create(const SpatialId& id)
+{
+    return std::make_shared<Pawn>(id);
+}
+
 std::shared_ptr<SpatialAssembler> Pawn::assembler() const
 {
     return std::make_shared<PawnAssembler>(m_id);

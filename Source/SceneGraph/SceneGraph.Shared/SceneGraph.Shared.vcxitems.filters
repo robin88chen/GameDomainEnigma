@@ -46,9 +46,6 @@
     <Filter Include="Assemblers">
       <UniqueIdentifier>{7ddc8bf7-5b8c-4234-b699-1a667a0172b1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="CreationMethods">
-      <UniqueIdentifier>{95586347-4e1d-420b-a0f3-0af246267811}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Spatial\Camera and Frustum">
       <UniqueIdentifier>{e61c19a1-1f54-412e-a197-5a674eb21f28}</UniqueIdentifier>
     </Filter>
@@ -69,6 +66,18 @@
     </Filter>
     <Filter Include="Assemblers\PortalSystem">
       <UniqueIdentifier>{734167ef-e9b7-40cb-822b-8c42270145cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assemblers\Spatial">
+      <UniqueIdentifier>{ca3539b6-e5f9-471b-8fba-5b58e1f6b65e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assemblers\Light">
+      <UniqueIdentifier>{991e7565-d819-4416-9cc6-f8a2cd0b9188}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assemblers\Visibility">
+      <UniqueIdentifier>{a5486e7a-7f72-4a17-8233-cee543eb7ddc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assemblers\LazyNode">
+      <UniqueIdentifier>{bc9b4c89-c445-4ebd-970b-0b780ab774ba}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -237,36 +246,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphOwnership.h">
       <Filter>Repository</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightAssemblers.h">
-      <Filter>Assemblers</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialAssembler.h">
-      <Filter>Assemblers</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\NodeAssembler.h">
-      <Filter>Assemblers</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightCreationMethods.h">
-      <Filter>CreationMethods</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphCreationMethods.h">
-      <Filter>CreationMethods</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\NodeCreationMethods.h">
-      <Filter>CreationMethods</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\LazyNodeAssembler.h">
-      <Filter>Assemblers</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\LazyNodeCreationMethods.h">
-      <Filter>CreationMethods</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\VisibilityManagedNodeAssembler.h">
-      <Filter>Assemblers</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\PawnAssembler.h">
-      <Filter>Assemblers</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\FrustumAssembler.h">
       <Filter>Assemblers\CameraFrustum</Filter>
     </ClInclude>
@@ -284,6 +263,24 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalAssembler.h">
       <Filter>Assemblers\PortalSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\NodeAssembler.h">
+      <Filter>Assemblers\Spatial</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PawnAssembler.h">
+      <Filter>Assemblers\Spatial</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialAssembler.h">
+      <Filter>Assemblers\Spatial</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightAssemblers.h">
+      <Filter>Assemblers\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\VisibilityManagedNodeAssembler.h">
+      <Filter>Assemblers\Visibility</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LazyNodeAssembler.h">
+      <Filter>Assemblers\LazyNode</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -413,30 +410,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphOwnership.cpp">
       <Filter>Repository</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightAssemblers.cpp">
-      <Filter>Assemblers</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialAssembler.cpp">
-      <Filter>Assemblers</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\NodeAssembler.cpp">
-      <Filter>Assemblers</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightCreationMethods.cpp">
-      <Filter>CreationMethods</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\NodeCreationMethods.cpp">
-      <Filter>CreationMethods</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\LazyNodeAssembler.cpp">
-      <Filter>Assemblers</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\LazyNodeCreationMethods.cpp">
-      <Filter>CreationMethods</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\PawnAssembler.cpp">
-      <Filter>Assemblers</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\CameraAssembler.cpp">
       <Filter>Assemblers\CameraFrustum</Filter>
     </ClCompile>
@@ -454,6 +427,21 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalAssembler.cpp">
       <Filter>Assemblers\PortalSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\NodeAssembler.cpp">
+      <Filter>Assemblers\Spatial</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PawnAssembler.cpp">
+      <Filter>Assemblers\Spatial</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialAssembler.cpp">
+      <Filter>Assemblers\Spatial</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightAssemblers.cpp">
+      <Filter>Assemblers\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LazyNodeAssembler.cpp">
+      <Filter>Assemblers\LazyNode</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

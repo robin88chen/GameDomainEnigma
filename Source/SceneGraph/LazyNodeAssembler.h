@@ -9,9 +9,12 @@
 #define LAZY_NODE_ASSEMBLER_H
 
 #include "NodeAssembler.h"
+#include <system_error>
 
 namespace Enigma::SceneGraph
 {
+    class LazyNode;
+
     class LazyNodeAssembler : public NodeAssembler
     {
     public:
@@ -38,8 +41,10 @@ namespace Enigma::SceneGraph
 
     class LazyNodeDisassembler : public NodeDisassembler
     {
+    public:
+        static std::error_code hydrate(const std::shared_ptr<LazyNode>& node, const Engine::GenericDto& dto);
     protected:
-        LazyNodeDisassembler() : NodeDisassembler() {}
+        LazyNodeDisassembler() = default;
         virtual ~LazyNodeDisassembler() override = default;
     };
 

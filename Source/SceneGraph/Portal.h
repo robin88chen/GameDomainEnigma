@@ -32,6 +32,7 @@ namespace Enigma::SceneGraph
         virtual ~Portal() override;
 
         static std::shared_ptr<Portal> queryPortal(const SpatialId& id);
+        static std::shared_ptr<Portal> create(const SpatialId& id);
 
         virtual std::shared_ptr<SpatialAssembler> assembler() const override;
         virtual void assemble(const std::shared_ptr<SpatialAssembler>& assembler) override;

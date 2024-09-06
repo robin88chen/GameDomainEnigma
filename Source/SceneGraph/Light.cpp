@@ -26,6 +26,11 @@ Light::~Light()
     Frameworks::EventPublisher::enqueue(std::make_shared<LightInfoDeleted>(m_id, m_lightInfo.lightType()));
 }
 
+std::shared_ptr<Light> Light::create(const SpatialId& id, const LightInfo& lightInfo)
+{
+    return std::make_shared<Light>(id, lightInfo);
+}
+
 std::shared_ptr<SpatialAssembler> Light::assembler() const
 {
     return std::make_shared<LightAssembler>(m_id, m_lightInfo.lightType());

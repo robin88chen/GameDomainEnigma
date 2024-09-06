@@ -50,6 +50,11 @@ Node::~Node()
     m_childList.clear();
 }
 
+std::shared_ptr<Node> Node::create(const SpatialId& id)
+{
+    return std::make_shared<Node>(id);
+}
+
 std::shared_ptr<SpatialAssembler> Node::assembler() const
 {
     return std::make_shared<NodeAssembler>(m_id);

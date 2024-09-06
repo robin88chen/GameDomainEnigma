@@ -39,6 +39,11 @@ PortalManagementNode::~PortalManagementNode()
     m_outsideRegion = nullptr;
 }
 
+std::shared_ptr<PortalManagementNode> PortalManagementNode::create(const SpatialId& id)
+{
+    return std::make_shared<PortalManagementNode>(id);
+}
+
 std::shared_ptr<SpatialAssembler> PortalManagementNode::assembler() const
 {
     return std::make_shared<PortalManagementNodeAssembler>(m_id);

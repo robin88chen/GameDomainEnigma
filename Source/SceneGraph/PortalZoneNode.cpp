@@ -29,6 +29,11 @@ PortalZoneNode::~PortalZoneNode()
 {
 }
 
+std::shared_ptr<PortalZoneNode> PortalZoneNode::create(const SpatialId& id)
+{
+    return std::make_shared<PortalZoneNode>(id);
+}
+
 std::shared_ptr<SpatialAssembler> PortalZoneNode::assembler() const
 {
     return std::make_shared<DehydratedPortalZoneNodeAssembler>(m_id);

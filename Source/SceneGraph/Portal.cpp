@@ -48,6 +48,11 @@ std::shared_ptr<Portal> Portal::queryPortal(const SpatialId& id)
     return std::dynamic_pointer_cast<Portal, Spatial>(std::make_shared<QuerySpatial>(id)->dispatch());
 }
 
+std::shared_ptr<Portal> Portal::create(const SpatialId& id)
+{
+    return std::make_shared<Portal>(id);
+}
+
 std::shared_ptr<SpatialAssembler> Portal::assembler() const
 {
     return std::make_shared<PortalAssembler>(m_id);

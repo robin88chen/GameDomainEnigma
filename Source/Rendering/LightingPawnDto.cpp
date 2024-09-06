@@ -8,7 +8,7 @@ using namespace Enigma::SceneGraph;
 static std::string TOKEN_HOST_LIGHT_ID = "HostLightId";
 static std::string TOKEN_PRESENT_CAMERA_ID = "PresentCameraId";
 
-LightingPawnDto::LightingPawnDto(const Engine::GenericDto& dto) : PawnDto(dto)
+/*LightingPawnDto::LightingPawnDto(const Engine::GenericDto& dto) : PawnDto(dto)
 {
     m_factoryDesc = Engine::FactoryDesc(LightingPawn::TYPE_RTTI.getName());
     if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_HOST_LIGHT_ID)) hostLightId(v.value());
@@ -42,5 +42,5 @@ Enigma::Engine::GenericDto LightVolumePawnDto::toGenericDto() const
     Engine::GenericDto dto = LightingPawnDto::toGenericDto();
     if (!m_cameraId.tokens().empty()) dto.addOrUpdate(TOKEN_PRESENT_CAMERA_ID, m_cameraId.tokens());
     return dto;
-}
+}*/
 

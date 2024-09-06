@@ -12,7 +12,7 @@
 
 namespace Enigma::Rendering
 {
-    class LightingPawnDto : public SceneGraph::PawnDto
+    /*class LightingPawnDto : public SceneGraph::PawnDto
     {
     public:
         LightingPawnDto(const Engine::GenericDto& dto);
@@ -39,7 +39,7 @@ namespace Enigma::Rendering
 
     private:
         SceneGraph::SpatialId m_cameraId;
-    };
+    };*/
 }
 
 #endif // LIGHTING_PAWN_DTO_H

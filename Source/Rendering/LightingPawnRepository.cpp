@@ -1,7 +1,7 @@
 ﻿#include "LightingPawnRepository.h"
 #include "LightQuadPawn.h"
 #include "LightVolumePawn.h"
-#include "LightingPawnDto.h"
+#include "LightingPawnAssemblers.h"
 #include "Renderables/MeshPrimitive.h"
 #include "SceneGraph/SceneGraphQueries.h"
 #include "SceneGraph/SceneGraphAssemblers.h"
@@ -51,13 +51,11 @@ void LightingPawnRepository::createAmbientLightPawn(const std::shared_ptr<Light>
     auto lit_pawn = std::dynamic_pointer_cast<LightingPawn>(std::make_shared<QuerySpatial>(amb_pawn_id)->dispatch());
     if (!lit_pawn)
     {
-        PawnAssembler pawn_assembler(amb_pawn_id);
-        pawn_assembler.spatial().topLevel(true);
-        pawn_assembler.primitive(amb_mesh_id).factory(FactoryDesc(LightQuadPawn::TYPE_RTTI.getName()));
-        LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_assembler.toPawnDto());
-        lighting_pawn_dto.id(amb_pawn_id);
-        lighting_pawn_dto.hostLightId(lit->id());
-        auto pawn_dto = lighting_pawn_dto.toGenericDto();
+        std::shared_ptr<LightQuadPawnAssembler> assembler = std::make_shared<LightQuadPawnAssembler>(amb_pawn_id);
+        assembler->topLevel(true);
+        assembler->primitiveId(amb_mesh_id);
+        assembler->hostLightId(lit->id());
+        auto pawn_dto = assembler->assemble();
         lit_pawn = std::dynamic_pointer_cast<LightingPawn>(std::make_shared<RequestSpatialConstitution>(amb_pawn_id, pawn_dto)->dispatch());
     }
     if (lit_pawn) tryCompleteLightPawnAttachment(lit, lit_pawn);
@@ -71,13 +69,11 @@ void LightingPawnRepository::createSunLightPawn(const std::shared_ptr<Light>& li
     auto lit_pawn = std::dynamic_pointer_cast<LightingPawn>(std::make_shared<QuerySpatial>(sun_pawn_id)->dispatch());
     if (!lit_pawn)
     {
-        PawnAssembler pawn_assembler(sun_pawn_id);
-        pawn_assembler.spatial().topLevel(true);
-        pawn_assembler.primitive(sun_mesh_id).factory(FactoryDesc(LightQuadPawn::TYPE_RTTI.getName()));
-        LightingPawnDto lighting_pawn_dto = LightingPawnDto(pawn_assembler.toPawnDto());
-        lighting_pawn_dto.id(sun_pawn_id);
-        lighting_pawn_dto.hostLightId(lit->id());
-        auto pawn_dto = lighting_pawn_dto.toGenericDto();
+        std::shared_ptr<LightQuadPawnAssembler> assembler = std::make_shared<LightQuadPawnAssembler>(sun_pawn_id);
+        assembler->topLevel(true);
+        assembler->primitiveId(sun_mesh_id);
+        assembler->hostLightId(lit->id());
+        auto pawn_dto = assembler->assemble();
         lit_pawn = std::dynamic_pointer_cast<LightingPawn>(std::make_shared<RequestSpatialConstitution>(sun_pawn_id, pawn_dto)->dispatch());
     }
     if (lit_pawn) tryCompleteLightPawnAttachment(lit, lit_pawn);
@@ -92,14 +88,13 @@ void LightingPawnRepository::createPointLightPawn(const std::shared_ptr<Light>& 
     auto lit_pawn = std::dynamic_pointer_cast<LightingPawn>(std::make_shared<QuerySpatial>(vol_pawn_id)->dispatch());
     if (!lit_pawn)
     {
-        PawnAssembler pawn_assembler(vol_pawn_id);
-        pawn_assembler.spatial().topLevel(true).localTransform(lit->getLocalTransform());
-        pawn_assembler.factory(FactoryDesc(LightVolumePawn::TYPE_RTTI.getName())).primitive(vol_mesh_id);
-        LightVolumePawnDto lighting_pawn_dto = LightVolumePawnDto{ LightingPawnDto(pawn_assembler.toPawnDto()) };
-        lighting_pawn_dto.id(vol_pawn_id);
-        lighting_pawn_dto.hostLightId(lit->id());
-        lighting_pawn_dto.presentCameraId(present_camera_id);
-        auto pawn_dto = lighting_pawn_dto.toGenericDto();
+        std::shared_ptr<LightVolumePawnAssembler> assembler = std::make_shared<LightVolumePawnAssembler>(vol_pawn_id);
+        assembler->topLevel(true);
+        assembler->localTransform(lit->getLocalTransform());
+        assembler->primitiveId(vol_mesh_id);
+        assembler->hostLightId(lit->id());
+        assembler->presentCameraId(present_camera_id);
+        auto pawn_dto = assembler->assemble();
         lit_pawn = std::dynamic_pointer_cast<LightingPawn>(std::make_shared<RequestSpatialConstitution>(vol_pawn_id, pawn_dto)->dispatch());
     }
     if (lit_pawn) tryCompleteLightPawnAttachment(lit, lit_pawn);

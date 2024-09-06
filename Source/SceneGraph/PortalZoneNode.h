@@ -9,7 +9,6 @@
 #define _PORTAL_ZONE_NODE_H
 
 #include "LazyNode.h"
-#include "GameEngine/FactoryDesc.h"
 #include <memory>
 
 namespace Enigma::SceneGraph

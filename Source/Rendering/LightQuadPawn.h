@@ -18,7 +18,6 @@ namespace Enigma::Rendering
         DECLARE_EN_RTTI;
     public:
         LightQuadPawn(const SceneGraph::SpatialId& id);
-        LightQuadPawn(const SceneGraph::SpatialId& id, const Engine::GenericDto& o);
         LightQuadPawn(const LightQuadPawn&) = delete;
         LightQuadPawn(LightQuadPawn&&) = delete;
         virtual ~LightQuadPawn() override;
@@ -26,9 +25,11 @@ namespace Enigma::Rendering
         LightQuadPawn& operator=(LightQuadPawn&&) = delete;
 
         static std::shared_ptr<LightQuadPawn> create(const SceneGraph::SpatialId& id);
-        static std::shared_ptr<LightQuadPawn> constitute(const SceneGraph::SpatialId& id, const Engine::GenericDto& dto);
 
-        virtual Engine::GenericDto serializeDto() override;
+        virtual std::shared_ptr<SceneGraph::SpatialAssembler> assembler() const override;
+        virtual void assemble(const std::shared_ptr<SceneGraph::SpatialAssembler>& assembler) override;
+        virtual std::shared_ptr<SceneGraph::SpatialDisassembler> disassembler() const override;
+        virtual void disassemble(const std::shared_ptr<SceneGraph::SpatialDisassembler>& disassembler) override;
 
         /// 影響的光源就是自己所帶的光源
         virtual error _updateSpatialRenderState() override;

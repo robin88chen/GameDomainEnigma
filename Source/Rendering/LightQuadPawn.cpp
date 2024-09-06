@@ -2,9 +2,10 @@
 #include "LightingMeshQueries.h"
 #include "SceneGraph/Light.h"
 #include "SceneGraph/LightInfo.h"
-#include "LightingPawnDto.h"
+#include "LightingPawnAssemblers.h"
 #include "SceneGraph/LightEvents.h"
 #include "RenderingErrors.h"
+#include "SceneGraph/SceneGraphQueries.h"
 
 using namespace Enigma::Rendering;
 using namespace Enigma::MathLib;
@@ -18,7 +19,7 @@ LightQuadPawn::LightQuadPawn(const SpatialId& id) : LightingPawn(id)
 {
 }
 
-LightQuadPawn::LightQuadPawn(const SpatialId& id, const Engine::GenericDto& o) : LightingPawn(id, o)
+/*LightQuadPawn::LightQuadPawn(const SpatialId& id, const Engine::GenericDto& o) : LightingPawn(id, o)
 {
     if ((!m_primitive) && (!m_hostLight.expired()))
     {
@@ -32,7 +33,7 @@ LightQuadPawn::LightQuadPawn(const SpatialId& id, const Engine::GenericDto& o) :
             m_primitive = std::make_shared<RequestSunLightMeshAssembly>(dto.primitiveId().value())->dispatch();
         }
     }
-}
+}*/
 
 LightQuadPawn::~LightQuadPawn()
 {
@@ -43,17 +44,56 @@ std::shared_ptr<LightQuadPawn> LightQuadPawn::create(const SceneGraph::SpatialId
     return std::make_shared<LightQuadPawn>(id);
 }
 
-std::shared_ptr<LightQuadPawn> LightQuadPawn::constitute(const SceneGraph::SpatialId& id, const Engine::GenericDto& dto)
+std::shared_ptr<SpatialAssembler> LightQuadPawn::assembler() const
 {
-    return std::make_shared<LightQuadPawn>(id, dto);
+    return std::make_shared<LightQuadPawnAssembler>(m_id);
 }
 
-GenericDto LightQuadPawn::serializeDto()
+void LightQuadPawn::assemble(const std::shared_ptr<SceneGraph::SpatialAssembler>& assembler)
+{
+    assert(assembler);
+    LightingPawn::assemble(assembler);
+    if (auto lightingPawnAssembler = std::dynamic_pointer_cast<LightQuadPawnAssembler>(assembler))
+    {
+        if (!m_hostLight.expired()) lightingPawnAssembler->hostLightId(m_hostLight.lock()->id());
+    }
+}
+
+std::shared_ptr<SpatialDisassembler> LightQuadPawn::disassembler() const
+{
+    return std::make_shared<LightQuadPawnDisassembler>();
+}
+
+void LightQuadPawn::disassemble(const std::shared_ptr<SceneGraph::SpatialDisassembler>& disassembler)
+{
+    assert(disassembler);
+    LightingPawn::disassemble(disassembler);
+    if (auto lightingPawnDisassembler = std::dynamic_pointer_cast<LightQuadPawnDisassembler>(disassembler))
+    {
+        if (auto v = lightingPawnDisassembler->hostLightId())
+        {
+            m_hostLight = std::dynamic_pointer_cast<Light>(std::make_shared<QuerySpatial>(v.value())->dispatch());
+        }
+        if ((!m_primitive) && (!m_hostLight.expired()))
+        {
+            if ((m_hostLight.lock()->info().lightType() == LightInfo::LightType::Ambient) && lightingPawnDisassembler->primitiveId().has_value())
+            {
+                m_primitive = std::make_shared<RequestAmbientLightMeshAssembly>(lightingPawnDisassembler->primitiveId().value())->dispatch();
+            }
+            else if ((m_hostLight.lock()->info().lightType() == LightInfo::LightType::SunLight) && lightingPawnDisassembler->primitiveId().has_value())
+            {
+                m_primitive = std::make_shared<RequestSunLightMeshAssembly>(lightingPawnDisassembler->primitiveId().value())->dispatch();
+            }
+        }
+    }
+}
+
+/*GenericDto LightQuadPawn::serializeDto()
 {
     LightingPawnDto dto(SerializePawnDto());
     if (getHostLight()) dto.hostLightId(getHostLight()->id());
     return dto.toGenericDto();
-}
+}*/
 
 error LightQuadPawn::_updateSpatialRenderState()
 {

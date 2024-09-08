@@ -4,7 +4,7 @@
 
 using namespace Enigma::Terrain;
 
-TerrainPawnDto::TerrainPawnDto() : PawnDto()
+/*TerrainPawnDto::TerrainPawnDto() : PawnDto()
 {
     m_factoryDesc = Engine::FactoryDesc(TerrainPawn::TYPE_RTTI.getName());
 }
@@ -24,5 +24,5 @@ Enigma::Engine::GenericDto TerrainPawnDto::toGenericDto() const
 {
     Engine::GenericDto dto = PawnDto::toGenericDto();
     return dto;
-}
+}*/
 

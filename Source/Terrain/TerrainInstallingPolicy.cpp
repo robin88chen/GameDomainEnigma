@@ -30,7 +30,7 @@ error TerrainInstallingPolicy::install(Frameworks::ServiceManager* service_manag
     renderable_builder->registerCustomMeshFactory(TerrainPrimitive::TYPE_RTTI.getName(), createTerrainPrimitive, constituteTerrainPrimitive);
     const auto scene_graph_repository = service_manager->getSystemServiceAs<SceneGraph::SceneGraphRepository>();
     assert(scene_graph_repository);
-    scene_graph_repository->registerSpatialFactory(TerrainPawn::TYPE_RTTI.getName(), TerrainPawn::create, TerrainPawn::constitute);
+    scene_graph_repository->registerSpatialFactory(TerrainPawn::TYPE_RTTI.getName(), TerrainPawn::create);
     return ErrorCode::ok;
 }
 

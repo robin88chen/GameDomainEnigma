@@ -2,7 +2,7 @@
 #include "Frameworks/CommandBus.h"
 #include "Renderables/ModelPrimitiveAnimator.h"
 #include "AvatarRecipes.h"
-#include "AnimatedPawnDto.h"
+#include "AnimatedPawnAssembler.h"
 #include "Animators/AnimatorCommands.h"
 #include "Renderables/RenderableEvents.h"
 #include "Frameworks/EventPublisher.h"
@@ -21,7 +21,7 @@ AnimatedPawn::AnimatedPawn(const SpatialId& id) : Pawn(id)
     registerHandlers();
 }
 
-AnimatedPawn::AnimatedPawn(const SpatialId& id, const Engine::GenericDto& o) : Pawn(id, o)
+/*AnimatedPawn::AnimatedPawn(const SpatialId& id, const Engine::GenericDto& o) : Pawn(id, o)
 {
     AnimatedPawnDto dto(o);
     if (auto clip = dto.animationClipMapDto()) m_animationClipMap = AnimationClipMap(clip.value());
@@ -30,7 +30,7 @@ AnimatedPawn::AnimatedPawn(const SpatialId& id, const Engine::GenericDto& o) : P
         m_avatarRecipeList.push_back(AvatarRecipe::createFromGenericDto(avatar_dto));
     }
     registerHandlers();
-}
+}*/
 
 AnimatedPawn::~AnimatedPawn()
 {
@@ -43,7 +43,46 @@ std::shared_ptr<AnimatedPawn> AnimatedPawn::create(const SceneGraph::SpatialId& 
     return std::make_shared<AnimatedPawn>(id);
 }
 
-std::shared_ptr<AnimatedPawn> AnimatedPawn::constitute(const SceneGraph::SpatialId& id, const Engine::GenericDto& o)
+std::shared_ptr<SpatialAssembler> AnimatedPawn::assembler() const
+{
+    return std::make_shared<AnimatedPawnAssembler>(m_id);
+}
+
+void AnimatedPawn::assemble(const std::shared_ptr<SceneGraph::SpatialAssembler>& assembler)
+{
+    Pawn::assemble(assembler);
+    if (auto animatedPawnAssembler = std::dynamic_pointer_cast<AnimatedPawnAssembler>(assembler))
+    {
+        animatedPawnAssembler->animationClipMap(m_animationClipMap);
+        Engine::GenericDtoCollection avatar_recipe_dtos;
+        for (auto& avatar_recipe : m_avatarRecipeList)
+        {
+            avatar_recipe_dtos.push_back(avatar_recipe->serializeDto());
+        }
+        animatedPawnAssembler->avatarRecipeDtos(avatar_recipe_dtos);
+    }
+}
+
+std::shared_ptr<SpatialDisassembler> AnimatedPawn::disassembler() const
+{
+    return std::make_shared<AnimatedPawnDisassembler>();
+}
+
+void AnimatedPawn::disassemble(const std::shared_ptr<SceneGraph::SpatialDisassembler>& disassembler)
+{
+    Pawn::disassemble(disassembler);
+    if (auto animatedPawnDisassembler = std::dynamic_pointer_cast<AnimatedPawnDisassembler>(disassembler))
+    {
+        if (auto clip = animatedPawnDisassembler->animationClipMapDto()) m_animationClipMap = AnimationClipMap(clip.value());
+        m_avatarRecipeList.clear();
+        for (auto& avatar_dto : animatedPawnDisassembler->avatarRecipeDtos())
+        {
+            m_avatarRecipeList.push_back(AvatarRecipe::createFromGenericDto(avatar_dto));
+        }
+    }
+}
+
+/*std::shared_ptr<AnimatedPawn> AnimatedPawn::constitute(const SceneGraph::SpatialId& id, const Engine::GenericDto& o)
 {
     auto pawn = std::make_shared<AnimatedPawn>(id, o);
     return pawn;
@@ -58,7 +97,7 @@ GenericDto AnimatedPawn::serializeDto()
         dto.avatarRecipeDtos().push_back(avatar_recipe->serializeDto());
     }
     return dto.toGenericDto();
-}
+}*/
 
 void AnimatedPawn::registerHandlers()
 {

@@ -21,7 +21,6 @@ namespace Enigma::GameCommon
         DECLARE_EN_RTTI;
     public:
         AnimatedPawn(const SceneGraph::SpatialId& id);
-        AnimatedPawn(const SceneGraph::SpatialId& id, const Engine::GenericDto& o);
         AnimatedPawn(const AnimatedPawn&) = delete;
         AnimatedPawn(AnimatedPawn&&) = delete;
         virtual ~AnimatedPawn() override;
@@ -29,9 +28,11 @@ namespace Enigma::GameCommon
         AnimatedPawn& operator=(AnimatedPawn&&) = delete;
 
         static std::shared_ptr<AnimatedPawn> create(const SceneGraph::SpatialId& id);
-        static std::shared_ptr<AnimatedPawn> constitute(const SceneGraph::SpatialId& id, const Engine::GenericDto& dto);
 
-        virtual Engine::GenericDto serializeDto() override;
+        virtual std::shared_ptr<SceneGraph::SpatialAssembler> assembler() const override;
+        virtual void assemble(const std::shared_ptr<SceneGraph::SpatialAssembler>& assembler) override;
+        virtual std::shared_ptr<SceneGraph::SpatialDisassembler> disassembler() const override;
+        virtual void disassemble(const std::shared_ptr<SceneGraph::SpatialDisassembler>& disassembler) override;
 
         void registerHandlers();
         void unregisterHandlers();

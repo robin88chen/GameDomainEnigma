@@ -1,54 +1,71 @@
 ﻿#include "AnimatedPawnAssembler.h"
 #include "SceneGraph/SceneGraphQueries.h"
+#include "AnimatedPawn.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::SceneGraph;
 
-AnimatedPawnAssembler::AnimatedPawnAssembler(const SceneGraph::SpatialId& id) : m_pawnAssembler(id)
+static std::string TOKEN_ANIMATION_CLIP_MAP = "AnimClipMap";
+static std::string TOKEN_AVATAR_RECIPES = "AvatarRecipes";
+
+AnimatedPawnAssembler::AnimatedPawnAssembler(const SceneGraph::SpatialId& id) : PawnAssembler(id)
 {
-    m_id = id;
-    m_dto.id(id);
-    m_dto.factoryDesc(Engine::FactoryDesc(AnimatedPawn::TYPE_RTTI.getName()));
-    m_pawnAssembler.factory(m_dto.factoryDesc());
+    m_factoryDesc = Engine::FactoryDesc(AnimatedPawn::TYPE_RTTI);
 }
 
-PawnAssembler& AnimatedPawnAssembler::pawn()
+void AnimatedPawnAssembler::factory(const Engine::FactoryDesc& factory)
 {
-    return m_pawnAssembler;
+    PawnAssembler::factory(factory);
+    if (m_prefab) m_factoryDesc.ClaimByPrefab(m_prefab.value());
 }
 
-AnimatedPawnAssembler& AnimatedPawnAssembler::factory(const Engine::FactoryDesc& factory)
+void AnimatedPawnAssembler::persist(const std::string& filename, const std::string& path_id)
 {
-    m_dto.factoryDesc(factory);
-    m_pawnAssembler.factory(factory);
-    return *this;
+    PawnAssembler::persist(filename, path_id);
+    m_prefab.reset();
 }
 
-AnimatedPawnAssembler& AnimatedPawnAssembler::animationClipMap(const AnimationClipMapAssembler& clip)
+void AnimatedPawnAssembler::animationClipMap(const std::shared_ptr<AnimationClipMapAssembler>& clip)
 {
-    m_dto.animationClipMapDto() = clip.toGenericDto();
-    return *this;
+    m_clip = clip;
 }
 
-AnimatedPawnAssembler& AnimatedPawnAssembler::asNative(const std::string& file_at_path)
+void AnimatedPawnAssembler::animationClipMap(const AnimationClipMap& clip)
 {
-    auto fd = m_dto.factoryDesc();
-    fd.ClaimAsNative(file_at_path);
-    m_dto.factoryDesc(fd);
-    m_pawnAssembler.factory(m_dto.factoryDesc());
-    return *this;
+    m_clip = std::make_shared<AnimationClipMapAssembler>();
+    for (auto& [key, value] : clip)
+    {
+        m_clip->addClip(key, value);
+    }
 }
 
-AnimatedPawnAssembler& AnimatedPawnAssembler::byPrefab(const std::string& prefab_name)
+void AnimatedPawnAssembler::byPrefab(const std::string& prefab_name)
 {
-    auto fd = m_dto.factoryDesc();
-    fd.ClaimByPrefab(prefab_name);
-    m_dto.factoryDesc(fd);
-    m_pawnAssembler.factory(m_dto.factoryDesc());
-    return *this;
+    m_prefab = prefab_name;
+    m_factoryDesc.ClaimByPrefab(prefab_name);
 }
 
-AnimatedPawnDto AnimatedPawnAssembler::toAnimatedPawnDto()
+Enigma::Engine::GenericDto AnimatedPawnAssembler::assemble() const
+{
+    Engine::GenericDto dto = PawnAssembler::assemble();
+    if (m_clip) dto.addOrUpdate(TOKEN_ANIMATION_CLIP_MAP, m_clip->toGenericDto());
+    dto.addOrUpdate(TOKEN_AVATAR_RECIPES, m_avatarRecipeDtos);
+    return dto;
+}
+
+AnimatedPawnDisassembler::AnimatedPawnDisassembler() : PawnDisassembler()
+{
+    m_factoryDesc = Engine::FactoryDesc(AnimatedPawn::TYPE_RTTI);
+}
+
+void AnimatedPawnDisassembler::disassemble(const Engine::GenericDto& dto)
+{
+    PawnDisassembler::disassemble(dto);
+    if (auto v = dto.tryGetValue<Engine::GenericDto>(TOKEN_ANIMATION_CLIP_MAP)) m_animationClipMapDto = v.value();
+    if (auto v = dto.tryGetValue<Engine::GenericDtoCollection>(TOKEN_AVATAR_RECIPES)) m_avatarRecipeDtos = v.value();
+}
+
+/*AnimatedPawnDto AnimatedPawnAssembler::toAnimatedPawnDto()
 {
     AnimatedPawnDto pawn_dto(m_pawnAssembler.toGenericDto());
     pawn_dto.id(m_dto.id());
@@ -65,5 +82,5 @@ Enigma::Engine::GenericDto AnimatedPawnAssembler::toGenericDto()
 std::shared_ptr<AnimatedPawn> AnimatedPawnAssembler::constitute()
 {
     return std::dynamic_pointer_cast<AnimatedPawn>(std::make_shared<RequestSpatialConstitution>(m_id, toGenericDto())->dispatch());
-}
+}*/
 

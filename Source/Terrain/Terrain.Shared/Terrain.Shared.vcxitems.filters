@@ -57,6 +57,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPrimitiveFactoryMethods.h">
       <Filter>Factory Methods</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPawnAssembler.h">
+      <Filter>Assemblers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainGeometry.cpp">
@@ -94,6 +97,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPrimitiveFactoryMethods.cpp">
       <Filter>Factory Methods</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPawnAssembler.cpp">
+      <Filter>Assemblers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   TerrainPawnDto.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   July 2023
  *********************************************************************/
@@ -11,7 +11,7 @@
 #include "SceneGraph/SceneGraphDtos.h"
 namespace Enigma::Terrain
 {
-    class TerrainPawnDto : public SceneGraph::PawnDto
+    /*class TerrainPawnDto : public SceneGraph::PawnDto
     {
     public:
         TerrainPawnDto();
@@ -19,7 +19,7 @@ namespace Enigma::Terrain
 
         static TerrainPawnDto fromGenericDto(const Engine::GenericDto& dto);
         Engine::GenericDto toGenericDto() const;
-    };
+    };*/
 }
 
 #endif // TERRAIN_PAWN_DTO_H

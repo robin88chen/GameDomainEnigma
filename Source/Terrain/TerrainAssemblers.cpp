@@ -112,7 +112,7 @@ Enigma::Engine::GenericDto TerrainPrimitiveAssembler::toGenericDto() const
 }*/
 
 //------------------------------------------------------------------------------
-TerrainPawnAssembler::TerrainPawnAssembler(const SpatialId& id) : m_pawnAssembler(id)
+/*TerrainPawnAssembler::TerrainPawnAssembler(const SpatialId& id) : m_pawnAssembler(id)
 {
     m_id = id;
     m_dto.id(id);
@@ -151,4 +151,4 @@ TerrainPawnDto TerrainPawnAssembler::dto() const
 Enigma::Engine::GenericDto TerrainPawnAssembler::toGenericDto() const
 {
     return dto().toGenericDto();
-}
+}*/

@@ -8,35 +8,46 @@
 #ifndef ANIMATED_PAWN_ASSEMBLER_H
 #define ANIMATED_PAWN_ASSEMBLER_H
 
-#include "SceneGraph/SceneGraphAssemblers.h"
+#include "SceneGraph/PawnAssembler.h"
 #include "AnimationClipMapAssembler.h"
 #include "AnimatedPawnDto.h"
 #include "AnimatedPawn.h"
 
 namespace Enigma::GameCommon
 {
-    class AnimatedPawnAssembler
+    class AnimatedPawnAssembler : public SceneGraph::PawnAssembler
     {
     public:
         AnimatedPawnAssembler(const SceneGraph::SpatialId& id);
 
-        const SceneGraph::SpatialId& id() const { return m_id; }
+        virtual void factory(const Engine::FactoryDesc& factory) override;
+        virtual void persist(const std::string& filename, const std::string& path_id) override;
 
-        SceneGraph::PawnAssembler& pawn();
+        void animationClipMap(const std::shared_ptr<AnimationClipMapAssembler>& clip);
+        void animationClipMap(const AnimationClipMap& clip);
+        void byPrefab(const std::string& prefab_name);
+        void avatarRecipeDtos(const Engine::GenericDtoCollection& dtos) { m_avatarRecipeDtos = dtos; }
 
-        AnimatedPawnAssembler& factory(const Engine::FactoryDesc& factory);
-        AnimatedPawnAssembler& animationClipMap(const AnimationClipMapAssembler& clip);
-        AnimatedPawnAssembler& asNative(const std::string& file_at_path);
-        AnimatedPawnAssembler& byPrefab(const std::string& prefab_name);
-
-        Engine::GenericDto toGenericDto();
-        AnimatedPawnDto toAnimatedPawnDto();
-        std::shared_ptr<AnimatedPawn> constitute();
+        Engine::GenericDto assemble() const override;
 
     private:
-        SceneGraph::SpatialId m_id;
-        SceneGraph::PawnAssembler m_pawnAssembler;
-        AnimatedPawnDto m_dto;
+        std::shared_ptr<AnimationClipMapAssembler> m_clip;
+        std::optional<std::string> m_prefab;
+        Engine::GenericDtoCollection m_avatarRecipeDtos;
+    };
+    class AnimatedPawnDisassembler : public SceneGraph::PawnDisassembler
+    {
+    public:
+        AnimatedPawnDisassembler();
+
+        void disassemble(const Engine::GenericDto& dto) override;
+
+        [[nodiscard]] const std::optional<Engine::GenericDto>& animationClipMapDto() const { return m_animationClipMapDto; }
+        [[nodiscard]] const Engine::GenericDtoCollection& avatarRecipeDtos() const { return m_avatarRecipeDtos; }
+
+    protected:
+        std::optional<Engine::GenericDto> m_animationClipMapDto;
+        Engine::GenericDtoCollection m_avatarRecipeDtos;
     };
 }
 

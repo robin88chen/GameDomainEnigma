@@ -33,9 +33,9 @@ void AnimatedPawnAssembler::animationClipMap(const std::shared_ptr<AnimationClip
 void AnimatedPawnAssembler::animationClipMap(const AnimationClipMap& clip)
 {
     m_clip = std::make_shared<AnimationClipMapAssembler>();
-    for (auto& [key, value] : clip)
+    for (auto& [key, value] : clip.animationClipMap())
     {
-        m_clip->addClip(key, value);
+        m_clip->addClip(key, value.clip());
     }
 }
 

@@ -21,6 +21,7 @@ void NodeAssembler::child(const SpatialId& child_id)
 void NodeAssembler::child(const std::shared_ptr<SpatialAssembler>& child)
 {
     assert(child);
+    child->parentId(m_id);
     m_children.push_back({ child->id(), child });
 }
 
@@ -28,6 +29,7 @@ void NodeAssembler::child(const std::shared_ptr<Spatial>& child)
 {
     assert(child);
     std::shared_ptr<SpatialAssembler> childAssembler = SpatialAssembler::assembledAssemblerOf(child);
+    childAssembler->parentId(m_id);
     m_children.push_back({ child->id(), childAssembler });
 }
 

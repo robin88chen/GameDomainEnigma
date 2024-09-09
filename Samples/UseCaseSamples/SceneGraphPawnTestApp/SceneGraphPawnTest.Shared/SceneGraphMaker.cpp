@@ -1,11 +1,11 @@
 ﻿#include "SceneGraphMaker.h"
 #include "MathLib/Matrix4.h"
 #include "SceneGraph/Pawn.h"
-#include "SceneGraph/SceneGraphDtos.h"
 #include "CubeGeometryMaker.h"
 #include "SceneGraph/Spatial.h"
 #include "SceneGraph/Node.h"
-#include "SceneGraph/SceneGraphAssemblers.h"
+#include "SceneGraph/NodeAssembler.h"
+#include "SceneGraph/PawnAssembler.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Frameworks;
@@ -16,53 +16,43 @@ using namespace Enigma::Primitives;
 Enigma::Engine::GenericDto SceneGraphMaker::makeSceneGraph(const SpatialId& id, const PrimitiveId& primitive_id, const Enigma::SceneGraph::SpatialId& pawn_id, const Enigma::SceneGraph::SpatialId& stillpawn_id)
 {
     BoundingVolume root_bv(Box3::UNIT_BOX);
-    NodeDto root_dto;
-    root_dto.id() = id;
-    //root_dto.name() = id.name();
-    root_dto.localTransform() = Matrix4::IDENTITY;
-    root_dto.worldTransform() = Matrix4::IDENTITY;
-    root_dto.modelBound() = root_bv.serializeDto().toGenericDto();
-    root_dto.worldBound() = root_bv.serializeDto().toGenericDto();
-    root_dto.isTopLevel() = true;
-    root_dto.spatialFlag() = static_cast<unsigned>(Spatial::Spatial_Unlit);
-    root_dto.factoryDesc() = FactoryDesc(Node::TYPE_RTTI.getName()).ClaimAsNative(id.name() + ".node@DataPath");
+    std::shared_ptr<NodeAssembler> root_assembler = std::make_shared<NodeAssembler>(id);
+    root_assembler->localTransform(Matrix4::IDENTITY);
+    root_assembler->worldTransform(Matrix4::IDENTITY);
+    root_assembler->modelBound(root_bv);
+    root_assembler->topLevel(true);
+    root_assembler->spatialFlags(Spatial::Spatial_Unlit);
+    root_assembler->factory(FactoryDesc(Node::TYPE_RTTI.getName()).ClaimAsNative(id.name() + ".node@DataPath"));
     //root_dto.ChildNames() = { "child1", "child2" };
     BoundingVolume child_bv(Box3::UNIT_BOX);
-    NodeDto child1_dto;
-    child1_dto.id() = SpatialId("child1", Node::TYPE_RTTI);
-    //child1_dto.name() = "child1";
-    child1_dto.localTransform() = Matrix4::IDENTITY;
-    child1_dto.worldTransform() = root_dto.worldTransform() * child1_dto.localTransform();
-    child1_dto.modelBound() = child_bv.serializeDto().toGenericDto();
-    child1_dto.worldBound() = BoundingVolume::CreateFromTransform(child_bv, child1_dto.worldTransform()).serializeDto().toGenericDto();
-    child1_dto.spatialFlag() = static_cast<unsigned>(Spatial::Spatial_Unlit);
-    child1_dto.parentId() = root_dto.id();
+    SpatialId child1_id("child1", Node::TYPE_RTTI);
+    std::shared_ptr<NodeAssembler> child1_assembler = std::make_shared<NodeAssembler>(child1_id);
+    child1_assembler->localTransform(Matrix4::IDENTITY);
+    //child1_assembler->parentWorldTransform(root_assembler->worldTransform());
+    child1_assembler->modelBound(child_bv);
+    child1_assembler->spatialFlags(Spatial::Spatial_Unlit);
+    //child1_assembler->parentId(id);
     //child1_dto.ChildNames() = { "still_pawn" };
-    NodeDto child2_dto;
-    child2_dto.id() = SpatialId("child2", Node::TYPE_RTTI);
-    //child2_dto.name() = "child2";
-    child2_dto.localTransform() = Matrix4::MakeTranslateTransform(Vector3(2.0f, 0.0f, 0.0f));
-    child2_dto.worldTransform() = root_dto.worldTransform() * child2_dto.localTransform();
-    child2_dto.modelBound() = child_bv.serializeDto().toGenericDto();
-    child2_dto.worldBound() = BoundingVolume::CreateFromTransform(child_bv, child2_dto.worldTransform()).serializeDto().toGenericDto();
-    child2_dto.spatialFlag() = static_cast<unsigned>(Spatial::Spatial_Unlit);
-    child2_dto.parentId() = root_dto.id();
+    SpatialId child2_id("child2", Node::TYPE_RTTI);
+    std::shared_ptr<NodeAssembler> child2_assembler = std::make_shared<NodeAssembler>(child2_id);
+    child2_assembler->localTransform(Matrix4::MakeTranslateTransform(Vector3(2.0f, 0.0f, 0.0f)));
+    child2_assembler->modelBound(child_bv);
+    child2_assembler->spatialFlags(Spatial::Spatial_Unlit);
+    //child2_assembler->parentId(id);
     //child2_dto.ChildNames() = { "pawn" };
-    PawnAssembler assembler(pawn_id);
-    assembler.primitive(primitive_id);
-    assembler.spatial().localTransform(Matrix4::IDENTITY).worldTransform(child2_dto.worldTransform()).modelBound(CubeGeometryMaker::getGeometryBound());
-    PawnDto pawn_dto = assembler.toPawnDto();
-    pawn_dto.parentId() = child2_dto.id();
-    PawnAssembler still_assembler(stillpawn_id);
-    still_assembler.primitive(primitive_id.next());
-    still_assembler.spatial().localTransform(Matrix4::IDENTITY).worldTransform(child1_dto.worldTransform()).modelBound(CubeGeometryMaker::getGeometryBound());
-    PawnDto stillpawn_dto = still_assembler.toPawnDto();
-    stillpawn_dto.parentId() = child1_dto.id();
+    std::shared_ptr<PawnAssembler> pawn_assembler = std::make_shared<PawnAssembler>(pawn_id);
+    pawn_assembler->primitiveId(primitive_id);
+    pawn_assembler->localTransform(Matrix4::IDENTITY);
+    pawn_assembler->modelBound(CubeGeometryMaker::getGeometryBound());
+    std::shared_ptr<PawnAssembler> still_assembler = std::make_shared<PawnAssembler>(stillpawn_id);
+    still_assembler->primitiveId(primitive_id.next());
+    still_assembler->localTransform(Matrix4::IDENTITY);
+    still_assembler->modelBound(CubeGeometryMaker::getGeometryBound());
     //ModelPrimitiveDto model_dto = SkinMeshModelMaker::MakeModelPrimitiveDto("test_model", "test_geometry");
-    child1_dto.children().emplace_back(NodeDto::ChildDto{ stillpawn_dto.id(), stillpawn_dto.toGenericDto() });
-    child2_dto.children().emplace_back(NodeDto::ChildDto{ pawn_dto.id(), pawn_dto.toGenericDto() });
-    root_dto.children().emplace_back(NodeDto::ChildDto{ child1_dto.id(), child1_dto.toGenericDto() });
-    root_dto.children().emplace_back(NodeDto::ChildDto{ child2_dto.id(), child2_dto.toGenericDto() });
+    child1_assembler->child(still_assembler);
+    child2_assembler->child(pawn_assembler);
+    root_assembler->child(child1_assembler);
+    root_assembler->child(child2_assembler);
 
-    return root_dto.toGenericDto();
+    return root_assembler->assemble();
 }

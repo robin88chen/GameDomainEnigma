@@ -61,7 +61,7 @@ protected:
     std::shared_ptr<Enigma::Renderables::ModelPrimitive> m_model;
     Enigma::SceneGraph::SpatialId m_rootId;
     //Enigma::SceneGraph::NodePtr m_sceneRoot;
-    Enigma::SceneGraph::PawnPtr m_pawn;
+    std::shared_ptr<Enigma::SceneGraph::Pawn> m_pawn;
 
     bool m_isPrefabBuilt;
     Enigma::SceneGraph::SpatialId m_cameraId;

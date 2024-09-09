@@ -4,8 +4,11 @@
 #include "GameEngine/EffectTextureMapAssembler.h"
 #include "Primitives/PrimitiveId.h"
 #include "Geometries/GeometryId.h"
-#include "Renderables/RenderablePrimitiveAssembler.h"
+#include "Renderables/SkinMeshPrimitiveAssembler.h"
 #include "Primitives/PrimitiveCommands.h"
+#include "Renderables/ModelPrimitiveAssembler.h"
+#include "Primitives/PrimitiveQueries.h"
+#include "Renderables/MeshNodeAssemblers.h"
 
 using namespace Enigma::Engine;
 using namespace Enigma::Animators;
@@ -16,7 +19,16 @@ using namespace Enigma::Primitives;
 std::shared_ptr<MeshPrimitive> SkinMeshModelMaker::makeCubeMeshPrimitive(const Enigma::Primitives::PrimitiveId& mesh_id, const Enigma::Geometries::GeometryId& geo_id)
 {
     if (auto mesh = Primitive::queryPrimitive(mesh_id)) return std::dynamic_pointer_cast<MeshPrimitive>(mesh);
-    auto mesh = SkinMeshPrimitiveAssembler(mesh_id).geometryId(geo_id).asNative(mesh_id.name() + ".mesh@DataPath").effect(EffectMaterialId("skin_mesh_prim_test")).textureMap(EffectTextureMapAssembler().textureMapping(TextureId("earth"), std::nullopt, "DiffuseMap")).renderListID(Enigma::Renderer::Renderer::RenderListID::Scene).visualTechnique("Default").constitute();
+    SkinMeshPrimitiveAssembler assembler(mesh_id);
+    assembler.geometryId(geo_id);
+    assembler.asNative(mesh_id.name() + ".mesh@DataPath");
+    assembler.addEffect(EffectMaterialId("skin_mesh_prim_test"));
+    std::shared_ptr<EffectTextureMapAssembler> texture_assembler = std::make_shared<EffectTextureMapAssembler>();
+    texture_assembler->addTextureMapping(TextureId("earth"), std::nullopt, "DiffuseMap");
+    assembler.addTextureMap(texture_assembler);
+    assembler.renderListID(Enigma::Renderer::Renderer::RenderListID::Scene);
+    assembler.visualTechnique("Default");
+    auto mesh = std::dynamic_pointer_cast<MeshPrimitive>(std::make_shared<RequestPrimitiveConstitution>(mesh_id, assembler.assemble())->dispatch());
     std::make_shared<PutPrimitive>(mesh_id, mesh)->execute();
     return mesh;
 }
@@ -25,23 +37,28 @@ std::shared_ptr<ModelPrimitive> SkinMeshModelMaker::makeModelPrimitive(const Eni
 {
     if (auto model = Primitive::queryPrimitive(model_id)) return std::dynamic_pointer_cast<ModelPrimitive>(model);
 
-    MeshNodeTreeAssembler tree;
+    std::shared_ptr<MeshNodeTreeAssembler> tree = std::make_shared<MeshNodeTreeAssembler>();
     for (unsigned i = 0; i < mesh_node_names.size(); i++)
     {
-        MeshNodeAssembler node(mesh_node_names[i]);
+        std::shared_ptr<MeshNodeAssembler> node_assembler = std::make_shared<MeshNodeAssembler>();
+        node_assembler->name(mesh_node_names[i]);
         auto transform = Matrix4::MakeTranslateTransform(Vector3(0.0f, 2.0f * i, 0.0f));
-        node.localT_PosTransform(transform);
+        node_assembler->localT_PosTransform(transform);
         if (i != 0)
         {
-            node.parentNode(mesh_node_names[i - 1]);
+            tree->addNodeWithParentName(mesh_node_names[i], node_assembler, mesh_node_names[i - 1]);
         }
         if (i == 0)
         {
-            node.meshPrimitive(mesh_id);
+            node_assembler->meshPrimitiveId(mesh_id);
+            tree->addNode(mesh_node_names[i], node_assembler);
         }
-        tree.addNode(node);
     }
-    auto model = ModelPrimitiveAssembler(model_id).asNative(model_id.name() + ".model@DataPath").animator(animator_id).meshNodeTree(tree).constitute();
+    ModelPrimitiveAssembler model_assembler(model_id);
+    model_assembler.meshNodeTree(tree);
+    model_assembler.asNative(model_id.name() + ".model@DataPath");
+    model_assembler.modelAnimatorId(animator_id);
+    auto model = std::dynamic_pointer_cast<ModelPrimitive>(std::make_shared<RequestPrimitiveConstitution>(model_id, model_assembler.assemble())->dispatch());
     std::make_shared<PutPrimitive>(model_id, model)->execute();
     return model;
 }

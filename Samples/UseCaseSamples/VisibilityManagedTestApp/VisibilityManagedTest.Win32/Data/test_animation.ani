@@ -1,14 +1,4 @@
 [{
-        "Rtti": {
-            "Type": "FactoryDesc",
-            "Value": {
-                "InstanceType": 5,
-                "ResourceName": "test_animation",
-                "ResourceFilename": "test_animation.ani@DataPath",
-                "RttiName": "En.Renderables.ModelAnimationAsset",
-                "PrefabFilename": ""
-            }
-        },
         "Id": {
             "Type": "String",
             "Value": "test_animation"
@@ -33,5 +23,15 @@
                         "Value": [0.0, 2.0, 2.0, 0.0, 1.0, -1.2000000476837158, 1.2000000476837158, 0.0, 2.0, 2.0, 2.0, 0.0]
                     }
                 }]
+        },
+        "Rtti": {
+            "Type": "FactoryDesc",
+            "Value": {
+                "InstanceType": 5,
+                "ResourceName": "test_animation",
+                "ResourceFilename": "test_animation.ani@DataPath",
+                "RttiName": "En.Renderables.ModelAnimationAsset",
+                "PrefabFilename": ""
+            }
         }
     }]

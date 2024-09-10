@@ -26,32 +26,24 @@
             "Type": "Boolean",
             "Value": true
         },
-        "Name": {
-            "Type": "String",
-            "Value": "lazy_node"
-        },
-        "NotifyFlag": {
-            "Type": "Uint32",
-            "Value": 0
-        },
         "GraphDepth": {
             "Type": "Uint32",
             "Value": 0
         },
         "Id": {
             "Type": "StringArray",
-            "Value": ["lazy_node", "En.SceneGraph.LazyNode"]
+            "Value": ["lazy_node", "En.SceneGraph.VisibilityManagedNode"]
         },
         "WorldTransform": {
             "Type": "Matrix4",
-            "Value": [1.0, 0.0, 0.0, 2.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+            "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
         },
         "WorldBound": {
             "Type": "DataObject",
             "Value": {
                 "BoxBV": {
                     "Type": "Box3",
-                    "Value": [2.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0]
+                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0]
                 }
             }
         },
@@ -62,6 +54,10 @@
         "SpatialFlag": {
             "Type": "Uint32",
             "Value": 4
+        },
+        "NotifyFlag": {
+            "Type": "Uint32",
+            "Value": 31
         },
         "ParentId": {
             "Type": "StringArray",

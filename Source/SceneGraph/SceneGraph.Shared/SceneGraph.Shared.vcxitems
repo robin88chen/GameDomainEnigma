@@ -135,6 +135,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialId.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialLightInfoQuery.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\VisibilityManagedNode.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\VisibilityManagedNodeAssembler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\VisibleSet.cpp" />
   </ItemGroup>
 </Project>

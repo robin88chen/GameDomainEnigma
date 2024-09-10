@@ -15,22 +15,22 @@ namespace Enigma::SceneGraph
     class DehydratedVisibilityManagedNodeAssembler : public DehydratedLazyNodeAssembler
     {
     public:
-        DehydratedVisibilityManagedNodeAssembler(const SpatialId& id) : DehydratedLazyNodeAssembler(id) {}
+        DehydratedVisibilityManagedNodeAssembler(const SpatialId& id);
     };
     class HydratedVisibilityManagedNodeAssembler : public HydratedLazyNodeAssembler
     {
     public:
-        HydratedVisibilityManagedNodeAssembler(const SpatialId& id) : HydratedLazyNodeAssembler(id) {}
+        HydratedVisibilityManagedNodeAssembler(const SpatialId& id);
     };
     class DehydratedVisibilityManagedNodeDisassembler : public DehydratedLazyNodeDisassembler
     {
     public:
-        DehydratedVisibilityManagedNodeDisassembler() : DehydratedLazyNodeDisassembler() {}
+        DehydratedVisibilityManagedNodeDisassembler();
     };
     class HydratedVisibilityManagedNodeDisassembler : public HydratedLazyNodeDisassembler
     {
     public:
-        HydratedVisibilityManagedNodeDisassembler() : HydratedLazyNodeDisassembler() {}
+        HydratedVisibilityManagedNodeDisassembler();
     };
 }
 

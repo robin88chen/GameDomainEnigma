@@ -16,8 +16,8 @@
 class SceneGraphMaker
 {
 public:
-    static void makePawm(const Enigma::SceneGraph::SpatialId& id, const Enigma::Primitives::PrimitiveId& primitive_id);
-    static Enigma::Engine::GenericDto makeVisibilityNode(const Enigma::SceneGraph::SpatialId& id, const Enigma::SceneGraph::SpatialId& parent_id, const std::vector<Enigma::SceneGraph::SpatialId>& children);
+    static void makePawn(const Enigma::SceneGraph::SpatialId& id, const Enigma::Primitives::PrimitiveId& primitive_id);
+    static Enigma::Engine::GenericDto makeHydratedVisibilityNode(const Enigma::SceneGraph::SpatialId& id, const Enigma::SceneGraph::SpatialId& parent_id, const std::vector<Enigma::SceneGraph::SpatialId>& children);
 
     static Enigma::Engine::GenericDto makeSceneGraph(const Enigma::SceneGraph::SpatialId& root_id, const Enigma::SceneGraph::SpatialId& visibility_node_id);
 };

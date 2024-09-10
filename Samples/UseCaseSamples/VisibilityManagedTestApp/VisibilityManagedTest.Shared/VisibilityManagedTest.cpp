@@ -39,7 +39,7 @@
 #include "SkinMeshModelMaker.h"
 #include "SceneGraph/SceneGraphQueries.h"
 #include "SceneGraph/SceneGraphPersistenceLevel.h"
-#include "SceneGraph/LazyNode.h"
+#include "SceneGraph/VisibilityManagedNode.h"
 
 std::string PrimaryTargetName = "primary_target";
 std::string DefaultRendererName = "default_renderer";
@@ -109,7 +109,7 @@ void VisibilityManagedTest::installEngine()
     EventPublisher::subscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
     //EventPublisher::subscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
     EventPublisher::subscribe(typeid(LazyNodeHydrated), m_onLazyNodeHydrated);
-    EventPublisher::subscribe(typeid(HydrateLazyNodeFailed), m_onHydrateLazyNodeFailed);
+    EventPublisher::subscribe(typeid(LazyNodeHydrationFailed), m_onHydrateLazyNodeFailed);
 
     assert(m_graphicMain);
 
@@ -120,7 +120,7 @@ void VisibilityManagedTest::installEngine()
     auto geometry_policy = std::make_shared<GeometryInstallingPolicy>(std::make_shared<GeometryDataFileStoreMapper>("geometries.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
     auto primitive_policy = std::make_shared<PrimitiveRepositoryInstallingPolicy>(std::make_shared<PrimitiveFileStoreMapper>("primitives.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
     auto animator_policy = std::make_shared<AnimatorInstallingPolicy>(std::make_shared<AnimatorFileStoreMapper>("animators.db.txt@DataPath", std::make_shared<DtoJsonGateway>()), std::make_shared<AnimationAssetFileStoreMapper>("animation_assets.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
-    m_sceneGraphFileStoreMapper = std::make_shared<SceneGraphFileStoreMapper>("scene_graph.db.txt@DataPath", "lazy_scene.db.txt@DataPath", std::make_shared<DtoJsonGateway>());
+    m_sceneGraphFileStoreMapper = std::make_shared<SceneGraphFileStoreMapper>("scene_graph.db.txt@DataPath", "lazy_scene.db.txt@DataPath", "lazied_", std::make_shared<DtoJsonGateway>());
     auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(m_sceneGraphFileStoreMapper);
     auto effect_material_source_policy = std::make_shared<EffectMaterialSourceRepositoryInstallingPolicy>(std::make_shared<EffectMaterialSourceFileStoreMapper>("effect_materials.db.txt@APK_PATH"));
     auto texture_policy = std::make_shared<TextureRepositoryInstallingPolicy>(std::make_shared<TextureFileStoreMapper>("textures.db.txt@APK_PATH", std::make_shared<DtoJsonGateway>()));
@@ -144,7 +144,7 @@ void VisibilityManagedTest::shutdownEngine()
     EventPublisher::unsubscribe(typeid(PrimaryRenderTargetCreated), m_onRenderTargetCreated);
     //EventPublisher::unsubscribe(typeid(FactorySceneGraphBuilt), m_onSceneGraphBuilt);
     EventPublisher::unsubscribe(typeid(LazyNodeHydrated), m_onLazyNodeHydrated);
-    EventPublisher::unsubscribe(typeid(HydrateLazyNodeFailed), m_onHydrateLazyNodeFailed);
+    EventPublisher::unsubscribe(typeid(LazyNodeHydrationFailed), m_onHydrateLazyNodeFailed);
     m_onRendererCreated = nullptr;
     m_onRenderTargetCreated = nullptr;
     //m_onSceneGraphBuilt = nullptr;
@@ -228,23 +228,27 @@ void VisibilityManagedTest::makeModel()
     auto animationId = AnimationAssetId("test_animation");
     auto animatorId = AnimatorId("test_animator", ModelPrimitiveAnimator::TYPE_RTTI);
     m_pawnId = SpatialId("pawn", Pawn::TYPE_RTTI);
-    auto lazyNodeId = SpatialId("lazy_node", LazyNode::TYPE_RTTI);
+    auto lazyNodeId = SpatialId("lazy_node", VisibilityManagedNode::TYPE_RTTI);
     auto animation = SkinAnimationMaker::makeSkinMeshAnimationAsset(animationId, meshNodeNames);
     auto animator = SkinAnimationMaker::makeModelAnimator(animatorId, animationId, modelId.origin(), meshId, meshNodeNames);
     auto cube = CubeGeometryMaker::makeCube(cubeId);
     auto mesh = SkinMeshModelMaker::makeCubeMeshPrimitive(meshId, cubeId);
     m_model = SkinMeshModelMaker::makeModelPrimitive(modelId, meshId, animatorId, meshNodeNames);
-    SceneGraphMaker::makePawm(m_pawnId, modelId);
+    SceneGraphMaker::makePawn(m_pawnId, modelId);
     if (!m_sceneGraphFileStoreMapper->hasLaziedContent(lazyNodeId))
     {
-        auto visibility_dto = SceneGraphMaker::makeVisibilityNode(lazyNodeId, m_rootId, { m_pawnId });
+        auto visibility_dto = SceneGraphMaker::makeHydratedVisibilityNode(lazyNodeId, m_rootId, { m_pawnId });
         m_sceneGraphFileStoreMapper->putLaziedContent(lazyNodeId, visibility_dto);
     }
     m_sceneRoot = Node::queryNode(m_rootId);
     if (!m_sceneRoot)
     {
         auto scene_dto = SceneGraphMaker::makeSceneGraph(m_rootId, lazyNodeId);
-        m_sceneRoot = std::dynamic_pointer_cast<Node>(std::make_shared<RequestSpatialConstitution>(m_rootId, scene_dto, PersistenceLevel::Store)->dispatch());
+        m_sceneRoot = std::dynamic_pointer_cast<Node>(std::make_shared<RequestSpatialConstitution>(m_rootId, scene_dto)->dispatch());
+        if (m_sceneRoot)
+        {
+            std::make_shared<PutSpatial>(m_rootId, m_sceneRoot)->execute();
+        }
     }
 }
 
@@ -262,13 +266,13 @@ void VisibilityManagedTest::onLazyNodeHydrated(const Enigma::Frameworks::IEventP
     {
         animator->playAnimation(Enigma::Renderables::AnimationClip{ 0.0f, 2.5f, Enigma::Renderables::AnimationClip::WarpMode::Loop, 0 });
     }
-    CommandBus::post(std::make_shared<AddListeningAnimator>(animatorId));
+    CommandBus::enqueue(std::make_shared<AddListeningAnimator>(animatorId));
 }
 
 void VisibilityManagedTest::onHydrateLazyNodeFailed(const Enigma::Frameworks::IEventPtr& e)
 {
     if (!e) return;
-    const auto ev = std::dynamic_pointer_cast<HydrateLazyNodeFailed, IEvent>(e);
+    const auto ev = std::dynamic_pointer_cast<LazyNodeHydrationFailed, IEvent>(e);
     if (!ev) return;
     Enigma::Platforms::Debug::ErrorPrintf("Hydrate lazy node %s failed : %s", ev->id().name().c_str(), ev->error().message().c_str());
 }

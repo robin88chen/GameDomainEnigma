@@ -443,5 +443,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LazyNodeAssembler.cpp">
       <Filter>Assemblers\LazyNode</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\VisibilityManagedNodeAssembler.cpp">
+      <Filter>Assemblers\Visibility</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

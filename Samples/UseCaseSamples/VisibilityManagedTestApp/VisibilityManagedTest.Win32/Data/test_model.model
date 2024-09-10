@@ -80,6 +80,6 @@
         },
         "ModelAnimatorId": {
             "Type": "StringArray",
-            "Value": ["test_animator", "0", "En.Renderables.ModelPrimitiveAnimator"]
+            "Value": ["test_animator", "1", "En.Renderables.ModelPrimitiveAnimator"]
         }
     }]

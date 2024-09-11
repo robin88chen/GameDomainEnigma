@@ -9,7 +9,7 @@
                 "InstanceType": 2,
                 "ResourceName": "",
                 "ResourceFilename": "",
-                "RttiName": "En.SceneGraph.PortalZoneNode",
+                "RttiName": "En.SceneGraph.OutRegionNode",
                 "PrefabFilename": "outside_region.node@DataPath"
             }
         },
@@ -18,7 +18,7 @@
             "Value": {
                 "BoxBV": {
                     "Type": "Box3",
-                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0]
+                    "Value": [0.0, 1.0, -0.25, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.5, 2.0, 1.25]
                 }
             }
         },
@@ -32,7 +32,7 @@
         },
         "Id": {
             "Type": "StringArray",
-            "Value": ["outside_region", "En.SceneGraph.PortalZoneNode"]
+            "Value": ["outside_region", "En.SceneGraph.OutRegionNode"]
         },
         "WorldTransform": {
             "Type": "Matrix4",
@@ -43,7 +43,7 @@
             "Value": {
                 "BoxBV": {
                     "Type": "Box3",
-                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0]
+                    "Value": [0.0, 1.0, -0.25, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.5, 2.0, 1.25]
                 }
             }
         },
@@ -57,7 +57,11 @@
         },
         "NotifyFlag": {
             "Type": "Uint32",
-            "Value": 255
+            "Value": 31
+        },
+        "ParentId": {
+            "Type": "StringArray",
+            "Value": ["root", "En.SceneGraph.PortalManagementNode"]
         },
         "Children": {
             "Type": "DataObjectArray",
@@ -106,13 +110,13 @@
                                 "Type": "Boolean",
                                 "Value": false
                             },
-                            "GraphDepth": {
-                                "Type": "Uint32",
-                                "Value": 0
-                            },
                             "Id": {
                                 "Type": "StringArray",
                                 "Value": ["portal", "En.SceneGraph.Portal"]
+                            },
+                            "GraphDepth": {
+                                "Type": "Uint32",
+                                "Value": 0
                             },
                             "WorldTransform": {
                                 "Type": "Matrix4",
@@ -137,7 +141,11 @@
                             },
                             "NotifyFlag": {
                                 "Type": "Uint32",
-                                "Value": 255
+                                "Value": 31
+                            },
+                            "ParentId": {
+                                "Type": "StringArray",
+                                "Value": ["outside_region", "En.SceneGraph.OutRegionNode"]
                             },
                             "AdjacentNodeID": {
                                 "Type": "StringArray",
@@ -150,9 +158,5 @@
                         }
                     }
                 }]
-        },
-        "PortalParentID": {
-            "Type": "StringArray",
-            "Value": ["root", "En.SceneGraph.PortalManagementNode"]
         }
     }]

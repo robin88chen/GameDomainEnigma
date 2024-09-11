@@ -71,7 +71,6 @@ void PortalManagementNode::disassemble(const std::shared_ptr<SpatialDisassembler
     if (auto portal_disassembler = std::dynamic_pointer_cast<PortalManagementNodeDisassembler>(disassembler))
     {
         if (portal_disassembler->outsideRegionId()) m_outsideRegionId = portal_disassembler->outsideRegionId().value();
-        subscribeOutRegionAttachment();
     }
 }
 

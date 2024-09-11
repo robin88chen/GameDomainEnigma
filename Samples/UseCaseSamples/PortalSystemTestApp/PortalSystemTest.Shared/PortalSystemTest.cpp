@@ -32,11 +32,16 @@
 #include "Renderables/RenderablesInstallingPolicy.h"
 #include "Renderables/ModelPrimitiveAnimator.h"
 #include "SceneGraph/SceneGraphQueries.h"
-#include "SceneGraph/SceneGraphPersistenceLevel.h"
 #include "SceneGraph/LazyNode.h"
 #include "SceneGraph/PortalZoneNode.h"
 #include "SceneGraph/Portal.h"
 #include "SceneGraph/PortalManagementNode.h"
+#include "SceneGraph/OutRegionNode.h"
+#include "SceneGraph/PortalZoneNodeAssembler.h"
+#include "SceneGraph/OutRegionNodeAssembler.h"
+#include "SceneGraph/PortalSceneGraph.h"
+#include "SceneGraph/SceneGraphRepository.h"
+#include "SceneGraph/SceneGraphCommands.h"
 
 std::string PrimaryTargetName = "primary_target";
 std::string DefaultRendererName = "default_renderer";
@@ -112,7 +117,7 @@ void PortalSystemTest::installEngine()
     m_primitiveFileStoreMapper = std::make_shared<PrimitiveFileStoreMapper>("primitives.db.txt@DataPath", std::make_shared<DtoJsonGateway>());
     auto primitive_policy = std::make_shared<PrimitiveRepositoryInstallingPolicy>(m_primitiveFileStoreMapper);
     auto animator_policy = std::make_shared<AnimatorInstallingPolicy>(std::make_shared<AnimatorFileStoreMapper>("animators.db.txt@DataPath", std::make_shared<DtoJsonGateway>()), std::make_shared<AnimationAssetFileStoreMapper>("animation_assets.db.txt@DataPath", std::make_shared<DtoJsonGateway>()));
-    m_sceneGraphFileStoreMapper = std::make_shared<SceneGraphFileStoreMapper>("scene_graph.db.txt@DataPath", "lazy_scene.db.txt@DataPath", std::make_shared<DtoJsonGateway>());
+    m_sceneGraphFileStoreMapper = std::make_shared<SceneGraphFileStoreMapper>("scene_graph.db.txt@DataPath", "lazy_scene.db.txt@DataPath", "lazied_", std::make_shared<DtoJsonGateway>());
     auto scene_graph_policy = std::make_shared<SceneGraphInstallingPolicy>(m_sceneGraphFileStoreMapper);
     auto effect_material_source_policy = std::make_shared<EffectMaterialSourceRepositoryInstallingPolicy>(std::make_shared<EffectMaterialSourceFileStoreMapper>("effect_materials.db.txt@APK_PATH"));
     auto texture_policy = std::make_shared<TextureRepositoryInstallingPolicy>(std::make_shared<TextureFileStoreMapper>("textures.db.txt@APK_PATH", std::make_shared<DtoJsonGateway>()));
@@ -231,43 +236,44 @@ void PortalSystemTest::makeSceneGraph()
     auto floor_pawn_id = SpatialId("floor_pawn", Pawn::TYPE_RTTI);
     if (!m_sceneGraphFileStoreMapper->hasSpatial(floor_pawn_id))
     {
-        const auto floor_pawn_dto = SceneGraphMaker::makePawm(floor_pawn_id, floor_mesh_id, PrimitiveMeshMaker::getFloorBound());
+        const auto floor_pawn_dto = SceneGraphMaker::makePawn(floor_pawn_id, floor_mesh_id, PrimitiveMeshMaker::getFloorBound());
         m_sceneGraphFileStoreMapper->putSpatial(floor_pawn_id, floor_pawn_dto);
     }
     auto door_pawn_id = SpatialId("door_pawn", Pawn::TYPE_RTTI);
     if (!m_sceneGraphFileStoreMapper->hasSpatial(door_pawn_id))
     {
-        const auto door_pawn_dto = SceneGraphMaker::makePawm(door_pawn_id, door_mesh_id, PrimitiveMeshMaker::getDoorBound());
+        const auto door_pawn_dto = SceneGraphMaker::makePawn(door_pawn_id, door_mesh_id, PrimitiveMeshMaker::getDoorBound());
         m_sceneGraphFileStoreMapper->putSpatial(door_pawn_id, door_pawn_dto);
     }
     auto board_pawn_id = SpatialId("board_pawn", Pawn::TYPE_RTTI);
     if (!m_sceneGraphFileStoreMapper->hasSpatial(board_pawn_id))
     {
-        const auto board_pawn_dto = SceneGraphMaker::makePawm(board_pawn_id, board_mesh_id, PrimitiveMeshMaker::getBoardBound());
+        const auto board_pawn_dto = SceneGraphMaker::makePawn(board_pawn_id, board_mesh_id, PrimitiveMeshMaker::getBoardBound());
         m_sceneGraphFileStoreMapper->putSpatial(board_pawn_id, board_pawn_dto);
     }
 
     m_rootId = SpatialId("root", PortalManagementNode::TYPE_RTTI);
-    auto outside_region_id = SpatialId("outside_region", PortalZoneNode::TYPE_RTTI);
+    auto outside_region_id = SpatialId("outside_region", OutRegionNode::TYPE_RTTI);
     auto portal_id = SpatialId("portal", Portal::TYPE_RTTI);
     auto inside_zone_node_id = SpatialId("inside_zone_node", PortalZoneNode::TYPE_RTTI);
-    PortalZoneNodeAssembler inside_zone_assembler(inside_zone_node_id);
-    PortalZoneNodeAssembler outside_region_assembler(outside_region_id);
+    std::shared_ptr<HydratedPortalZoneNodeAssembler> inside_zone_assembler;
+    std::shared_ptr<HydratedOutRegionNodeAssembler> outside_region_assembler;
     if (!m_sceneGraphFileStoreMapper->hasLaziedContent(outside_region_id))
     {
-        outside_region_assembler = SceneGraphMaker::makeOutsideRegion(outside_region_id, m_rootId, portal_id, inside_zone_node_id, { floor_pawn_id, door_pawn_id });
-        m_sceneGraphFileStoreMapper->putLaziedContent(outside_region_id, outside_region_assembler.toHydratedGenericDto());
+        outside_region_assembler = SceneGraphMaker::makeHydratedOutsideRegion(outside_region_id, m_rootId, portal_id, inside_zone_node_id, { floor_pawn_id, door_pawn_id });
+        m_sceneGraphFileStoreMapper->putLaziedContent(outside_region_id, outside_region_assembler->assemble());
     }
     if (!m_sceneGraphFileStoreMapper->hasLaziedContent(inside_zone_node_id))
     {
-        inside_zone_assembler = SceneGraphMaker::makeInsideZoneNode(inside_zone_node_id, portal_id, { board_pawn_id });
-        m_sceneGraphFileStoreMapper->putLaziedContent(inside_zone_node_id, inside_zone_assembler.toHydratedGenericDto());
+        inside_zone_assembler = SceneGraphMaker::makeHydratedInsideZoneNode(inside_zone_node_id, portal_id, { board_pawn_id });
+        m_sceneGraphFileStoreMapper->putLaziedContent(inside_zone_node_id, inside_zone_assembler->assemble());
     }
     m_sceneGraph->createRoot(m_rootId);
     if (!m_sceneGraph->root())
     {
         auto root_dto = SceneGraphMaker::makeSceneGraph(m_rootId, outside_region_assembler, portal_id, inside_zone_assembler);
-        std::make_shared<RequestSpatialConstitution>(m_rootId, root_dto, PersistenceLevel::Store)->dispatch();
+        auto root = std::make_shared<RequestSpatialConstitution>(m_rootId, root_dto)->dispatch();
+        std::make_shared<PutSpatial>(m_rootId, root)->execute();
         m_sceneGraph->createRoot(m_rootId);
     }
 }

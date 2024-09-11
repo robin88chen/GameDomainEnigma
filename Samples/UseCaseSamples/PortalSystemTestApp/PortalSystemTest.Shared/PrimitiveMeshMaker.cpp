@@ -5,14 +5,11 @@
 #include "GameEngine/BoundingVolume.h"
 #include "GameEngine/EffectMaterial.h"
 #include "GraphicKernel/GraphicAPITypes.h"
-#include "MathLib/Box3.h"
-#include "MathLib/ContainmentBox3.h"
 #include "Gateways/DtoJsonGateway.h"
-#include "Geometries/GeometryDataDto.h"
+#include "Geometries/TriangleListAssembler.h"
 #include "Geometries/TriangleList.h"
-#include "Renderables/RenderablePrimitiveDtos.h"
 #include "Renderables/MeshPrimitive.h"
-#include "GameEngine/EffectDtoHelper.h"
+#include "Renderables/MeshPrimitiveAssembler.h"
 #include <vector>
 
 using namespace Enigma::MathLib;
@@ -62,26 +59,22 @@ Enigma::Engine::GenericDto PrimitiveMeshMaker::makeFloorGeometry(const Enigma::G
             mesh_index[patch_idx * 6 + 5] = vtx_idx + 1;
         }
     }
-    TextureCoordDto tex_dto;
-    tex_dto.texture2DCoords() = vtx_uv;
-    TriangleListDto dto;
-    dto.position3s() = vtx_pos;
-    dto.normals() = vtx_nor;
-    dto.textureCoords().emplace_back(tex_dto.toGenericDto());
-    dto.indices() = mesh_index;
-    dto.segments() = { 0, 121, 0, 600 };
-    dto.vertexCapacity() = 121;
-    dto.vertexUsedCount() = 121;
-    dto.indexCapacity() = 600;
-    dto.indexUsedCount() = 600;
-    dto.id() = id;
-    dto.vertexFormat() = "xyz_nor_tex1(2)";
-    dto.topology() = static_cast<unsigned>(PrimitiveTopology::Topology_TriangleList);
-    Box3 box = ContainmentBox3::ComputeAlignedBox(&vtx_pos[0], static_cast<unsigned>(vtx_pos.size()));
-    m_floorBounding = BoundingVolume{ box };
-    dto.geometryBound() = m_floorBounding.serializeDto().toGenericDto();
-    dto.factoryDesc() = FactoryDesc(TriangleList::TYPE_RTTI.getName()).ClaimAsResourceAsset(id.name(), id.name() + ".geo", "DataPath");
-    return dto.toGenericDto();
+    TriangleListAssembler assembler(id);
+    assembler.position3s(vtx_pos);
+    assembler.addTexture2DCoords(vtx_uv);
+    assembler.normals(vtx_nor);
+    assembler.indices(mesh_index);
+    assembler.addSegment({ 0, 121, 0, 600 });
+    assembler.vertexCapacity(121);
+    assembler.vertexUsedCount(121);
+    assembler.indexCapacity(600);
+    assembler.indexUsedCount(600);
+    assembler.topology(PrimitiveTopology::Topology_TriangleList);
+    assembler.asAsset(id.name(), id.name() + ".geo", "DataPath");
+    assembler.computeAlignedBox();
+    m_floorBounding = assembler.geometryBound();
+
+    return assembler.assemble();
 }
 
 GenericDto PrimitiveMeshMaker::makeDoorGeometry(const GeometryId& id)
@@ -128,26 +121,21 @@ GenericDto PrimitiveMeshMaker::makeDoorGeometry(const GeometryId& id)
         7,8,6, 7,9,8,
         10,9,7, 10,11,9,
     };
-    TextureCoordDto tex_dto;
-    tex_dto.texture2DCoords() = uv;
-    TriangleListDto dto;
-    dto.position3s() = pos;
-    dto.normals() = nor;
-    dto.textureCoords().emplace_back(tex_dto.toGenericDto());
-    dto.indices() = idx;
-    dto.segments() = { 0, static_cast<unsigned>(pos.size()), 0, static_cast<unsigned>(idx.size()) };
-    dto.vertexCapacity() = pos.size();
-    dto.vertexUsedCount() = pos.size();
-    dto.indexCapacity() = idx.size();
-    dto.indexUsedCount() = idx.size();
-    dto.id() = id;
-    dto.vertexFormat() = "xyz_nor_tex1(2)";
-    dto.topology() = static_cast<unsigned>(PrimitiveTopology::Topology_TriangleList);
-    Box3 box = ContainmentBox3::ComputeAlignedBox(&pos[0], static_cast<unsigned>(pos.size()));
-    m_doorBounding = BoundingVolume{ box };
-    dto.geometryBound() = m_doorBounding.serializeDto().toGenericDto();
-    dto.factoryDesc() = FactoryDesc(TriangleList::TYPE_RTTI.getName()).ClaimAsResourceAsset(id.name(), id.name() + ".geo", "DataPath");
-    return dto.toGenericDto();
+    TriangleListAssembler assembler(id);
+    assembler.position3s(pos);
+    assembler.addTexture2DCoords(uv);
+    assembler.normals(nor);
+    assembler.indices(idx);
+    assembler.addSegment({ 0, static_cast<unsigned>(pos.size()), 0, static_cast<unsigned>(idx.size()) });
+    assembler.vertexCapacity(pos.size());
+    assembler.vertexUsedCount(pos.size());
+    assembler.indexCapacity(idx.size());
+    assembler.indexUsedCount(idx.size());
+    assembler.topology(PrimitiveTopology::Topology_TriangleList);
+    assembler.asAsset(id.name(), id.name() + ".geo", "DataPath");
+    assembler.computeAlignedBox();
+    m_doorBounding = assembler.geometryBound();
+    return assembler.assemble();
 }
 
 GenericDto PrimitiveMeshMaker::makeBoardGeometry(const GeometryId& id)
@@ -172,40 +160,35 @@ GenericDto PrimitiveMeshMaker::makeBoardGeometry(const GeometryId& id)
     {
         0,1,2, 0,2,3,
     };
-    TextureCoordDto tex_dto;
-    tex_dto.texture2DCoords() = uv;
-    TriangleListDto dto;
-    dto.position3s() = pos;
-    dto.normals() = nor;
-    dto.textureCoords().emplace_back(tex_dto.toGenericDto());
-    dto.indices() = idx;
-    dto.segments() = { 0, static_cast<unsigned>(pos.size()), 0, static_cast<unsigned>(idx.size()) };
-    dto.vertexCapacity() = pos.size();
-    dto.vertexUsedCount() = pos.size();
-    dto.indexCapacity() = idx.size();
-    dto.indexUsedCount() = idx.size();
-    dto.id() = id;
-    dto.vertexFormat() = "xyz_nor_tex1(2)";
-    dto.topology() = static_cast<unsigned>(PrimitiveTopology::Topology_TriangleList);
-    Box3 box = ContainmentBox3::ComputeAlignedBox(&pos[0], static_cast<unsigned>(pos.size()));
-    m_boardBounding = BoundingVolume{ box };
-    dto.geometryBound() = m_boardBounding.serializeDto().toGenericDto();
-    dto.factoryDesc() = FactoryDesc(TriangleList::TYPE_RTTI.getName()).ClaimAsResourceAsset(id.name(), id.name() + ".geo", "DataPath");
-    return dto.toGenericDto();
+    TriangleListAssembler assembler(id);
+    assembler.position3s(pos);
+    assembler.addTexture2DCoords(uv);
+    assembler.normals(nor);
+    assembler.indices(idx);
+    assembler.addSegment({ 0, static_cast<unsigned>(pos.size()), 0, static_cast<unsigned>(idx.size()) });
+    assembler.vertexCapacity(pos.size());
+    assembler.vertexUsedCount(pos.size());
+    assembler.indexCapacity(idx.size());
+    assembler.indexUsedCount(idx.size());
+    assembler.topology(PrimitiveTopology::Topology_TriangleList);
+    assembler.asAsset(id.name(), id.name() + ".geo", "DataPath");
+    assembler.computeAlignedBox();
+    m_boardBounding = assembler.geometryBound();
+    return assembler.assemble();
 }
 
 GenericDto PrimitiveMeshMaker::makeMeshPrimitive(const PrimitiveId& mesh_id, const GeometryId& geo_id,
     const EffectMaterialId& effect_id, const TextureId& texture_id, const std::string& tex_semantic)
 {
-    MeshPrimitiveDto mesh_dto;
-    mesh_dto.id() = mesh_id;
-    mesh_dto.geometryId() = geo_id;
-    mesh_dto.factoryDesc() = FactoryDesc(MeshPrimitive::TYPE_RTTI.getName()).ClaimAsNative(mesh_id.name() + ".mesh@DataPath");
-    mesh_dto.effects().emplace_back(effect_id);
-    EffectTextureMapDtoHelper texture_helper;
-    texture_helper.textureMapping(texture_id, std::nullopt, tex_semantic);
-    mesh_dto.textureMaps().emplace_back(texture_helper.toGenericDto());
-    mesh_dto.renderListID() = Renderer::RenderListID::Scene;
-    mesh_dto.visualTechniqueSelection() = "Default";
-    return mesh_dto.toGenericDto();
+    MeshPrimitiveAssembler assembler(mesh_id);
+    assembler.geometryId(geo_id);
+    assembler.factoryDesc(FactoryDesc(MeshPrimitive::TYPE_RTTI));
+    assembler.asNative(mesh_id.name() + ".mesh@DataPath");
+    assembler.addEffect(effect_id);
+    std::shared_ptr<EffectTextureMapAssembler> texture_assembler = std::make_shared<EffectTextureMapAssembler>();
+    texture_assembler->addTextureMapping(texture_id, std::nullopt, tex_semantic);
+    assembler.addTextureMap(texture_assembler);
+    assembler.renderListID(Enigma::Renderer::Renderer::RenderListID::Scene);
+    assembler.visualTechnique("Default");
+    return assembler.assemble();
 }

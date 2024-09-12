@@ -6,11 +6,11 @@
         "Rtti": {
             "Type": "FactoryDesc",
             "Value": {
-                "InstanceType": 0,
+                "InstanceType": 2,
                 "ResourceName": "",
                 "ResourceFilename": "",
-                "RttiName": "En.SceneGraph.Node",
-                "PrefabFilename": ""
+                "RttiName": "En.SceneGraph.PortalZoneNode",
+                "PrefabFilename": "inside_zone_node.node@DataPath"
             }
         },
         "ModelBound": {
@@ -24,7 +24,7 @@
         },
         "TopLevel": {
             "Type": "Boolean",
-            "Value": false
+            "Value": true
         },
         "GraphDepth": {
             "Type": "Uint32",
@@ -32,7 +32,7 @@
         },
         "Id": {
             "Type": "StringArray",
-            "Value": ["root", "En.SceneGraph.Node"]
+            "Value": ["inside_zone_node", "En.SceneGraph.PortalZoneNode"]
         },
         "WorldTransform": {
             "Type": "Matrix4",
@@ -57,10 +57,19 @@
         },
         "NotifyFlag": {
             "Type": "Uint32",
-            "Value": 255
+            "Value": 31
         },
         "Children": {
             "Type": "DataObjectArray",
-            "Value": []
+            "Value": [{
+                    "Id": {
+                        "Type": "StringArray",
+                        "Value": ["cube_pawn", "En.SceneGraph.Pawn"]
+                    }
+                }]
+        },
+        "PortalParentID": {
+            "Type": "StringArray",
+            "Value": ["portal", "En.SceneGraph.Portal"]
         }
     }]

@@ -26,9 +26,11 @@
 #include "FileStorage/GeometryDataFileStoreMapper.h"
 #include "FileStorage/SceneGraphFileStoreMapper.h"
 #include "FileStorage/PrimitiveFileStoreMapper.h"
-#include "GameCommon/SceneRendererService.h"
+#include "Rendering/SceneRendering.h"
+#include "GameCommon/GameSceneService.h"
 #include <memory>
 #include <string>
+#include <Rendering/DeferredRenderingConfiguration.h>
 
 class PortalManagementTest : public Enigma::Application::AppDelegate
 {
@@ -53,7 +55,8 @@ private:
     void onRenderEngineInstalled(const Enigma::Frameworks::IEventPtr& e);
 
 protected:
-    std::weak_ptr<Enigma::GameCommon::SceneRendererService> m_sceneRendererService;
+    std::weak_ptr<Enigma::Rendering::SceneRendering> m_sceneRendering;
+    std::weak_ptr<Enigma::GameCommon::GameSceneService> m_gameSceneService;
 
     Enigma::Frameworks::EventSubscriberPtr m_onRenderEngineInstalled;
 
@@ -65,8 +68,8 @@ protected:
     std::shared_ptr<Enigma::Renderables::ModelPrimitive> m_model;
     Enigma::SceneGraph::SpatialId m_rootId;
     Enigma::SceneGraph::SpatialId m_portalManagementId;
-    Enigma::SceneGraph::NodePtr m_sceneRoot;
-    Enigma::SceneGraph::PawnPtr m_pawn;
+    std::shared_ptr<Enigma::SceneGraph::Node> m_sceneRoot;
+    std::shared_ptr<Enigma::SceneGraph::Pawn> m_pawn;
 
     Enigma::SceneGraph::SpatialId m_cameraId;
     std::shared_ptr<Enigma::SceneGraph::Camera> m_camera;

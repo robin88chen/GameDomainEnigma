@@ -1,73 +1,98 @@
 ﻿#include "SceneGraphMaker.h"
 #include "FileSystem/FileSystem.h"
 #include "GameEngine/BoundingVolume.h"
-#include "SceneGraph/SceneGraphDtos.h"
+#include "SceneGraph/SceneGraphQueries.h"
 #include "SceneGraph/Node.h"
 #include "PrimitiveMeshMaker.h"
 #include "SceneGraph/Pawn.h"
-#include "SceneGraph/PortalDtos.h"
-#include "SceneGraph/PortalManagementNode.h"
+#include "SceneGraph/PawnAssembler.h"
+#include "SceneGraph/PortalManagementNodeAssembler.h"
 #include "SceneGraph/PortalZoneNode.h"
-#include "SceneGraph/Portal.h"
-#include "SceneGraph/SceneGraphAssemblers.h"
+#include "SceneGraph/PortalAssembler.h"
+#include "SceneGraph/SceneGraphCommands.h"
 
 using namespace Enigma::Engine;
 using namespace Enigma::MathLib;
 using namespace Enigma::SceneGraph;
-using namespace Enigma::Renderer;
 using namespace Enigma::FileSystem;
 
-GenericDto SceneGraphMaker::makePawm(const SpatialId& id, const Enigma::Primitives::PrimitiveId& primitive_id, const
+GenericDto SceneGraphMaker::makePawn(const SpatialId& id, const Enigma::Primitives::PrimitiveId& primitive_id, const
     BoundingVolume& geometry_bound)
 {
-    PawnAssembler pawn(id);
-    pawn.spatial().localTransform(Matrix4::IDENTITY).modelBound(geometry_bound).topLevel(true);
-    pawn.primitive(primitive_id).asNative(id.name() + ".pawn@DataPath").constitute(
-        PersistenceLevel::Store);
-    return pawn.toPawnDto().toGenericDto();
+    std::shared_ptr<PawnAssembler> assembler = std::make_shared<PawnAssembler>(id);
+    assembler->localTransform(Matrix4::IDENTITY);
+    assembler->modelBound(geometry_bound);
+    assembler->topLevel(true);
+    assembler->primitiveId(primitive_id);
+    assembler->persist(id.name() + ".pawn", "DataPath");
+    return assembler->assemble();
 }
 
-PortalZoneNodeAssembler SceneGraphMaker::makeInsideZoneNode(const SpatialId& node_id, const SpatialId& portal_id, const std::vector<SpatialId>& children)
+std::tuple<std::shared_ptr<HydratedPortalZoneNodeAssembler>, std::shared_ptr<DehydratedPortalZoneNodeAssembler>> SceneGraphMaker::makeInsideZoneNode(const SpatialId& node_id, const SpatialId& portal_id, const std::vector<SpatialId>& children)
 {
     BoundingVolume unit_bv(Box3::UNIT_BOX);
-    PortalZoneNodeAssembler node_assembler(node_id);
-    node_assembler.lazyNode().node().spatial().localTransform(Matrix4::IDENTITY).modelBound(unit_bv).topLevel(true);
+    std::shared_ptr<HydratedPortalZoneNodeAssembler> hydrated_assembler = std::make_shared<HydratedPortalZoneNodeAssembler>(node_id);
+    std::shared_ptr<DehydratedPortalZoneNodeAssembler> dehydrated_assembler = std::make_shared<DehydratedPortalZoneNodeAssembler>(node_id);
+    hydrated_assembler->localTransform(Matrix4::IDENTITY);
+    dehydrated_assembler->localTransform(Matrix4::IDENTITY);
+    hydrated_assembler->modelBound(unit_bv);
+    dehydrated_assembler->modelBound(unit_bv);
+    hydrated_assembler->topLevel(true);
+    dehydrated_assembler->topLevel(true);
     for (const auto& child : children)
     {
-        node_assembler.lazyNode().node().child(child);
+        hydrated_assembler->child(child);
     }
-    node_assembler.asDeferred(node_id.name() + ".node", "DataPath");
-    node_assembler.portalParentId(portal_id);
+    hydrated_assembler->persist(node_id.name() + ".node", "DataPath");
+    dehydrated_assembler->persist(node_id.name() + ".node", "DataPath");
+    hydrated_assembler->portalParentId(portal_id);
+    dehydrated_assembler->portalParentId(portal_id);
 
-    return node_assembler;
+    return { hydrated_assembler, dehydrated_assembler };
 }
 
-PortalZoneNodeAssembler SceneGraphMaker::makeOutsideRegion(const SpatialId& outside_id, const SpatialId& root_id, const SpatialId& portal_id, const SpatialId& inside_zone_id, const std::vector<SpatialId>& children)
+std::tuple<std::shared_ptr<HydratedOutRegionNodeAssembler>, std::shared_ptr<DehydratedOutRegionNodeAssembler>> SceneGraphMaker::makeOutsideRegion(const SpatialId& outside_id, const SpatialId& root_id, const SpatialId& portal_id, const SpatialId& inside_zone_id, const std::vector<SpatialId>& children)
 {
     BoundingVolume unit_bv(Box3::UNIT_BOX);
-    PortalZoneNodeAssembler node_assembler(outside_id);
-    node_assembler.lazyNode().node().spatial().localTransform(Matrix4::IDENTITY).modelBound(unit_bv).topLevel(true);
+    std::shared_ptr<HydratedOutRegionNodeAssembler> hydrated_assembler = std::make_shared<HydratedOutRegionNodeAssembler>(outside_id);
+    std::shared_ptr<DehydratedOutRegionNodeAssembler> dehydrated_assembler = std::make_shared<DehydratedOutRegionNodeAssembler>(outside_id);
+
+    hydrated_assembler->localTransform(Matrix4::IDENTITY);
+    dehydrated_assembler->localTransform(Matrix4::IDENTITY);
+    hydrated_assembler->modelBound(unit_bv);
+    dehydrated_assembler->modelBound(unit_bv);
+    hydrated_assembler->topLevel(true);
+    dehydrated_assembler->topLevel(true);
     for (const auto& child : children)
     {
-        node_assembler.lazyNode().node().child(child);
+        hydrated_assembler->child(child);
     }
-    node_assembler.asDeferred(outside_id.name() + ".node", "DataPath");
-    node_assembler.portalParentId(root_id);
+    hydrated_assembler->persist(outside_id.name() + ".node", "DataPath");
+    dehydrated_assembler->persist(outside_id.name() + ".node", "DataPath");
+    hydrated_assembler->parentId(root_id);
+    dehydrated_assembler->parentId(root_id);
 
-    PortalAssembler portal_assembler(portal_id);
-    portal_assembler.spatial().localTransform(Matrix4::IDENTITY).modelBound(PrimitiveMeshMaker::getDoorBound());
-    portal_assembler.adjacentZoneNodeId(inside_zone_id).isOpen(true).asNative(portal_id.name() + ".portal@DataPath");
-    node_assembler.lazyNode().node().child(portal_id, portal_assembler.toGenericDto());
-    return node_assembler;
+    std::shared_ptr<PortalAssembler> portal_assembler = std::make_shared<PortalAssembler>(portal_id);
+    portal_assembler->localTransform(Matrix4::IDENTITY);
+    portal_assembler->modelBound(PrimitiveMeshMaker::getDoorBound());
+    portal_assembler->adjacentNodeId(inside_zone_id);
+    portal_assembler->isOpen(true);
+    portal_assembler->persist(portal_id.name() + ".portal", "DataPath");
+    hydrated_assembler->child(portal_assembler);
+    return { hydrated_assembler, dehydrated_assembler };
 }
 
-GenericDto SceneGraphMaker::makePortalManagementNode(const SpatialId& node_id, const PortalZoneNodeAssembler& outside_region, const PortalZoneNodeAssembler& inside_zone)
+GenericDto SceneGraphMaker::makePortalManagementNode(const SpatialId& node_id, const std::shared_ptr<HydratedOutRegionNodeAssembler>& outside_region, const std::shared_ptr<HydratedPortalZoneNodeAssembler>& inside_zone)
 {
     BoundingVolume root_bv(Box3::UNIT_BOX);
-    PortalManagementNodeAssembler root_assembler(node_id);
-    root_assembler.node().spatial().localTransform(Matrix4::IDENTITY).modelBound(root_bv).topLevel(true);
-    root_assembler.node().child(inside_zone.id(), inside_zone.toDeHydratedGenericDto()).child(outside_region.id(), outside_region.toDeHydratedGenericDto());
-    root_assembler.asNative(node_id.name() + ".node@DataPath").outsideZoneNodeId(outside_region.id());
+    std::shared_ptr<PortalManagementNodeAssembler> root_assembler = std::make_shared<PortalManagementNodeAssembler>(node_id);
+    root_assembler->localTransform(Matrix4::IDENTITY);
+    root_assembler->modelBound(root_bv);
+    root_assembler->topLevel(true);
+    //root_assembler->child(inside_zone);
+    root_assembler->child(outside_region);
+    root_assembler->persist(node_id.name() + ".node", "DataPath");
+    root_assembler->outsideRegionId(outside_region->id());
 
-    return root_assembler.toGenericDto();
+    return root_assembler->assemble();
 }

@@ -1,6 +1,6 @@
-camera,En.SceneGraph.Camera,camera.cam@DataPath
-portal_management,En.SceneGraph.PortalManagementNode,portal_management.node@DataPath
 floor_pawn,En.SceneGraph.Pawn,floor_pawn.pawn@DataPath
+inside_zone_node,En.SceneGraph.PortalZoneNode,inside_zone_node.node@DataPath
 door_pawn,En.SceneGraph.Pawn,door_pawn.pawn@DataPath
 cube_pawn,En.SceneGraph.Pawn,cube_pawn.pawn@DataPath
-root,En.SceneGraph.Node,root.En.SceneGraph.Node.json
+outside_region,En.SceneGraph.OutRegionNode,outside_region.node@DataPath
+portal_management,En.SceneGraph.PortalManagementNode,portal_management.node@DataPath

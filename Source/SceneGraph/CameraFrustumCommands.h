@@ -9,7 +9,6 @@
 #define CAMERA_FRUSTUM_COMMANDS_H
 
 #include "Frameworks/Command.h"
-#include "GameEngine/GenericDto.h"
 #include "SpatialId.h"
 
 namespace Enigma::SceneGraph

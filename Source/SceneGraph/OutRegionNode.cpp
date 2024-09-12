@@ -12,13 +12,6 @@ OutRegionNode::OutRegionNode(const SpatialId& id) : LazyNode(id)
     m_hasTraversed = false;
 }
 
-/*OutRegionNode::OutRegionNode(const SpatialId& id, const Engine::GenericDto& o) : LazyNode(id, o)
-{
-    m_hasTraversed = false;
-    OutRegionNodeDto dto{ o };
-    m_ownerManagementId = dto.ownerManagementId();
-}*/
-
 OutRegionNode::~OutRegionNode()
 {
 }
@@ -77,37 +70,6 @@ void OutRegionNode::assembleLaziedContent(const std::shared_ptr<HydratedLazyNode
         if (m_ownerManagementId.has_value()) outRegionAssembler->ownerManagementId(m_ownerManagementId.value());
     }
 }
-
-/*std::shared_ptr<OutRegionNode> OutRegionNode::create(const SpatialId& id)
-{
-    return std::make_shared<OutRegionNode>(id);
-}
-
-std::shared_ptr<OutRegionNode> OutRegionNode::constitute(const SpatialId& id, const Engine::GenericDto& dto)
-{
-    return std::make_shared<OutRegionNode>(id, dto);
-}
-
-Enigma::Engine::GenericDto OutRegionNode::serializeDto()
-{
-    OutRegionNodeDto dto = OutRegionNodeDto(LazyNode::serializeLazyNodeAsLaziness());
-    if (m_ownerManagementId.has_value()) dto.ownerManagementId(m_ownerManagementId.value());
-    return dto.toGenericDto();
-}
-
-Enigma::Engine::GenericDto OutRegionNode::serializeLaziedContent()
-{
-    OutRegionNodeDto dto = OutRegionNodeDto(LazyNodeDto(Node::serializeNodeDto()));
-    if (m_ownerManagementId.has_value()) dto.ownerManagementId(m_ownerManagementId.value());
-    return dto.toGenericDto();
-}
-
-Enigma::Engine::GenericDto OutRegionNode::serializeAsLaziness()
-{
-    OutRegionNodeDto dto = OutRegionNodeDto(LazyNode::serializeLazyNodeAsLaziness());
-    if (m_ownerManagementId.has_value()) dto.ownerManagementId(m_ownerManagementId.value());
-    return dto.toGenericDto();
-}*/
 
 error OutRegionNode::onCullingVisible(Culler* culler, bool noCull)
 {

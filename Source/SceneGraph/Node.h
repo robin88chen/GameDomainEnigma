@@ -43,9 +43,6 @@ namespace Enigma::SceneGraph
 
         static std::shared_ptr<Node> queryNode(const SpatialId& id);
 
-        //todo: remove
-        //virtual Engine::GenericDtoCollection serializeFlattenedTree();
-
         /** on cull visible, used by culler, for compute visible set, recursive calling children's "CullingVisibleSet"  */
         virtual error onCullingVisible(Culler* culler, bool noCull) override;
         virtual bool canVisited() override { return true; };
@@ -83,9 +80,6 @@ namespace Enigma::SceneGraph
         {
             return std::dynamic_pointer_cast<const Node, const Spatial>(shared_from_this());
         }
-
-    protected:
-        //NodeDto serializeNodeDto();
 
     protected:
         //todo : rethink -- mutex for lock list??

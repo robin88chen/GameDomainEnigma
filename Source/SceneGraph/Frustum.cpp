@@ -3,7 +3,6 @@
 #include "SceneGraphErrors.h"
 #include "MathLib/MathAlgorithm.h"
 #include "MathLib/MathGlobal.h"
-#include "CameraDtos.h"
 #include "Frameworks/EventPublisher.h"
 #include "FrustumAssembler.h"
 
@@ -57,34 +56,6 @@ void Frustum::constructProjectionTransform()
         }
     }
 }
-
-/*Frustum::Frustum(const GenericDto& dto)
-{
-    FrustumDto frustum_dto = FrustumDto::fromGenericDto(dto);
-    m_handCoord = frustum_dto.HandSystem();
-    m_projectionType = frustum_dto.ProjectionType();
-    m_fov = Radian(frustum_dto.Fov());
-    m_nearPlaneZ = frustum_dto.NearPlaneZ();
-    m_farPlaneZ = frustum_dto.FarPlaneZ();
-    m_aspectRatio = frustum_dto.AspectRatio();
-    m_nearWidth = frustum_dto.NearWidth();
-    m_nearHeight = frustum_dto.NearHeight();
-    constructProjectionTransform();
-}
-
-GenericDto Frustum::serializeDto()
-{
-    FrustumDto dto;
-    dto.HandSystem() = m_handCoord;
-    dto.ProjectionType() = m_projectionType;
-    dto.Fov() = m_fov.value();
-    dto.NearPlaneZ() = m_nearPlaneZ;
-    dto.FarPlaneZ() = m_farPlaneZ;
-    dto.AspectRatio() = m_aspectRatio;
-    dto.NearWidth() = m_nearWidth;
-    dto.NearHeight() = m_nearHeight;
-    return dto.toGenericDto();
-}*/
 
 Frustum Frustum::fromPerspective(GraphicCoordSys hand, Radian fov, float aspect, float n_plane, float f_plane)
 {

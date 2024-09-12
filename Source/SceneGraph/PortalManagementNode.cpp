@@ -24,14 +24,6 @@ PortalManagementNode::PortalManagementNode(const SpatialId& id) : Node(id)
     subscribeOutRegionAttachment();
 }
 
-/*PortalManagementNode::PortalManagementNode(const SpatialId& id, const Engine::GenericDto& o) : Node(id, o)
-{
-    m_outsideRegion = nullptr;
-    PortalManagementNodeDto dto{ o };
-    if (dto.outsideRegionId()) m_outsideRegionId = dto.outsideRegionId().value();
-    subscribeOutRegionAttachment();
-}*/
-
 PortalManagementNode::~PortalManagementNode()
 {
     unsubscribeOutRegionAttachment();
@@ -73,23 +65,6 @@ void PortalManagementNode::disassemble(const std::shared_ptr<SpatialDisassembler
         if (portal_disassembler->outsideRegionId()) m_outsideRegionId = portal_disassembler->outsideRegionId().value();
     }
 }
-
-/*std::shared_ptr<PortalManagementNode> PortalManagementNode::create(const SpatialId& id)
-{
-    return std::make_shared<PortalManagementNode>(id);
-}
-
-std::shared_ptr<PortalManagementNode> PortalManagementNode::constitute(const SpatialId& id, const Engine::GenericDto& dto)
-{
-    return std::make_shared<PortalManagementNode>(id, dto);
-}
-
-GenericDto PortalManagementNode::serializeDto()
-{
-    PortalManagementNodeDto dto(serializeNodeDto());
-    if (!m_outsideRegionId.empty()) dto.outsideRegionId(m_outsideRegionId);
-    return dto.toGenericDto();
-}*/
 
 void PortalManagementNode::attachOutsideRegion(const std::shared_ptr<OutRegionNode>& node)
 {

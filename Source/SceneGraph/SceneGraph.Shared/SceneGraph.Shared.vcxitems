@@ -17,7 +17,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Camera.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\CameraAssembler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\CameraFrustumCommands.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\CameraDtos.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\CameraFrustumEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ContainingPortalZoneFinder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Culler.h" />
@@ -35,7 +34,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightInfo.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightInfoTraversal.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightDtos.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\NodalSceneGraph.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Node.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\NodeAssembler.h" />
@@ -45,9 +43,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PawnAssembler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Portal.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalAssembler.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalAssemblers.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalCommands.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalDtos.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalManagementNode.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalManagementNodeAssembler.h" />
@@ -56,8 +52,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalZoneNodeAssembler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneFlattenTraversal.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphCommands.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphAssemblers.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphDtos.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphDefines.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphEvents.h" />
@@ -74,7 +68,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneTraveler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Spatial.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialAssembler.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialId.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialLightInfoQuery.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialRenderState.h" />
@@ -85,7 +78,6 @@
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Camera.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\CameraAssembler.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\CameraDtos.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ContainingPortalZoneFinder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Culler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EnumDerivedSpatials.cpp" />
@@ -100,7 +92,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightAssemblers.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightCommands.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightInfo.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightDtos.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightInfoTraversal.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\NodalSceneGraph.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Node.cpp" />
@@ -111,17 +102,13 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PawnAssembler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Portal.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalAssembler.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalAssemblers.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalDtos.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalManagementNode.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalManagementNodeAssembler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalSceneGraph.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalZoneNode.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalZoneNodeAssembler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneFlattenTraversal.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphAssemblers.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphCommands.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphDtos.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphFactory.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphInstallingPolicy.cpp" />
@@ -131,7 +118,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneNonLazyFlattenTraversal.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Spatial.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialAssembler.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialId.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialLightInfoQuery.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\VisibilityManagedNode.cpp" />

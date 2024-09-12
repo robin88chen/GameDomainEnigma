@@ -8,8 +8,6 @@
 #ifndef _ANIMATED_PAWN_DTO_H
 #define _ANIMATED_PAWN_DTO_H
 
-#include "SceneGraph/SceneGraphDtos.h"
-
 namespace Enigma::GameCommon
 {
     /*class AnimatedPawnDto : public SceneGraph::PawnDto

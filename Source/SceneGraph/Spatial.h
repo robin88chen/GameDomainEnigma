@@ -18,9 +18,7 @@
 #include "SpatialRenderState.h"
 #include "Frameworks/Rtti.h"
 #include "GameEngine/FactoryDesc.h"
-#include "GameEngine/LinkageResolver.h"
 #include "SceneGraphPersistenceLevel.h"
-#include <string>
 #include <memory>
 #include <system_error>
 #include <bitset>
@@ -242,12 +240,8 @@ namespace Enigma::SceneGraph
         }
 
     protected:
-        //SpatialDto serializeSpatialDto();
-
-    protected:
         SpatialId m_id;
         PersistenceLevel m_persistenceLevel;
-        //std::string m_name;
 
         Engine::FactoryDesc m_factoryDesc;
 

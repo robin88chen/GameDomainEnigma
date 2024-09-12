@@ -19,17 +19,11 @@
     <Filter Include="Visibilities">
       <UniqueIdentifier>{91848c0a-c165-4152-9490-3558f3e042e8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Portal System\Dtos">
-      <UniqueIdentifier>{06aaa09e-d052-45ed-8dde-145f70ebfb2a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Installing">
       <UniqueIdentifier>{8cf6c686-c6e8-43fb-831a-333a82d058ef}</UniqueIdentifier>
     </Filter>
     <Filter Include="Repository\StoreMapper">
       <UniqueIdentifier>{227981a7-1c6e-4575-af21-6bf16d55db5d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DTO &amp; Assemblers">
-      <UniqueIdentifier>{2e119933-502e-48d9-b642-a1d9450a14cf}</UniqueIdentifier>
     </Filter>
     <Filter Include="Lazy Node Hydration">
       <UniqueIdentifier>{4e37e94c-8b2a-49e1-adcf-8d4049626af6}</UniqueIdentifier>
@@ -120,17 +114,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneFlattenTraversal.h">
       <Filter>Scene Traveler</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphDtos.h">
-      <Filter>DTO &amp; Assemblers</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphCommands.h">
       <Filter>Communication\Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightDtos.h">
-      <Filter>DTO &amp; Assemblers</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\CameraDtos.h">
-      <Filter>DTO &amp; Assemblers</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LazyNodeHydrationService.h">
       <Filter>Lazy Node Hydration</Filter>
@@ -140,9 +125,6 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalZoneNode.h">
       <Filter>Portal System</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalDtos.h">
-      <Filter>Portal System\Dtos</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Portal.h">
       <Filter>Portal System</Filter>
@@ -161,9 +143,6 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphInstallingPolicy.h">
       <Filter>Installing</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphAssemblers.h">
-      <Filter>DTO &amp; Assemblers</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalCommands.h">
       <Filter>Communication\Commands</Filter>
@@ -224,12 +203,6 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphFactoryDelegate.h">
       <Filter>Repository</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialDto.h">
-      <Filter>DTO &amp; Assemblers</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalAssemblers.h">
-      <Filter>Portal System\Dtos</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightEvents.h">
       <Filter>Communication\Events</Filter>
@@ -314,15 +287,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneFlattenTraversal.cpp">
       <Filter>Scene Traveler</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphDtos.cpp">
-      <Filter>DTO &amp; Assemblers</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightDtos.cpp">
-      <Filter>DTO &amp; Assemblers</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\CameraDtos.cpp">
-      <Filter>DTO &amp; Assemblers</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LazyNodeHydrationService.cpp">
       <Filter>Lazy Node Hydration</Filter>
     </ClCompile>
@@ -331,9 +295,6 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalZoneNode.cpp">
       <Filter>Portal System</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalDtos.cpp">
-      <Filter>Portal System\Dtos</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Portal.cpp">
       <Filter>Portal System</Filter>
@@ -349,9 +310,6 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphInstallingPolicy.cpp">
       <Filter>Installing</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphAssemblers.cpp">
-      <Filter>DTO &amp; Assemblers</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EnumDerivedSpatials.cpp">
       <Filter>Scene Traveler</Filter>
@@ -394,12 +352,6 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalSceneGraph.cpp">
       <Filter>Scene Graph</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialDto.cpp">
-      <Filter>DTO &amp; Assemblers</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalAssemblers.cpp">
-      <Filter>Portal System\Dtos</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightCommands.cpp">
       <Filter>Communication\Commands</Filter>

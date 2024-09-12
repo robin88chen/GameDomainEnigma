@@ -13,7 +13,6 @@
 #include "GameEngine/BoundingVolume.h"
 #include "TerrainPrimitiveDto.h"
 #include "Frameworks/ExtentTypesDefine.h"
-#include "SceneGraph/SceneGraphAssemblers.h"
 
 namespace Enigma::Terrain
 {

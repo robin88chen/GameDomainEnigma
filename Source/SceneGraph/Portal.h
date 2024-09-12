@@ -12,7 +12,6 @@
 #include "MathLib/Vector3.h"
 #include "MathLib/Plane3.h"
 #include <memory>
-#include "GameEngine/LinkageResolver.h"
 
 #define PORTAL_VERTEX_COUNT     4
 

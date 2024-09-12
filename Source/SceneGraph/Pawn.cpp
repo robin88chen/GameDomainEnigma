@@ -19,12 +19,6 @@ Pawn::Pawn(const SpatialId& id) : Spatial(id)
     removeSpatialFlag(Spatial_Unlit);
 }
 
-/*Pawn::Pawn(const SpatialId& id, const Engine::GenericDto& dto) : Spatial(id, dto)
-{
-    PawnDto pawn_dto{ dto };
-    if (pawn_dto.primitiveId()) m_primitive = Primitives::Primitive::queryPrimitive(pawn_dto.primitiveId().value());
-}*/
-
 Pawn::~Pawn()
 {
     m_primitive = nullptr;
@@ -71,36 +65,11 @@ void Pawn::disassemble(const std::shared_ptr<SpatialDisassembler>& disassembler)
     }
 }
 
-/*std::shared_ptr<Pawn> Pawn::create(const SpatialId& id)
-{
-    return std::make_shared<Pawn>(id);
-}
-
-std::shared_ptr<Pawn> Pawn::constitute(const SpatialId& id, const Engine::GenericDto& dto)
-{
-    return std::make_shared<Pawn>(id, dto);
-}*/
-
 std::shared_ptr<Pawn> Pawn::queryPawn(const SpatialId& id)
 {
     assert(id.rtti().isDerived(Pawn::TYPE_RTTI));
     return std::dynamic_pointer_cast<Pawn>(std::make_shared<QuerySpatial>(id)->dispatch());
 }
-
-/*Enigma::Engine::GenericDto Pawn::serializeDto()
-{
-    return SerializePawnDto().toGenericDto();
-}
-
-PawnDto Pawn::SerializePawnDto()
-{
-    PawnDto dto(serializeSpatialDto());
-    if (m_primitive)
-    {
-        dto.primitiveId(m_primitive->id());
-    }
-    return dto;
-}*/
 
 error Pawn::onCullingVisible(Culler* culler, bool noCull)
 {

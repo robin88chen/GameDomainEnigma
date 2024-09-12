@@ -8,8 +8,6 @@
 #ifndef LIGHTING_PAWN_DTO_H
 #define LIGHTING_PAWN_DTO_H
 
-#include "SceneGraph/SceneGraphDtos.h"
-
 namespace Enigma::Rendering
 {
     /*class LightingPawnDto : public SceneGraph::PawnDto

@@ -12,10 +12,10 @@
 #include "SceneGraph/SceneGraphRepository.h"
 #include "SceneGraph/SpatialId.h"
 #include "MathLib/Ray3.h"
+#include "MathLib/Radian.h"
 #include "Frameworks/EventSubscriber.h"
 #include "Frameworks/CommandSubscriber.h"
 #include "Frameworks/QuerySubscriber.h"
-#include "SceneGraph/CameraDtos.h"
 
 namespace Enigma::GameCommon
 {

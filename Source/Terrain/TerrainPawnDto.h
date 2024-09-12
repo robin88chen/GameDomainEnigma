@@ -8,7 +8,6 @@
 #ifndef TERRAIN_PAWN_DTO_H
 #define TERRAIN_PAWN_DTO_H
 
-#include "SceneGraph/SceneGraphDtos.h"
 namespace Enigma::Terrain
 {
     /*class TerrainPawnDto : public SceneGraph::PawnDto

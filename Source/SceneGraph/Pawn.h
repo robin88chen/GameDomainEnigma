@@ -12,7 +12,6 @@
 #include "GameEngine/IRenderer.h"
 #include "Primitives/Primitive.h"
 #include "Animators/Animator.h"
-#include <string>
 #include <list>
 
 namespace Enigma::SceneGraph

@@ -9,7 +9,8 @@
 #define _GAME_COMMON_INSTALLING_POLICIES_H
 
 #include "GameEngine/InstallingPolicy.h"
-#include "SceneGraph/CameraDtos.h"
+#include "SceneGraph/SpatialId.h"
+#include "GameEngine/GenericDto.h"
 
 namespace Enigma::GameCommon
 {

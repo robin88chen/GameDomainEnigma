@@ -18,13 +18,6 @@ PortalZoneNode::PortalZoneNode(const SpatialId& id) : LazyNode(id)
     m_hasTraversed = false;
 }
 
-/*PortalZoneNode::PortalZoneNode(const SpatialId& id, const Engine::GenericDto& o) : LazyNode(id, o)
-{
-    m_hasTraversed = false;
-    PortalZoneNodeDto dto{ o };
-    m_portalParentId = dto.portalParentId();
-}*/
-
 PortalZoneNode::~PortalZoneNode()
 {
 }
@@ -83,37 +76,6 @@ void PortalZoneNode::assembleLaziedContent(const std::shared_ptr<HydratedLazyNod
         if (m_portalParentId) node_assembler->portalParentId(m_portalParentId.value());
     }
 }
-
-/*std::shared_ptr<PortalZoneNode> PortalZoneNode::create(const SpatialId& id)
-{
-    return std::make_shared<PortalZoneNode>(id);
-}
-
-std::shared_ptr<PortalZoneNode> PortalZoneNode::constitute(const SpatialId& id, const Engine::GenericDto& dto)
-{
-    return std::make_shared<PortalZoneNode>(id, dto);
-}
-
-GenericDto PortalZoneNode::serializeDto()
-{
-    PortalZoneNodeDto dto = PortalZoneNodeDto(LazyNode::serializeLazyNodeAsLaziness());
-    if (m_portalParentId.has_value()) dto.portalParentId(m_portalParentId.value());
-    return dto.toGenericDto();
-}
-
-GenericDto PortalZoneNode::serializeLaziedContent()
-{
-    PortalZoneNodeDto dto = PortalZoneNodeDto(LazyNodeDto(Node::serializeNodeDto()));
-    if (m_portalParentId.has_value()) dto.portalParentId(m_portalParentId.value());
-    return dto.toGenericDto();
-}
-
-GenericDto PortalZoneNode::serializeAsLaziness()
-{
-    PortalZoneNodeDto dto = PortalZoneNodeDto(LazyNode::serializeLazyNodeAsLaziness());
-    if (m_portalParentId.has_value()) dto.portalParentId(m_portalParentId.value());
-    return dto.toGenericDto();
-}*/
 
 error PortalZoneNode::onCullingVisible(Culler* culler, bool noCull)
 {

@@ -17,10 +17,6 @@ VisibilityManagedNode::VisibilityManagedNode(const SpatialId& id) : LazyNode(id)
 {
 }
 
-/*VisibilityManagedNode::VisibilityManagedNode(const SpatialId& id, const Engine::GenericDto& o) : LazyNode(id, o)
-{
-}*/
-
 VisibilityManagedNode::~VisibilityManagedNode()
 {
 
@@ -50,22 +46,6 @@ std::shared_ptr<HydratedLazyNodeDisassembler> VisibilityManagedNode::disassemble
 {
     return std::make_shared<HydratedVisibilityManagedNodeDisassembler>();
 }
-
-/*std::shared_ptr<VisibilityManagedNode> VisibilityManagedNode::create(const SpatialId& id)
-{
-    return std::make_shared<VisibilityManagedNode>(id);
-}
-
-std::shared_ptr<VisibilityManagedNode> VisibilityManagedNode::constitute(const SpatialId& id, const Engine::GenericDto& dto)
-{
-    return std::make_shared<VisibilityManagedNode>(id, dto);
-}
-
-GenericDto VisibilityManagedNode::serializeDto()
-{
-    return LazyNode::serializeDto();
-}*/
-
 
 error VisibilityManagedNode::onCullingVisible(Culler* culler, bool noCull)
 {

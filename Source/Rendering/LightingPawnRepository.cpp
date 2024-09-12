@@ -4,7 +4,6 @@
 #include "LightingPawnAssemblers.h"
 #include "Renderables/MeshPrimitive.h"
 #include "SceneGraph/SceneGraphQueries.h"
-#include "SceneGraph/SceneGraphAssemblers.h"
 #include "SceneGraph/Node.h"
 #include "SceneGraph/SceneGraphCommands.h"
 #include "SceneGraph/SceneGraphEvents.h"

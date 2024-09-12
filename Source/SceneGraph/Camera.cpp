@@ -1,6 +1,5 @@
 ﻿#include "Camera.h"
 #include "SceneGraphErrors.h"
-#include "CameraDtos.h"
 #include "Frustum.h"
 #include "CameraFrustumEvents.h"
 #include "MathLib/Ray3.h"
@@ -34,14 +33,6 @@ Camera::Camera(const SpatialId& id, GraphicCoordSys hand) : m_id(id), m_factoryD
     m_vecRight = Vector3::UNIT_X;
 }
 
-/*Camera::Camera(const SpatialId& id, const GenericDto& dto) : m_id(id), m_factoryDesc(dto.getRtti())
-{
-    CameraDto camera_dto = CameraDto::fromGenericDto(dto);
-    m_handSys = camera_dto.HandSystem();
-    changeCameraFrame(camera_dto.EyePosition(), camera_dto.LookAtDirection(), camera_dto.UpVector());
-    m_cullingFrustum = Frustum(camera_dto.Frustum());
-}*/
-
 Camera::~Camera()
 {
 }
@@ -69,21 +60,6 @@ void Camera::disassemble(const std::shared_ptr<CameraDisassembler>& disassembler
     changeCameraFrame(disassembler->eyePosition(), disassembler->lookAt(), disassembler->upDirection());
     m_cullingFrustum = disassembler->frustum();
 }
-
-/*GenericDto Camera::serializeDto()
-{
-    CameraDto dto;
-    dto.factoryDesc() = m_factoryDesc;
-    dto.id() = m_id;
-    dto.HandSystem() = m_handSys;
-    dto.EyePosition() = m_vecLocation;
-    dto.LookAtDirection() = m_vecEyeToLookAt;
-    dto.UpVector() = m_vecUp;
-    dto.Frustum() = m_cullingFrustum.serializeDto();
-    GenericDto generic_dto = dto.toGenericDto();
-    generic_dto.addName(m_id.name());
-    return generic_dto;
-}*/
 
 error Camera::changeCameraFrame(const std::optional<Vector3>& eye,
     const std::optional<Vector3>& eye_to_lookat, const std::optional<Vector3>& up)

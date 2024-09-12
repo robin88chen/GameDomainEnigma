@@ -29,15 +29,6 @@ Portal::Portal(const SpatialId& id) : Spatial(id)
     m_zoneLoadStatus = ZoneLoadStatus::None;
 }
 
-/*Portal::Portal(const SpatialId& id, const Engine::GenericDto& o) : Spatial(id, o)
-{
-    m_adjacentPortalZone = nullptr;
-    PortalDto dto{ o };
-    m_isOpen = dto.isOpen();
-    m_adjacentZoneId = dto.adjacentZoneNodeId();
-    m_zoneLoadStatus = ZoneLoadStatus::None;
-}*/
-
 Portal::~Portal()
 {
 }
@@ -84,24 +75,6 @@ void Portal::disassemble(const std::shared_ptr<SpatialDisassembler>& disassemble
         m_isOpen = portal_disassembler->isOpen();
     }
 }
-
-/*std::shared_ptr<Portal> Portal::create(const SpatialId& id)
-{
-    return std::make_shared<Portal>(id);
-}
-
-std::shared_ptr<Portal> Portal::constitute(const SpatialId& id, const Engine::GenericDto& dto)
-{
-    return std::make_shared<Portal>(id, dto);
-}
-
-Enigma::Engine::GenericDto Portal::serializeDto()
-{
-    PortalDto dto(serializeSpatialDto());
-    dto.isOpen(m_isOpen);
-    dto.adjacentZoneNodeId(m_adjacentZoneId);
-    return dto.toGenericDto();
-}*/
 
 void Portal::adjacentZone(const std::shared_ptr<PortalZoneNode>& zone)
 {

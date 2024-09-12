@@ -5,7 +5,6 @@
 #include "WorldMapEvents.h"
 #include "WorldMapQueries.h"
 #include "Frameworks/EventPublisher.h"
-#include "SceneGraph/SceneGraphAssemblers.h"
 #include "SceneGraph/VisibilityManagedNodeAssembler.h"
 #include "SceneGraph/LazyNodeAssembler.h"
 #include "SceneGraph/VisibilityManagedNode.h"

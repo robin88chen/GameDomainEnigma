@@ -30,8 +30,6 @@ namespace Enigma::SceneGraph
 
         static std::shared_ptr<LazyNode> create(const SpatialId& id);
 
-        //virtual std::error_code hydrate(const Engine::GenericDto& dto);
-
         virtual std::shared_ptr<SpatialAssembler> assembler() const override;
         virtual std::shared_ptr<SpatialDisassembler> disassembler() const override;
         virtual std::shared_ptr<HydratedLazyNodeAssembler> assemblerOfLaziedContent() const;
@@ -39,21 +37,12 @@ namespace Enigma::SceneGraph
         virtual void assembleLaziedContent(const std::shared_ptr<HydratedLazyNodeAssembler>& assembler);
         virtual std::error_code hydrate(const std::shared_ptr<HydratedLazyNodeDisassembler>& disassembler);
 
-        //virtual Engine::GenericDto serializeDto() override;
-        //virtual Engine::GenericDto serializeLaziedContent();
-        //todo : remove
-        //virtual Engine::GenericDtoCollection serializeFlattenedTree() override;
-
         virtual bool canVisited() override;
 
         virtual SceneTraveler::TravelResult visitBy(SceneTraveler* traveler) override;
 
         const Frameworks::LazyStatus& lazyStatus() const { return m_lazyStatus; }
         Frameworks::LazyStatus& lazyStatus() { return m_lazyStatus; }
-
-    protected:
-        //virtual Engine::GenericDto serializeAsLaziness();
-        //LazyNodeDto serializeLazyNodeAsLaziness();
 
     protected:
         Frameworks::LazyStatus m_lazyStatus;

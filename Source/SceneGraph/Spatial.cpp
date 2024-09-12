@@ -4,7 +4,6 @@
 #include "SceneGraphErrors.h"
 #include "Culler.h"
 #include "SceneGraphEvents.h"
-#include "SceneGraphDtos.h"
 #include "MathLib/MathAlgorithm.h"
 #include "Frameworks/EventPublisher.h"
 #include "GameEngine/BoundingVolume.h"
@@ -44,37 +43,10 @@ Spatial::Spatial(const SpatialId& id) : m_factoryDesc(Spatial::TYPE_RTTI.getName
     m_notifyFlags = Notify_All;
 
 }
-/*Spatial::Spatial(const SpatialId& id, const GenericDto& o) : m_factoryDesc(o.getRtti()), m_id(id)
-{
-    SpatialDto dto{ o };
-    m_graphDepth = dto.graphDepth();
-    m_cullingMode = static_cast<CullingMode>(dto.cullingMode());
-    m_spatialFlags = dto.spatialFlag();
-    m_notifyFlags = dto.notifyFlag();
-    m_mxLocalTransform = dto.localTransform();
-    assert(m_mxLocalTransform != Matrix4::ZERO);
-    m_mxWorldTransform = dto.worldTransform();
-    assert(m_mxWorldTransform != Matrix4::ZERO);
-    m_modelBound = BoundingVolume{ dto.modelBound() };
-    m_worldBound = BoundingVolume{ dto.worldBound() };
-    assert(!m_modelBound.isEmpty());
-    assert(!m_worldBound.isEmpty());
-    std::tie(m_vecLocalScale, m_qtLocalQuaternion, m_vecLocalPosition) = m_mxLocalTransform.UnMatrixSRT();
-    m_mxLocalRotation = m_qtLocalQuaternion.ToRotationMatrix();
-    EulerAngles angles{ 0.0f, 0.0f, 0.0f };
-    std::tie(angles, std::ignore) = m_mxLocalRotation.ToEulerAnglesXYZ();
-    m_vecLocalEulerAngle = Vector3(angles.m_x, angles.m_y, angles.m_z);
-    m_vecWorldPosition = m_mxWorldTransform.UnMatrixTranslate();
-}*/
 
 Spatial::~Spatial()
 {
 }
-
-/*Enigma::Engine::GenericDto Spatial::serializeDto()
-{
-    return serializeSpatialDto().toGenericDto();
-}*/
 
 std::shared_ptr<SpatialAssembler> Spatial::assembler() const
 {
@@ -130,28 +102,6 @@ std::shared_ptr<Spatial> Spatial::querySpatial(const SpatialId& id)
     assert(id.rtti().isDerived(Spatial::TYPE_RTTI));
     return std::make_shared<QuerySpatial>(id)->dispatch();
 }
-
-/*SpatialDto Spatial::serializeSpatialDto()
-{
-    SpatialDto dto;
-    dto.factoryDesc(m_factoryDesc);
-    //dto.name() = m_name;
-    dto.id(m_id);
-    if (m_parent) dto.parentName(m_parent.value().name());
-    //dto.graphDepth() = m_graphDepth;
-    dto.cullingMode(static_cast<unsigned int>(m_cullingMode));
-    dto.spatialFlag(static_cast<unsigned int>(m_spatialFlags.to_ulong()));
-    dto.notifyFlag(static_cast<unsigned int>(m_notifyFlags.to_ulong()));
-    dto.localTransform(m_mxLocalTransform);
-    dto.worldTransform(m_mxWorldTransform);
-    std::shared_ptr<BoundingVolumeAssembler> model_assembler = std::make_shared<BoundingVolumeAssembler>();
-    m_modelBound.assemble(model_assembler);
-    std::shared_ptr<BoundingVolumeAssembler> world_assembler = std::make_shared<BoundingVolumeAssembler>();
-    m_worldBound.assemble(world_assembler);
-    dto.modelBound(model_assembler->assemble());
-    dto.worldBound(world_assembler->assemble());
-    return dto;
-}*/
 
 void Spatial::linkParent(const std::optional<SpatialId>& parent)
 {

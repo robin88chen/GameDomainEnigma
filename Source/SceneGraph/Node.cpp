@@ -4,7 +4,6 @@
 #include "Spatial.h"
 #include "SceneGraphErrors.h"
 #include "SceneGraphEvents.h"
-#include "SceneGraphDtos.h"
 #include "SceneFlattenTraversal.h"
 #include "Frameworks/EventPublisher.h"
 #include "Platforms/PlatformLayer.h"
@@ -22,21 +21,6 @@ Node::Node(const SpatialId& id) : Spatial(id)
 {
     m_factoryDesc = FactoryDesc(TYPE_RTTI.getName());
 }
-
-/*Node::Node(const SpatialId& id, const GenericDto& dto) : Spatial(id, dto)
-{
-    NodeDto nodeDto{ dto };
-    for (auto& child : nodeDto.children())
-    {
-        auto child_spatial = std::make_shared<QuerySpatial>(child.id())->dispatch();
-        if (!child_spatial)
-        {
-            assert(child.dto().has_value());
-            child_spatial = std::make_shared<RequestSpatialConstitution>(child.id(), child.dto().value())->dispatch();
-        }
-        if (child_spatial) m_childList.push_back(child_spatial);
-    }
-}*/
 
 Node::~Node()
 {
@@ -109,43 +93,6 @@ std::shared_ptr<Node> Node::queryNode(const SpatialId& id)
     assert(id.rtti().isDerived(Node::TYPE_RTTI));
     return std::dynamic_pointer_cast<Node, Spatial>(std::make_shared<QuerySpatial>(id)->dispatch());
 }
-
-/*GenericDto Node::serializeDto()
-{
-    return serializeNodeDto().toGenericDto();
-}
-
-NodeDto Node::serializeNodeDto()
-{
-    NodeDto dto(serializeSpatialDto());
-    for (auto child : m_childList)
-    {
-        if (!child) continue;
-        if (child->persistenceLevel() == PersistenceLevel::Store)
-        {
-            dto.pushChild({ child->id() });
-        }
-        else
-        {
-            dto.pushChild({ child->id(), child->serializeDto() });
-        }
-    }
-    return dto;
-}*/
-
-/*GenericDtoCollection Node::serializeFlattenedTree()
-{
-    GenericDtoCollection collection;
-    SceneFlattenTraversal flatten;
-    visitBy(&flatten);
-    if (flatten.GetSpatials().empty()) return collection;
-    for (auto& sp : flatten.GetSpatials())
-    {
-        collection.push_back(sp->serializeDto());
-    }
-    collection[0].asTopLevel(true);
-    return collection;
-}*/
 
 error Node::onCullingVisible(Culler* culler, bool noCull)
 {

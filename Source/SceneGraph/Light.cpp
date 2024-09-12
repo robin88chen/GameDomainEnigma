@@ -15,12 +15,6 @@ Light::Light(const SpatialId& id, const LightInfo& lightInfo) : Spatial(id), m_l
     m_factoryDesc = Engine::FactoryDesc(Light::TYPE_RTTI.getName());
 }
 
-/*Light::Light(const SpatialId& id, const Engine::GenericDto& o) : Spatial(id, o)
-{
-    LightDto dto{ o };
-    m_lightInfo = LightInfo(dto.lightInfo());
-}*/
-
 Light::~Light()
 {
     Frameworks::EventPublisher::enqueue(std::make_shared<LightInfoDeleted>(m_id, m_lightInfo.lightType()));
@@ -58,13 +52,6 @@ void Light::disassemble(const std::shared_ptr<SpatialDisassembler>& disassembler
         m_lightInfo = lightDisassembler->lightInfo();
     }
 }
-
-/*Enigma::Engine::GenericDto Light::serializeDto()
-{
-    LightDto dto(serializeSpatialDto());
-    dto.lightInfo(m_lightInfo.serializeDto().toGenericDto());
-    return dto.toGenericDto();
-}*/
 
 error Light::onCullingVisible(Culler*, bool)
 {

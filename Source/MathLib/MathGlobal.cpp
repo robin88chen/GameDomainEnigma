@@ -13,8 +13,6 @@ const float Math::TWO_PI = 2.0f * Math::PI;
 const float Math::HALF_PI = 0.5f * Math::PI;
 const float Math::INV_PI = 1.0f / Math::PI;
 const float Math::INV_TWO_PI = 1.0f / Math::TWO_PI;
-const float Math::DEG_TO_RAD = Math::PI / 180.0f;
-const float Math::RAD_TO_DEG = 180.0f / Math::PI;
 
 bool Math::IsEqual(float l, float r)
 {

@@ -95,6 +95,22 @@ void BoundingVolume::assemble(const std::shared_ptr<BoundingVolumeAssembler>& as
     }
 }
 
+void BoundingVolume::disassemble(const std::shared_ptr<BoundingVolumeDisassembler>& disassembler)
+{
+    if (disassembler->box())
+    {
+        m_bv = std::make_unique<BoxBV>(disassembler->box().value());
+    }
+    else if (disassembler->sphere())
+    {
+        m_bv = std::make_unique<SphereBV>(disassembler->sphere().value());
+    }
+    else
+    {
+        m_bv.reset();
+    }
+}
+
 Enigma::MathLib::Vector3 BoundingVolume::Center() const
 {
     if (m_bv) return m_bv->GetCenterPos();

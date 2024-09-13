@@ -1,1 +1,1 @@
-lazy_node,En.SceneGraph.LazyNode,lazy_node.node@DataPath
+lazy_node,En.SceneGraph.VisibilityManagedNode,lazied_lazy_node.node@DataPath

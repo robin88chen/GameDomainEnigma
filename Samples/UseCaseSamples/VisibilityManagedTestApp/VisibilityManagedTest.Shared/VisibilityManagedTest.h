@@ -72,9 +72,9 @@ protected:
     Enigma::Renderer::RenderTargetPtr m_renderTarget;
     std::shared_ptr<Enigma::Renderables::ModelPrimitive> m_model;
     Enigma::SceneGraph::SpatialId m_rootId;
-    Enigma::SceneGraph::NodePtr m_sceneRoot;
+    std::shared_ptr<Enigma::SceneGraph::Node> m_sceneRoot;
     Enigma::SceneGraph::SpatialId m_pawnId;
-    Enigma::SceneGraph::PawnPtr m_pawn;
+    std::shared_ptr<Enigma::SceneGraph::Pawn> m_pawn;
 
     Enigma::SceneGraph::SpatialId m_cameraId;
     std::shared_ptr<Enigma::SceneGraph::Camera> m_camera;

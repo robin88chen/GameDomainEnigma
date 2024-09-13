@@ -230,7 +230,7 @@ std::array<Vector3, 8> CSMSunLightCamera::calcViewerFrustumCorner(unsigned frust
     Vector3 vecX = m_viewerCamera.lock()->rightVector();
     Vector3 vecY = m_viewerCamera.lock()->upVector();
     float frustaAspect = frustum.aspectRatio();
-    float frustaFov = frustum.fov();
+    float frustaFov = frustum.fov().value();
 
     float nearPlaneHalfHeight = std::tan(frustaFov * 0.5f) * frustaNear;
     float nearPlaneHalfWidth = nearPlaneHalfHeight * frustaAspect;

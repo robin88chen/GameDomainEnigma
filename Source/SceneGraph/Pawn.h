@@ -12,19 +12,16 @@
 #include "GameEngine/IRenderer.h"
 #include "Primitives/Primitive.h"
 #include "Animators/Animator.h"
-#include <string>
 #include <list>
 
 namespace Enigma::SceneGraph
 {
-    class PawnDto;
 
     class Pawn : public Spatial
     {
         DECLARE_EN_RTTI;
     public:
         Pawn(const SpatialId& id);
-        Pawn(const SpatialId& id, const Engine::GenericDto& dto);
         Pawn(const Pawn&) = delete;
         Pawn(Pawn&&) = delete;
         virtual ~Pawn() override;
@@ -32,11 +29,13 @@ namespace Enigma::SceneGraph
         Pawn& operator=(Pawn&&) = delete;
 
         static std::shared_ptr<Pawn> create(const SpatialId& id);
-        static std::shared_ptr<Pawn> constitute(const SpatialId& id, const Engine::GenericDto& dto);
+
+        virtual std::shared_ptr<SpatialAssembler> assembler() const override;
+        virtual void assemble(const std::shared_ptr<SpatialAssembler>& assembler) override;
+        virtual std::shared_ptr<SpatialDisassembler> disassembler() const override;
+        virtual void disassemble(const std::shared_ptr<SpatialDisassembler>& disassembler) override;
 
         static std::shared_ptr<Pawn> queryPawn(const SpatialId& id);
-
-        virtual Engine::GenericDto serializeDto() override;
 
         /** on cull visible, insert this object to culler */
         virtual error onCullingVisible(Culler* culler, bool noCull) override;
@@ -63,12 +62,8 @@ namespace Enigma::SceneGraph
         virtual void enumAnimatorListDeep(std::list<std::shared_ptr<Animators::Animator>>& resultList);
 
     protected:
-        PawnDto SerializePawnDto();
-
-    protected:
         std::shared_ptr<Primitives::Primitive> m_primitive;
     };
-    using PawnPtr = std::shared_ptr<Pawn>;
 }
 
 #endif // PAWN_H

@@ -34,7 +34,7 @@ namespace Enigma::Engine
         FactoryDesc& operator=(const FactoryDesc& desc) = default;
         FactoryDesc& operator=(FactoryDesc&& desc) = default;
 
-        FactoryDesc& ClaimAsNative(const std::string& name);
+        FactoryDesc& ClaimAsNative(const std::string& filename, const std::string& path_id = "");
         FactoryDesc& ClaimByPrefab(const std::string& prefab_name);
         FactoryDesc& ClaimAsDeferred(const std::string& filename, const std::string& path_id = "");
         FactoryDesc& ClaimAsInstanced(const std::string& filename, const std::string& path_id = "");
@@ -70,6 +70,10 @@ namespace Enigma::Engine
         const std::string& GetDeferredFilename() { return m_prefab_deferredFilename; };
         const std::string& GetDeferredFilename() const { return m_prefab_deferredFilename; };
         std::string PathId() const;
+
+    protected:
+        std::string combineFilenameAtPath(const std::string& filename, const std::string& path_id) const;
+
     protected:
         InstanceType m_type;
         std::string m_resourceName;

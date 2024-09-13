@@ -193,7 +193,7 @@ std::array<Vector3, 8> SunLightCamera::calcViewerFrustumCorner() const
     Vector3 vX = m_viewerCamera.lock()->rightVector();
     Vector3 vY = m_viewerCamera.lock()->upVector();
     float aspect = frustum.aspectRatio();
-    float fov = frustum.fov();
+    float fov = frustum.fov().value();
 
     float nearPlaneHalfHeight = std::tan(fov * 0.5f) * m_effectiveViewerNearZ;
     float nearPlaneHalfWidth = nearPlaneHalfHeight * aspect;

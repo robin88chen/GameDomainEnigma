@@ -26,14 +26,6 @@
             "Type": "Boolean",
             "Value": false
         },
-        "Name": {
-            "Type": "String",
-            "Value": "pawn"
-        },
-        "NotifyFlag": {
-            "Type": "Uint32",
-            "Value": 31
-        },
         "GraphDepth": {
             "Type": "Uint32",
             "Value": 0
@@ -62,6 +54,10 @@
         "SpatialFlag": {
             "Type": "Uint32",
             "Value": 4
+        },
+        "NotifyFlag": {
+            "Type": "Uint32",
+            "Value": 31
         },
         "PawnPrimitiveId": {
             "Type": "StringArray",

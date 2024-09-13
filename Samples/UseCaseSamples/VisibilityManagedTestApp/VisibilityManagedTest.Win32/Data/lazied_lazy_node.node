@@ -1,16 +1,16 @@
 [{
         "LocalTransform": {
             "Type": "Matrix4",
-            "Value": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+            "Value": [1.0, 0.0, 0.0, 2.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
         },
         "Rtti": {
             "Type": "FactoryDesc",
             "Value": {
-                "InstanceType": 0,
+                "InstanceType": 2,
                 "ResourceName": "",
                 "ResourceFilename": "",
-                "RttiName": "En.SceneGraph.Node",
-                "PrefabFilename": ""
+                "RttiName": "En.SceneGraph.VisibilityManagedNode",
+                "PrefabFilename": "lazy_node.node@DataPath"
             }
         },
         "ModelBound": {
@@ -24,7 +24,7 @@
         },
         "TopLevel": {
             "Type": "Boolean",
-            "Value": false
+            "Value": true
         },
         "GraphDepth": {
             "Type": "Uint32",
@@ -32,7 +32,7 @@
         },
         "Id": {
             "Type": "StringArray",
-            "Value": ["root", "En.SceneGraph.Node"]
+            "Value": ["lazy_node", "En.SceneGraph.VisibilityManagedNode"]
         },
         "WorldTransform": {
             "Type": "Matrix4",
@@ -57,10 +57,19 @@
         },
         "NotifyFlag": {
             "Type": "Uint32",
-            "Value": 255
+            "Value": 31
+        },
+        "ParentId": {
+            "Type": "StringArray",
+            "Value": ["root", "En.SceneGraph.Node"]
         },
         "Children": {
             "Type": "DataObjectArray",
-            "Value": []
+            "Value": [{
+                    "Id": {
+                        "Type": "StringArray",
+                        "Value": ["pawn", "En.SceneGraph.Pawn"]
+                    }
+                }]
         }
     }]

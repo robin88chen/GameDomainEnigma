@@ -26,17 +26,15 @@ namespace Enigma::SceneGraph
     class RegisterSpatialFactory : public Frameworks::ICommand
     {
     public:
-        RegisterSpatialFactory(const std::string& rtti, const SpatialCreator& creator, const SpatialConstitutor& constitutor)
-            : m_rtti(rtti), m_creator(creator), m_constitutor(constitutor) {}
+        RegisterSpatialFactory(const std::string& rtti, const SpatialCreator& creator)
+            : m_rtti(rtti), m_creator(creator) {}
 
         const std::string& rttiName() const { return m_rtti; }
         const SpatialCreator& creator() { return m_creator; }
-        const SpatialConstitutor& constitutor() { return m_constitutor; }
 
     private:
         std::string m_rtti;
         SpatialCreator m_creator;
-        SpatialConstitutor m_constitutor;
     };
     class UnregisterSpatialFactory : public Frameworks::ICommand
     {
@@ -51,17 +49,15 @@ namespace Enigma::SceneGraph
     class RegisterSpatialLightFactory : public Frameworks::ICommand
     {
     public:
-        RegisterSpatialLightFactory(const std::string& rtti, const LightCreator& creator, const LightConstitutor& constitutor)
-            : m_rtti(rtti), m_creator(creator), m_constitutor(constitutor) {}
+        RegisterSpatialLightFactory(const std::string& rtti, const LightCreator& creator)
+            : m_rtti(rtti), m_creator(creator) {}
 
         const std::string& rttiName() const { return m_rtti; }
         const LightCreator& creator() { return m_creator; }
-        const LightConstitutor& constitutor() { return m_constitutor; }
 
     private:
         std::string m_rtti;
         LightCreator m_creator;
-        LightConstitutor m_constitutor;
     };
     class UnregisterSpatialLightFactory : public Frameworks::ICommand
     {

@@ -108,7 +108,7 @@ void Culler::UpdateFrustumPlanes()
     else
     {
         // m_fFov是 y方向 fov
-        float fovy = frustum.fov() / 2.0f;
+        float fovy = frustum.fov().value() / 2.0f;
         float fovx = (float)(atan(tan(fovy) * frustum.aspectRatio()));
         xCos = (float)cos(fovx);
         xSin = (float)sin(fovx);

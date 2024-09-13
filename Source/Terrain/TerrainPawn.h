@@ -17,7 +17,6 @@ namespace Enigma::Terrain
         DECLARE_EN_RTTI;
     public:
         TerrainPawn(const SceneGraph::SpatialId& id);
-        TerrainPawn(const SceneGraph::SpatialId& id, const Engine::GenericDto& o);
         TerrainPawn(const TerrainPawn&) = delete;
         TerrainPawn(TerrainPawn&&) = delete;
         TerrainPawn& operator=(const TerrainPawn&) = delete;
@@ -25,9 +24,9 @@ namespace Enigma::Terrain
         virtual ~TerrainPawn() override;
 
         static std::shared_ptr<TerrainPawn> create(const SceneGraph::SpatialId& id);
-        static std::shared_ptr<TerrainPawn> constitute(const SceneGraph::SpatialId& id, const Engine::GenericDto& o);
 
-        virtual Engine::GenericDto serializeDto() override;
+        virtual std::shared_ptr<SceneGraph::SpatialAssembler> assembler() const override;
+        virtual std::shared_ptr<SceneGraph::SpatialDisassembler> disassembler() const override;
     };
 }
 

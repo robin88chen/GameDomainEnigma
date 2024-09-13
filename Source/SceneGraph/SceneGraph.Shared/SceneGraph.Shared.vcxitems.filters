@@ -7,20 +7,11 @@
     <Filter Include="Scene Traveler">
       <UniqueIdentifier>{a612705c-1d5b-4847-b7d6-a6dda06d0ff7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Camera and Frustum">
-      <UniqueIdentifier>{e61c19a1-1f54-412e-a197-5a674eb21f28}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Repository">
       <UniqueIdentifier>{68e2350b-9531-4107-96e4-7fdcd2308f71}</UniqueIdentifier>
     </Filter>
     <Filter Include="Cullers">
       <UniqueIdentifier>{388f366a-7ed3-4c06-9c41-a0c84abf2abd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Events">
-      <UniqueIdentifier>{5cfd4ff6-f389-40d8-8586-5ff1103a2059}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Commands">
-      <UniqueIdentifier>{7f26edff-9dd0-4f4b-bb08-6864c8bd9b46}</UniqueIdentifier>
     </Filter>
     <Filter Include="Portal System">
       <UniqueIdentifier>{979f42de-ba0c-49b5-a048-e13b8fd593cb}</UniqueIdentifier>
@@ -28,20 +19,11 @@
     <Filter Include="Visibilities">
       <UniqueIdentifier>{91848c0a-c165-4152-9490-3558f3e042e8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Portal System\Dtos">
-      <UniqueIdentifier>{06aaa09e-d052-45ed-8dde-145f70ebfb2a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Installing">
       <UniqueIdentifier>{8cf6c686-c6e8-43fb-831a-333a82d058ef}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Queries">
-      <UniqueIdentifier>{1afd4c29-661a-4759-b666-b605a72f0cac}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Repository\StoreMapper">
       <UniqueIdentifier>{227981a7-1c6e-4575-af21-6bf16d55db5d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DTO &amp; Assemblers">
-      <UniqueIdentifier>{2e119933-502e-48d9-b642-a1d9450a14cf}</UniqueIdentifier>
     </Filter>
     <Filter Include="Lazy Node Hydration">
       <UniqueIdentifier>{4e37e94c-8b2a-49e1-adcf-8d4049626af6}</UniqueIdentifier>
@@ -55,6 +37,42 @@
     <Filter Include="Spatial\LightInfo">
       <UniqueIdentifier>{a324eb2b-2215-44f4-9ee8-09f24c4b48af}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Assemblers">
+      <UniqueIdentifier>{7ddc8bf7-5b8c-4234-b699-1a667a0172b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Spatial\Camera and Frustum">
+      <UniqueIdentifier>{e61c19a1-1f54-412e-a197-5a674eb21f28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Communication">
+      <UniqueIdentifier>{6c2ce53c-6ea2-481e-b710-c9f2a360b54c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Communication\Commands">
+      <UniqueIdentifier>{7f26edff-9dd0-4f4b-bb08-6864c8bd9b46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Communication\Events">
+      <UniqueIdentifier>{5cfd4ff6-f389-40d8-8586-5ff1103a2059}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Communication\Queries">
+      <UniqueIdentifier>{1afd4c29-661a-4759-b666-b605a72f0cac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assemblers\CameraFrustum">
+      <UniqueIdentifier>{205b86f6-8526-4c0f-a320-0769f904e6fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assemblers\PortalSystem">
+      <UniqueIdentifier>{734167ef-e9b7-40cb-822b-8c42270145cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assemblers\Spatial">
+      <UniqueIdentifier>{ca3539b6-e5f9-471b-8fba-5b58e1f6b65e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assemblers\Light">
+      <UniqueIdentifier>{991e7565-d819-4416-9cc6-f8a2cd0b9188}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assemblers\Visibility">
+      <UniqueIdentifier>{a5486e7a-7f72-4a17-8233-cee543eb7ddc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assemblers\LazyNode">
+      <UniqueIdentifier>{bc9b4c89-c445-4ebd-970b-0b780ab774ba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.h">
@@ -64,13 +82,13 @@
       <Filter>Scene Traveler</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Frustum.h">
-      <Filter>Camera and Frustum</Filter>
+      <Filter>Spatial\Camera and Frustum</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphRepository.h">
       <Filter>Repository</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Camera.h">
-      <Filter>Camera and Frustum</Filter>
+      <Filter>Spatial\Camera and Frustum</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphDefines.h">
       <Filter>Repository</Filter>
@@ -82,7 +100,7 @@
       <Filter>Cullers</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphEvents.h">
-      <Filter>Events</Filter>
+      <Filter>Communication\Events</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightInfo.h">
       <Filter>Spatial\LightInfo</Filter>
@@ -96,17 +114,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneFlattenTraversal.h">
       <Filter>Scene Traveler</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphDtos.h">
-      <Filter>DTO &amp; Assemblers</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphCommands.h">
-      <Filter>Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightDtos.h">
-      <Filter>DTO &amp; Assemblers</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\CameraDtos.h">
-      <Filter>DTO &amp; Assemblers</Filter>
+      <Filter>Communication\Commands</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LazyNodeHydrationService.h">
       <Filter>Lazy Node Hydration</Filter>
@@ -116,9 +125,6 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalZoneNode.h">
       <Filter>Portal System</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalDtos.h">
-      <Filter>Portal System\Dtos</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Portal.h">
       <Filter>Portal System</Filter>
@@ -130,7 +136,7 @@
       <Filter>Portal System</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\CameraFrustumEvents.h">
-      <Filter>Events</Filter>
+      <Filter>Communication\Events</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\FindSpatialById.h">
       <Filter>Scene Traveler</Filter>
@@ -138,11 +144,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphInstallingPolicy.h">
       <Filter>Installing</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphAssemblers.h">
-      <Filter>DTO &amp; Assemblers</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalCommands.h">
-      <Filter>Commands</Filter>
+      <Filter>Communication\Commands</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EnumDerivedSpatials.h">
       <Filter>Scene Traveler</Filter>
@@ -151,10 +154,10 @@
       <Filter>Scene Traveler</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\CameraFrustumCommands.h">
-      <Filter>Commands</Filter>
+      <Filter>Communication\Commands</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphQueries.h">
-      <Filter>Queries</Filter>
+      <Filter>Communication\Queries</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LazyNode.h">
       <Filter>Spatial</Filter>
@@ -201,29 +204,14 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphFactoryDelegate.h">
       <Filter>Repository</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\CameraAssemblers.h">
-      <Filter>DTO &amp; Assemblers</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialDto.h">
-      <Filter>DTO &amp; Assemblers</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialAssembler.h">
-      <Filter>DTO &amp; Assemblers</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalAssemblers.h">
-      <Filter>Portal System\Dtos</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightAssemblers.h">
-      <Filter>DTO &amp; Assemblers</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightEvents.h">
-      <Filter>Events</Filter>
+      <Filter>Communication\Events</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightCommands.h">
-      <Filter>Commands</Filter>
+      <Filter>Communication\Commands</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalEvents.h">
-      <Filter>Events</Filter>
+      <Filter>Communication\Events</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\OutRegionNode.h">
       <Filter>Portal System</Filter>
@@ -231,19 +219,55 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\SceneGraphOwnership.h">
       <Filter>Repository</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\FrustumAssembler.h">
+      <Filter>Assemblers\CameraFrustum</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\CameraAssembler.h">
+      <Filter>Assemblers\CameraFrustum</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalManagementNodeAssembler.h">
+      <Filter>Assemblers\PortalSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\OutRegionNodeAssembler.h">
+      <Filter>Assemblers\PortalSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalZoneNodeAssembler.h">
+      <Filter>Assemblers\PortalSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PortalAssembler.h">
+      <Filter>Assemblers\PortalSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\NodeAssembler.h">
+      <Filter>Assemblers\Spatial</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PawnAssembler.h">
+      <Filter>Assemblers\Spatial</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\SpatialAssembler.h">
+      <Filter>Assemblers\Spatial</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightAssemblers.h">
+      <Filter>Assemblers\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\VisibilityManagedNodeAssembler.h">
+      <Filter>Assemblers\Visibility</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\LazyNodeAssembler.h">
+      <Filter>Assemblers\LazyNode</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphErrors.cpp">
       <Filter>Scene Graph Errors</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Frustum.cpp">
-      <Filter>Camera and Frustum</Filter>
+      <Filter>Spatial\Camera and Frustum</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphRepository.cpp">
       <Filter>Repository</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Camera.cpp">
-      <Filter>Camera and Frustum</Filter>
+      <Filter>Spatial\Camera and Frustum</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Culler.cpp">
       <Filter>Cullers</Filter>
@@ -263,15 +287,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneFlattenTraversal.cpp">
       <Filter>Scene Traveler</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphDtos.cpp">
-      <Filter>DTO &amp; Assemblers</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightDtos.cpp">
-      <Filter>DTO &amp; Assemblers</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\CameraDtos.cpp">
-      <Filter>DTO &amp; Assemblers</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LazyNodeHydrationService.cpp">
       <Filter>Lazy Node Hydration</Filter>
     </ClCompile>
@@ -280,9 +295,6 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalZoneNode.cpp">
       <Filter>Portal System</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalDtos.cpp">
-      <Filter>Portal System\Dtos</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Portal.cpp">
       <Filter>Portal System</Filter>
@@ -298,9 +310,6 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphInstallingPolicy.cpp">
       <Filter>Installing</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphAssemblers.cpp">
-      <Filter>DTO &amp; Assemblers</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EnumDerivedSpatials.cpp">
       <Filter>Scene Traveler</Filter>
@@ -333,7 +342,7 @@
       <Filter>Repository</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphCommands.cpp">
-      <Filter>Commands</Filter>
+      <Filter>Communication\Commands</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\NodalSceneGraph.cpp">
       <Filter>Scene Graph</Filter>
@@ -344,29 +353,50 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalSceneGraph.cpp">
       <Filter>Scene Graph</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\CameraAssemblers.cpp">
-      <Filter>DTO &amp; Assemblers</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialDto.cpp">
-      <Filter>DTO &amp; Assemblers</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialAssembler.cpp">
-      <Filter>DTO &amp; Assemblers</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalAssemblers.cpp">
-      <Filter>Portal System\Dtos</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightAssemblers.cpp">
-      <Filter>DTO &amp; Assemblers</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightCommands.cpp">
-      <Filter>Commands</Filter>
+      <Filter>Communication\Commands</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\OutRegionNode.cpp">
       <Filter>Portal System</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\SceneGraphOwnership.cpp">
       <Filter>Repository</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\CameraAssembler.cpp">
+      <Filter>Assemblers\CameraFrustum</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\FrustumAssembler.cpp">
+      <Filter>Assemblers\CameraFrustum</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalManagementNodeAssembler.cpp">
+      <Filter>Assemblers\PortalSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\OutRegionNodeAssembler.cpp">
+      <Filter>Assemblers\PortalSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalZoneNodeAssembler.cpp">
+      <Filter>Assemblers\PortalSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PortalAssembler.cpp">
+      <Filter>Assemblers\PortalSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\NodeAssembler.cpp">
+      <Filter>Assemblers\Spatial</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PawnAssembler.cpp">
+      <Filter>Assemblers\Spatial</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\SpatialAssembler.cpp">
+      <Filter>Assemblers\Spatial</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightAssemblers.cpp">
+      <Filter>Assemblers\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\LazyNodeAssembler.cpp">
+      <Filter>Assemblers\LazyNode</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\VisibilityManagedNodeAssembler.cpp">
+      <Filter>Assemblers\Visibility</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

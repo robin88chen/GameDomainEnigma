@@ -22,6 +22,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ContainmentBox3.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ContainmentSphere2.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ContainmentSphere3.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Degree.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Intersector.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrBox2Box2.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrBox2Sphere2.cpp" />
@@ -44,6 +45,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Matrix4.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Plane3.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Quaternion.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Radian.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Ray2.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Ray3.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Rect.cpp" />
@@ -66,6 +68,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ContainmentBox3.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ContainmentSphere2.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ContainmentSphere3.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Degree.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Intersector.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IntersectorCache.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrBox2Box2.h" />
@@ -90,6 +93,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Matrix4.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Plane3.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Quaternion.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Radian.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Ray2.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Ray3.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Rect.h" />

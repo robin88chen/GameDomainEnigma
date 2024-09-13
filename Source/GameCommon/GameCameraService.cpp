@@ -182,7 +182,7 @@ void GameCameraService::changeFrustumFarPlane(float far_z)
     EventPublisher::enqueue(std::make_shared<GameCameraUpdated>(m_primaryCamera, GameCameraUpdated::NotifyCode::FrustumZ));
 }
 
-void GameCameraService::changeFrustumFov(float fov)
+void GameCameraService::changeFrustumFov(Radian fov)
 {
     if (!m_primaryCamera) return;
     m_primaryCamera->changeFrustumFov(fov);

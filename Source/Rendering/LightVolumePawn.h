@@ -19,7 +19,6 @@ namespace Enigma::Rendering
         DECLARE_EN_RTTI;
     public:
         LightVolumePawn(const SceneGraph::SpatialId& id);
-        LightVolumePawn(const SceneGraph::SpatialId& id, const Engine::GenericDto& o);
         LightVolumePawn(const LightVolumePawn&) = delete;
         LightVolumePawn(LightVolumePawn&&) = delete;
         virtual ~LightVolumePawn() override;
@@ -27,8 +26,11 @@ namespace Enigma::Rendering
         LightVolumePawn& operator=(LightVolumePawn&&) = delete;
 
         static std::shared_ptr<LightVolumePawn> create(const SceneGraph::SpatialId& id);
-        static std::shared_ptr<LightVolumePawn> constitute(const SceneGraph::SpatialId& id, const Engine::GenericDto& dto);
-        virtual Engine::GenericDto serializeDto() override;
+
+        virtual std::shared_ptr<SceneGraph::SpatialAssembler> assembler() const override;
+        virtual void assemble(const std::shared_ptr<SceneGraph::SpatialAssembler>& assembler) override;
+        virtual std::shared_ptr<SceneGraph::SpatialDisassembler> disassembler() const override;
+        virtual void disassemble(const std::shared_ptr<SceneGraph::SpatialDisassembler>& disassembler) override;
 
         virtual void registerHandlers() override;
         virtual void unregisterHandlers() override;

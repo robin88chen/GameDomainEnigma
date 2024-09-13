@@ -12,7 +12,6 @@
 #include "MathLib/Vector3.h"
 #include "MathLib/Plane3.h"
 #include <memory>
-#include "GameEngine/LinkageResolver.h"
 
 #define PORTAL_VERTEX_COUNT     4
 
@@ -25,7 +24,6 @@ namespace Enigma::SceneGraph
         DECLARE_EN_RTTI;
     public:
         Portal(const SpatialId& id);
-        Portal(const SpatialId& id, const Engine::GenericDto& o);
         Portal(const Portal&) = delete;
         Portal(Portal&&) = delete;
         Portal& operator=(const Portal&) = delete;
@@ -34,9 +32,11 @@ namespace Enigma::SceneGraph
 
         static std::shared_ptr<Portal> queryPortal(const SpatialId& id);
         static std::shared_ptr<Portal> create(const SpatialId& id);
-        static std::shared_ptr<Portal> constitute(const SpatialId& id, const Engine::GenericDto& dto);
 
-        virtual Engine::GenericDto serializeDto() override;
+        virtual std::shared_ptr<SpatialAssembler> assembler() const override;
+        virtual void assemble(const std::shared_ptr<SpatialAssembler>& assembler) override;
+        virtual std::shared_ptr<SpatialDisassembler> disassembler() const override;
+        virtual void disassemble(const std::shared_ptr<SpatialDisassembler>& disassembler) override;
 
         void adjacentZone(const std::shared_ptr<PortalZoneNode>& zone);
         std::shared_ptr<PortalZoneNode> adjacentZone();

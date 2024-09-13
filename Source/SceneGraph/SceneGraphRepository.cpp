@@ -20,8 +20,12 @@
 #include "CameraFrustumCommands.h"
 #include "CameraFrustumEvents.h"
 #include "SceneGraphQueries.h"
-#include "SceneGraphDtos.h"
+#include "CameraAssembler.h"
+#include "SpatialAssembler.h"
+#include "PawnAssembler.h"
 #include <cassert>
+
+#include "LazyNodeAssembler.h"
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Frameworks;
@@ -161,16 +165,16 @@ GraphicCoordSys SceneGraphRepository::getCoordinateSystem()
     return m_handSystem;
 }
 
-void SceneGraphRepository::registerSpatialFactory(const std::string& rtti, const SpatialCreator& creator, const SpatialConstitutor& constitutor)
+void SceneGraphRepository::registerSpatialFactory(const std::string& rtti, const SpatialCreator& creator)
 {
     assert(m_factory);
-    m_factory->registerSpatialFactory(rtti, creator, constitutor);
+    m_factory->registerSpatialFactory(rtti, creator);
 }
 
-void SceneGraphRepository::registerSpatialLightFactory(const std::string& rtti, const LightCreator& creator, const LightConstitutor& constitutor)
+void SceneGraphRepository::registerSpatialLightFactory(const std::string& rtti, const LightCreator& creator)
 {
     assert(m_factory);
-    m_factory->registerLightFactory(rtti, creator, constitutor);
+    m_factory->registerLightFactory(rtti, creator);
 }
 
 bool SceneGraphRepository::hasCamera(const SpatialId& id)
@@ -240,8 +244,7 @@ Enigma::MathLib::Matrix4 SceneGraphRepository::queryWorldTransform(const Spatial
     if (auto spatial = findCachedSpatial(id); spatial) return spatial->getWorldTransform();
     auto dto = m_storeMapper->querySpatial(id);
     assert(dto.has_value());
-    SpatialDto spatial_dto = SpatialDto(dto.value());
-    return spatial_dto.worldTransform();
+    return SpatialDisassembler::disassembledDisassembler(dto.value())->worldTransform();
 }
 
 Enigma::Engine::BoundingVolume SceneGraphRepository::queryModelBound(const SpatialId& id)
@@ -250,8 +253,7 @@ Enigma::Engine::BoundingVolume SceneGraphRepository::queryModelBound(const Spati
     if (auto spatial = findCachedSpatial(id); spatial) return spatial->getModelBound();
     auto dto = m_storeMapper->querySpatial(id);
     assert(dto.has_value());
-    SpatialDto spatial_dto = SpatialDto(dto.value());
-    return BoundingVolume{ spatial_dto.modelBound() };
+    return SpatialDisassembler::disassembledDisassembler(dto.value())->modelBound();
 }
 
 std::shared_ptr<Spatial> SceneGraphRepository::queryRunningSpatial(const SpatialId& id)
@@ -280,8 +282,9 @@ std::optional<Enigma::Primitives::PrimitiveId> SceneGraphRepository::queryPawnPr
     assert(dto.has_value());
     if (Rtti::isDerivedFrom(dto->getRtti().GetRttiName(), Pawn::TYPE_RTTI.getName()))
     {
-        PawnDto pawn_dto = PawnDto(dto.value());
-        return pawn_dto.primitiveId();
+        std::shared_ptr<PawnDisassembler> pawn_disassembler = std::dynamic_pointer_cast<PawnDisassembler>(SpatialDisassembler::disassembledDisassembler(dto.value()));
+        if (!pawn_disassembler) return std::nullopt;
+        return pawn_disassembler->primitiveId();
     }
     return std::nullopt;
 }
@@ -342,7 +345,9 @@ void SceneGraphRepository::putCamera(const std::shared_ptr<Camera>& camera)
 {
     assert(m_storeMapper);
     assert(camera);
-    auto camera_dto = camera->serializeDto();
+    std::shared_ptr<CameraAssembler> assembler = std::make_shared<CameraAssembler>(camera->id());
+    camera->assemble(assembler);
+    auto camera_dto = assembler->assemble();
     auto er = m_storeMapper->putCamera(camera->id(), { camera_dto });
     if (!er)
     {
@@ -376,8 +381,7 @@ void SceneGraphRepository::putSpatial(const std::shared_ptr<Spatial>& spatial)
     assert(spatial);
     std::lock_guard locker{ m_spatialMapLock };
     spatial->persistenceLevel(PersistenceLevel::Store);
-    auto dto = spatial->serializeDto();
-    auto er = m_storeMapper->putSpatial(spatial->id(), { dto });
+    auto er = m_storeMapper->putSpatial(spatial->id(), { SpatialAssembler::assemble(spatial) });
     if (!er)
     {
         EventPublisher::enqueue(std::make_shared<SpatialPut>(spatial->id()));
@@ -392,8 +396,9 @@ void SceneGraphRepository::putLaziedContent(const std::shared_ptr<LazyNode>& laz
 {
     assert(m_storeMapper);
     assert(lazy_node);
-    auto dto = lazy_node->serializeLaziedContent();
-    auto er = m_storeMapper->putLaziedContent(lazy_node->id(), dto);
+    std::shared_ptr<HydratedLazyNodeAssembler> assembler = lazy_node->assemblerOfLaziedContent();
+    lazy_node->assembleLaziedContent(assembler);
+    auto er = m_storeMapper->putLaziedContent(lazy_node->id(), assembler->assemble());
     if (!er)
     {
         EventPublisher::enqueue(std::make_shared<LaziedContentPut>(lazy_node->id()));
@@ -597,7 +602,7 @@ void SceneGraphRepository::hydrateLazyNode(const SpatialId& id)
         EventPublisher::enqueue(std::make_shared<LazyNodeHydrationFailed>(id, ErrorCode::laziedContentNotFound));
         return;
     }
-    if (error er = lazy_node->hydrate(content.value()))
+    if (error er = LazyNodeDisassembler::hydrate(lazy_node, content.value()))
     {
         EventPublisher::enqueue(std::make_shared<LazyNodeHydrationFailed>(id, er));
     }

@@ -9,7 +9,6 @@
 #define _PRIMITIVE_MESH_MAKER_H
 
 #include "GameEngine/BoundingVolume.h"
-#include "Renderables/RenderablePrimitiveDtos.h"
 #include "Geometries/GeometryId.h"
 #include "Primitives/PrimitiveId.h"
 #include "GameEngine/EffectMaterialId.h"

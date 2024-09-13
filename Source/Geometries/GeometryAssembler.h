@@ -62,6 +62,7 @@ namespace Enigma::Geometries
         void geometryBound(const Engine::BoundingVolume& bounding) { m_geometryBound = bounding; }
 
         void computeAlignedBox();
+        [[nodiscard]] const Engine::BoundingVolume& geometryBound() const { return m_geometryBound; }
 
     protected:
         void serializeNonVertexAttributesToGenericDto(Engine::GenericDto& dto) const;

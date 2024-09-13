@@ -21,6 +21,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainGeometryFactoryMethods.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainInstallingPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPawn.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPawnAssembler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPawnDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPrimitive.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPrimitiveAssembler.h" />
@@ -35,6 +36,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainGeometryFactoryMethods.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainInstallingPolicy.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPawn.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPawnAssembler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPawnDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPrimitive.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPrimitiveAssembler.cpp" />

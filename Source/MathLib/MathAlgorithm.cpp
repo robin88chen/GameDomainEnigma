@@ -6,10 +6,10 @@
 
 using namespace Enigma::MathLib;
 
-Matrix4 MathAlgorithm::MakePerspectiveProjectionFovLH(float fovy, float aspect, float nearPlane, float farPlane)
+Matrix4 MathAlgorithm::MakePerspectiveProjectionFovLH(Radian fovy, float aspect, float nearPlane, float farPlane)
 {
     Matrix4 rm(true);
-    float theta = fovy * 0.5f;
+    float theta = fovy.value() * 0.5f;
     float Q = farPlane / (farPlane - nearPlane);
     float h = (float)(cos(theta) / sin(theta));
     float w = h / aspect;
@@ -22,10 +22,10 @@ Matrix4 MathAlgorithm::MakePerspectiveProjectionFovLH(float fovy, float aspect, 
     return rm;
 }
 
-Matrix4 MathAlgorithm::MakePerspectiveProjectionFovRH(float fovy, float aspect, float nearPlane, float farPlane)
+Matrix4 MathAlgorithm::MakePerspectiveProjectionFovRH(Radian fovy, float aspect, float nearPlane, float farPlane)
 {
     Matrix4 rm(true);
-    float theta = fovy * 0.5f;
+    float theta = fovy.value() * 0.5f;
     float Q = farPlane / (nearPlane - farPlane);
     float h = (float)(cos(theta) / sin(theta));
     float w = h / aspect;
@@ -114,7 +114,7 @@ MathAlgorithm::TangentBinormalPair MathAlgorithm::CalculateTangentVector(const V
     Vector3 e2 = vec[2] - vec[0];
     if ((e1.length() <= Math::ZERO_TOLERANCE) || (e2.length() <= Math::ZERO_TOLERANCE))
     {
-        return { tan, binor};
+        return { tan, binor };
     }
 
     Vector2 st1 = uv[1] - uv[0];

@@ -57,7 +57,7 @@
         },
         "NotifyFlag": {
             "Type": "Uint32",
-            "Value": 255
+            "Value": 31
         },
         "PawnPrimitiveId": {
             "Type": "StringArray",

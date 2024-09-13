@@ -8,11 +8,9 @@
 #ifndef _ANIMATED_PAWN_DTO_H
 #define _ANIMATED_PAWN_DTO_H
 
-#include "SceneGraph/SceneGraphDtos.h"
-
 namespace Enigma::GameCommon
 {
-    class AnimatedPawnDto : public SceneGraph::PawnDto
+    /*class AnimatedPawnDto : public SceneGraph::PawnDto
     {
     public:
         AnimatedPawnDto();
@@ -29,7 +27,7 @@ namespace Enigma::GameCommon
     private:
         std::optional<Engine::GenericDto> m_animationClipMapDto;
         Engine::GenericDtoCollection m_avatarRecipeDtos;
-    };
+    };*/
 }
 
 #endif // _ANIMATED_PAWN_DTO_H

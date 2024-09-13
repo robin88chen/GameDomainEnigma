@@ -35,9 +35,9 @@ namespace Enigma::SceneGraph
         std::shared_ptr<Light> createLight(const SpatialId& id, const LightInfo& info);
         std::shared_ptr<Light> constituteLight(const SpatialId& id, const Engine::GenericDto& dto, bool is_persisted);
 
-        void registerSpatialFactory(const std::string& rtti, const SpatialCreator& creator, const SpatialConstitutor& constitutor);
+        void registerSpatialFactory(const std::string& rtti, const SpatialCreator& creator);
         void unregisterSpatialFactory(const std::string& rtti);
-        void registerLightFactory(const std::string& rtti, const LightCreator& creator, const LightConstitutor& constitutor);
+        void registerLightFactory(const std::string& rtti, const LightCreator& creator);
         void unregisterLightFactory(const std::string& rtti);
 
     protected:
@@ -49,9 +49,7 @@ namespace Enigma::SceneGraph
         void reattachOwnership(const std::shared_ptr<Spatial>& spatial);
     protected:
         std::unordered_map<std::string, SpatialCreator> m_creators; // rtti name -> creator
-        std::unordered_map<std::string, SpatialConstitutor> m_constitutors; // rtti name -> constitutor
         std::unordered_map<std::string, LightCreator> m_lightCreators; // rtti name -> creator
-        std::unordered_map<std::string, LightConstitutor> m_lightConstitutors; // rtti name -> constitutor
 
         Frameworks::CommandSubscriberPtr m_registerSpatialFactory;
         Frameworks::CommandSubscriberPtr m_unregisterSpatialFactory;

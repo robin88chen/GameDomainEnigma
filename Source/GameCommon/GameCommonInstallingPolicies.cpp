@@ -49,7 +49,7 @@ error AnimatedPawnInstallingPolicy::install(Frameworks::ServiceManager* service_
     assert(service_manager);
     const auto scene_graph_repository = service_manager->getSystemServiceAs<SceneGraph::SceneGraphRepository>();
     assert(scene_graph_repository);
-    scene_graph_repository->registerSpatialFactory(AnimatedPawn::TYPE_RTTI.getName(), AnimatedPawn::create, AnimatedPawn::constitute);
+    scene_graph_repository->registerSpatialFactory(AnimatedPawn::TYPE_RTTI.getName(), AnimatedPawn::create);
     return error();
 }
 

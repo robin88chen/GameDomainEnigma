@@ -1,2 +1,2 @@
-outside_region,En.SceneGraph.PortalZoneNode,outside_region.node@DataPath
-inside_zone_node,En.SceneGraph.PortalZoneNode,inside_zone_node.node@DataPath
+outside_region,En.SceneGraph.OutRegionNode,lazied_outside_region.node@DataPath
+inside_zone_node,En.SceneGraph.PortalZoneNode,lazied_inside_zone_node.node@DataPath

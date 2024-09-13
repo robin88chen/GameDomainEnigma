@@ -194,7 +194,7 @@ void SceneGraphPawnTest::makeModel()
     {
         animator->playAnimation(Enigma::Renderables::AnimationClip{ 0.0f, 2.5f, Enigma::Renderables::AnimationClip::WarpMode::Loop, 0 });
     }
-    CommandBus::post(std::make_shared<AddListeningAnimator>(animatorId));
+    CommandBus::enqueue(std::make_shared<AddListeningAnimator>(animatorId));
 }
 
 void SceneGraphPawnTest::prepareRenderScene()

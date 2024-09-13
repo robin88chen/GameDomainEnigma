@@ -1,9 +1,9 @@
 ﻿#include "Spatial.h"
+#include "SpatialAssembler.h"
 #include "Node.h"
 #include "SceneGraphErrors.h"
 #include "Culler.h"
 #include "SceneGraphEvents.h"
-#include "SceneGraphDtos.h"
 #include "MathLib/MathAlgorithm.h"
 #include "Frameworks/EventPublisher.h"
 #include "GameEngine/BoundingVolume.h"
@@ -43,19 +43,50 @@ Spatial::Spatial(const SpatialId& id) : m_factoryDesc(Spatial::TYPE_RTTI.getName
     m_notifyFlags = Notify_All;
 
 }
-Spatial::Spatial(const SpatialId& id, const GenericDto& o) : m_factoryDesc(o.getRtti()), m_id(id)
+
+Spatial::~Spatial()
 {
-    SpatialDto dto{ o };
-    m_graphDepth = dto.graphDepth();
-    m_cullingMode = static_cast<CullingMode>(dto.cullingMode());
-    m_spatialFlags = dto.spatialFlag();
-    m_notifyFlags = dto.notifyFlag();
-    m_mxLocalTransform = dto.localTransform();
+}
+
+std::shared_ptr<SpatialAssembler> Spatial::assembler() const
+{
+    return std::make_shared<SpatialAssembler>(m_id);
+}
+
+void Spatial::assemble(const std::shared_ptr<SpatialAssembler>& assembler)
+{
+    assert(assembler);
+    assembler->factory(m_factoryDesc);
+    assembler->localTransform(m_mxLocalTransform);
+    assembler->worldTransform(m_mxWorldTransform);
+    assembler->modelBound(m_modelBound);
+    assembler->cullingMode(m_cullingMode);
+    assembler->spatialFlags(m_spatialFlags);
+    assembler->notifyFlags(m_notifyFlags);
+    assembler->graphDepth(m_graphDepth);
+    if (m_parent) assembler->parentId(m_parent.value());
+}
+
+std::shared_ptr<SpatialDisassembler> Spatial::disassembler() const
+{
+    return std::make_shared<SpatialDisassembler>();
+}
+
+void Spatial::disassemble(const std::shared_ptr<SpatialDisassembler>& disassembler)
+{
+    assert(disassembler);
+    assert(m_id == disassembler->id());
+    m_factoryDesc = disassembler->factory();
+    m_graphDepth = disassembler->graphDepth();
+    m_cullingMode = disassembler->cullingMode();
+    m_spatialFlags = disassembler->spatialFlags();
+    m_notifyFlags = disassembler->notifyFlags();
+    m_mxLocalTransform = disassembler->localTransform();
     assert(m_mxLocalTransform != Matrix4::ZERO);
-    m_mxWorldTransform = dto.worldTransform();
+    m_mxWorldTransform = disassembler->worldTransform();
     assert(m_mxWorldTransform != Matrix4::ZERO);
-    m_modelBound = BoundingVolume{ dto.modelBound() };
-    m_worldBound = BoundingVolume{ dto.worldBound() };
+    m_modelBound = disassembler->modelBound();
+    m_worldBound = disassembler->worldBound();
     assert(!m_modelBound.isEmpty());
     assert(!m_worldBound.isEmpty());
     std::tie(m_vecLocalScale, m_qtLocalQuaternion, m_vecLocalPosition) = m_mxLocalTransform.UnMatrixSRT();
@@ -66,41 +97,10 @@ Spatial::Spatial(const SpatialId& id, const GenericDto& o) : m_factoryDesc(o.get
     m_vecWorldPosition = m_mxWorldTransform.UnMatrixTranslate();
 }
 
-Spatial::~Spatial()
-{
-}
-
-Enigma::Engine::GenericDto Spatial::serializeDto()
-{
-    return serializeSpatialDto().toGenericDto();
-}
-
 std::shared_ptr<Spatial> Spatial::querySpatial(const SpatialId& id)
 {
     assert(id.rtti().isDerived(Spatial::TYPE_RTTI));
     return std::make_shared<QuerySpatial>(id)->dispatch();
-}
-
-SpatialDto Spatial::serializeSpatialDto()
-{
-    SpatialDto dto;
-    dto.factoryDesc(m_factoryDesc);
-    //dto.name() = m_name;
-    dto.id(m_id);
-    if (m_parent) dto.parentName(m_parent.value().name());
-    //dto.graphDepth() = m_graphDepth;
-    dto.cullingMode(static_cast<unsigned int>(m_cullingMode));
-    dto.spatialFlag(static_cast<unsigned int>(m_spatialFlags.to_ulong()));
-    dto.notifyFlag(static_cast<unsigned int>(m_notifyFlags.to_ulong()));
-    dto.localTransform(m_mxLocalTransform);
-    dto.worldTransform(m_mxWorldTransform);
-    std::shared_ptr<BoundingVolumeAssembler> model_assembler = std::make_shared<BoundingVolumeAssembler>();
-    m_modelBound.assemble(model_assembler);
-    std::shared_ptr<BoundingVolumeAssembler> world_assembler = std::make_shared<BoundingVolumeAssembler>();
-    m_worldBound.assemble(world_assembler);
-    dto.modelBound(model_assembler->assemble());
-    dto.worldBound(world_assembler->assemble());
-    return dto;
 }
 
 void Spatial::linkParent(const std::optional<SpatialId>& parent)
@@ -118,7 +118,7 @@ std::shared_ptr<Spatial> Spatial::getParent() const
 void Spatial::detachFromParent()
 {
     if (!m_parent.has_value()) return;
-    const NodePtr parent_node = Node::queryNode(m_parent.value());
+    const std::shared_ptr<Node> parent_node = Node::queryNode(m_parent.value());
     if (!parent_node) return;
     parent_node->detachChild(thisSpatial());
 }
@@ -219,7 +219,7 @@ error Spatial::setLocalTransform(const MathLib::Matrix4& mx)
 void Spatial::changeWorldPosition(const MathLib::Vector3& vecWorldPos, const std::optional<std::shared_ptr<Node>>& new_parent_option)
 {
     Vector3 vecLocalPos = vecWorldPos;
-    NodePtr targetParentNode = std::dynamic_pointer_cast<Node, Spatial>(getParent());
+    std::shared_ptr<Node> targetParentNode = std::dynamic_pointer_cast<Node, Spatial>(getParent());
     if (new_parent_option) targetParentNode = new_parent_option.value();  // if New Parent Node is null opt, we no change parent node
     if (targetParentNode) // 有parent node, 取得local pos
     {
@@ -231,7 +231,7 @@ void Spatial::changeWorldPosition(const MathLib::Vector3& vecWorldPos, const std
     // change parent node or not?
     if (getParent() != targetParentNode)
     {
-        NodePtr node = std::dynamic_pointer_cast<Node, Spatial>(getParent());
+        std::shared_ptr<Node> node = std::dynamic_pointer_cast<Node, Spatial>(getParent());
         if (node) node->detachChild(thisSpatial());
         if (targetParentNode)
         {

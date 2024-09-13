@@ -11,13 +11,11 @@
 #include "SceneGraphDefines.h"
 #include "SpatialId.h"
 #include "MathLib/Vector3.h"
-#include "GameEngine/GenericDto.h"
 #include "Frameworks/Rtti.h"
 #include "MathLib/Matrix4.h"
-#include "Frameworks/EventSubscriber.h"
+#include "GameEngine/FactoryDesc.h"
 #include "Frustum.h"
 #include <memory>
-#include <string>
 #include <system_error>
 #include <optional>
 
@@ -25,13 +23,15 @@ namespace Enigma::SceneGraph
 {
     using error = std::error_code;
     using FrustumPtr = std::shared_ptr<Frustum>;
+    class CameraAssembler;
+    class CameraDisassembler;
 
     class Camera : public std::enable_shared_from_this<Camera>
     {
         DECLARE_EN_RTTI_OF_BASE;
     public:
+        Camera(const SpatialId& id);
         Camera(const SpatialId& id, GraphicCoordSys hand);
-        Camera(const SpatialId& id, const Engine::GenericDto& dto);
         Camera(const Camera&) = delete;
         Camera(Camera&&) = delete;
         virtual ~Camera();
@@ -43,7 +43,8 @@ namespace Enigma::SceneGraph
         const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         Engine::FactoryDesc& factoryDesc() { return m_factoryDesc; }
 
-        Engine::GenericDto serializeDto();
+        void assemble(const std::shared_ptr<CameraAssembler>& assembler) const;
+        void disassemble(const std::shared_ptr<CameraDisassembler>& disassembler);
 
         const SpatialId& id() const { return m_id; }
         GraphicCoordSys getCoordHandSys() const { return m_handSys; }
@@ -69,7 +70,7 @@ namespace Enigma::SceneGraph
         void changeAspectRatio(float ratio);
         void changeFrustumFarPlane(float far_z);
         void changeFrustumNearPlane(float near_z);
-        void changeFrustumFov(float fov);
+        void changeFrustumFov(MathLib::Radian fov);
 
         /** set frustum */
         error cullingFrustum(const Frustum& frustum);

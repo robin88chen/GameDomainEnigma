@@ -8,7 +8,7 @@
 #ifndef LIGHT_ASSEMBLERS_H
 #define LIGHT_ASSEMBLERS_H
 
-#include "LightDtos.h"
+#include "LightInfo.h"
 #include "SpatialId.h"
 #include "SpatialAssembler.h"
 
@@ -16,34 +16,87 @@ namespace Enigma::SceneGraph
 {
     class Light;
 
-    class LightAssembler
+    class LightInfoAssembler
+    {
+    public:
+        LightInfoAssembler(const LightInfo::LightType& type);
+
+        [[nodiscard]] LightInfo::LightType lightType() const { return m_type; }
+
+        void color(const MathLib::ColorRGBA& color) { m_color = color; }
+        void position(const MathLib::Vector3& position);
+        void direction(const MathLib::Vector3& direction);
+        void range(float range);
+        void attenuation(const MathLib::Vector3& attenuation);
+        void isEnable(bool is_enable) { m_isEnable = is_enable; }
+
+        Engine::GenericDto assemble() const;
+
+    private:
+        LightInfo::LightType m_type;
+        MathLib::ColorRGBA m_color;
+        MathLib::Vector3 m_position;
+        MathLib::Vector3 m_direction;
+        float m_range;
+        MathLib::Vector3 m_attenuation;
+        bool m_isEnable;
+    };
+
+    class LightInfoDisassembler
+    {
+    public:
+        LightInfoDisassembler();
+
+        [[nodiscard]] LightInfo::LightType lightType() const { return m_type; }
+        [[nodiscard]] MathLib::ColorRGBA color() const { return m_color; }
+        [[nodiscard]] MathLib::Vector3 position() const { return m_position; }
+        [[nodiscard]] MathLib::Vector3 direction() const { return m_direction; }
+        [[nodiscard]] float range() const { return m_range; }
+        [[nodiscard]] MathLib::Vector3 attenuation() const { return m_attenuation; }
+        [[nodiscard]] bool isEnable() const { return m_isEnable; }
+
+        void disassemble(const Engine::GenericDto& dto);
+
+    private:
+        LightInfo::LightType m_type;
+        MathLib::ColorRGBA m_color;
+        MathLib::Vector3 m_position;
+        MathLib::Vector3 m_direction;
+        float m_range;
+        MathLib::Vector3 m_attenuation;
+        bool m_isEnable;
+    };
+
+    class LightAssembler : public SpatialAssembler
     {
     public:
         LightAssembler(const SpatialId& id, const LightInfo::LightType& type);
 
-        const SpatialId& id() const { return m_id; }
+        void color(const MathLib::ColorRGBA& color);
+        void position(const MathLib::Vector3& position);
+        void direction(const MathLib::Vector3& direction);
+        void range(float range);
+        void attenuation(const MathLib::Vector3& attenuation);
+        void isEnable(bool is_enable);
+        void lightInfo(const LightInfo& info);
+        void lightInfo(const std::shared_ptr<LightInfoAssembler>& info_assembler);
 
-        SpatialAssembler& spatial();
-
-        LightAssembler& factory(const Engine::FactoryDesc& factory);
-        LightAssembler& asNative(const std::string& file_at_path);
-        LightAssembler& color(const MathLib::ColorRGBA& color);
-        LightAssembler& position(const MathLib::Vector3& position);
-        LightAssembler& direction(const MathLib::Vector3& direction);
-        LightAssembler& range(float range);
-        LightAssembler& attenuation(const MathLib::Vector3& attenuation);
-        LightAssembler& isEnable(bool is_enable);
-
-        LightDto toLightDto() const;
-        Engine::GenericDto toGenericDto() const;
-
-        std::shared_ptr<Light> constitute();
+        Engine::GenericDto assemble() const;
 
     private:
-        SpatialId m_id;
-        Engine::FactoryDesc m_factory;
-        SpatialAssembler m_spatialAssembler;
-        LightInfoDto m_info;
+        std::shared_ptr<LightInfoAssembler> m_infoAssembler;
+    };
+    class LightDisassembler : public SpatialDisassembler
+    {
+    public:
+        LightDisassembler();
+
+        [[nodiscard]] LightInfo lightInfo() const { return m_info; }
+
+        void disassemble(const Engine::GenericDto& dto);
+
+    private:
+        LightInfo m_info;
     };
 }
 

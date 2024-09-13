@@ -18,7 +18,7 @@
             "Value": {
                 "BoxBV": {
                     "Type": "Box3",
-                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0]
+                    "Value": [1.0, 0.75, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 2.0, 1.75, 1.0]
                 }
             }
         },
@@ -43,7 +43,7 @@
             "Value": {
                 "BoxBV": {
                     "Type": "Box3",
-                    "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0]
+                    "Value": [1.0, 0.75, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 2.0, 1.75, 1.0]
                 }
             }
         },
@@ -57,7 +57,7 @@
         },
         "NotifyFlag": {
             "Type": "Uint32",
-            "Value": 0
+            "Value": 31
         },
         "Children": {
             "Type": "DataObjectArray",
@@ -88,7 +88,7 @@
                                 "Value": {
                                     "BoxBV": {
                                         "Type": "Box3",
-                                        "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0]
+                                        "Value": [0.0, 0.75, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.75, 1.0]
                                     }
                                 }
                             },
@@ -96,13 +96,13 @@
                                 "Type": "Boolean",
                                 "Value": false
                             },
-                            "Id": {
-                                "Type": "StringArray",
-                                "Value": ["child1", "En.SceneGraph.Node"]
-                            },
                             "GraphDepth": {
                                 "Type": "Uint32",
                                 "Value": 0
+                            },
+                            "Id": {
+                                "Type": "StringArray",
+                                "Value": ["child1", "En.SceneGraph.Node"]
                             },
                             "WorldTransform": {
                                 "Type": "Matrix4",
@@ -113,7 +113,7 @@
                                 "Value": {
                                     "BoxBV": {
                                         "Type": "Box3",
-                                        "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0]
+                                        "Value": [0.0, 0.75, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.75, 1.0]
                                     }
                                 }
                             },
@@ -127,7 +127,11 @@
                             },
                             "NotifyFlag": {
                                 "Type": "Uint32",
-                                "Value": 0
+                                "Value": 31
+                            },
+                            "ParentId": {
+                                "Type": "StringArray",
+                                "Value": ["root", "En.SceneGraph.Node"]
                             },
                             "Children": {
                                 "Type": "DataObjectArray",
@@ -166,13 +170,13 @@
                                                     "Type": "Boolean",
                                                     "Value": false
                                                 },
-                                                "GraphDepth": {
-                                                    "Type": "Uint32",
-                                                    "Value": 0
-                                                },
                                                 "Id": {
                                                     "Type": "StringArray",
                                                     "Value": ["still_pawn", "En.SceneGraph.Pawn"]
+                                                },
+                                                "GraphDepth": {
+                                                    "Type": "Uint32",
+                                                    "Value": 0
                                                 },
                                                 "WorldTransform": {
                                                     "Type": "Matrix4",
@@ -198,6 +202,10 @@
                                                 "NotifyFlag": {
                                                     "Type": "Uint32",
                                                     "Value": 31
+                                                },
+                                                "ParentId": {
+                                                    "Type": "StringArray",
+                                                    "Value": ["child1", "En.SceneGraph.Node"]
                                                 },
                                                 "PawnPrimitiveId": {
                                                     "Type": "StringArray",
@@ -236,7 +244,7 @@
                                 "Value": {
                                     "BoxBV": {
                                         "Type": "Box3",
-                                        "Value": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0]
+                                        "Value": [0.0, 0.75, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.75, 1.0]
                                     }
                                 }
                             },
@@ -261,7 +269,7 @@
                                 "Value": {
                                     "BoxBV": {
                                         "Type": "Box3",
-                                        "Value": [2.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0]
+                                        "Value": [2.0, 0.75, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.75, 1.0]
                                     }
                                 }
                             },
@@ -275,7 +283,11 @@
                             },
                             "NotifyFlag": {
                                 "Type": "Uint32",
-                                "Value": 0
+                                "Value": 31
+                            },
+                            "ParentId": {
+                                "Type": "StringArray",
+                                "Value": ["root", "En.SceneGraph.Node"]
                             },
                             "Children": {
                                 "Type": "DataObjectArray",
@@ -346,6 +358,10 @@
                                                 "NotifyFlag": {
                                                     "Type": "Uint32",
                                                     "Value": 31
+                                                },
+                                                "ParentId": {
+                                                    "Type": "StringArray",
+                                                    "Value": ["child2", "En.SceneGraph.Node"]
                                                 },
                                                 "PawnPrimitiveId": {
                                                     "Type": "StringArray",

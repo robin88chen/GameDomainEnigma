@@ -18,7 +18,6 @@ namespace Enigma::SceneGraph
         DECLARE_EN_RTTI;
     public:
         VisibilityManagedNode(const SpatialId& id);
-        VisibilityManagedNode(const SpatialId& id, const Engine::GenericDto& o);
         VisibilityManagedNode(const VisibilityManagedNode&) = delete;
         VisibilityManagedNode(VisibilityManagedNode&&) = delete;
         virtual ~VisibilityManagedNode() override;
@@ -26,9 +25,11 @@ namespace Enigma::SceneGraph
         VisibilityManagedNode& operator=(VisibilityManagedNode&&) = delete;
 
         static std::shared_ptr<VisibilityManagedNode> create(const SpatialId& id);
-        static std::shared_ptr<VisibilityManagedNode> constitute(const SpatialId& id, const Engine::GenericDto& dto);
 
-        virtual Engine::GenericDto serializeDto() override;
+        virtual std::shared_ptr<SpatialAssembler> assembler() const override;
+        virtual std::shared_ptr<SpatialDisassembler> disassembler() const override;
+        virtual std::shared_ptr<HydratedLazyNodeAssembler> assemblerOfLaziedContent() const override;
+        virtual std::shared_ptr<HydratedLazyNodeDisassembler> disassemblerOfLaziedContent() const override;
 
         virtual error onCullingVisible(Culler* culler, bool noCull) override;
         virtual void onCullingCompleteNotVisible(Culler* culler) override;

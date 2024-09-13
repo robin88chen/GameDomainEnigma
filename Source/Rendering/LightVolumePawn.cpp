@@ -2,7 +2,7 @@
 #include "Renderables/MeshPrimitive.h"
 #include "RenderingErrors.h"
 #include "LightingMeshQueries.h"
-#include "LightingPawnDto.h"
+#include "LightingPawnAssemblers.h"
 #include "SceneGraph/LightEvents.h"
 #include "Frameworks/EventPublisher.h"
 #include "SceneGraph/CameraFrustumEvents.h"
@@ -23,7 +23,7 @@ LightVolumePawn::LightVolumePawn(const SpatialId& id) : LightingPawn(id), m_isCa
 {
 }
 
-LightVolumePawn::LightVolumePawn(const SpatialId& id, const Engine::GenericDto& o) : LightingPawn(id, o), m_isCameraInside(false)
+/*LightVolumePawn::LightVolumePawn(const SpatialId& id, const Engine::GenericDto& o) : LightingPawn(id, o), m_isCameraInside(false)
 {
     if ((!m_primitive) && (!m_hostLight.expired()))
     {
@@ -34,7 +34,7 @@ LightVolumePawn::LightVolumePawn(const SpatialId& id, const Engine::GenericDto& 
         }
         m_prensentCameraId = dto.presentCameraId();
     }
-}
+}*/
 
 LightVolumePawn::~LightVolumePawn()
 {
@@ -46,18 +46,56 @@ std::shared_ptr<LightVolumePawn> LightVolumePawn::create(const SceneGraph::Spati
     return std::make_shared<LightVolumePawn>(id);
 }
 
-std::shared_ptr<LightVolumePawn> LightVolumePawn::constitute(const SceneGraph::SpatialId& id, const Engine::GenericDto& dto)
+std::shared_ptr<SpatialAssembler> LightVolumePawn::assembler() const
 {
-    return std::make_shared<LightVolumePawn>(id, dto);
+    return std::make_shared<LightVolumePawnAssembler>(m_id);
 }
 
-GenericDto LightVolumePawn::serializeDto()
+void LightVolumePawn::assemble(const std::shared_ptr<SceneGraph::SpatialAssembler>& assembler)
+{
+    assert(assembler);
+    LightingPawn::assemble(assembler);
+    if (auto lightingPawnAssembler = std::dynamic_pointer_cast<LightVolumePawnAssembler>(assembler))
+    {
+        if (!m_hostLight.expired()) lightingPawnAssembler->hostLightId(m_hostLight.lock()->id());
+        if (!m_prensentCameraId.empty()) lightingPawnAssembler->presentCameraId(m_prensentCameraId);
+    }
+}
+
+std::shared_ptr<SpatialDisassembler> LightVolumePawn::disassembler() const
+{
+    return std::make_shared<LightVolumePawnDisassembler>();
+}
+
+void LightVolumePawn::disassemble(const std::shared_ptr<SceneGraph::SpatialDisassembler>& disassembler)
+{
+    assert(disassembler);
+    LightingPawn::disassemble(disassembler);
+    if (auto lightingPawnDisassembler = std::dynamic_pointer_cast<LightVolumePawnDisassembler>(disassembler))
+    {
+        if (auto v = lightingPawnDisassembler->hostLightId())
+        {
+            m_hostLight = std::dynamic_pointer_cast<Light>(std::make_shared<QuerySpatial>(v.value())->dispatch());
+        }
+        if ((!m_primitive) && (m_hostLight.expired()))
+        {
+
+            if ((m_hostLight.lock()->info().lightType() == LightInfo::LightType::Point) && (lightingPawnDisassembler->primitiveId().has_value()))
+            {
+                m_primitive = std::make_shared<RequestPointLightMeshAssembly>(lightingPawnDisassembler->primitiveId().value(), m_hostLight.lock()->getLightRange())->dispatch();
+            }
+        }
+        if (lightingPawnDisassembler->presentCameraId()) m_prensentCameraId = lightingPawnDisassembler->presentCameraId().value();
+    }
+}
+
+/*GenericDto LightVolumePawn::serializeDto()
 {
     LightVolumePawnDto dto{ LightingPawnDto(SerializePawnDto()) };
     if (getHostLight()) dto.hostLightId(getHostLight()->id());
     if (!m_prensentCameraId.empty()) dto.presentCameraId(m_prensentCameraId);
     return dto.toGenericDto();
-}
+}*/
 
 void LightVolumePawn::registerHandlers()
 {
@@ -98,9 +136,9 @@ error LightVolumePawn::_updateSpatialRenderState()
     if (!isRenderable()) return ErrorCode::ok;  // only renderable entity need
     if (m_hostLight.expired()) return ErrorCode::nullHostLight;
 
-    Vector4 vecLightPosRange(m_hostLight.lock()->info().getLightPosition(), m_hostLight.lock()->info().getLightRange());
-    ColorRGBA colorLight(m_hostLight.lock()->info().getLightColor());
-    Vector4 vecLightAtten(m_hostLight.lock()->info().getLightAttenuation(), 1.0f);
+    Vector4 vecLightPosRange(m_hostLight.lock()->info().position(), m_hostLight.lock()->info().range());
+    ColorRGBA colorLight(m_hostLight.lock()->info().color());
+    Vector4 vecLightAtten(m_hostLight.lock()->info().attenuation(), 1.0f);
     RenderLightingState lighting_state;
     lighting_state.setPointLightArray({ vecLightPosRange }, { colorLight }, { vecLightAtten });
     m_spatialRenderState = SpatialRenderState(lighting_state);

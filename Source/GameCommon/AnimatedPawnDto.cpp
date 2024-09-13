@@ -8,7 +8,7 @@ using namespace Enigma::SceneGraph;
 static std::string TOKEN_ANIMATION_CLIP_MAP = "AnimClipMap";
 static std::string TOKEN_AVATAR_RECIPES = "AvatarRecipes";
 
-AnimatedPawnDto::AnimatedPawnDto() : PawnDto()
+/*AnimatedPawnDto::AnimatedPawnDto() : PawnDto()
 {
     m_factoryDesc = Engine::FactoryDesc(AnimatedPawn::TYPE_RTTI.getName());
 }
@@ -31,4 +31,4 @@ Enigma::Engine::GenericDto AnimatedPawnDto::toGenericDto() const
     if (m_animationClipMapDto) dto.addOrUpdate(TOKEN_ANIMATION_CLIP_MAP, m_animationClipMapDto.value());
     dto.addOrUpdate(TOKEN_AVATAR_RECIPES, m_avatarRecipeDtos);
     return dto;
-}
+}*/

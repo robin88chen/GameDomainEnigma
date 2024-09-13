@@ -43,6 +43,9 @@
     <Filter Include="Intersector">
       <UniqueIdentifier>{10aea23e-415b-4023-a845-8b7880ffec3c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Radian &amp; Degree">
+      <UniqueIdentifier>{bdefa437-fc30-4f86-849a-713e9bd74842}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Vector2.cpp">
@@ -163,6 +166,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\IntrRay3Triangle3.cpp">
       <Filter>Intersector</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Radian.cpp">
+      <Filter>Radian &amp; Degree</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Degree.cpp">
+      <Filter>Radian &amp; Degree</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -289,6 +298,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\MathLib.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\IntrRay3Triangle3.h">
       <Filter>Intersector</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Radian.h">
+      <Filter>Radian &amp; Degree</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Degree.h">
+      <Filter>Radian &amp; Degree</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

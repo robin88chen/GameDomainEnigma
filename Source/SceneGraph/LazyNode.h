@@ -14,14 +14,14 @@
 
 namespace Enigma::SceneGraph
 {
-    class LazyNodeDto;
+    class HydratedLazyNodeAssembler;
+    class HydratedLazyNodeDisassembler;
 
     class LazyNode : public Node
     {
         DECLARE_EN_RTTI;
     public:
         LazyNode(const SpatialId& id);
-        LazyNode(const SpatialId& id, const Engine::GenericDto& o);
         LazyNode(const LazyNode&) = delete;
         LazyNode(LazyNode&&) = delete;
         virtual ~LazyNode() override;
@@ -29,13 +29,13 @@ namespace Enigma::SceneGraph
         LazyNode& operator=(LazyNode&&) = delete;
 
         static std::shared_ptr<LazyNode> create(const SpatialId& id);
-        static std::shared_ptr<LazyNode> constitute(const SpatialId& id, const Engine::GenericDto& dto);
-        virtual std::error_code hydrate(const Engine::GenericDto& dto);
 
-        virtual Engine::GenericDto serializeDto() override;
-        virtual Engine::GenericDto serializeLaziedContent();
-        //todo : remove
-        virtual Engine::GenericDtoCollection serializeFlattenedTree() override;
+        virtual std::shared_ptr<SpatialAssembler> assembler() const override;
+        virtual std::shared_ptr<SpatialDisassembler> disassembler() const override;
+        virtual std::shared_ptr<HydratedLazyNodeAssembler> assemblerOfLaziedContent() const;
+        virtual std::shared_ptr<HydratedLazyNodeDisassembler> disassemblerOfLaziedContent() const;
+        virtual void assembleLaziedContent(const std::shared_ptr<HydratedLazyNodeAssembler>& assembler);
+        virtual std::error_code hydrate(const std::shared_ptr<HydratedLazyNodeDisassembler>& disassembler);
 
         virtual bool canVisited() override;
 
@@ -43,10 +43,6 @@ namespace Enigma::SceneGraph
 
         const Frameworks::LazyStatus& lazyStatus() const { return m_lazyStatus; }
         Frameworks::LazyStatus& lazyStatus() { return m_lazyStatus; }
-
-    protected:
-        virtual Engine::GenericDto serializeAsLaziness();
-        LazyNodeDto serializeLazyNodeAsLaziness();
 
     protected:
         Frameworks::LazyStatus m_lazyStatus;

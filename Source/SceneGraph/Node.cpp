@@ -1,9 +1,9 @@
 ﻿#include "Node.h"
+#include "NodeAssembler.h"
 #include "Culler.h"
 #include "Spatial.h"
 #include "SceneGraphErrors.h"
 #include "SceneGraphEvents.h"
-#include "SceneGraphDtos.h"
 #include "SceneFlattenTraversal.h"
 #include "Frameworks/EventPublisher.h"
 #include "Platforms/PlatformLayer.h"
@@ -22,21 +22,6 @@ Node::Node(const SpatialId& id) : Spatial(id)
     m_factoryDesc = FactoryDesc(TYPE_RTTI.getName());
 }
 
-Node::Node(const SpatialId& id, const GenericDto& dto) : Spatial(id, dto)
-{
-    NodeDto nodeDto{ dto };
-    for (auto& child : nodeDto.children())
-    {
-        auto child_spatial = std::make_shared<QuerySpatial>(child.id())->dispatch();
-        if (!child_spatial)
-        {
-            assert(child.dto().has_value());
-            child_spatial = std::make_shared<RequestSpatialConstitution>(child.id(), child.dto().value())->dispatch();
-        }
-        if (child_spatial) m_childList.push_back(child_spatial);
-    }
-}
-
 Node::~Node()
 {
     while (m_childList.size())
@@ -49,57 +34,64 @@ Node::~Node()
     m_childList.clear();
 }
 
-std::shared_ptr<Node> Node::queryNode(const SpatialId& id)
-{
-    assert(id.rtti().isDerived(Node::TYPE_RTTI));
-    return std::dynamic_pointer_cast<Node, Spatial>(std::make_shared<QuerySpatial>(id)->dispatch());
-}
-
 std::shared_ptr<Node> Node::create(const SpatialId& id)
 {
     return std::make_shared<Node>(id);
 }
 
-std::shared_ptr<Node> Node::constitute(const SpatialId& id, const GenericDto& dto)
+std::shared_ptr<SpatialAssembler> Node::assembler() const
 {
-    return std::make_shared<Node>(id, dto);
+    return std::make_shared<NodeAssembler>(m_id);
 }
 
-GenericDto Node::serializeDto()
+void Node::assemble(const std::shared_ptr<SpatialAssembler>& assembler)
 {
-    return serializeNodeDto().toGenericDto();
-}
-
-NodeDto Node::serializeNodeDto()
-{
-    NodeDto dto(serializeSpatialDto());
-    for (auto child : m_childList)
+    assert(assembler);
+    Spatial::assemble(assembler);
+    if (auto nodeAssembler = std::dynamic_pointer_cast<NodeAssembler>(assembler))
     {
-        if (!child) continue;
-        if (child->persistenceLevel() == PersistenceLevel::Store)
+        for (const auto& child : m_childList)
         {
-            dto.pushChild({ child->id() });
-        }
-        else
-        {
-            dto.pushChild({ child->id(), child->serializeDto() });
+            if (!child) continue;
+            if (child->persistenceLevel() == PersistenceLevel::Store)
+            {
+                nodeAssembler->child(child->id());
+            }
+            else
+            {
+                nodeAssembler->child(child);
+            }
         }
     }
-    return dto;
 }
 
-GenericDtoCollection Node::serializeFlattenedTree()
+std::shared_ptr<SpatialDisassembler> Node::disassembler() const
 {
-    GenericDtoCollection collection;
-    SceneFlattenTraversal flatten;
-    visitBy(&flatten);
-    if (flatten.GetSpatials().empty()) return collection;
-    for (auto& sp : flatten.GetSpatials())
+    return std::make_shared<NodeDisassembler>();
+}
+
+void Node::disassemble(const std::shared_ptr<SpatialDisassembler>& disassembler)
+{
+    assert(disassembler);
+    Spatial::disassemble(disassembler);
+    std::shared_ptr<NodeDisassembler> nodeDisassembler = std::dynamic_pointer_cast<NodeDisassembler>(disassembler);
+    if (!nodeDisassembler) return;
+    for (auto& [child_id, child_dto] : nodeDisassembler->children())
     {
-        collection.push_back(sp->serializeDto());
+        auto child_spatial = std::make_shared<QuerySpatial>(child_id)->dispatch();
+        if (!child_spatial)
+        {
+            assert(child_dto.has_value());
+            child_spatial = std::make_shared<RequestSpatialConstitution>(child_id, child_dto.value())->dispatch();
+        }
+        if (child_spatial) m_childList.push_back(child_spatial);
     }
-    collection[0].asTopLevel(true);
-    return collection;
+}
+
+std::shared_ptr<Node> Node::queryNode(const SpatialId& id)
+{
+    assert(id.rtti().isDerived(Node::TYPE_RTTI));
+    return std::dynamic_pointer_cast<Node, Spatial>(std::make_shared<QuerySpatial>(id)->dispatch());
 }
 
 error Node::onCullingVisible(Culler* culler, bool noCull)

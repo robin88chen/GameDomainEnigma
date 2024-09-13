@@ -70,9 +70,5 @@
         "Indices": {
             "Type": "Uint32Array",
             "Value": [0, 1, 2, 0, 2, 3]
-        },
-        "Name": {
-            "Type": "String",
-            "Value": "board"
         }
     }]

@@ -13,7 +13,6 @@
 #include "GameEngine/BoundingVolume.h"
 #include "TerrainPrimitiveDto.h"
 #include "Frameworks/ExtentTypesDefine.h"
-#include "SceneGraph/SceneGraphAssemblers.h"
 
 namespace Enigma::Terrain
 {
@@ -58,7 +57,7 @@ namespace Enigma::Terrain
         TerrainPrimitiveDto m_dto;
     };*/
 
-    class TerrainPawnAssembler
+    /*class TerrainPawnAssembler
     {
     public:
         TerrainPawnAssembler(const SceneGraph::SpatialId& id);
@@ -76,7 +75,7 @@ namespace Enigma::Terrain
         SceneGraph::SpatialId m_id;
         SceneGraph::PawnAssembler m_pawnAssembler;
         TerrainPawnDto m_dto;
-    };
+    };*/
 }
 
 #endif // TERRAIN_ASSEMBLERS_H

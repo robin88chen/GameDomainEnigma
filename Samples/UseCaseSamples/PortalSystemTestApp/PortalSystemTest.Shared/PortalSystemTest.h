@@ -69,7 +69,7 @@ protected:
     Enigma::SceneGraph::SpatialId m_rootId;
     std::unique_ptr<Enigma::SceneGraph::SceneGraph> m_sceneGraph;
     //Enigma::SceneGraph::NodePtr m_sceneRoot;
-    Enigma::SceneGraph::PawnPtr m_pawn;
+    std::shared_ptr<Enigma::SceneGraph::Pawn> m_pawn;
 
     Enigma::SceneGraph::SpatialId m_cameraId;
     std::shared_ptr<Enigma::SceneGraph::Camera> m_camera;

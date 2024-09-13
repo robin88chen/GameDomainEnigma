@@ -5,8 +5,8 @@
 #include "WorldMapEvents.h"
 #include "WorldMapQueries.h"
 #include "Frameworks/EventPublisher.h"
-#include "SceneGraph/SceneGraphAssemblers.h"
-#include "SceneGraph/SceneGraphFactory.h"
+#include "SceneGraph/VisibilityManagedNodeAssembler.h"
+#include "SceneGraph/LazyNodeAssembler.h"
 #include "SceneGraph/VisibilityManagedNode.h"
 #include <cassert>
 
@@ -18,11 +18,11 @@ using namespace Enigma::Frameworks;
 
 DEFINE_RTTI_OF_BASE(WorldMap, QuadTreeRoot);
 
-QuadTreeRoot::QuadTreeRoot(const QuadTreeRootId& id) : m_factoryDesc(QuadTreeRoot::TYPE_RTTI), m_id(id)
+QuadTreeRoot::QuadTreeRoot(const QuadTreeRootId& id) : m_factoryDesc(TYPE_RTTI), m_id(id)
 {
 }
 
-QuadTreeRoot::QuadTreeRoot(const QuadTreeRootId& id, const Engine::GenericDto& o) : m_factoryDesc(QuadTreeRoot::TYPE_RTTI), m_id(id)
+QuadTreeRoot::QuadTreeRoot(const QuadTreeRootId& id, const Engine::GenericDto& o) : m_factoryDesc(TYPE_RTTI), m_id(id)
 {
     QuadTreeRootDto dto(o);
     assert(dto.id() == m_id);
@@ -57,7 +57,7 @@ std::optional<SpatialId> QuadTreeRoot::findFittingNode(const Engine::BoundingVol
     return fitting_volume->id();
 }
 
-void QuadTreeRoot::createFittingNodes(const std::shared_ptr<SceneGraph::SceneGraphRepository>& repository, const Engine::BoundingVolume& bv_in_world, unsigned max_depth)
+void QuadTreeRoot::createFittingNodes(const std::shared_ptr<SceneGraphRepository>& repository, const Engine::BoundingVolume& bv_in_world, unsigned max_depth)
 {
     assert(repository);
     assert(!m_rootNodeId.empty());
@@ -84,7 +84,7 @@ void QuadTreeRoot::createFittingNodes(const std::shared_ptr<SceneGraph::SceneGra
     EventPublisher::enqueue(std::make_shared<FittingNodeCreated>(m_id));
 }
 
-std::error_code QuadTreeRoot::createTreeNode(const std::shared_ptr<SceneGraph::SceneGraphRepository>& repository, const std::shared_ptr<QuadTreeVolume>& volume)
+std::error_code QuadTreeRoot::createTreeNode(const std::shared_ptr<SceneGraphRepository>& repository, const std::shared_ptr<QuadTreeVolume>& volume)
 {
     assert(repository);
     assert(volume);
@@ -98,11 +98,13 @@ std::error_code QuadTreeRoot::createTreeNode(const std::shared_ptr<SceneGraph::S
         if (!parent_node->lazyStatus().isReady()) return ErrorCode::parentQuadNodeHydrationFailed;
     }
     MathLib::Matrix4 local_transform = volume->worldTransform() * parent_node->getWorldTransform().Inverse();
-    Engine::GenericDto child_dto = assembleChildTreeNode(volume->parentId().value(), parent_node->factoryDesc(), volume->id(), local_transform, volume->worldTransform(), volume->modelBounding());
-    std::shared_ptr<LazyNode> child_node = std::dynamic_pointer_cast<LazyNode>(std::make_shared<RequestSpatialConstitution>(volume->id(), child_dto)->dispatch());
+    std::shared_ptr<HydratedLazyNodeAssembler> child_assembler = assembleChildTreeNode(volume->parentId().value(), parent_node->factoryDesc(), volume->id(), local_transform, volume->worldTransform(), volume->modelBounding());
+    std::shared_ptr<LazyNode> child_node = std::dynamic_pointer_cast<LazyNode>(std::make_shared<RequestSpatialConstitution>(volume->id(), child_assembler->assemble())->dispatch());
     if (!child_node) return ErrorCode::childQuadNodeConstitutionFailed;
     repository->putSpatial(child_node);
-    std::error_code er = child_node->hydrate(child_dto);
+    std::shared_ptr<HydratedLazyNodeDisassembler> child_disassembler = child_node->disassemblerOfLaziedContent();
+    child_disassembler->disassemble(child_assembler->assemble());
+    std::error_code er = child_node->hydrate(child_disassembler);
     if (er) return er;
     repository->putLaziedContent(child_node);
     er = parent_node->attachChild(child_node, local_transform);
@@ -112,16 +114,18 @@ std::error_code QuadTreeRoot::createTreeNode(const std::shared_ptr<SceneGraph::S
     return ErrorCode::ok;
 }
 
-Enigma::Engine::GenericDto QuadTreeRoot::assembleChildTreeNode(const SceneGraph::SpatialId& parent_id, const Engine::FactoryDesc& parent_desc, const SceneGraph::SpatialId& id, const MathLib::Matrix4& local_transform, const MathLib::Matrix4& world_transform, const Engine::BoundingVolume& model_bound)
+std::shared_ptr<HydratedLazyNodeAssembler> QuadTreeRoot::assembleChildTreeNode(const SpatialId& parent_id, const Engine::FactoryDesc& parent_desc, const SpatialId& id, const MathLib::Matrix4& local_transform, const MathLib::Matrix4& world_transform, const Engine::BoundingVolume& model_bound)
 {
     auto child_filename = replaceToChildFilename(parent_desc.GetDeferredFilename(), parent_desc.PathId(), parent_id, id);
-    VisibilityManagedNodeAssembler assembler(id);
-    assembler.lazyNode().node().spatial().localTransform(local_transform).modelBound(model_bound).worldTransform(world_transform);
-    assembler.asDeferred(child_filename, parent_desc.PathId());
-    return assembler.toHydratedGenericDto();
+    std::shared_ptr<HydratedVisibilityManagedNodeAssembler> assembler = std::make_shared<HydratedVisibilityManagedNodeAssembler>(id);
+    assembler->localTransform(local_transform);
+    assembler->modelBound(model_bound);
+    assembler->worldTransform(world_transform);
+    assembler->persist(child_filename, parent_desc.PathId());
+    return assembler;
 }
 
-std::string QuadTreeRoot::replaceToChildFilename(const std::string& parent_filename, const std::string& path_id, const SceneGraph::SpatialId& parent_id, const SceneGraph::SpatialId& id)
+std::string QuadTreeRoot::replaceToChildFilename(const std::string& parent_filename, const std::string& path_id, const SpatialId& parent_id, const SpatialId& id)
 {
     std::string child_filename = parent_filename;
     auto pos = child_filename.find_last_of('@');

@@ -62,18 +62,18 @@ SpatialRenderState LightInfoTraversal::queryLightingStateAt(const MathLib::Vecto
         switch ((*iter).m_lightInfo.lightType())
         {
         case LightInfo::LightType::Ambient:
-            lighting_state.setAmbientLightColor((*iter).m_lightInfo.getLightColor());
+            lighting_state.setAmbientLightColor((*iter).m_lightInfo.color());
             break;
         case LightInfo::LightType::SunLight:
         case LightInfo::LightType::Directional:  //todo : if we want directional light, separate it from sun light
-            lighting_state.setSunLight((*iter).m_lightInfo.getLightDirection(), (*iter).m_lightInfo.getLightColor());
+            lighting_state.setSunLight((*iter).m_lightInfo.direction(), (*iter).m_lightInfo.color());
             break;
         case LightInfo::LightType::Point:
         {
-            MathLib::Vector3 pos = (*iter).m_lightInfo.getLightPosition();
-            light_positions.emplace_back(MathLib::Vector4(pos.x(), pos.y(), pos.z(), (*iter).m_lightInfo.getLightRange()));
-            light_colors.emplace_back((*iter).m_lightInfo.getLightColor());
-            MathLib::Vector3 attn = (*iter).m_lightInfo.getLightAttenuation();
+            MathLib::Vector3 pos = (*iter).m_lightInfo.position();
+            light_positions.emplace_back(MathLib::Vector4(pos.x(), pos.y(), pos.z(), (*iter).m_lightInfo.range()));
+            light_colors.emplace_back((*iter).m_lightInfo.color());
+            MathLib::Vector3 attn = (*iter).m_lightInfo.attenuation();
             light_attenuations.emplace_back(MathLib::Vector4(attn.x(), attn.y(), attn.z(), 1.0f));
         }
         break;

@@ -24,25 +24,24 @@ namespace Enigma::SceneGraph
     {
         DECLARE_EN_RTTI;
     public:
-        using ChildList = std::list<SpatialPtr>;
+        using ChildList = std::list<std::shared_ptr<Spatial>>;
 
     public:
         Node(const SpatialId& id);
-        Node(const SpatialId& id, const Engine::GenericDto& dto);
         Node(const Node&) = delete;
         Node(Node&&) = delete;
         virtual ~Node() override;
         Node& operator=(const Node&) = delete;
         Node& operator=(Node&&) = delete;
 
-        virtual Engine::GenericDto serializeDto() override;
+        static std::shared_ptr<Node> create(const SpatialId& id);
+
+        virtual std::shared_ptr<SpatialAssembler> assembler() const override;
+        virtual void assemble(const std::shared_ptr<SpatialAssembler>& assembler) override;
+        virtual std::shared_ptr<SpatialDisassembler> disassembler() const override;
+        virtual void disassemble(const std::shared_ptr<SpatialDisassembler>& disassembler) override;
 
         static std::shared_ptr<Node> queryNode(const SpatialId& id);
-        static std::shared_ptr<Node> create(const SpatialId& id);
-        static std::shared_ptr<Node> constitute(const SpatialId& id, const Engine::GenericDto& dto);
-
-        //todo: remove
-        virtual Engine::GenericDtoCollection serializeFlattenedTree();
 
         /** on cull visible, used by culler, for compute visible set, recursive calling children's "CullingVisibleSet"  */
         virtual error onCullingVisible(Culler* culler, bool noCull) override;
@@ -83,14 +82,9 @@ namespace Enigma::SceneGraph
         }
 
     protected:
-        NodeDto serializeNodeDto();
-
-    protected:
         //todo : rethink -- mutex for lock list??
         ChildList m_childList;
     };
-
-    using NodePtr = std::shared_ptr<Node>;
 };
 
 

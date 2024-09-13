@@ -1,5 +1,5 @@
 ﻿#include "VisibilityManagedNode.h"
-#include "SceneGraphDtos.h"
+#include "VisibilityManagedNodeAssembler.h"
 #include "SceneGraphCommands.h"
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/EventPublisher.h"
@@ -17,10 +17,6 @@ VisibilityManagedNode::VisibilityManagedNode(const SpatialId& id) : LazyNode(id)
 {
 }
 
-VisibilityManagedNode::VisibilityManagedNode(const SpatialId& id, const Engine::GenericDto& o) : LazyNode(id, o)
-{
-}
-
 VisibilityManagedNode::~VisibilityManagedNode()
 {
 
@@ -31,14 +27,24 @@ std::shared_ptr<VisibilityManagedNode> VisibilityManagedNode::create(const Spati
     return std::make_shared<VisibilityManagedNode>(id);
 }
 
-std::shared_ptr<VisibilityManagedNode> VisibilityManagedNode::constitute(const SpatialId& id, const Engine::GenericDto& dto)
+std::shared_ptr<SpatialAssembler> VisibilityManagedNode::assembler() const
 {
-    return std::make_shared<VisibilityManagedNode>(id, dto);
+    return std::make_shared<DehydratedVisibilityManagedNodeAssembler>(m_id);
 }
 
-GenericDto VisibilityManagedNode::serializeDto()
+std::shared_ptr<SpatialDisassembler> VisibilityManagedNode::disassembler() const
 {
-    return LazyNode::serializeDto();
+    return std::make_shared<DehydratedVisibilityManagedNodeDisassembler>();
+}
+
+std::shared_ptr<HydratedLazyNodeAssembler> VisibilityManagedNode::assemblerOfLaziedContent() const
+{
+    return std::make_shared<HydratedVisibilityManagedNodeAssembler>(m_id);
+}
+
+std::shared_ptr<HydratedLazyNodeDisassembler> VisibilityManagedNode::disassemblerOfLaziedContent() const
+{
+    return std::make_shared<HydratedVisibilityManagedNodeDisassembler>();
 }
 
 error VisibilityManagedNode::onCullingVisible(Culler* culler, bool noCull)

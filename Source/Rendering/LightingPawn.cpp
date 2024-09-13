@@ -1,6 +1,6 @@
 ﻿#include "LightingPawn.h"
 #include "SceneGraph/Light.h"
-#include "LightingPawnDto.h"
+#include "LightingPawnAssemblers.h"
 #include "SceneGraph/SceneGraphQueries.h"
 #include "SceneGraph/LightEvents.h"
 #include "Frameworks/EventPublisher.h"
@@ -16,15 +16,16 @@ LightingPawn::LightingPawn(const SpatialId& id) : Pawn(id)
 {
 }
 
-LightingPawn::LightingPawn(const SpatialId& id, const Engine::GenericDto& o) : Pawn(id, o)
+/*LightingPawn::LightingPawn(const SpatialId& id, const Engine::GenericDto& o) : Pawn(id, o)
 {
     LightingPawnDto dto(o);
     m_hostLight = std::dynamic_pointer_cast<Light>(std::make_shared<QuerySpatial>(dto.hostLightId())->dispatch());
-}
+}*/
 
 LightingPawn::~LightingPawn()
 {
 }
+
 
 void LightingPawn::registerHandlers()
 {

@@ -18,9 +18,7 @@
 #include "SpatialRenderState.h"
 #include "Frameworks/Rtti.h"
 #include "GameEngine/FactoryDesc.h"
-#include "GameEngine/LinkageResolver.h"
 #include "SceneGraphPersistenceLevel.h"
-#include <string>
 #include <memory>
 #include <system_error>
 #include <bitset>
@@ -30,7 +28,8 @@ namespace Enigma::SceneGraph
     using error = std::error_code;
     class Culler;
     class Node;
-    class SpatialDto;
+    class SpatialAssembler;
+    class SpatialDisassembler;
 
     /** Scene Graph Spatial Object */
     class Spatial : public std::enable_shared_from_this<Spatial>
@@ -73,14 +72,18 @@ namespace Enigma::SceneGraph
 
     public:
         Spatial(const SpatialId& id);
-        Spatial(const SpatialId& id, const Engine::GenericDto& dto);
         Spatial(const Spatial&) = delete;
         Spatial(Spatial&&) = delete;
         virtual ~Spatial();
         Spatial& operator=(const Spatial&) = delete;
         Spatial& operator=(Spatial&&) = delete;
 
-        virtual Engine::GenericDto serializeDto();
+        //! ADR : 這裡傳回空的 assembler, 而不是已組裝的。如果要傳回已組裝的，會讓 disassembler 有概念侵入問題，在SpatialAssembler中實作靜態函式
+        virtual std::shared_ptr<SpatialAssembler> assembler() const;
+        virtual void assemble(const std::shared_ptr<SpatialAssembler>& assembler);
+        //! ADR : 這裡傳回空的 disassembler, 而不是已拆解的。如果要傳回已拆解的，必須把 DTO 參數傳入，這樣會讓 DTO 概念侵入，在SpatialDisassembler中實作靜態函式
+        virtual std::shared_ptr<SpatialDisassembler> disassembler() const;
+        virtual void disassemble(const std::shared_ptr<SpatialDisassembler>& disassembler);
 
         static std::shared_ptr<Spatial> querySpatial(const SpatialId& id);
 
@@ -237,12 +240,8 @@ namespace Enigma::SceneGraph
         }
 
     protected:
-        SpatialDto serializeSpatialDto();
-
-    protected:
         SpatialId m_id;
         PersistenceLevel m_persistenceLevel;
-        //std::string m_name;
 
         Engine::FactoryDesc m_factoryDesc;
 
@@ -272,8 +271,6 @@ namespace Enigma::SceneGraph
         //todo : 先全開，之後再看效能決定要不要減少
         NotifyFlags m_notifyFlags;  ///< enqueue message when location/bound/visibility... has changed, default is all
     };
-
-    using SpatialPtr = std::shared_ptr<Spatial>;
 };
 
 

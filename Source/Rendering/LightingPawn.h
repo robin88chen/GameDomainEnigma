@@ -20,12 +20,12 @@ namespace Enigma::Rendering
         DECLARE_EN_RTTI;
     public:
         LightingPawn(const SceneGraph::SpatialId& id);
-        LightingPawn(const SceneGraph::SpatialId& id, const Engine::GenericDto& o);
         LightingPawn(const LightingPawn&) = delete;
         LightingPawn(LightingPawn&&) = delete;
         virtual ~LightingPawn() override;
         LightingPawn& operator=(const LightingPawn&) = delete;
         LightingPawn& operator=(LightingPawn&&) = delete;
+
 
         virtual void registerHandlers();
         virtual void unregisterHandlers();

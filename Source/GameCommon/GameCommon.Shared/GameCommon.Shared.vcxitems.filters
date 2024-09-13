@@ -54,13 +54,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AvatarRecipeDto.h">
       <Filter>Avatar</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClipMapDto.h">
-      <Filter>AnimationClipMap</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatedPawn.h">
-      <Filter>AnimatedPawn</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatedPawnDto.h">
       <Filter>AnimatedPawn</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClipMapEvents.h">
@@ -107,13 +101,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AvatarRecipeDto.cpp">
       <Filter>Avatar</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationClipMapDto.cpp">
-      <Filter>AnimationClipMap</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatedPawn.cpp">
-      <Filter>AnimatedPawn</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatedPawnDto.cpp">
       <Filter>AnimatedPawn</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatedPawnAssembler.cpp">

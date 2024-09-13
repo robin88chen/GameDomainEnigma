@@ -16,10 +16,8 @@
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatedPawn.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatedPawnAssembler.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatedPawnDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClipMap.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClipMapAssembler.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClipMapDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClipMapEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AvatarRecipeDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AvatarRecipes.h" />
@@ -37,10 +35,8 @@
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatedPawn.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatedPawnAssembler.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatedPawnDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationClipMap.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationClipMapAssembler.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationClipMapDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AvatarRecipeDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AvatarRecipies.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCameraService.cpp" />

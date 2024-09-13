@@ -32,11 +32,7 @@ void AnimatedPawnAssembler::animationClipMap(const std::shared_ptr<AnimationClip
 
 void AnimatedPawnAssembler::animationClipMap(const AnimationClipMap& clip)
 {
-    m_clip = std::make_shared<AnimationClipMapAssembler>();
-    for (auto& [key, value] : clip.animationClipMap())
-    {
-        m_clip->addClip(key, value.clip());
-    }
+    m_clip = std::make_shared<AnimationClipMapAssembler>(clip);
 }
 
 void AnimatedPawnAssembler::byPrefab(const std::string& prefab_name)
@@ -48,7 +44,7 @@ void AnimatedPawnAssembler::byPrefab(const std::string& prefab_name)
 Enigma::Engine::GenericDto AnimatedPawnAssembler::assemble() const
 {
     Engine::GenericDto dto = PawnAssembler::assemble();
-    if (m_clip) dto.addOrUpdate(TOKEN_ANIMATION_CLIP_MAP, m_clip->toGenericDto());
+    if (m_clip) dto.addOrUpdate(TOKEN_ANIMATION_CLIP_MAP, m_clip->assemble());
     dto.addOrUpdate(TOKEN_AVATAR_RECIPES, m_avatarRecipeDtos);
     return dto;
 }
@@ -61,7 +57,10 @@ AnimatedPawnDisassembler::AnimatedPawnDisassembler() : PawnDisassembler()
 void AnimatedPawnDisassembler::disassemble(const Engine::GenericDto& dto)
 {
     PawnDisassembler::disassemble(dto);
-    if (auto v = dto.tryGetValue<Engine::GenericDto>(TOKEN_ANIMATION_CLIP_MAP)) m_animationClipMapDto = v.value();
+    if (auto v = dto.tryGetValue<Engine::GenericDto>(TOKEN_ANIMATION_CLIP_MAP))
+    {
+        m_animationClipMap = std::make_shared<AnimationClipMapDisassembler>(v.value());
+    }
     if (auto v = dto.tryGetValue<Engine::GenericDtoCollection>(TOKEN_AVATAR_RECIPES)) m_avatarRecipeDtos = v.value();
 }
 

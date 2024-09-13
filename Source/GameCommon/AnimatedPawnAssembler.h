@@ -10,7 +10,6 @@
 
 #include "SceneGraph/PawnAssembler.h"
 #include "AnimationClipMapAssembler.h"
-#include "AnimatedPawnDto.h"
 #include "AnimatedPawn.h"
 
 namespace Enigma::GameCommon
@@ -42,11 +41,11 @@ namespace Enigma::GameCommon
 
         void disassemble(const Engine::GenericDto& dto) override;
 
-        [[nodiscard]] const std::optional<Engine::GenericDto>& animationClipMapDto() const { return m_animationClipMapDto; }
+        [[nodiscard]] const std::shared_ptr<AnimationClipMapDisassembler>& animationClipMap() const { return m_animationClipMap; }
         [[nodiscard]] const Engine::GenericDtoCollection& avatarRecipeDtos() const { return m_avatarRecipeDtos; }
 
     protected:
-        std::optional<Engine::GenericDto> m_animationClipMapDto;
+        std::shared_ptr<AnimationClipMapDisassembler> m_animationClipMap;
         Engine::GenericDtoCollection m_avatarRecipeDtos;
     };
 }

@@ -8,17 +8,18 @@
 #ifndef _ANIMATION_CLIP_MAP_H
 #define _ANIMATION_CLIP_MAP_H
 
-#include <string>
-#include <unordered_map>
-#include <optional>
 #include "Renderables/AnimationClip.h"
 #include "Frameworks/optional_ref.hpp"
 #include "Frameworks/Rtti.h"
 #include "GameEngine/GenericDto.h"
+#include <string>
+#include <unordered_map>
+#include <optional>
 
 namespace Enigma::GameCommon
 {
-    class AnimationClipMapDto;
+    class AnimationClipMapAssembler;
+    class AnimationClipMapDisassembler;
 
     class AnimationClipMap
     {
@@ -27,7 +28,7 @@ namespace Enigma::GameCommon
         class AnimClip
         {
         public:
-            AnimClip() {};
+            AnimClip() = default;
             AnimClip(const std::string& name, const Renderables::AnimationClip& clip)
             {
                 m_actionName = name; m_animClip = clip;
@@ -44,14 +45,14 @@ namespace Enigma::GameCommon
         typedef std::unordered_map<std::string, AnimClip> ClipMap;
     public:
         AnimationClipMap() = default;
-        AnimationClipMap(const Engine::GenericDto& o);
         AnimationClipMap(const AnimationClipMap&) = default;
         AnimationClipMap(AnimationClipMap&&) = default;
         virtual ~AnimationClipMap() = default;
         AnimationClipMap& operator=(const AnimationClipMap&) = default;
         AnimationClipMap& operator=(AnimationClipMap&&) = default;
 
-        Engine::GenericDto serializeDto() const;
+        void assemble(const std::shared_ptr<AnimationClipMapAssembler>& assembler) const;
+        void disassemble(const std::shared_ptr<AnimationClipMapDisassembler>& disassembler);
 
         stdext::optional_ref<AnimClip> findAnimationClip(const std::string& name);
         std::optional<AnimClip> findAnimationClip(const std::string& name) const;

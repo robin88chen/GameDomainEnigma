@@ -73,7 +73,7 @@ void AnimatedPawn::disassemble(const std::shared_ptr<SceneGraph::SpatialDisassem
     Pawn::disassemble(disassembler);
     if (auto animatedPawnDisassembler = std::dynamic_pointer_cast<AnimatedPawnDisassembler>(disassembler))
     {
-        if (auto clip = animatedPawnDisassembler->animationClipMapDto()) m_animationClipMap = AnimationClipMap(clip.value());
+        if (auto clip = animatedPawnDisassembler->animationClipMap()) m_animationClipMap.disassemble(clip);
         m_avatarRecipeList.clear();
         for (auto& avatar_dto : animatedPawnDisassembler->avatarRecipeDtos())
         {

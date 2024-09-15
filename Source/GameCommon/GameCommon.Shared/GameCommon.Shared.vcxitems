@@ -19,6 +19,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClipMap.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClipMapAssembler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClipMapEvents.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AvatarRecipeAssemblers.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AvatarRecipeDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AvatarRecipes.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCameraCommands.h" />
@@ -37,6 +38,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatedPawnAssembler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationClipMap.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationClipMapAssembler.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AvatarRecipeAssemblers.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AvatarRecipeDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AvatarRecipies.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCameraService.cpp" />

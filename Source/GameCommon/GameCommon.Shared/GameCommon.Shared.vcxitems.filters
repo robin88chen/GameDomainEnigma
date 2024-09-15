@@ -78,6 +78,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCameraQueries.h">
       <Filter>GameCamera</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AvatarRecipeAssemblers.h">
+      <Filter>Avatar</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCameraService.cpp">
@@ -112,6 +115,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameLightCommands.cpp">
       <Filter>GameLight</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AvatarRecipeAssemblers.cpp">
+      <Filter>Avatar</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

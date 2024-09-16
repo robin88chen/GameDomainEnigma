@@ -9,11 +9,15 @@
 #define ANIMATED_PAWN_ASSEMBLER_H
 
 #include "SceneGraph/PawnAssembler.h"
-#include "AnimationClipMapAssembler.h"
 #include "AnimatedPawn.h"
 
 namespace Enigma::GameCommon
 {
+    class AnimationClipMapAssembler;
+    class AnimationClipMapDisassembler;
+    class AvatarRecipeAssembler;
+    class AvatarRecipeDisassembler;
+
     class AnimatedPawnAssembler : public SceneGraph::PawnAssembler
     {
     public:
@@ -25,14 +29,15 @@ namespace Enigma::GameCommon
         void animationClipMap(const std::shared_ptr<AnimationClipMapAssembler>& clip);
         void animationClipMap(const AnimationClipMap& clip);
         void byPrefab(const std::string& prefab_name);
-        void avatarRecipeDtos(const Engine::GenericDtoCollection& dtos) { m_avatarRecipeDtos = dtos; }
+        void addAvatarRecipe(const std::shared_ptr<AvatarRecipe>& recipe);
+        void addAvatarRecipe(const std::shared_ptr<AvatarRecipeAssembler>& recipe);
 
         Engine::GenericDto assemble() const override;
 
     private:
         std::shared_ptr<AnimationClipMapAssembler> m_clip;
         std::optional<std::string> m_prefab;
-        Engine::GenericDtoCollection m_avatarRecipeDtos;
+        std::vector<std::shared_ptr<AvatarRecipeAssembler>> m_avatarRecipes;
     };
     class AnimatedPawnDisassembler : public SceneGraph::PawnDisassembler
     {
@@ -41,12 +46,12 @@ namespace Enigma::GameCommon
 
         void disassemble(const Engine::GenericDto& dto) override;
 
-        [[nodiscard]] const std::shared_ptr<AnimationClipMapDisassembler>& animationClipMap() const { return m_animationClipMap; }
-        [[nodiscard]] const Engine::GenericDtoCollection& avatarRecipeDtos() const { return m_avatarRecipeDtos; }
+        [[nodiscard]] const AnimationClipMap& animationClipMap() const { return m_animationClipMap; }
+        [[nodiscard]] const std::vector<std::shared_ptr<AvatarRecipe>>& avatarRecipes() const { return m_avatarRecipes; }
 
     protected:
-        std::shared_ptr<AnimationClipMapDisassembler> m_animationClipMap;
-        Engine::GenericDtoCollection m_avatarRecipeDtos;
+        AnimationClipMap m_animationClipMap;
+        std::vector<std::shared_ptr<AvatarRecipe>> m_avatarRecipes;
     };
 }
 

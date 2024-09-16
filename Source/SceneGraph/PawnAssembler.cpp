@@ -34,3 +34,10 @@ void PawnDisassembler::disassemble(const Engine::GenericDto& dto)
     SpatialDisassembler::disassemble(dto);
     if (auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_PAWN_PRIMITIVE_ID)) m_primitiveId = v.value();
 }
+
+std::shared_ptr<PawnDisassembler> PawnDisassembler::disassembledDisassembler(const Engine::GenericDto& dto)
+{
+    auto disassembler = std::make_shared<PawnDisassembler>();
+    disassembler->disassemble(dto);
+    return disassembler;
+}

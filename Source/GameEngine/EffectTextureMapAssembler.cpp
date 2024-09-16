@@ -11,7 +11,7 @@ EffectTextureMapAssembler::EffectTextureMapAssembler()
 
 void EffectTextureMapAssembler::addTextureMapping(const TextureId& id, std::optional<unsigned int> array_index, const std::string& semantic)
 {
-    m_mappingAssemblers.emplace_back(TextureMappingAssembler(id, array_index, semantic));
+    m_mappingAssemblers.emplace_back(TextureMappingAssembler({ id, array_index, semantic }));
 }
 
 GenericDto EffectTextureMapAssembler::assemble() const

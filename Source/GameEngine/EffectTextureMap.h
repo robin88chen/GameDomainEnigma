@@ -8,6 +8,7 @@
 #ifndef _EFFECT_TEXTURE_MAP_H
 #define _EFFECT_TEXTURE_MAP_H
 
+#include "TextureId.h"
 #include <system_error>
 #include <memory>
 #include <optional>
@@ -25,7 +26,15 @@ namespace Enigma::Engine
     class EffectTextureMap
     {
     public:
-        using EffectSemanticTextureTuple = std::tuple<std::string, std::shared_ptr<Texture>, std::optional<unsigned>>;
+        struct SemanticTextureMapping
+        {
+            TextureId m_textureId;
+            std::optional<unsigned> m_arrayIndex;
+            std::string m_semantic;
+        };
+    public:
+        ///todo: texture 可以改成 texture id 嗎?
+        using EffectSemanticTextureTuple = std::tuple<std::shared_ptr<Texture>, std::optional<unsigned>, std::string>;
         using SegmentEffectTextures = std::vector<EffectSemanticTextureTuple>;
     public:
         EffectTextureMap();

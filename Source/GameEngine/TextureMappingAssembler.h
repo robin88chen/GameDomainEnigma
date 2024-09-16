@@ -10,6 +10,7 @@
 
 #include "TextureId.h"
 #include "GameEngine/GenericDto.h"
+#include "EffectTextureMap.h"
 #include <optional>
 #include <string>
 
@@ -19,18 +20,16 @@ namespace Enigma::Engine
     {
     public:
         TextureMappingAssembler() = default;
-        TextureMappingAssembler(const TextureId& id, const std::optional<unsigned>& array_index, const std::string& semantic);
+        TextureMappingAssembler(const EffectTextureMap::SemanticTextureMapping& mapping);
 
-        void textureId(const TextureId& id) { m_textureId = id; }
-        void arrayIndex(unsigned index) { m_arrayIndex = index; }
-        void semantic(const std::string& semantic) { m_semantic = semantic; }
+        void textureId(const TextureId& id) { m_mapping.m_textureId = id; }
+        void arrayIndex(unsigned index) { m_mapping.m_arrayIndex = index; }
+        void semantic(const std::string& semantic) { m_mapping.m_semantic = semantic; }
 
         Engine::GenericDto assemble() const;
 
     protected:
-        TextureId m_textureId;
-        std::optional<unsigned> m_arrayIndex;
-        std::string m_semantic;
+        EffectTextureMap::SemanticTextureMapping m_mapping;
     };
 
     class TextureMappingDisassembler
@@ -39,16 +38,15 @@ namespace Enigma::Engine
         TextureMappingDisassembler() = default;
         TextureMappingDisassembler(const Engine::GenericDto& dto);
 
-        [[nodiscard]] const TextureId& textureId() const { return m_textureId; }
-        [[nodiscard]] std::optional<unsigned> arrayIndex() const { return m_arrayIndex; }
-        [[nodiscard]] const std::string& semantic() const { return m_semantic; }
+        [[nodiscard]] const EffectTextureMap::SemanticTextureMapping& semanticTextureMapping() const { return m_mapping; }
+        [[nodiscard]] const TextureId& textureId() const { return m_mapping.m_textureId; }
+        [[nodiscard]] std::optional<unsigned> arrayIndex() const { return m_mapping.m_arrayIndex; }
+        [[nodiscard]] const std::string& semantic() const { return m_mapping.m_semantic; }
 
         void disassemble(const Engine::GenericDto& dto);
 
     protected:
-        TextureId m_textureId;
-        std::optional<unsigned> m_arrayIndex;
-        std::string m_semantic;
+        EffectTextureMap::SemanticTextureMapping m_mapping;
     };
 }
 

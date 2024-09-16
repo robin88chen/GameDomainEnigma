@@ -1,6 +1,10 @@
 ﻿#include "AnimatedPawnAssembler.h"
+#include "AnimationClipMapAssembler.h"
+#include "AvatarRecipeAssemblers.h"
 #include "SceneGraph/SceneGraphQueries.h"
+#include "AvatarRecipes.h"
 #include "AnimatedPawn.h"
+#include "AvatarRecipeQueries.h"
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::SceneGraph;
@@ -35,6 +39,18 @@ void AnimatedPawnAssembler::animationClipMap(const AnimationClipMap& clip)
     m_clip = std::make_shared<AnimationClipMapAssembler>(clip);
 }
 
+void AnimatedPawnAssembler::addAvatarRecipe(const std::shared_ptr<AvatarRecipe>& recipe)
+{
+    std::shared_ptr<AvatarRecipeAssembler> assembler = recipe->assembler();
+    recipe->assemble(assembler);
+    addAvatarRecipe(assembler);
+}
+
+void AnimatedPawnAssembler::addAvatarRecipe(const std::shared_ptr<AvatarRecipeAssembler>& recipe)
+{
+    m_avatarRecipes.push_back(recipe);
+}
+
 void AnimatedPawnAssembler::byPrefab(const std::string& prefab_name)
 {
     m_prefab = prefab_name;
@@ -45,7 +61,15 @@ Enigma::Engine::GenericDto AnimatedPawnAssembler::assemble() const
 {
     Engine::GenericDto dto = PawnAssembler::assemble();
     if (m_clip) dto.addOrUpdate(TOKEN_ANIMATION_CLIP_MAP, m_clip->assemble());
-    dto.addOrUpdate(TOKEN_AVATAR_RECIPES, m_avatarRecipeDtos);
+    if (!m_avatarRecipes.empty())
+    {
+        Engine::GenericDtoCollection avatar_recipe_dtos;
+        for (auto& recipe : m_avatarRecipes)
+        {
+            avatar_recipe_dtos.push_back(recipe->assemble());
+        }
+        dto.addOrUpdate(TOKEN_AVATAR_RECIPES, avatar_recipe_dtos);
+    }
     return dto;
 }
 
@@ -59,9 +83,20 @@ void AnimatedPawnDisassembler::disassemble(const Engine::GenericDto& dto)
     PawnDisassembler::disassemble(dto);
     if (auto v = dto.tryGetValue<Engine::GenericDto>(TOKEN_ANIMATION_CLIP_MAP))
     {
-        m_animationClipMap = std::make_shared<AnimationClipMapDisassembler>(v.value());
+        m_animationClipMap = std::make_shared<AnimationClipMapDisassembler>(v.value())->clipMap();
     }
-    if (auto v = dto.tryGetValue<Engine::GenericDtoCollection>(TOKEN_AVATAR_RECIPES)) m_avatarRecipeDtos = v.value();
+    m_avatarRecipes.clear();
+    if (auto v = dto.tryGetValue<Engine::GenericDtoCollection>(TOKEN_AVATAR_RECIPES))
+    {
+        for (auto& recipe_dto : v.value())
+        {
+            std::shared_ptr<AvatarRecipe> recipe = std::make_shared<RequestAvatarRecipeCreation>(recipe_dto.getRtti().GetRttiName())->dispatch();
+            std::shared_ptr<AvatarRecipeDisassembler> disassembler = recipe->disassembler();
+            disassembler->disassemble(recipe_dto);
+            recipe->disassemble(disassembler);
+            m_avatarRecipes.push_back(recipe);
+        }
+    }
 }
 
 /*AnimatedPawnDto AnimatedPawnAssembler::toAnimatedPawnDto()

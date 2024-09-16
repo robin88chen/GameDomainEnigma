@@ -118,7 +118,7 @@ void MeshPrimitiveBuilder::onRenderBufferBuilt(const Frameworks::IEventPtr& e)
             m_builtTextures[i].appendTextureSemantic(t.semantic());
             if (auto tex = Texture::queryTexture(t.textureId()))
             {
-                m_builtTextures[i].changeSemanticTexture({ t.semantic(), tex, t.arrayIndex() });
+                m_builtTextures[i].changeSemanticTexture({ tex, t.arrayIndex(), t.semantic() });
                 if (!tex->lazyStatus().isReady())
                 {
                     all_texture_ready = false;

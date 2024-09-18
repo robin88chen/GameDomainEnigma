@@ -1,5 +1,5 @@
 ﻿#include "QuadTreeRoot.h"
-#include "QuadTreeRootDto.h"
+#include "QuadTreeRootAssembler.h"
 #include "QuadTreeVolume.h"
 #include "WorldMapErrors.h"
 #include "WorldMapEvents.h"
@@ -8,9 +8,8 @@
 #include "SceneGraph/VisibilityManagedNodeAssembler.h"
 #include "SceneGraph/LazyNodeAssembler.h"
 #include "SceneGraph/VisibilityManagedNode.h"
-#include <cassert>
-
 #include "SceneGraph/SceneGraphQueries.h"
+#include <cassert>
 
 using namespace Enigma::WorldMap;
 using namespace Enigma::SceneGraph;
@@ -22,25 +21,40 @@ QuadTreeRoot::QuadTreeRoot(const QuadTreeRootId& id) : m_factoryDesc(TYPE_RTTI),
 {
 }
 
-QuadTreeRoot::QuadTreeRoot(const QuadTreeRootId& id, const Engine::GenericDto& o) : m_factoryDesc(TYPE_RTTI), m_id(id)
+std::shared_ptr<QuadTreeRootAssembler> QuadTreeRoot::assembler() const
 {
-    QuadTreeRootDto dto(o);
-    assert(dto.id() == m_id);
-    m_factoryDesc = dto.factoryDesc();
-    m_rootNodeId = dto.rootNodeId();
+    return std::make_shared<QuadTreeRootAssembler>(m_id);
+}
+
+std::shared_ptr<QuadTreeRootAssembler> QuadTreeRoot::assembledAssembler() const
+{
+    auto assembler = std::make_shared<QuadTreeRootAssembler>(m_id);
+    assemble(assembler);
+    return assembler;
+}
+
+std::shared_ptr<QuadTreeRootDisassembler> QuadTreeRoot::disassembler() const
+{
+    return std::make_shared<QuadTreeRootDisassembler>();
+}
+
+void QuadTreeRoot::assemble(const std::shared_ptr<QuadTreeRootAssembler>& assembler) const
+{
+    assert(assembler);
+    assembler->rootNodeId(m_rootNodeId);
+    assembler->factoryDesc(m_factoryDesc);
+}
+
+void QuadTreeRoot::disassemble(const std::shared_ptr<QuadTreeRootDisassembler>& disassembler)
+{
+    assert(disassembler);
+    m_id = disassembler->id();
+    m_rootNodeId = disassembler->rootNodeId();
+    m_factoryDesc = disassembler->factoryDesc();
     if (!m_rootNodeId.empty())
     {
         m_root = std::dynamic_pointer_cast<LazyNode>(Node::queryNode(m_rootNodeId));
     }
-}
-
-Enigma::Engine::GenericDto QuadTreeRoot::serializeDto() const
-{
-    QuadTreeRootDto dto;
-    dto.factoryDesc(m_factoryDesc);
-    dto.id(m_id);
-    dto.rootNodeId(m_rootNodeId);
-    return dto.toGenericDto();
 }
 
 std::shared_ptr<QuadTreeRoot> QuadTreeRoot::queryQuadTreeRoot(const QuadTreeRootId& id)

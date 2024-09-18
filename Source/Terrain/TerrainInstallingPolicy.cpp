@@ -7,10 +7,8 @@
 #include "Frameworks/CommandBus.h"
 #include "Geometries/GeometryCommands.h"
 #include "TerrainPawn.h"
-#include "SceneGraph/SceneGraphCommands.h"
 #include "Renderables/RenderablePrimitiveBuilder.h"
 #include "SceneGraph/SceneGraphRepository.h"
-#include "Geometries/GeometryAssembler.h"
 #include "TerrainPrimitive.h"
 #include <cassert>
 

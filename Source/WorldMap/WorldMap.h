@@ -16,6 +16,8 @@
 
 namespace Enigma::WorldMap
 {
+    class WorldMapAssembler;
+    class WorldMapDisassembler;
     class QuadTreeRoot;
     class WorldMap
     {
@@ -23,18 +25,21 @@ namespace Enigma::WorldMap
     public:
         WorldMap(const WorldMapId& id);
         WorldMap(const WorldMapId& id, const SceneGraph::SpatialId& out_region_id, const std::vector<QuadTreeRootId>& quad_roots);
-        WorldMap(const WorldMapId& id, const Engine::GenericDto& dto);
         ~WorldMap();
         WorldMap(const WorldMap&) = delete;
         WorldMap(WorldMap&&) = delete;
         WorldMap& operator=(const WorldMap&) = delete;
         WorldMap& operator=(WorldMap&&) = delete;
 
+        virtual std::shared_ptr<WorldMapAssembler> assembler() const;
+        virtual std::shared_ptr<WorldMapAssembler> assembledAssembler() const;
+        virtual void assemble(const std::shared_ptr<WorldMapAssembler>& assembler) const;
+        virtual std::shared_ptr<WorldMapDisassembler> disassembler() const;
+        virtual void disassemble(const std::shared_ptr<WorldMapDisassembler>& disassembler);
+
         const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
         void factoryDesc(const Engine::FactoryDesc& fd) { m_factoryDesc = fd; }
         const WorldMapId& id() const { return m_id; }
-
-        Engine::GenericDto serializeDto() const;
 
         std::shared_ptr<SceneGraph::LazyNode> findFittingNode(const Engine::BoundingVolume& bv_in_world);
 

@@ -24,13 +24,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainGeometry.h">
       <Filter>Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainGeometryDto.h">
-      <Filter>Geometry</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPrimitive.h">
-      <Filter>Primitive</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPrimitiveDto.h">
       <Filter>Primitive</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainInstallingPolicy.h">
@@ -38,12 +32,6 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPawn.h">
       <Filter>Pawn</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainPawnDto.h">
-      <Filter>Pawn</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainAssemblers.h">
-      <Filter>Assemblers</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TerrainGeometryAssembler.h">
       <Filter>Assemblers</Filter>
@@ -65,13 +53,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainGeometry.cpp">
       <Filter>Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainGeometryDto.cpp">
-      <Filter>Geometry</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPrimitive.cpp">
-      <Filter>Primitive</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPrimitiveDto.cpp">
       <Filter>Primitive</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainInstallingPolicy.cpp">
@@ -79,12 +61,6 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPawn.cpp">
       <Filter>Pawn</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainPawnDto.cpp">
-      <Filter>Pawn</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainAssemblers.cpp">
-      <Filter>Assemblers</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TerrainGeometryAssembler.cpp">
       <Filter>Assemblers</Filter>

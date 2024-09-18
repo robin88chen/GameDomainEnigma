@@ -1,6 +1,6 @@
 ﻿#include "WorldMap.h"
 #include "QuadTreeRoot.h"
-#include "WorldMapDto.h"
+#include "WorldMapAssembler.h"
 #include "SceneGraph/SceneGraphCommands.h"
 
 using namespace Enigma::WorldMap;
@@ -21,29 +21,43 @@ WorldMap::WorldMap(const WorldMapId& id, const SceneGraph::SpatialId& out_region
     if (!m_quadRootIds.empty()) m_quadRoots.resize(m_quadRootIds.size());
 }
 
-WorldMap::WorldMap(const WorldMapId& id, const Engine::GenericDto& dto) : m_factoryDesc(WorldMap::TYPE_RTTI)
-{
-    m_id = id;
-    WorldMapDto worldMapDto{ dto };
-    assert(worldMapDto.id() == id);
-    m_factoryDesc = worldMapDto.factoryDesc();
-    if (worldMapDto.outRegionId()) m_outRegionId = worldMapDto.outRegionId().value();
-    m_quadRootIds = worldMapDto.quadRootIds();
-    if (!m_quadRootIds.empty()) m_quadRoots.resize(m_quadRootIds.size());
-}
-
 WorldMap::~WorldMap()
 {
 }
 
-GenericDto WorldMap::serializeDto() const
+std::shared_ptr<WorldMapAssembler> WorldMap::assembler() const
 {
-    WorldMapDto worldMapDto;
-    worldMapDto.id(m_id);
-    worldMapDto.factoryDesc(m_factoryDesc);
-    if (!m_outRegionId.empty()) worldMapDto.outRegionId(m_outRegionId);
-    worldMapDto.quadRootIds(m_quadRootIds);
-    return worldMapDto.toGenericDto();
+    return std::make_shared<WorldMapAssembler>(m_id);
+}
+
+std::shared_ptr<WorldMapAssembler> WorldMap::assembledAssembler() const
+{
+    auto assembler = std::make_shared<WorldMapAssembler>(m_id);
+    assemble(assembler);
+    return assembler;
+}
+
+void WorldMap::assemble(const std::shared_ptr<WorldMapAssembler>& assembler) const
+{
+    assert(assembler);
+    assembler->factoryDesc(m_factoryDesc);
+    if (!m_outRegionId.empty()) assembler->outRegionId(m_outRegionId);
+    assembler->quadRootIds(m_quadRootIds);
+}
+
+std::shared_ptr<WorldMapDisassembler> WorldMap::disassembler() const
+{
+    return std::make_shared<WorldMapDisassembler>();
+}
+
+void WorldMap::disassemble(const std::shared_ptr<WorldMapDisassembler>& disassembler)
+{
+    assert(disassembler);
+    m_id = disassembler->id();
+    m_factoryDesc = disassembler->factoryDesc();
+    if (disassembler->outRegionId().has_value()) m_outRegionId = disassembler->outRegionId().value();
+    m_quadRootIds = disassembler->quadRootIds();
+    if (!m_quadRootIds.empty()) m_quadRoots.resize(m_quadRootIds.size());
 }
 
 std::shared_ptr<Enigma::SceneGraph::LazyNode> WorldMap::findFittingNode(const Engine::BoundingVolume& bv_in_world)

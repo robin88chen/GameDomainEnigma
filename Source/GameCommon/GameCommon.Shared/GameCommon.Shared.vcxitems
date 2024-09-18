@@ -16,12 +16,14 @@
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatedPawn.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatedPawnAssembler.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimatedPawnDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClipMap.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClipMapAssembler.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClipMapDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AnimationClipMapEvents.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\AvatarRecipeDto.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AvatarFactoryCommands.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AvatarRecipeAssemblers.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AvatarRecipeFactory.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AvatarRecipeFactoryDelegate.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\AvatarRecipeQueries.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\AvatarRecipes.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCameraCommands.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\GameCameraEvents.h" />
@@ -37,11 +39,10 @@
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatedPawn.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatedPawnAssembler.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimatedPawnDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationClipMap.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationClipMapAssembler.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AnimationClipMapDto.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\AvatarRecipeDto.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AvatarRecipeAssemblers.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\AvatarRecipeFactory.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\AvatarRecipies.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCameraService.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\GameCommonErrors.cpp" />

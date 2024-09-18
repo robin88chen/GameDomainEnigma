@@ -282,7 +282,7 @@ std::optional<Enigma::Primitives::PrimitiveId> SceneGraphRepository::queryPawnPr
     assert(dto.has_value());
     if (Rtti::isDerivedFrom(dto->getRtti().GetRttiName(), Pawn::TYPE_RTTI.getName()))
     {
-        std::shared_ptr<PawnDisassembler> pawn_disassembler = std::dynamic_pointer_cast<PawnDisassembler>(SpatialDisassembler::disassembledDisassembler(dto.value()));
+        std::shared_ptr<PawnDisassembler> pawn_disassembler = PawnDisassembler::disassembledDisassembler(dto.value());
         if (!pawn_disassembler) return std::nullopt;
         return pawn_disassembler->primitiveId();
     }

@@ -6,6 +6,8 @@
 #include "Frameworks/CommandBus.h"
 #include "SceneGraph/SceneGraphCommands.h"
 #include "AnimatedPawn.h"
+#include "AvatarRecipeFactory.h"
+#include "AvatarRecipes.h"
 #include <cassert>
 
 using namespace Enigma::GameCommon;
@@ -50,10 +52,19 @@ error AnimatedPawnInstallingPolicy::install(Frameworks::ServiceManager* service_
     const auto scene_graph_repository = service_manager->getSystemServiceAs<SceneGraph::SceneGraphRepository>();
     assert(scene_graph_repository);
     scene_graph_repository->registerSpatialFactory(AnimatedPawn::TYPE_RTTI.getName(), AnimatedPawn::create);
+    auto avatar_factory = std::make_shared<AvatarRecipeFactory>(service_manager);
+    service_manager->registerSystemService(avatar_factory);
+    avatar_factory->registerRecipeFactory(ReplaceAvatarMaterial::TYPE_RTTI.getName(), ReplaceAvatarMaterial::create);
+    avatar_factory->registerRecipeFactory(ChangeAvatarTexture::TYPE_RTTI.getName(), ChangeAvatarTexture::create);
     return error();
 }
 
 error AnimatedPawnInstallingPolicy::shutdown(Frameworks::ServiceManager* service_manager)
 {
+    if (const auto avatar_factory = service_manager->getSystemServiceAs<AvatarRecipeFactory>())
+    {
+        avatar_factory->unregisterRecipeFactory(ReplaceAvatarMaterial::TYPE_RTTI.getName());
+        avatar_factory->unregisterRecipeFactory(ChangeAvatarTexture::TYPE_RTTI.getName());
+    }
     return error();
 }

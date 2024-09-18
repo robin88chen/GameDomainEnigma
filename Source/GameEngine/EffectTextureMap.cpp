@@ -49,7 +49,7 @@ void EffectTextureMap::disassemble(const std::shared_ptr<EffectTextureMapDisasse
     {
         if (auto tex = Texture::queryTexture(mapping.textureId()); tex)
         {
-            m_effectTextures.emplace_back(std::make_tuple(mapping.semantic(), tex, mapping.arrayIndex()));
+            m_effectTextures.emplace_back(std::make_tuple(tex, mapping.arrayIndex(), mapping.semantic()));
         }
     }
 }
@@ -79,7 +79,7 @@ unsigned EffectTextureMap::appendTextureSemantic(const std::string& semantic)
     auto index = getTextureIndexBySemantic(semantic);
     if (index) return index.value();
 
-    m_effectTextures.emplace_back(std::make_tuple(semantic, nullptr, std::nullopt));
+    m_effectTextures.emplace_back(std::make_tuple(nullptr, std::nullopt, semantic));
     return static_cast<unsigned>(m_effectTextures.size()) - 1;
 }
 

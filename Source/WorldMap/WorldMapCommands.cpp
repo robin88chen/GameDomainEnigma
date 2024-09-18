@@ -1,5 +1,5 @@
 ﻿#include "WorldMapCommands.h"
-#include "WorldMapDto.h"
+#include "WorldMapAssembler.h"
 #include "WorldMapQueries.h"
 #include "WorldMapEvents.h"
 #include "SceneGraph/PortalCommands.h"
@@ -12,14 +12,13 @@ using namespace Enigma::WorldMap;
 
 void CreateEmptyWorldMap::execute()
 {
-    WorldMapDto world_map_dto;
-    world_map_dto.id(m_id);
-    world_map_dto.factoryDesc(m_factory_desc);
+    WorldMapAssembler world_map_assembler(m_id);
+    world_map_assembler.factoryDesc(m_factory_desc);
     if (m_outside_region_id.has_value())
     {
-        world_map_dto.outRegionId(m_outside_region_id.value());
+        world_map_assembler.outRegionId(m_outside_region_id.value());
     }
-    auto world = std::make_shared<RequestWorldMapConstitution>(m_id, world_map_dto.toGenericDto())->dispatch();
+    auto world = std::make_shared<RequestWorldMapConstitution>(m_id, world_map_assembler.assemble())->dispatch();
     if (world)
     {
         std::make_shared<WorldMapCreated>(m_id, world)->enqueue();

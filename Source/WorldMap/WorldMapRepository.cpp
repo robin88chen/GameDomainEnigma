@@ -3,6 +3,8 @@
 #include "WorldMapQueries.h"
 #include "WorldMapCommands.h"
 #include "QuadTreeRoot.h"
+#include "QuadTreeRootAssembler.h"
+#include "WorldMapAssembler.h"
 #include "WorldMapErrors.h"
 #include "WorldMapEvents.h"
 #include "Frameworks/QueryDispatcher.h"
@@ -104,7 +106,10 @@ std::shared_ptr<QuadTreeRoot> WorldMapRepository::queryQuadTreeRoot(const QuadTr
     if ((it != m_quadTreeRoots.end()) && (!it->second.expired())) return it->second.lock();
     auto dto = m_storeMapper->queryQuadTreeRoot(id);
     if (!dto) return nullptr;
-    auto quadTreeRoot = std::make_shared<QuadTreeRoot>(id, *dto);
+    auto quadTreeRoot = std::make_shared<QuadTreeRoot>(id);
+    std::shared_ptr<QuadTreeRootDisassembler> disassembler = quadTreeRoot->disassembler();
+    disassembler->disassemble(*dto);
+    quadTreeRoot->disassemble(disassembler);
     m_quadTreeRoots.insert_or_assign(id, quadTreeRoot);
     return quadTreeRoot;
 }
@@ -115,7 +120,7 @@ void WorldMapRepository::putQuadTreeRoot(const QuadTreeRootId& id, const std::sh
     assert(quad_tree_root);
     std::lock_guard locker{ m_quadTreeRootLock };
     m_quadTreeRoots.insert_or_assign(id, quad_tree_root);
-    auto er = m_storeMapper->putQuadTreeRoot(id, quad_tree_root->serializeDto());
+    auto er = m_storeMapper->putQuadTreeRoot(id, quad_tree_root->assembledAssembler()->assemble());
     if (!er)
     {
         EventPublisher::enqueue(std::make_shared<QuadTreeRootPut>(id));
@@ -160,7 +165,10 @@ std::shared_ptr<WorldMap> WorldMapRepository::queryWorldMap(const WorldMapId& id
     if ((it != m_worldMaps.end()) && (!it->second.expired())) return it->second.lock();
     auto dto = m_storeMapper->queryWorldMap(id);
     if (!dto) return nullptr;
-    auto worldMap = std::make_shared<WorldMap>(id, *dto);
+    auto worldMap = std::make_shared<WorldMap>(id);
+    std::shared_ptr<WorldMapDisassembler> disassembler = worldMap->disassembler();
+    disassembler->disassemble(*dto);
+    worldMap->disassemble(disassembler);
     m_worldMaps.insert_or_assign(id, worldMap);
     return worldMap;
 }
@@ -172,7 +180,7 @@ void WorldMapRepository::putWorldMap(const WorldMapId& id, const std::shared_ptr
     world_map->putOutRegion();
     std::lock_guard locker{ m_worldMapLock };
     m_worldMaps.insert_or_assign(id, world_map);
-    auto er = m_storeMapper->putWorldMap(id, world_map->serializeDto());
+    auto er = m_storeMapper->putWorldMap(id, world_map->assembledAssembler()->assemble());
     if (!er)
     {
         EventPublisher::enqueue(std::make_shared<WorldMapPut>(id));
@@ -238,7 +246,10 @@ void WorldMapRepository::requestQuadTreeRootConstitution(const Frameworks::IQuer
         EventPublisher::enqueue(std::make_shared<QuadTreeRootConstitutionFailed>(request->id(), ErrorCode::quadRootAlreadyExists));
         return;
     }
-    auto quadTreeRoot = std::make_shared<QuadTreeRoot>(request->id(), request->dto());
+    auto quadTreeRoot = std::make_shared<QuadTreeRoot>(request->id());
+    std::shared_ptr<QuadTreeRootDisassembler> disassembler = quadTreeRoot->disassembler();
+    disassembler->disassemble(request->dto());
+    quadTreeRoot->disassemble(disassembler);
     putQuadTreeRoot(request->id(), quadTreeRoot);
     request->setResult(quadTreeRoot);
 }
@@ -282,7 +293,10 @@ void WorldMapRepository::requestWorldMapConstitution(const Frameworks::IQueryPtr
         EventPublisher::enqueue(std::make_shared<WorldMapConstitutionFailed>(request->id(), ErrorCode::worldMapAlreadyExists));
         return;
     }
-    auto worldMap = std::make_shared<WorldMap>(request->id(), request->dto());
+    auto worldMap = std::make_shared<WorldMap>(request->id());
+    std::shared_ptr<WorldMapDisassembler> disassembler = worldMap->disassembler();
+    disassembler->disassemble(request->dto());
+    worldMap->disassemble(disassembler);
     putWorldMap(request->id(), worldMap);
     request->setResult(worldMap);
 }

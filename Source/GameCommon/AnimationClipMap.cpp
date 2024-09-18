@@ -1,5 +1,5 @@
 ﻿#include "AnimationClipMap.h"
-#include "AnimationClipMapDto.h"
+#include "AnimationClipMapAssembler.h"
 #include "AnimationClipMapEvents.h"
 #include "Frameworks/EventPublisher.h"
 #include <optional>
@@ -10,7 +10,7 @@ using namespace Enigma::Engine;
 
 DEFINE_RTTI_OF_BASE(GameCommon, AnimationClipMap);
 
-AnimationClipMap::AnimationClipMap(const Engine::GenericDto& o)
+/*AnimationClipMap::AnimationClipMap(const Engine::GenericDto& o)
 {
     AnimationClipMapDto dto(o);
     for (unsigned i = 0; i < dto.animationNames().size(); ++i)
@@ -33,6 +33,16 @@ GenericDto AnimationClipMap::serializeDto() const
         dto.divideIndices().push_back(clip.clip().divideIndex());
     }
     return dto.toGenericDto();
+}*/
+
+void AnimationClipMap::assemble(const std::shared_ptr<AnimationClipMapAssembler>& assembler) const
+{
+    assembler->clipMap(*this);
+}
+
+void AnimationClipMap::disassemble(const std::shared_ptr<AnimationClipMapDisassembler>& disassembler)
+{
+    m_animClips = disassembler->clipMap().animationClipMap();
 }
 
 stdext::optional_ref<AnimationClipMap::AnimClip> AnimationClipMap::findAnimationClip(const std::string& name)

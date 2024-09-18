@@ -1,5 +1,4 @@
-﻿#include "AvatarRecipeDto.h"
-#include "AvatarRecipes.h"
+﻿#include "AvatarRecipes.h"
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/EventPublisher.h"
 #include "Frameworks/EventSubscriber.h"
@@ -12,6 +11,8 @@
 #include "GameEngine/TextureQueries.h"
 #include "Platforms/PlatformLayer.h"
 #include "Renderables/ModelPrimitive.h"
+#include "AvatarRecipeAssemblers.h"
+#include <cassert>
 
 using namespace Enigma::GameCommon;
 using namespace Enigma::SceneGraph;
@@ -27,7 +28,7 @@ AvatarRecipe::AvatarRecipe() : m_factoryDesc(AvatarRecipe::TYPE_RTTI.getName())
 {
 }
 
-AvatarRecipe::AvatarRecipe(const Engine::GenericDto& o) : m_factoryDesc(o.getRtti())
+/*AvatarRecipe::AvatarRecipe(const Engine::GenericDto& o) : m_factoryDesc(o.getRtti())
 {
 }
 
@@ -43,8 +44,28 @@ std::shared_ptr<AvatarRecipe> AvatarRecipe::createFromGenericDto(const Engine::G
         return std::make_shared<ChangeAvatarTexture>(dto);
     }
     return nullptr;
+}*/
+
+void AvatarRecipe::assemble(const std::shared_ptr<AvatarRecipeAssembler>& assembler)
+{
+    assert(assembler);
+    assembler->factory(m_factoryDesc);
 }
 
+void AvatarRecipe::disassemble(const std::shared_ptr<AvatarRecipeDisassembler>& disassembler)
+{
+    assert(disassembler);
+    m_factoryDesc = disassembler->factory();
+}
+
+ReplaceAvatarMaterial::ReplaceAvatarMaterial() : m_oldMaterialId(), m_newMaterialId()
+{
+    m_factoryDesc = FactoryDesc(ReplaceAvatarMaterial::TYPE_RTTI.getName());
+    m_onEffectMaterialHydrated = std::make_shared<EventSubscriber>([=](auto e) { this->onEffectMaterialHydrated(e); });
+    EventPublisher::subscribe(typeid(EffectMaterialHydrated), m_onEffectMaterialHydrated);
+    m_onHydrateEffectMaterialFailed = std::make_shared<EventSubscriber>([=](auto e) { this->onHydrateMaterialFailed(e); });
+    EventPublisher::subscribe(typeid(HydrateEffectMaterialFailed), m_onHydrateEffectMaterialFailed);
+}
 
 ReplaceAvatarMaterial::ReplaceAvatarMaterial(const EffectMaterialId& old_material_id, const EffectMaterialId& new_material_id)
     : m_oldMaterialId(old_material_id), m_newMaterialId(new_material_id)
@@ -56,7 +77,7 @@ ReplaceAvatarMaterial::ReplaceAvatarMaterial(const EffectMaterialId& old_materia
     EventPublisher::subscribe(typeid(HydrateEffectMaterialFailed), m_onHydrateEffectMaterialFailed);
 }
 
-ReplaceAvatarMaterial::ReplaceAvatarMaterial(const Engine::GenericDto& o) : AvatarRecipe(o)
+/*ReplaceAvatarMaterial::ReplaceAvatarMaterial(const Engine::GenericDto& o) : AvatarRecipe(o)
 {
     AvatarRecipeReplaceMaterialDto dto = AvatarRecipeReplaceMaterialDto::fromGenericDto(o);
     m_oldMaterialId = dto.oldMaterialId();
@@ -65,7 +86,7 @@ ReplaceAvatarMaterial::ReplaceAvatarMaterial(const Engine::GenericDto& o) : Avat
     EventPublisher::subscribe(typeid(EffectMaterialHydrated), m_onEffectMaterialHydrated);
     m_onHydrateEffectMaterialFailed = std::make_shared<EventSubscriber>([=](auto e) { this->onHydrateMaterialFailed(e); });
     EventPublisher::subscribe(typeid(HydrateEffectMaterialFailed), m_onHydrateEffectMaterialFailed);
-}
+}*/
 
 ReplaceAvatarMaterial::~ReplaceAvatarMaterial()
 {
@@ -76,14 +97,49 @@ ReplaceAvatarMaterial::~ReplaceAvatarMaterial()
     m_changeSpecifyMaterialMap.clear();
 }
 
-GenericDto ReplaceAvatarMaterial::serializeDto() const
+std::shared_ptr<AvatarRecipe> ReplaceAvatarMaterial::create()
+{
+    return std::make_shared<ReplaceAvatarMaterial>();
+}
+
+std::shared_ptr<AvatarRecipeAssembler> ReplaceAvatarMaterial::assembler() const
+{
+    return std::make_shared<ReplaceAvatarMaterialAssembler>();
+}
+
+void ReplaceAvatarMaterial::assemble(const std::shared_ptr<AvatarRecipeAssembler>& assembler)
+{
+    AvatarRecipe::assemble(assembler);
+    if (std::shared_ptr<ReplaceAvatarMaterialAssembler> replace_assembler = std::dynamic_pointer_cast<ReplaceAvatarMaterialAssembler>(assembler))
+    {
+        replace_assembler->oldMaterialId(m_oldMaterialId);
+        replace_assembler->newMaterialId(m_newMaterialId);
+    }
+}
+
+std::shared_ptr<AvatarRecipeDisassembler> ReplaceAvatarMaterial::disassembler() const
+{
+    return std::make_shared<ReplaceAvatarMaterialDisassembler>();
+}
+
+void ReplaceAvatarMaterial::disassemble(const std::shared_ptr<AvatarRecipeDisassembler>& disassembler)
+{
+    AvatarRecipe::disassemble(disassembler);
+    if (std::shared_ptr<ReplaceAvatarMaterialDisassembler> replace_disassembler = std::dynamic_pointer_cast<ReplaceAvatarMaterialDisassembler>(disassembler))
+    {
+        m_oldMaterialId = replace_disassembler->oldMaterialId();
+        m_newMaterialId = replace_disassembler->newMaterialId();
+    }
+}
+
+/*GenericDto ReplaceAvatarMaterial::serializeDto() const
 {
     AvatarRecipeReplaceMaterialDto dto;
     dto.factoryDesc() = m_factoryDesc;
     dto.oldMaterialId() = m_oldMaterialId;
     dto.newMaterialId() = m_newMaterialId;
     return dto.toGenericDto();
-}
+}*/
 
 void ReplaceAvatarMaterial::bake(const std::shared_ptr<Pawn>& pawn)
 {
@@ -180,7 +236,7 @@ void ReplaceAvatarMaterial::onHydrateMaterialFailed(const IEventPtr& e)
     Platforms::Debug::ErrorPrintf("ReplaceAvatarMaterial::OnContentEffectMaterialFailed: %s, %s\n", ev->id().name().c_str(), ev->error().message().c_str());
 }
 
-ChangeAvatarTexture::ChangeAvatarTexture(const Primitives::PrimitiveId& mesh_id, const TextureMappingDisassembler& texture_dto) : m_meshId(mesh_id), m_textureDto(texture_dto)
+ChangeAvatarTexture::ChangeAvatarTexture() : m_meshId(), m_semanticTextureMapping()
 {
     m_factoryDesc = FactoryDesc(ChangeAvatarTexture::TYPE_RTTI.getName());
     m_onTextureHydrated = std::make_shared<EventSubscriber>([=](auto e) { this->onTextureHydrated(e); });
@@ -189,7 +245,16 @@ ChangeAvatarTexture::ChangeAvatarTexture(const Primitives::PrimitiveId& mesh_id,
     EventPublisher::subscribe(typeid(HydrateTextureFailed), m_onTextureHydrated);
 }
 
-ChangeAvatarTexture::ChangeAvatarTexture(const Engine::GenericDto& o) : AvatarRecipe(o)
+ChangeAvatarTexture::ChangeAvatarTexture(const Primitives::PrimitiveId& mesh_id, const EffectTextureMap::SemanticTextureMapping& semantic_texture_mapping) : m_meshId(mesh_id), m_semanticTextureMapping(semantic_texture_mapping)
+{
+    m_factoryDesc = FactoryDesc(ChangeAvatarTexture::TYPE_RTTI.getName());
+    m_onTextureHydrated = std::make_shared<EventSubscriber>([=](auto e) { this->onTextureHydrated(e); });
+    EventPublisher::subscribe(typeid(TextureHydrated), m_onTextureHydrated);
+    m_onHydrateTextureFailed = std::make_shared<EventSubscriber>([=](auto e) { this->onHydrateTextureFailed(e); });
+    EventPublisher::subscribe(typeid(HydrateTextureFailed), m_onTextureHydrated);
+}
+
+/*ChangeAvatarTexture::ChangeAvatarTexture(const Engine::GenericDto& o) : AvatarRecipe(o)
 {
     AvatarRecipeChangeTextureDto dto = AvatarRecipeChangeTextureDto::fromGenericDto(o);
     m_meshId = dto.meshId();
@@ -198,7 +263,7 @@ ChangeAvatarTexture::ChangeAvatarTexture(const Engine::GenericDto& o) : AvatarRe
     EventPublisher::subscribe(typeid(TextureHydrated), m_onTextureHydrated);
     m_onHydrateTextureFailed = std::make_shared<EventSubscriber>([=](auto e) { this->onHydrateTextureFailed(e); });
     EventPublisher::subscribe(typeid(HydrateTextureFailed), m_onHydrateTextureFailed);
-}
+}*/
 
 ChangeAvatarTexture::~ChangeAvatarTexture()
 {
@@ -208,14 +273,49 @@ ChangeAvatarTexture::~ChangeAvatarTexture()
     m_onHydrateTextureFailed = nullptr;
 }
 
-GenericDto ChangeAvatarTexture::serializeDto() const
+std::shared_ptr<AvatarRecipe> ChangeAvatarTexture::create()
+{
+    return std::make_shared<ChangeAvatarTexture>();
+}
+
+std::shared_ptr<AvatarRecipeAssembler> ChangeAvatarTexture::assembler() const
+{
+    return std::make_shared<ChangeAvatarTextureAssembler>();
+}
+
+void ChangeAvatarTexture::assemble(const std::shared_ptr<AvatarRecipeAssembler>& assembler)
+{
+    AvatarRecipe::assemble(assembler);
+    if (std::shared_ptr<ChangeAvatarTextureAssembler> change_assembler = std::dynamic_pointer_cast<ChangeAvatarTextureAssembler>(assembler))
+    {
+        change_assembler->meshId(m_meshId);
+        change_assembler->semanticTextureMapping(m_semanticTextureMapping);
+    }
+}
+
+std::shared_ptr<AvatarRecipeDisassembler> ChangeAvatarTexture::disassembler() const
+{
+    return std::make_shared<ChangeAvatarTextureDisassembler>();
+}
+
+void ChangeAvatarTexture::disassemble(const std::shared_ptr<AvatarRecipeDisassembler>& disassembler)
+{
+    AvatarRecipe::disassemble(disassembler);
+    if (std::shared_ptr<ChangeAvatarTextureDisassembler> change_disassembler = std::dynamic_pointer_cast<ChangeAvatarTextureDisassembler>(disassembler))
+    {
+        m_meshId = change_disassembler->meshId();
+        m_semanticTextureMapping = change_disassembler->semanticTextureMapping();
+    }
+}
+
+/*GenericDto ChangeAvatarTexture::serializeDto() const
 {
     AvatarRecipeChangeTextureDto dto;
     dto.factoryDesc() = m_factoryDesc;
     dto.meshId() = m_meshId;
     dto.textureDto() = m_textureDto;
     return dto.toGenericDto();
-}
+}*/
 
 void ChangeAvatarTexture::bake(const std::shared_ptr<Pawn>& pawn)
 {
@@ -242,11 +342,11 @@ void ChangeAvatarTexture::changeMeshTexture(const std::shared_ptr<MeshPrimitive>
 {
     if (!mesh) return;
     if (m_meshId.name().empty()) return;
-    auto query = std::make_shared<QueryTexture>(m_textureDto.textureId());
+    auto query = std::make_shared<QueryTexture>(m_semanticTextureMapping.m_textureId);
     QueryDispatcher::dispatch(query);
     if ((query->getResult()) && (query->getResult()->lazyStatus().isReady()))
     {
-        mesh->changeSemanticTexture({ m_textureDto.semantic(), query->getResult(), m_textureDto.arrayIndex() });
+        mesh->changeSemanticTexture({ query->getResult(), m_semanticTextureMapping.m_arrayIndex, m_semanticTextureMapping.m_semantic });
     }
     else
     {
@@ -259,9 +359,9 @@ void ChangeAvatarTexture::onTextureHydrated(const Frameworks::IEventPtr& e)
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<TextureHydrated>(e);
     if (!ev) return;
-    if (ev->id() != m_textureDto.textureId()) return;
+    if (ev->id() != m_semanticTextureMapping.m_textureId) return;
     if (m_mesh.expired()) return;
-    m_mesh.lock()->changeSemanticTexture({ m_textureDto.semantic(), ev->texture(), m_textureDto.arrayIndex() });
+    m_mesh.lock()->changeSemanticTexture({ ev->texture(), m_semanticTextureMapping.m_arrayIndex, m_semanticTextureMapping.m_semantic });
 }
 
 void ChangeAvatarTexture::onHydrateTextureFailed(const Frameworks::IEventPtr& e)
@@ -269,7 +369,7 @@ void ChangeAvatarTexture::onHydrateTextureFailed(const Frameworks::IEventPtr& e)
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<HydrateTextureFailed>(e);
     if (!ev) return;
-    if (ev->id() != m_textureDto.textureId()) return;
+    if (ev->id() != m_semanticTextureMapping.m_textureId) return;
     Platforms::Debug::ErrorPrintf("ChangeAvatarTexture::OnLoadTextureFailed: %s, %s\n", ev->id().name().c_str(), ev->error().message().c_str());
 }
 

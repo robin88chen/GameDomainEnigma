@@ -51,9 +51,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightingPawn.cpp">
       <Filter>DeferredRendering\Light Pawn</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightingPawnDto.cpp">
-      <Filter>DeferredRendering\Light Pawn</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightingPawnRepository.cpp">
       <Filter>DeferredRendering\Light Pawn</Filter>
     </ClCompile>
@@ -96,9 +93,6 @@
       <Filter>DeferredRendering\Light Mesh</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightingPawn.h">
-      <Filter>DeferredRendering\Light Pawn</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightingPawnDto.h">
       <Filter>DeferredRendering\Light Pawn</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightingPawnRepository.h">

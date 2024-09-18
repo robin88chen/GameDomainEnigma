@@ -54,12 +54,10 @@ void AnimatedPawn::assemble(const std::shared_ptr<SceneGraph::SpatialAssembler>&
     if (auto animatedPawnAssembler = std::dynamic_pointer_cast<AnimatedPawnAssembler>(assembler))
     {
         animatedPawnAssembler->animationClipMap(m_animationClipMap);
-        Engine::GenericDtoCollection avatar_recipe_dtos;
         for (auto& avatar_recipe : m_avatarRecipeList)
         {
-            avatar_recipe_dtos.push_back(avatar_recipe->serializeDto());
+            animatedPawnAssembler->addAvatarRecipe(avatar_recipe);
         }
-        animatedPawnAssembler->avatarRecipeDtos(avatar_recipe_dtos);
     }
 }
 
@@ -73,11 +71,11 @@ void AnimatedPawn::disassemble(const std::shared_ptr<SceneGraph::SpatialDisassem
     Pawn::disassemble(disassembler);
     if (auto animatedPawnDisassembler = std::dynamic_pointer_cast<AnimatedPawnDisassembler>(disassembler))
     {
-        if (auto clip = animatedPawnDisassembler->animationClipMapDto()) m_animationClipMap = AnimationClipMap(clip.value());
+        m_animationClipMap = animatedPawnDisassembler->animationClipMap();
         m_avatarRecipeList.clear();
-        for (auto& avatar_dto : animatedPawnDisassembler->avatarRecipeDtos())
+        for (auto& avatar_recipe : animatedPawnDisassembler->avatarRecipes())
         {
-            m_avatarRecipeList.push_back(AvatarRecipe::createFromGenericDto(avatar_dto));
+            m_avatarRecipeList.push_back(avatar_recipe);
         }
     }
 }

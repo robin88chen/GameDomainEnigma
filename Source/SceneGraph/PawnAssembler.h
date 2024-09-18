@@ -34,6 +34,8 @@ namespace Enigma::SceneGraph
         [[nodiscard]] std::optional<Primitives::PrimitiveId> primitiveId() const { return m_primitiveId; }
         virtual void disassemble(const Engine::GenericDto& dto) override;
 
+        static std::shared_ptr<PawnDisassembler> disassembledDisassembler(const Engine::GenericDto& dto);
+
     protected:
         std::optional<Primitives::PrimitiveId> m_primitiveId;
     };

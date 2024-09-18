@@ -18,7 +18,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\DeferredRenderingConfiguration.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightingPawn.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightingPawnAssembler.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\LightingPawnDto.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightingPawnRepository.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightMeshAssembler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LightQuadPawn.cpp" />
@@ -35,7 +34,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightingMeshQueries.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightingPawn.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightingPawnAssemblers.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\LightingPawnDto.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightingPawnRepository.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightMeshAssembler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LightQuadPawn.h" />

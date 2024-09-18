@@ -8,23 +8,41 @@
 #ifndef ANIMATION_CLIP_MAP_ASSEMBLER_H
 #define ANIMATION_CLIP_MAP_ASSEMBLER_H
 
-#include "Renderables/AnimationClip.h"
-#include "AnimationClipMapDto.h"
-#include <string>
+#include "AnimationClipMap.h"
+#include <vector>
 
 namespace Enigma::GameCommon
 {
     class AnimationClipMapAssembler
     {
     public:
-        AnimationClipMapAssembler() = default;
+        AnimationClipMapAssembler();
+        AnimationClipMapAssembler(const AnimationClipMap& clipMap);
 
-        AnimationClipMapAssembler& addClip(const std::string& name, const Renderables::AnimationClip& clip);
+        void clipMap(const AnimationClipMap& clipMap);
+        void addClip(const AnimationClipMap::AnimClip& clip);
 
-        Engine::GenericDto toGenericDto() const;
+        Engine::GenericDto assemble() const;
 
     private:
-        AnimationClipMapDto m_dto;
+        Engine::FactoryDesc m_factoryDesc;
+        std::vector<AnimationClipMap::AnimClip> m_clips;
+    };
+
+    class AnimationClipMapDisassembler
+    {
+    public:
+        AnimationClipMapDisassembler();
+        AnimationClipMapDisassembler(const Engine::GenericDto& dto);
+
+        void disassemble(const Engine::GenericDto& dto);
+
+        [[nodiscard]] const Engine::FactoryDesc& factoryDesc() const { return m_factoryDesc; }
+        [[nodiscard]] const AnimationClipMap& clipMap() const { return m_clipMap; }
+
+    protected:
+        Engine::FactoryDesc m_factoryDesc;
+        AnimationClipMap m_clipMap;
     };
 }
 

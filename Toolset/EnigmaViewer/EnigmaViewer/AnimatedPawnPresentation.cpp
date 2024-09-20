@@ -1,5 +1,7 @@
 ﻿#include "AnimatedPawnPresentation.h"
 
+#include <SceneGraph/SceneGraphQueries.h>
+
 #include "ViewerCommands.h"
 #include "GameCommon/AnimatedPawnAssembler.h"
 #include "MathLib/MathGlobal.h"
@@ -32,11 +34,11 @@ AnimatedPawnPresentation::~AnimatedPawnPresentation()
 
 void AnimatedPawnPresentation::subscribeHandlers()
 {
-    m_onSpatialRemoved = std::make_shared<EventSubscriber>([=](const IEventPtr& e) { onSpatialRemoved(e); });
+    m_onSpatialRemoved = std::make_shared<EventSubscriber>([this](const IEventPtr& e) { onSpatialRemoved(e); });
     EventPublisher::subscribe(typeid(SpatialRemoved), m_onSpatialRemoved);
-    m_onSpatialConstituted = std::make_shared<EventSubscriber>([=](const IEventPtr& e) { onSpatialConstituted(e); });
+    m_onSpatialConstituted = std::make_shared<EventSubscriber>([this](const IEventPtr& e) { onSpatialConstituted(e); });
     EventPublisher::subscribe(typeid(SpatialConstituted), m_onSpatialConstituted);
-    m_onConstituteSpatialFailed = std::make_shared<EventSubscriber>([=](const IEventPtr& e) { onConstituteSpatialFailed(e); });
+    m_onConstituteSpatialFailed = std::make_shared<EventSubscriber>([this](const IEventPtr& e) { onConstituteSpatialFailed(e); });
     EventPublisher::subscribe(typeid(ConstituteSpatialFailed), m_onConstituteSpatialFailed);
 }
 
@@ -82,7 +84,7 @@ void AnimatedPawnPresentation::loadPawn(const Enigma::SceneGraph::SpatialId& paw
     m_pawn = std::dynamic_pointer_cast<AnimatedPawn>(Pawn::queryPawn(pawn_id));
     if (!m_pawn) return;
     m_presentingPawnId = pawn_id;
-    attatchPawnToRoot();
+    attachPawnToRoot();
     listenPawnAnimation();
     refreshPawnModelTree();
     refreshPawnAnimationClipMap();
@@ -101,18 +103,18 @@ void AnimatedPawnPresentation::removePawn(const Enigma::SceneGraph::SpatialId& s
 void AnimatedPawnPresentation::assemblePawn()
 {
     AnimatedPawnAssembler assembler(m_presentingPawnId);
-    assembler.asNative(m_presentingPawnId.name() + ".pawn@APK_PATH");
-    assembler.pawn().primitive(m_presentingModelId.value());
-    assembler.pawn().spatial().localTransform(Matrix4::IDENTITY);
-    m_pawn = assembler.constitute();
-    attatchPawnToRoot();
+    assembler.persist(m_presentingPawnId.name() + ".pawn", "APK_PATH");
+    if (m_presentingModelId.has_value()) assembler.primitiveId(m_presentingModelId.value());
+    assembler.localTransform(Matrix4::IDENTITY);
+    m_pawn = std::dynamic_pointer_cast<AnimatedPawn>(std::make_shared<RequestSpatialConstitution>(m_presentingPawnId, assembler.assemble())->dispatch());
+    attachPawnToRoot();
     listenPawnAnimation();
     refreshPawnModelTree();
     refreshPawnAnimationClipMap();
     m_presentingModelId.reset();
 }
 
-void AnimatedPawnPresentation::attatchPawnToRoot()
+void AnimatedPawnPresentation::attachPawnToRoot()
 {
     Enigma::MathLib::Matrix4 mx = Enigma::MathLib::Matrix4::MakeRotationXTransform(-Enigma::MathLib::Math::HALF_PI);
     CommandBus::enqueue(std::make_shared<AttachNodeChild>(m_sceneRootId, m_pawn, mx));

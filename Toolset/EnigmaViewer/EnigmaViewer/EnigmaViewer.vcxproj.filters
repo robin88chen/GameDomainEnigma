@@ -112,6 +112,9 @@
     <ClInclude Include="ViewerAnimationClipCommandHandler.h">
       <Filter>AppDelegate</Filter>
     </ClInclude>
+    <ClInclude Include="CameraConcatenater.h">
+      <Filter>Helper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainForm.cpp">
@@ -186,6 +189,9 @@
     </ClCompile>
     <ClCompile Include="ViewerAnimationClipCommandHandler.cpp">
       <Filter>AppDelegate</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraConcatenater.cpp">
+      <Filter>Helper</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

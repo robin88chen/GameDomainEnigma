@@ -31,12 +31,13 @@ namespace Enigma::Renderables
 
         void factoryDesc(const Engine::FactoryDesc& desc) { m_factoryDesc = desc; }
         void name(const std::string& name) { m_name = name; }
+        [[nodiscard]] const std::string& name() const { return m_name; }
 
         void localT_PosTransform(const MathLib::Matrix4& transform) { m_localT_PosTransform = transform; }
         void meshPrimitiveId(const Primitives::PrimitiveId& id) { m_meshPrimitiveId = id; }
         void parentIndexInArray(unsigned index) { m_parentIndexInArray = index; }
 
-        Engine::GenericDto assemble() const;
+        [[nodiscard]] Engine::GenericDto assemble() const;
 
     protected:
         Engine::FactoryDesc m_factoryDesc;
@@ -86,7 +87,7 @@ namespace Enigma::Renderables
         void addNode(const MeshNode& node);
         void addNode(const std::string& node_name, const std::shared_ptr<MeshNodeAssembler>& assembler);
 
-        Engine::GenericDto assemble() const;
+        [[nodiscard]] Engine::GenericDto assemble() const;
 
     protected:
         std::optional<unsigned> findNodeIndex(const std::string& name) const;

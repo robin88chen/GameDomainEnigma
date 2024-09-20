@@ -1,7 +1,7 @@
 ﻿#include "ViewerAvatarBaker.h"
 #include "ViewerCommands.h"
 #include "Frameworks/CommandBus.h"
-#include "GameEngine/EffectTextureMapDto.h"
+#include "GameEngine/EffectTextureMap.h"
 #include "GameCommon/AvatarRecipes.h"
 
 using namespace EnigmaViewer;
@@ -41,10 +41,7 @@ void ViewerAvatarBaker::changeMeshTexture(const Enigma::Frameworks::ICommandPtr&
     if (!m_getCurrentPawn) return;
     auto pawn = m_getCurrentPawn();
     if (!pawn) return;
-    TextureMappingDto tex_dto;
-    tex_dto.textureId() = cmd->textureId();
-    tex_dto.semantic() = "DiffuseMap";
-    auto recipe = std::make_shared<ChangeAvatarTexture>(cmd->meshId(), tex_dto);
+    auto recipe = std::make_shared<ChangeAvatarTexture>(cmd->meshId(), EffectTextureMap::SemanticTextureMapping{ cmd->textureId(), std::nullopt, "DiffuseMap" });
     pawn->addAvatarRecipe(recipe);
     pawn->bakeAvatarRecipes();
 }

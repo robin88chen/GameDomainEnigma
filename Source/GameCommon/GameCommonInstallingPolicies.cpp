@@ -66,5 +66,6 @@ error AnimatedPawnInstallingPolicy::shutdown(Frameworks::ServiceManager* service
         avatar_factory->unregisterRecipeFactory(ReplaceAvatarMaterial::TYPE_RTTI.getName());
         avatar_factory->unregisterRecipeFactory(ChangeAvatarTexture::TYPE_RTTI.getName());
     }
+    service_manager->shutdownSystemService(AvatarRecipeFactory::TYPE_RTTI);
     return error();
 }

@@ -8,17 +8,19 @@
 #ifndef _DAE_PARSER_H
 #define _DAE_PARSER_H
 
-#include "SceneGraph/SceneGraphDtos.h"
-#include "Animators/AnimationAssetDtos.h"
-#include "GameCommon/AnimatedPawnDto.h"
+#include "Animators/AnimationAssetAssembler.h"
+#include "GameCommon/AnimatedPawnAssembler.h"
 #include "Geometries/GeometryData.h"
 #include "Geometries/GeometryRepository.h"
 #include "DaeParserConfiguration.h"
-#include "Renderables/RenderablePrimitiveAssembler.h"
+#include "Renderables/MeshNodeAssemblers.h"
 #include "Renderables/ModelAnimationAssembler.h"
+#include "Renderables/ModelPrimitiveAssembler.h"
 #include "Animators/AnimationAssetStoreMapper.h"
 #include "Animators/AnimatorStoreMapper.h"
 #include "Primitives/PrimitiveStoreMapper.h"
+#include "GameEngine/EffectMaterialId.h"
+#include "GameEngine/TextureId.h"
 #include "pugixml.hpp"
 #include <string>
 #include <optional>
@@ -46,15 +48,15 @@ namespace EnigmaViewer
 
         void parseScene(const pugi::xml_node& collada_root);
         void parseModelSceneNode(const pugi::xml_node& model_scene_node);
-        void parseSceneNode(Enigma::Renderables::MeshNodeTreeAssembler& node_tree_assembler, const pugi::xml_node& scene_node_xml, std::optional<std::string> parent_node_name);
+        void parseSceneNode(const std::shared_ptr<Enigma::Renderables::MeshNodeTreeAssembler>& node_tree_assembler, const pugi::xml_node& scene_node_xml, std::optional<std::string> parent_node_name);
 
-        void parseGeometryInstanceNode(Enigma::Renderables::MeshNodeAssembler& mesh_node_assembler, const pugi::xml_node& geometry_inst);
-        void parseSingleGeometry(Enigma::Renderables::MeshNodeAssembler& mesh_node_assembler, const pugi::xml_node& geometry_xml_node, bool is_skin);
+        void parseGeometryInstanceNode(const std::shared_ptr<Enigma::Renderables::MeshNodeAssembler>& mesh_node_assembler, const pugi::xml_node& geometry_inst);
+        void parseSingleGeometry(const std::shared_ptr<Enigma::Renderables::MeshNodeAssembler>& mesh_node_assembler, const pugi::xml_node& geometry_xml_node, bool is_skin);
 
-        void parseSceneNodeForSkin(Enigma::Renderables::MeshNodeTreeAssembler& node_tree_assembler, const pugi::xml_node& scene_node_xml, std::optional<std::string> parent_node_name);
-        void parseSkinMesh(Enigma::Renderables::MeshNodeAssembler& mesh_node_assembler, const pugi::xml_node& skin_node_xml);
-        void parseVertexWeights(Enigma::Renderables::MeshNodeAssembler& mesh_node_assembler, const pugi::xml_node& skin_host_xml, const pugi::xml_node& vertex_weights_xml);
-        void parseJointNameSource(Enigma::Renderables::MeshNodeAssembler& mesh_node_assembler, const pugi::xml_node& bone_names_xml);
+        void parseSceneNodeForSkin(const std::shared_ptr<Enigma::Renderables::MeshNodeTreeAssembler>& node_tree_assembler, const pugi::xml_node& scene_node_xml, std::optional<std::string> parent_node_name);
+        void parseSkinMesh(const std::shared_ptr<Enigma::Renderables::MeshNodeAssembler>& mesh_node_assembler, const pugi::xml_node& skin_node_xml);
+        void parseVertexWeights(const std::shared_ptr<Enigma::Renderables::MeshNodeAssembler>& mesh_node_assembler, const pugi::xml_node& skin_host_xml, const pugi::xml_node& vertex_weights_xml);
+        void parseJointNameSource(const std::shared_ptr<Enigma::Renderables::MeshNodeAssembler>& mesh_node_assembler, const pugi::xml_node& bone_names_xml);
         void parseWeightsArraySource(const pugi::xml_node& weights_array_xml);
 
         std::tuple<std::string, GeometryValueOffsets> parseGeometryMesh(const pugi::xml_node& mesh_node);
@@ -64,12 +66,12 @@ namespace EnigmaViewer
         void parseIndexArray(const pugi::xml_node& index_ary_node, int triangle_count);
 
         void parseAnimations(const pugi::xml_node& collada_root);
-        void parseSingleAnimation(Enigma::Renderables::ModelAnimationAssembler& animation_assembler, const pugi::xml_node& anim_node);
-        void parseAnimationSample(Enigma::Renderables::AnimationTimeSRTAssembler& srt_assembler, const pugi::xml_node& sampler_node,
+        void parseSingleAnimation(const std::shared_ptr<Enigma::Renderables::ModelAnimationAssembler>& animation_assembler, const pugi::xml_node& anim_node);
+        void parseAnimationSample(const std::shared_ptr<Enigma::Renderables::AnimationTimeSRTAssembler>& srt_assembler, const pugi::xml_node& sampler_node,
             const pugi::xml_node& anim_node);
         void parseTimeValue(const pugi::xml_node& time_value_source);
         void parseAnimationMatrix(const pugi::xml_node& anim_matrix_source);
-        void analyzeSRTKeys(Enigma::Renderables::AnimationTimeSRTAssembler& srt_assembler);
+        void analyzeSRTKeys(const std::shared_ptr<Enigma::Renderables::AnimationTimeSRTAssembler>& srt_assembler);
 
         void splitVertexPositions(int pos_offset, int tex_set, int tex_offset, bool is_split_vertex, bool is_skin);
         void collapseVertexNormals(int pos_offset, int nor_offset, bool is_split_vertex);
@@ -97,7 +99,7 @@ namespace EnigmaViewer
 
         std::string m_filename;
         Enigma::Primitives::PrimitiveId m_modelId;
-        std::unique_ptr<Enigma::Renderables::ModelPrimitiveAssembler> m_modelAssembler;
+        std::shared_ptr<Enigma::Renderables::ModelPrimitiveAssembler> m_modelAssembler;
         Enigma::Animators::AnimationAssetId m_animationAssetId;
         Enigma::Animators::AnimatorId m_animatorId;
         std::string m_modelName;

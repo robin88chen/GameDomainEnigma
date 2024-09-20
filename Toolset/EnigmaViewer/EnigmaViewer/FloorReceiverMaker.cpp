@@ -3,9 +3,8 @@
 #include "GeometryCreationHelper.h"
 #include "SceneGraph/Pawn.h"
 #include "SceneGraph/SpatialId.h"
-#include "SceneGraph/SceneGraphAssemblers.h"
-#include "Renderables/RenderablePrimitiveAssembler.h"
-#include "Renderables/RenderablePrimitiveDtos.h"
+#include "SceneGraph/PawnAssembler.h"
+#include "Renderables/MeshPrimitiveAssembler.h"
 #include "GameEngine/EffectTextureMapAssembler.h"
 #include "Primitives/PrimitiveId.h"
 #include "Renderables/MeshPrimitive.h"
@@ -30,21 +29,21 @@ void FloorReceiverMaker::makeFloorReceiver(const std::shared_ptr<Enigma::SceneGr
     auto geometry = GeometryCreationHelper::createSquareXZQuad(floorGeometryId);
     auto floorPawnId = SpatialId(FloorReceiverName, Pawn::TYPE_RTTI);
     PawnAssembler pawn_assembler(floorPawnId);
-    MeshPrimitiveDto mesh_dto;
-    EffectTextureMapAssembler tex_assembler;
-    tex_assembler.textureMapping(TextureId("image/du011"), std::nullopt, "DiffuseMap");
     auto floorMeshId = PrimitiveId("floor_mesh", MeshPrimitive::TYPE_RTTI);
-    mesh_dto.id() = floorMeshId;
-    mesh_dto.factoryDesc() = FactoryDesc(MeshPrimitive::TYPE_RTTI.getName()).ClaimAsNative(floorMeshId.name() + ".mesh@DataPath");
-    mesh_dto.effects().emplace_back(EffectMaterialId("fx/default_textured_mesh_effect"));
-    mesh_dto.textureMaps().emplace_back(tex_assembler.toGenericDto());
-    mesh_dto.geometryId() = floorGeometryId;
-    mesh_dto.renderListID() = Enigma::Renderer::Renderer::RenderListID::Scene;
-    mesh_dto.visualTechniqueSelection() = "Default";
-
-    auto mesh = std::make_shared<RequestPrimitiveConstitution>(floorMeshId, mesh_dto.toGenericDto())->dispatch();
-    pawn_assembler.primitive(floorMeshId);
-    pawn_assembler.spatial().localTransform(Matrix4::IDENTITY).topLevel(true).spatialFlags(SpatialShadowFlags::Spatial_ShadowReceiver);
-    auto floor = std::dynamic_pointer_cast<Pawn>(std::make_shared<RequestSpatialConstitution>(floorPawnId, pawn_assembler.toGenericDto())->dispatch());
+    MeshPrimitiveAssembler mesh_assembler(floorMeshId);
+    std::shared_ptr<EffectTextureMapAssembler> tex_assembler = std::make_shared<EffectTextureMapAssembler>();
+    tex_assembler->addTextureMapping(TextureId("image/du011"), std::nullopt, "DiffuseMap");
+    mesh_assembler.addTextureMap(tex_assembler);
+    mesh_assembler.geometryId(floorGeometryId);
+    mesh_assembler.renderListID(Enigma::Renderer::Renderer::RenderListID::Scene);
+    mesh_assembler.visualTechnique("Default");
+    mesh_assembler.addEffect(EffectMaterialId("fx/default_textured_mesh_effect"));
+    mesh_assembler.asNative(floorMeshId.name() + ".mesh@DataPath");
+    auto mesh = std::make_shared<RequestPrimitiveConstitution>(floorMeshId, mesh_assembler.assemble())->dispatch();
+    pawn_assembler.primitiveId(floorMeshId);
+    pawn_assembler.localTransform(Matrix4::IDENTITY);
+    pawn_assembler.topLevel(true);
+    pawn_assembler.spatialFlags(SpatialShadowFlags::Spatial_ShadowReceiver);
+    auto floor = std::dynamic_pointer_cast<Pawn>(std::make_shared<RequestSpatialConstitution>(floorPawnId, pawn_assembler.assemble())->dispatch());
     if (root) root->attachChild(floor, Matrix4::IDENTITY);
 }

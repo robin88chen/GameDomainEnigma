@@ -10,31 +10,6 @@ using namespace Enigma::Engine;
 
 DEFINE_RTTI_OF_BASE(GameCommon, AnimationClipMap);
 
-/*AnimationClipMap::AnimationClipMap(const Engine::GenericDto& o)
-{
-    AnimationClipMapDto dto(o);
-    for (unsigned i = 0; i < dto.animationNames().size(); ++i)
-    {
-        AnimClip clip(dto.animationNames()[i], AnimationClip(dto.startOffsets()[i], dto.loopTimes()[i],
-            static_cast<AnimationClip::WarpMode>(dto.warpModes()[i]), dto.divideIndices()[i]));
-        m_animClips[clip.getName()] = clip;
-    }
-}
-
-GenericDto AnimationClipMap::serializeDto() const
-{
-    AnimationClipMapDto dto;
-    for (auto& [name, clip] : m_animClips)
-    {
-        dto.animationNames().push_back(name);
-        dto.startOffsets().push_back(clip.clip().startOffset());
-        dto.loopTimes().push_back(clip.clip().loopTime());
-        dto.warpModes().push_back(static_cast<unsigned>(clip.clip().warpMode()));
-        dto.divideIndices().push_back(clip.clip().divideIndex());
-    }
-    return dto.toGenericDto();
-}*/
-
 void AnimationClipMap::assemble(const std::shared_ptr<AnimationClipMapAssembler>& assembler) const
 {
     assembler->clipMap(*this);

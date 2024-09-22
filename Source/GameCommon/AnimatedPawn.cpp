@@ -21,17 +21,6 @@ AnimatedPawn::AnimatedPawn(const SpatialId& id) : Pawn(id)
     registerHandlers();
 }
 
-/*AnimatedPawn::AnimatedPawn(const SpatialId& id, const Engine::GenericDto& o) : Pawn(id, o)
-{
-    AnimatedPawnDto dto(o);
-    if (auto clip = dto.animationClipMapDto()) m_animationClipMap = AnimationClipMap(clip.value());
-    for (auto& avatar_dto : dto.avatarRecipeDtos())
-    {
-        m_avatarRecipeList.push_back(AvatarRecipe::createFromGenericDto(avatar_dto));
-    }
-    registerHandlers();
-}*/
-
 AnimatedPawn::~AnimatedPawn()
 {
     unregisterHandlers();
@@ -78,24 +67,8 @@ void AnimatedPawn::disassemble(const std::shared_ptr<SceneGraph::SpatialDisassem
             m_avatarRecipeList.push_back(avatar_recipe);
         }
     }
+    bakeAvatarRecipes();
 }
-
-/*std::shared_ptr<AnimatedPawn> AnimatedPawn::constitute(const SceneGraph::SpatialId& id, const Engine::GenericDto& o)
-{
-    auto pawn = std::make_shared<AnimatedPawn>(id, o);
-    return pawn;
-}
-
-GenericDto AnimatedPawn::serializeDto()
-{
-    AnimatedPawnDto dto(SerializePawnDto());
-    dto.animationClipMapDto() = m_animationClipMap.serializeDto();
-    for (auto& avatar_recipe : m_avatarRecipeList)
-    {
-        dto.avatarRecipeDtos().push_back(avatar_recipe->serializeDto());
-    }
-    return dto.toGenericDto();
-}*/
 
 void AnimatedPawn::registerHandlers()
 {

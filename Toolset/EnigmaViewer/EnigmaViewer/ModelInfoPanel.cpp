@@ -109,7 +109,7 @@ void ModelInfoPanel::enumModelMeshNode(const std::shared_ptr<Enigma::Renderables
         mesh_pos_map.emplace(mesh_node.value().get().getName(), node_pos);
         if (mesh_node.value().get().getMeshPrimitive())
         {
-            node_pos.append(mesh_node.value().get().getMeshPrimitive()->getName(), mesh_node.value().get().getMeshPrimitive()->getName(), mesh_node.value().get().getMeshPrimitive()->id());
+            node_pos.append(mesh_node.value().get().getMeshPrimitive()->id().name(), mesh_node.value().get().getMeshPrimitive()->id().name(), mesh_node.value().get().getMeshPrimitive()->id());
             //m_meshNodeTree->insert(node_pos,
               //  mesh_node.value().get().getMeshPrimitive()->getName(), mesh_node.value().get().getMeshPrimitive()->getName());
         }

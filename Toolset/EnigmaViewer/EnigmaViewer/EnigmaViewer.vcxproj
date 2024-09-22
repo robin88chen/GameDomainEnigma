@@ -135,6 +135,7 @@
     <ClInclude Include="AnimatedPawnPresentation.h" />
     <ClInclude Include="AnimationClipInfoItem.h" />
     <ClInclude Include="AnimationInfoPanel.h" />
+    <ClInclude Include="CameraConcatenater.h" />
     <ClInclude Include="CreateNewPawnDlg.h" />
     <ClInclude Include="DaeParser.h" />
     <ClInclude Include="DaeParserConfiguration.h" />
@@ -164,6 +165,7 @@
   <ItemGroup>
     <ClCompile Include="AnimatedPawnPresentation.cpp" />
     <ClCompile Include="AnimationInfoPanel.cpp" />
+    <ClCompile Include="CameraConcatenater.cpp" />
     <ClCompile Include="CreateNewPawnDlg.cpp" />
     <ClCompile Include="DaeParser.cpp" />
     <ClCompile Include="DaeParserConfiguration.cpp" />

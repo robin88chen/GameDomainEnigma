@@ -17,7 +17,7 @@ std::shared_ptr<GeometryData> GeometryCreationHelper::createSquareXZQuad(const G
 
     SquareQuadAssembler helper(id);
     helper.xzQuad(Vector3(-5.0f, 0.0f, -5.0f), Vector3(5.0f, 0.0f, 5.0f)).normal().textureCoord(Vector2(0.0f, 1.0f), Vector2(1.0f, 0.0f));
-    auto dto = helper.toGenericDto();
+    auto dto = helper.assemble();
     dto.addRtti(FactoryDesc(TriangleList::TYPE_RTTI.getName()).ClaimAsResourceAsset(id.name(), id.name() + ".geo", "APK_PATH"));
     const auto request = std::make_shared<RequestGeometryConstitution>(id, dto);
     request->dispatch();

@@ -13,52 +13,9 @@ TerrainGeometry::TerrainGeometry(const Geometries::GeometryId& id) : TriangleLis
     m_factoryDesc = Engine::FactoryDesc(TerrainGeometry::TYPE_RTTI.getName());
 }
 
-//TerrainGeometry::TerrainGeometry(const Geometries::GeometryId& id, const GenericDto& o) : TriangleList(id, o)
-//{
-    /*TerrainGeometryDto dto = TerrainGeometryDto::fromGenericDto(o);
-    m_numRows = dto.numRows();
-    m_numCols = dto.numCols();
-    m_minPosition = dto.minPosition();
-    m_maxPosition = dto.maxPosition();
-    m_minTextureCoordinate = dto.minTextureCoordinate();
-    m_maxTextureCoordinate = dto.maxTextureCoordinate();
-    if (dto.heightMap())
-    {
-        m_heightMap = dto.heightMap().value();
-    }
-    else
-    {
-        m_heightMap = std::vector<float>((m_numRows + 1) * (m_numCols + 1));
-        std::memset(m_heightMap.data(), 0, m_heightMap.size() * sizeof(float));
-    }
-    if (!dto.position3s())
-    {
-        dto.convertGeometryVertices();
-        GeometryData::deserializeGeometryDto(dto);
-    }*/
-    //}
-
 TerrainGeometry::~TerrainGeometry()
 {
 }
-
-/*GenericDto TerrainGeometry::serializeDto() const
-{
-    TerrainGeometryDto dto;
-    serializeNonVertexAttributes(dto);
-    dto.id() = m_id;
-    dto.numRows() = m_numRows;
-    dto.numCols() = m_numCols;
-    dto.minPosition() = m_minPosition;
-    dto.maxPosition() = m_maxPosition;
-    dto.minTextureCoordinate() = m_minTextureCoordinate;
-    dto.maxTextureCoordinate() = m_maxTextureCoordinate;
-    if (!m_heightMap.empty())
-    {
-        dto.heightMap() = m_heightMap;
-    }
-    return dto.toGenericDto();
-}*/
 
 std::shared_ptr<Enigma::Geometries::GeometryAssembler> TerrainGeometry::assembler() const
 {

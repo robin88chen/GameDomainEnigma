@@ -39,7 +39,7 @@ namespace EnigmaViewer
 
     protected:
         void assemblePawn();
-        void attatchPawnToRoot();
+        void attachPawnToRoot();
         void listenPawnAnimation();
         void refreshPawnModelTree();
         void refreshPawnAnimationClipMap();

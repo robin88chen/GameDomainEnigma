@@ -12,7 +12,7 @@
 #include "GraphicKernel/IGraphicAPI.h"
 #include "Controllers/GraphicMain.h"
 #include "InputHandlers/InputHandlerService.h"
-#include "GameCommon/SceneRendererService.h"
+#include "Rendering/SceneRendering.h"
 #include "Frameworks/EventSubscriber.h"
 #include "GameCommon/AnimatedPawn.h"
 #include "Frameworks/CommandSubscriber.h"
@@ -24,6 +24,7 @@
 #include "AnimatedPawnPresentation.h"
 #include "ViewerAvatarBaker.h"
 #include "ViewerAnimationClipCommandHandler.h"
+#include "Controllers/InstallingPolicyList.h"
 
 namespace EnigmaViewer
 {
@@ -57,6 +58,11 @@ namespace EnigmaViewer
         std::shared_ptr<Enigma::InputHandlers::InputHandlerService> inputHandler() const { return m_inputHandler.lock(); }
 
     protected:
+        void installEngineService();
+        void installDomainService();
+        void installUseCaseService();
+        void installPresentationService();
+        void installGameCommonService();
         void onRenderEngineInstalled(const Enigma::Frameworks::IEventPtr& e);
         void onSceneGraphRootCreated(const Enigma::Frameworks::IEventPtr& e);
 
@@ -81,6 +87,8 @@ namespace EnigmaViewer
 
         Enigma::Controllers::GraphicMain* m_graphicMain;
 
+        Enigma::Controllers::InstallingPolicyList m_policyList;
+
         std::shared_ptr<Enigma::FileStorage::GeometryDataFileStoreMapper> m_geometryDataFileStoreMapper;
         std::shared_ptr<Enigma::FileStorage::AnimationAssetFileStoreMapper> m_animationAssetFileStoreMapper;
         std::shared_ptr<Enigma::FileStorage::AnimatorFileStoreMapper> m_animatorFileStoreMapper;
@@ -89,8 +97,9 @@ namespace EnigmaViewer
         std::shared_ptr<ViewerTextureFileStoreMapper> m_textureFileStoreMapper;
 
         std::weak_ptr<Enigma::InputHandlers::InputHandlerService> m_inputHandler;
-        std::weak_ptr<Enigma::GameCommon::SceneRendererService> m_sceneRenderer;
+        std::weak_ptr<Enigma::Rendering::SceneRendering> m_sceneRendering;
         std::weak_ptr<Enigma::ShadowMap::ShadowMapService> m_shadowMapService;
+        std::weak_ptr<Enigma::GameCommon::GameSceneService> m_gameSceneService;
 
         Enigma::Frameworks::EventSubscriberPtr m_onRenderEngineInstalled;
         Enigma::Frameworks::EventSubscriberPtr m_onSceneGraphRootCreated;
@@ -101,6 +110,7 @@ namespace EnigmaViewer
         Enigma::Frameworks::CommandSubscriberPtr m_removeModelPrimitive;
         Enigma::Frameworks::CommandSubscriberPtr m_removeAnimatedPawn;
 
+        Enigma::SceneGraph::SpatialId m_primaryCameraId;
         Enigma::SceneGraph::SpatialId m_sceneRootId;
         std::shared_ptr<Enigma::SceneGraph::Node> m_sceneRoot;
         AnimatedPawnPresentation m_viewingPawnPresentation;

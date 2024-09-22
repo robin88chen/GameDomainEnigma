@@ -18,7 +18,6 @@ namespace Enigma::Terrain
         DECLARE_EN_RTTI;
     public:
         TerrainGeometry(const Geometries::GeometryId& id);
-        //TerrainGeometry(const Geometries::GeometryId& id, const Engine::GenericDto& o);
         virtual ~TerrainGeometry() override;
         TerrainGeometry(const TerrainGeometry&) = delete;
         TerrainGeometry& operator=(const TerrainGeometry&) = delete;

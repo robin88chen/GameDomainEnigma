@@ -1,4 +1,6 @@
 ﻿#include "DaeParser.h"
+#include "DaeSchema.h"
+#include "DaeAnimationParser.h"
 #include "FileSystem/FileSystem.h"
 #include "FileSystem/IFile.h"
 #include "ViewerCommands.h"
@@ -71,8 +73,6 @@ using namespace Enigma::Geometries;
 #define TOKEN_MATERIAL "material"
 #define TOKEN_EFFECT "effect"
 #define TOKEN_IMAGE "image"
-#define TOKEN_LIB_ANIMATIONS "library_animations"
-#define TOKEN_ANIMATION "animation"
 #define TOKEN_CHANNEL "channel"
 #define TOKEN_TARGET "target"
 #define TOKEN_SAMPLER "sampler"
@@ -140,8 +140,10 @@ void DaeParser::loadDaeFile(const std::string& filename)
     {
         outputLog(filename + " not a COLLADA file!!");
     }
+    DaeSchema::clearNodeIdNameMapping();
     parseScene(collada_root);
-    parseAnimations(collada_root);
+    DaeAnimationParser anim_parser([=](auto s) { outputLog(s); }, m_animationStoreMapper.lock());
+    //parseAnimations(collada_root);
     persistAnimator();
     persistModel();
 }
@@ -222,7 +224,7 @@ void DaeParser::parseSceneNode(const std::shared_ptr<MeshNodeTreeAssembler>& nod
     }
 
     std::string mesh_node_name = scene_node_xml.attribute(TOKEN_NAME).as_string();
-    m_nodeIdNameMapping.emplace(node_xml_id, mesh_node_name);
+    DaeSchema::addNodeIdNameMapping(node_xml_id, mesh_node_name);
     std::string node_joint_name = scene_node_xml.attribute("sid").as_string();
     m_nodeJointIdMapping.emplace(node_joint_name, mesh_node_name);
     outputLog("   scene node " + node_xml_id + " with mesh name " + mesh_node_name + ", joint name " + node_joint_name);
@@ -703,33 +705,33 @@ void DaeParser::parseWeightsArraySource(const pugi::xml_node& weights_array_xml)
     }
 }
 
-void DaeParser::parseAnimations(const pugi::xml_node& collada_root)
+/*void DaeParser::parseAnimations(const pugi::xml_node& collada_root)
 {
-    if (!collada_root) return;
-    pugi::xml_node anim_lib_node = collada_root.child(TOKEN_LIB_ANIMATIONS);
-    if (!anim_lib_node)
-    {
-        outputLog("has no animations lib");
-        return;
-    }
-    m_animationAssetId = AnimationAssetId("animations/" + m_modelName);
-    m_animatorId = AnimatorId("animators/" + m_modelName, ModelPrimitiveAnimator::TYPE_RTTI);
-    std::shared_ptr<ModelAnimationAssembler> animation_assembler = std::make_shared<ModelAnimationAssembler>(m_animationAssetId);
-    pugi::xml_node anim_name_node = anim_lib_node.child(TOKEN_ANIMATION);
-    if (anim_name_node)
-    {
-        pugi::xml_node anim_node = anim_name_node.child(TOKEN_ANIMATION);
-        while (anim_node)
+        if (!collada_root) return;
+        pugi::xml_node anim_lib_node = collada_root.child(TOKEN_LIB_ANIMATIONS);
+        if (!anim_lib_node)
         {
-            parseSingleAnimation(animation_assembler, anim_node);
-            anim_node = anim_node.next_sibling(TOKEN_ANIMATION);
+            outputLog("has no animations lib");
+            return;
         }
-    }
-    animation_assembler->asAsset(m_animationAssetId.name(), m_animationAssetId.name() + ".ani", "APK_PATH");
-    if (m_animationStoreMapper.lock())
-    {
-        m_animationStoreMapper.lock()->putAnimationAsset(m_animationAssetId, animation_assembler->assemble());
-    }
+        m_animationAssetId = AnimationAssetId("animations/" + m_modelName);
+        m_animatorId = AnimatorId("animators/" + m_modelName, ModelPrimitiveAnimator::TYPE_RTTI);
+        std::shared_ptr<ModelAnimationAssembler> animation_assembler = std::make_shared<ModelAnimationAssembler>(m_animationAssetId);
+        pugi::xml_node anim_name_node = anim_lib_node.child(TOKEN_ANIMATION);
+        if (anim_name_node)
+        {
+            pugi::xml_node anim_node = anim_name_node.child(TOKEN_ANIMATION);
+            while (anim_node)
+            {
+                parseSingleAnimation(animation_assembler, anim_node);
+                anim_node = anim_node.next_sibling(TOKEN_ANIMATION);
+            }
+        }
+        animation_assembler->asAsset(m_animationAssetId.name(), m_animationAssetId.name() + ".ani", "APK_PATH");
+        if (m_animationStoreMapper.lock())
+        {
+            m_animationStoreMapper.lock()->putAnimationAsset(m_animationAssetId, animation_assembler->assemble());
+        }
 }
 
 void DaeParser::parseSingleAnimation(const std::shared_ptr<Enigma::Renderables::ModelAnimationAssembler>& animation_assembler, const pugi::xml_node& anim_node)
@@ -1001,7 +1003,7 @@ void DaeParser::analyzeSRTKeys(const std::shared_ptr<AnimationTimeSRTAssembler>&
     {
         srt_assembler->addTranslationKey(key);
     }
-}
+}*/
 
 void DaeParser::splitVertexPositions(int pos_offset, int tex_set, int tex_offset, bool is_split_vertex, bool is_skin)
 {

@@ -28,6 +28,9 @@
     <Filter Include="AppDelegate\StoreMapper">
       <UniqueIdentifier>{8ac38c99-163a-4e22-8800-5dad4cf3eeed}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Dae Parser\AnimationParser">
+      <UniqueIdentifier>{1cefcd2d-e7eb-4867-9397-4dfbd18e4466}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainForm.h">
@@ -115,6 +118,21 @@
     <ClInclude Include="CameraConcatenater.h">
       <Filter>Helper</Filter>
     </ClInclude>
+    <ClInclude Include="DaeParserErrors.h">
+      <Filter>Dae Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="DaeAnimationParser.h">
+      <Filter>Dae Parser\AnimationParser</Filter>
+    </ClInclude>
+    <ClInclude Include="DaeAnimationAssetParser.h">
+      <Filter>Dae Parser\AnimationParser</Filter>
+    </ClInclude>
+    <ClInclude Include="DaeAnimationKeyParser.h">
+      <Filter>Dae Parser\AnimationParser</Filter>
+    </ClInclude>
+    <ClInclude Include="DaeSchema.h">
+      <Filter>Dae Parser</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainForm.cpp">
@@ -192,6 +210,21 @@
     </ClCompile>
     <ClCompile Include="CameraConcatenater.cpp">
       <Filter>Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="DaeParserErrors.cpp">
+      <Filter>Dae Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="DaeAnimationAssetParser.cpp">
+      <Filter>Dae Parser\AnimationParser</Filter>
+    </ClCompile>
+    <ClCompile Include="DaeAnimationParser.cpp">
+      <Filter>Dae Parser\AnimationParser</Filter>
+    </ClCompile>
+    <ClCompile Include="DaeAnimationKeyParser.cpp">
+      <Filter>Dae Parser\AnimationParser</Filter>
+    </ClCompile>
+    <ClCompile Include="DaeSchema.cpp">
+      <Filter>Dae Parser</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

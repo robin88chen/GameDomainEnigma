@@ -65,13 +65,13 @@ namespace EnigmaViewer
         void parseTexcoordSource(const pugi::xml_node& texcoord_source, int texcoord_set);
         void parseIndexArray(const pugi::xml_node& index_ary_node, int triangle_count);
 
-        void parseAnimations(const pugi::xml_node& collada_root);
-        void parseSingleAnimation(const std::shared_ptr<Enigma::Renderables::ModelAnimationAssembler>& animation_assembler, const pugi::xml_node& anim_node);
-        void parseAnimationSample(const std::shared_ptr<Enigma::Renderables::AnimationTimeSRTAssembler>& srt_assembler, const pugi::xml_node& sampler_node,
-            const pugi::xml_node& anim_node);
-        void parseTimeValue(const pugi::xml_node& time_value_source);
-        void parseAnimationMatrix(const pugi::xml_node& anim_matrix_source);
-        void analyzeSRTKeys(const std::shared_ptr<Enigma::Renderables::AnimationTimeSRTAssembler>& srt_assembler);
+        //void parseAnimations(const pugi::xml_node& collada_root);
+        //void parseSingleAnimation(const std::shared_ptr<Enigma::Renderables::ModelAnimationAssembler>& animation_assembler, const pugi::xml_node& anim_node);
+        //void parseAnimationSample(const std::shared_ptr<Enigma::Renderables::AnimationTimeSRTAssembler>& srt_assembler, const pugi::xml_node& sampler_node,
+          //  const pugi::xml_node& anim_node);
+        //void parseTimeValue(const pugi::xml_node& time_value_source);
+        //void parseAnimationMatrix(const pugi::xml_node& anim_matrix_source);
+        //void analyzeSRTKeys(const std::shared_ptr<Enigma::Renderables::AnimationTimeSRTAssembler>& srt_assembler);
 
         void splitVertexPositions(int pos_offset, int tex_set, int tex_offset, bool is_split_vertex, bool is_skin);
         void collapseVertexNormals(int pos_offset, int nor_offset, bool is_split_vertex);
@@ -122,10 +122,10 @@ namespace EnigmaViewer
         std::unordered_map<std::string, std::vector<std::string>> m_skinBoneNames;
         std::unordered_map<std::string, Enigma::Primitives::PrimitiveId> m_meshIdInMeshNode;
 
-        std::vector<float> m_timeValues;
-        std::vector<Enigma::MathLib::Matrix4> m_animMatrixs;
+        //std::vector<float> m_timeValues;
+        //std::vector<Enigma::MathLib::Matrix4> m_animMatrixs;
 
-        std::unordered_map<std::string, std::string> m_nodeIdNameMapping;
+        //std::unordered_map<std::string, std::string> m_nodeIdNameMapping;
         std::unordered_map<std::string, std::string> m_nodeJointIdMapping;
     };
 }

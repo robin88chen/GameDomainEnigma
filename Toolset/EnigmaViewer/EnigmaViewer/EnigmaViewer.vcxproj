@@ -137,8 +137,13 @@
     <ClInclude Include="AnimationInfoPanel.h" />
     <ClInclude Include="CameraConcatenater.h" />
     <ClInclude Include="CreateNewPawnDlg.h" />
+    <ClInclude Include="DaeAnimationAssetParser.h" />
+    <ClInclude Include="DaeAnimationKeyParser.h" />
+    <ClInclude Include="DaeAnimationParser.h" />
     <ClInclude Include="DaeParser.h" />
     <ClInclude Include="DaeParserConfiguration.h" />
+    <ClInclude Include="DaeParserErrors.h" />
+    <ClInclude Include="DaeSchema.h" />
     <ClInclude Include="FloorReceiverMaker.h" />
     <ClInclude Include="GeometryCreationHelper.h" />
     <ClInclude Include="ListboxInlineCombox.h" />
@@ -167,8 +172,13 @@
     <ClCompile Include="AnimationInfoPanel.cpp" />
     <ClCompile Include="CameraConcatenater.cpp" />
     <ClCompile Include="CreateNewPawnDlg.cpp" />
+    <ClCompile Include="DaeAnimationAssetParser.cpp" />
+    <ClCompile Include="DaeAnimationKeyParser.cpp" />
+    <ClCompile Include="DaeAnimationParser.cpp" />
     <ClCompile Include="DaeParser.cpp" />
     <ClCompile Include="DaeParserConfiguration.cpp" />
+    <ClCompile Include="DaeParserErrors.cpp" />
+    <ClCompile Include="DaeSchema.cpp" />
     <ClCompile Include="FloorReceiverMaker.cpp" />
     <ClCompile Include="GeometryCreationHelper.cpp" />
     <ClCompile Include="ListboxInlineCombox.cpp" />

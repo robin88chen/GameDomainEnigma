@@ -28,9 +28,5 @@
         "VisualTechniqueSelection": {
             "Type": "String",
             "Value": "Default"
-        },
-        "TextureMaps": {
-            "Type": "DataObjectArray",
-            "Value": []
         }
     }]

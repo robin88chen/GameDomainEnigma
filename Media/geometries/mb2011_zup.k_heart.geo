@@ -70,9 +70,5 @@
         "Indices": {
             "Type": "Uint32Array",
             "Value": [0, 1, 2]
-        },
-        "Name": {
-            "Type": "String",
-            "Value": "geometries/mb2011_zup.k_heart"
         }
     }]

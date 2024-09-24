@@ -142,10 +142,14 @@ void DaeParser::loadDaeFile(const std::string& filename)
     }
     DaeSchema::clearNodeIdNameMapping();
     parseScene(collada_root);
-    DaeAnimationParser anim_parser([=](auto s) { outputLog(s); }, m_animationStoreMapper.lock());
+    DaeAnimationParser animation_parser([=](auto s) { outputLog(s); }, m_animationStoreMapper.lock());
+    std::error_code er = animation_parser.parseAnimations(collada_root, m_modelName);
     //parseAnimations(collada_root);
-    persistAnimator();
-    persistModel();
+    if (!er)
+    {
+        persistAnimator(animation_parser.getAnimatorId(), animation_parser.getAnimationAssetId());
+        persistModel(animation_parser.getAnimatorId());
+    }
 }
 
 void DaeParser::outputLog(const std::string& msg)
@@ -1182,10 +1186,10 @@ void DaeParser::persistSkinMesh(const Enigma::Primitives::PrimitiveId& mesh_id, 
     }
 }
 
-void DaeParser::persistAnimator()
+void DaeParser::persistAnimator(const Enigma::Animators::AnimatorId& animator_id, const Enigma::Animators::AnimationAssetId& animation_asset_id)
 {
-    ModelAnimatorAssembler animator_assembler(m_animatorId);
-    animator_assembler.animationAsset(m_animationAssetId);
+    ModelAnimatorAssembler animator_assembler(animator_id);
+    animator_assembler.animationAsset(animation_asset_id);
     animator_assembler.controlledPrimitive(m_modelId);
     for (const auto& [skin_name, bone_names] : m_skinBoneNames)
     {
@@ -1196,16 +1200,16 @@ void DaeParser::persistAnimator()
         operator_assembler->bones(bone_names);
         animator_assembler.addSkinOperator(operator_assembler);
     }
-    animator_assembler.asNative(m_animatorId.name() + ".animator@APK_PATH");
+    animator_assembler.asNative(animator_id.name() + ".animator@APK_PATH");
     if (m_animatorStoreMapper.lock())
     {
-        m_animatorStoreMapper.lock()->putAnimator(m_animatorId, animator_assembler.assemble());
+        m_animatorStoreMapper.lock()->putAnimator(animator_id, animator_assembler.assemble());
     }
 }
 
-void DaeParser::persistModel()
+void DaeParser::persistModel(const Enigma::Animators::AnimatorId& animator_id)
 {
-    m_modelAssembler->modelAnimatorId(m_animatorId);
+    m_modelAssembler->modelAnimatorId(animator_id);
     m_modelAssembler->asNative(m_modelId.name() + ".model@APK_PATH");
     if (m_primitiveStoreMapper.lock())
     {

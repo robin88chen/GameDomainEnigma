@@ -85,8 +85,8 @@ namespace EnigmaViewer
         void persistSingleGeometry(const Enigma::Geometries::GeometryId& geo_id, bool is_skin);
         void persistMesh(const Enigma::Primitives::PrimitiveId& mesh_id, const Enigma::Geometries::GeometryId& geo_id, const Enigma::Engine::EffectMaterialId& effect_id, const std::optional<Enigma::Engine::TextureId>& texture_id, const std::optional<std::string>& tex_semantic);
         void persistSkinMesh(const Enigma::Primitives::PrimitiveId& mesh_id, const Enigma::Geometries::GeometryId& geo_id, const Enigma::Engine::EffectMaterialId& effect_id, const std::optional<Enigma::Engine::TextureId>& texture_id, const std::optional<std::string>& tex_semantic);
-        void persistAnimator();
-        void persistModel();
+        void persistAnimator(const Enigma::Animators::AnimatorId& animator_id, const Enigma::Animators::AnimationAssetId& animation_asset_id);
+        void persistModel(const Enigma::Animators::AnimatorId& animator_id);
 
         std::optional<Enigma::Primitives::PrimitiveId> meshIdInMeshNode(const std::string& name);
 
@@ -100,8 +100,8 @@ namespace EnigmaViewer
         std::string m_filename;
         Enigma::Primitives::PrimitiveId m_modelId;
         std::shared_ptr<Enigma::Renderables::ModelPrimitiveAssembler> m_modelAssembler;
-        Enigma::Animators::AnimationAssetId m_animationAssetId;
-        Enigma::Animators::AnimatorId m_animatorId;
+        //Enigma::Animators::AnimationAssetId m_animationAssetId;
+        //Enigma::Animators::AnimatorId m_animatorId;
         std::string m_modelName;
 
         std::vector<Enigma::MathLib::Vector3> m_positions;

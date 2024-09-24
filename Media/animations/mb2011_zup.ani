@@ -1,14 +1,4 @@
 [{
-        "Rtti": {
-            "Type": "FactoryDesc",
-            "Value": {
-                "InstanceType": 5,
-                "ResourceName": "animations/mb2011_zup",
-                "ResourceFilename": "animations/mb2011_zup.ani@APK_PATH",
-                "RttiName": "En.Renderables.ModelAnimationAsset",
-                "PrefabFilename": ""
-            }
-        },
         "Id": {
             "Type": "String",
             "Value": "animations/mb2011_zup"
@@ -371,5 +361,15 @@
                         "Value": [0.04166661947965622, 0.17457009851932526, -0.00770503981038928, 2.98022992950564e-8, 1.1666669845581055, 0.17457009851932526, -0.00770503981038928, 2.98022992950564e-8, 1.2916669845581055, 0.17457009851932526, -0.007705050986260176, -8.940700269022273e-8, 1.4583330154418945, 0.17457009851932526, -0.007705032825469971, 5.96045985901128e-8, 2.6666669845581055, 0.17457009851932526, -0.007705022115260363, 2.98022992950564e-8, 3.2083330154418945, 0.17457009851932526, -0.007705070078372955, -8.940700269022273e-8, 3.25, 0.17457009851932526, -0.0077050551772117615, 2.98022992950564e-8, 10.416669845581055, 0.17457009851932526, -0.007705084979534149, 5.96045985901128e-8]
                     }
                 }]
+        },
+        "Rtti": {
+            "Type": "FactoryDesc",
+            "Value": {
+                "InstanceType": 5,
+                "ResourceName": "animations/mb2011_zup",
+                "ResourceFilename": "animations/mb2011_zup.ani@APK_PATH",
+                "RttiName": "En.Renderables.ModelAnimationAsset",
+                "PrefabFilename": ""
+            }
         }
     }]

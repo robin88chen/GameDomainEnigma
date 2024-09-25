@@ -316,6 +316,25 @@ void DaeParser::parseSceneNodeForSkin(const std::shared_ptr<MeshNodeTreeAssemble
     }
     clearParsedData();
     parseSkinMesh(mesh_node_assembler, skin_node);*/
+    std::string texmap_filename = "";
+    std::string material_id = geometry_parser.getMeshMaterialId();
+    if (material_id.length() > 0)
+    {
+        texmap_filename = findMaterialTexImageFilename(scene_node_xml.root(), material_id);
+    }
+    std::string geo_name = geometry_parser.getGeometryName();
+    Enigma::Geometries::GeometryId geo_id = geometry_parser.getGeometryId();
+    PrimitiveId mesh_id("renderables/" + geo_name, SkinMeshPrimitive::TYPE_RTTI);
+    m_meshIdInMeshNode.insert_or_assign(mesh_node_assembler->name(), mesh_id);
+    if (texmap_filename.empty())
+    {
+        persistSkinMesh(mesh_id, geo_id, EffectMaterialId(m_config.defaultColorMeshEffectName()), std::nullopt, std::nullopt);
+    }
+    else
+    {
+        persistSkinMesh(mesh_id, geo_id, EffectMaterialId(m_config.defaultTexturedSkinMeshEffectName()), TextureId(texmap_filename), DIFFUSE_MAP_SEMANTIC);
+    }
+    mesh_node_assembler->meshPrimitiveId(mesh_id);
     if (parent_node_name)
     {
         node_tree_assembler->addNodeWithParentName(mesh_node_name, mesh_node_assembler, parent_node_name.value());
@@ -328,7 +347,32 @@ void DaeParser::parseSceneNodeForSkin(const std::shared_ptr<MeshNodeTreeAssemble
 
 void DaeParser::parseGeometryInstanceNode(const std::shared_ptr<MeshNodeAssembler>& mesh_node_assembler, const pugi::xml_node& geometry_inst)
 {
-    std::string geometry_url = &(geometry_inst.attribute(TOKEN_URL).as_string()[1]);
+    DaeGeometryParser geometry_parser([=](auto s) { outputLog(s); }, m_geometryStoreMapper.lock());
+    std::error_code er = geometry_parser.parseGeometryInstanceNode(geometry_inst, m_modelName);
+
+    std::string texmap_filename = "";
+    std::string material_id = geometry_parser.getMeshMaterialId();
+    if (material_id.length() > 0)
+    {
+        texmap_filename = findMaterialTexImageFilename(geometry_inst.root(), material_id);
+    }
+    std::string geo_name = geometry_parser.getGeometryName();
+    Enigma::Geometries::GeometryId geo_id = geometry_parser.getGeometryId();
+
+    PrimitiveId mesh_id("renderables/" + geo_name, MeshPrimitive::TYPE_RTTI);
+    m_meshIdInMeshNode.insert_or_assign(mesh_node_assembler->name(), mesh_id);
+    if (texmap_filename.empty())
+    {
+        persistMesh(mesh_id, geo_id, EffectMaterialId(m_config.defaultColorMeshEffectName()), std::nullopt, std::nullopt);
+    }
+    else
+    {
+        persistMesh(mesh_id, geo_id, EffectMaterialId(m_config.defaultTexturedMeshEffectName()), TextureId(texmap_filename), DIFFUSE_MAP_SEMANTIC);
+    }
+    mesh_node_assembler->meshPrimitiveId(mesh_id);
+
+
+    /*std::string geometry_url = &(geometry_inst.attribute(TOKEN_URL).as_string()[1]);
     outputLog("   Parse geometry instance " + geometry_url + "...");
     pugi::xml_node geometry_node = geometry_inst.root().find_node([=](pugi::xml_node node) -> bool
         {
@@ -342,7 +386,7 @@ void DaeParser::parseGeometryInstanceNode(const std::shared_ptr<MeshNodeAssemble
         return;
     }
     clearParsedData();
-    parseSingleGeometry(mesh_node_assembler, geometry_node, false);
+    parseSingleGeometry(mesh_node_assembler, geometry_node, false);*/
 }
 
 void DaeParser::parseSingleGeometry(const std::shared_ptr<MeshNodeAssembler>& mesh_node_assembler, const pugi::xml_node& geometry_xml_node, bool is_skin)

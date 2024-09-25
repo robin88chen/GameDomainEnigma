@@ -1,6 +1,7 @@
 ﻿#include "DaeParser.h"
 #include "DaeSchema.h"
 #include "DaeAnimationParser.h"
+#include "DaeGeometryParser.h"
 #include "FileSystem/FileSystem.h"
 #include "FileSystem/IFile.h"
 #include "ViewerCommands.h"
@@ -141,6 +142,7 @@ void DaeParser::loadDaeFile(const std::string& filename)
         outputLog(filename + " not a COLLADA file!!");
     }
     DaeSchema::clearNodeIdNameMapping();
+    DaeSchema::clearNodeJointIdMapping();
     parseScene(collada_root);
     DaeAnimationParser animation_parser([=](auto s) { outputLog(s); }, m_animationStoreMapper.lock());
     std::error_code er = animation_parser.parseAnimations(collada_root, m_modelName);
@@ -230,7 +232,7 @@ void DaeParser::parseSceneNode(const std::shared_ptr<MeshNodeTreeAssembler>& nod
     std::string mesh_node_name = scene_node_xml.attribute(TOKEN_NAME).as_string();
     DaeSchema::addNodeIdNameMapping(node_xml_id, mesh_node_name);
     std::string node_joint_name = scene_node_xml.attribute("sid").as_string();
-    m_nodeJointIdMapping.emplace(node_joint_name, mesh_node_name);
+    DaeSchema::addNodeJointIdMapping(node_joint_name, mesh_node_name);
     outputLog("   scene node " + node_xml_id + " with mesh name " + mesh_node_name + ", joint name " + node_joint_name);
 
     std::shared_ptr<MeshNodeAssembler> mesh_node_assembler = std::make_shared<MeshNodeAssembler>();
@@ -273,7 +275,20 @@ void DaeParser::parseSceneNode(const std::shared_ptr<MeshNodeTreeAssembler>& nod
 
 void DaeParser::parseSceneNodeForSkin(const std::shared_ptr<MeshNodeTreeAssembler>& node_tree_assembler, const pugi::xml_node& scene_node_xml, std::optional<std::string> parent_node_name)
 {
-    std::string node_name = std::string(scene_node_xml.attribute(TOKEN_ID).as_string());
+    DaeGeometryParser geometry_parser([=](auto s) { outputLog(s); }, m_geometryStoreMapper.lock());
+    std::error_code er = geometry_parser.parseSceneNodeForSkin(scene_node_xml, m_modelName);
+    if (er)
+    {
+        outputLog("parse skin mesh node error!!");
+        return;
+    }
+    std::string mesh_node_name = geometry_parser.getSkinMeshNodeName();
+    m_skinBoneNames[mesh_node_name] = geometry_parser.getSkinBoneNames();
+    std::shared_ptr<MeshNodeAssembler> mesh_node_assembler = std::make_shared<MeshNodeAssembler>();
+    mesh_node_assembler->name(mesh_node_name);
+    mesh_node_assembler->localT_PosTransform(geometry_parser.getBindShapeMatrix());
+
+    /*std::string node_name = std::string(scene_node_xml.attribute(TOKEN_ID).as_string());
     outputLog("   Parse skin mesh node " + node_name + "...");
     pugi::xml_node inst_controller = scene_node_xml.child(TOKEN_INSTANCE_CONTROLLER);
     if (!inst_controller)
@@ -300,7 +315,7 @@ void DaeParser::parseSceneNodeForSkin(const std::shared_ptr<MeshNodeTreeAssemble
         return;
     }
     clearParsedData();
-    parseSkinMesh(mesh_node_assembler, skin_node);
+    parseSkinMesh(mesh_node_assembler, skin_node);*/
     if (parent_node_name)
     {
         node_tree_assembler->addNodeWithParentName(mesh_node_name, mesh_node_assembler, parent_node_name.value());
@@ -332,7 +347,9 @@ void DaeParser::parseGeometryInstanceNode(const std::shared_ptr<MeshNodeAssemble
 
 void DaeParser::parseSingleGeometry(const std::shared_ptr<MeshNodeAssembler>& mesh_node_assembler, const pugi::xml_node& geometry_xml_node, bool is_skin)
 {
-    pugi::xml_attribute attr_name = geometry_xml_node.attribute(TOKEN_NAME);
+    DaeGeometryParser geometry_parser([=](auto s) { outputLog(s); }, m_geometryStoreMapper.lock());
+    std::error_code er = geometry_parser.parseGeometryInstanceNode(geometry_xml_node, m_modelName);
+    /*pugi::xml_attribute attr_name = geometry_xml_node.attribute(TOKEN_NAME);
     if (!attr_name)
     {
         outputLog("geometry do not have name!!");
@@ -361,7 +378,15 @@ void DaeParser::parseSingleGeometry(const std::shared_ptr<MeshNodeAssembler>& me
     collapseIndexArray(offsets.pos_offset, is_split_vertex);
 
     GeometryId geo_id("geometries/" + geo_name);
-    persistSingleGeometry(geo_id, is_skin);
+    persistSingleGeometry(geo_id, is_skin);*/
+    std::string texmap_filename = "";
+    std::string material_id = geometry_parser.getMeshMaterialId();
+    if (material_id.length() > 0)
+    {
+        texmap_filename = findMaterialTexImageFilename(geometry_xml_node.root(), material_id);
+    }
+    std::string geo_name = geometry_parser.getGeometryName();
+    Enigma::Geometries::GeometryId geo_id = geometry_parser.getGeometryId();
     if (is_skin)
     {
         PrimitiveId mesh_id("renderables/" + geo_name, SkinMeshPrimitive::TYPE_RTTI);
@@ -392,7 +417,7 @@ void DaeParser::parseSingleGeometry(const std::shared_ptr<MeshNodeAssembler>& me
     }
 }
 
-void DaeParser::parseSkinMesh(const std::shared_ptr<MeshNodeAssembler>& mesh_node_assembler, const pugi::xml_node& skin_node_xml)
+/*void DaeParser::parseSkinMesh(const std::shared_ptr<MeshNodeAssembler>& mesh_node_assembler, const pugi::xml_node& skin_node_xml)
 {
     pugi::xml_node matrix_xml_node = skin_node_xml.child(TOKEN_BIND_SHAPE_MATRIX);
     if (matrix_xml_node)
@@ -421,9 +446,9 @@ void DaeParser::parseSkinMesh(const std::shared_ptr<MeshNodeAssembler>& mesh_nod
         return;
     }
     parseSingleGeometry(mesh_node_assembler, geometry_node, true);
-}
+}*/
 
-std::tuple<std::string, DaeParser::GeometryValueOffsets> DaeParser::parseGeometryMesh(const pugi::xml_node& mesh_node)
+/*std::tuple<std::string, DaeParser::GeometryValueOffsets> DaeParser::parseGeometryMesh(const pugi::xml_node& mesh_node)
 {
     std::string material_id = "";
     GeometryValueOffsets offsets;
@@ -593,9 +618,9 @@ void DaeParser::parseIndexArray(const pugi::xml_node& index_ary_node, int triang
     {
         ss >> m_primitiveIndices[i];
     }
-}
+}*/
 
-void DaeParser::parseVertexWeights(const std::shared_ptr<MeshNodeAssembler>& mesh_node_assembler, const pugi::xml_node& skin_host_xml, const pugi::xml_node& vertex_weights_xml)
+/*void DaeParser::parseVertexWeights(const std::shared_ptr<MeshNodeAssembler>& mesh_node_assembler, const pugi::xml_node& skin_host_xml, const pugi::xml_node& vertex_weights_xml)
 {
     outputLog("  Parse Vertex Weights for " + mesh_node_assembler->name());
     pugi::xml_node input_xml = vertex_weights_xml.child(TOKEN_INPUT);
@@ -667,9 +692,9 @@ void DaeParser::parseVertexWeights(const std::shared_ptr<MeshNodeAssembler>& mes
         m_weightPaletteIndices[i] = (unsigned int)(p[3] << 24) + (unsigned int)(p[2] << 16)
             + (unsigned int)(p[1] << 8) + (unsigned int)(p[0]);
     }
-}
+}*/
 
-void DaeParser::parseJointNameSource(const std::shared_ptr<MeshNodeAssembler>& mesh_node_assembler, const pugi::xml_node& bone_names_xml)
+/*void DaeParser::parseJointNameSource(const std::shared_ptr<MeshNodeAssembler>& mesh_node_assembler, const pugi::xml_node& bone_names_xml)
 {
     pugi::xml_node name_array_xml = bone_names_xml.child(TOKEN_NAME_ARRAY);
     if (!name_array_xml)
@@ -688,7 +713,7 @@ void DaeParser::parseJointNameSource(const std::shared_ptr<MeshNodeAssembler>& m
     m_skinBoneNames[mesh_node_assembler->name()] = bone_names;
     for (std::string& joint : m_skinBoneNames[mesh_node_assembler->name()])
     {
-        joint = m_nodeJointIdMapping[joint];
+        joint = DaeSchema::getMeshNameFromJointId(joint);
     }
 }
 
@@ -707,7 +732,7 @@ void DaeParser::parseWeightsArraySource(const pugi::xml_node& weights_array_xml)
     {
         ss >> m_weightSource[i];
     }
-}
+}*/
 
 /*void DaeParser::parseAnimations(const pugi::xml_node& collada_root)
 {
@@ -1009,7 +1034,7 @@ void DaeParser::analyzeSRTKeys(const std::shared_ptr<AnimationTimeSRTAssembler>&
     }
 }*/
 
-void DaeParser::splitVertexPositions(int pos_offset, int tex_set, int tex_offset, bool is_split_vertex, bool is_skin)
+/*void DaeParser::splitVertexPositions(int pos_offset, int tex_set, int tex_offset, bool is_split_vertex, bool is_skin)
 {
     if (is_split_vertex)
     {
@@ -1102,7 +1127,7 @@ void DaeParser::collapseIndexArray(int pos_offset, bool is_split_vertex)
             m_collapsedIndices[p * 3 + 1] = m_collapsedIndices[p * 3 + 2];
             m_collapsedIndices[p * 3 + 2] = t;
         }*/
-        return;
+        /*return;
     }
     int prim_set_count = static_cast<int>(m_primitiveIndices.size()) / 3;
     m_collapsedIndices.resize(prim_set_count);
@@ -1118,33 +1143,33 @@ void DaeParser::collapseIndexArray(int pos_offset, bool is_split_vertex)
         m_collapsedIndices[p * 3 + 1] = m_collapsedIndices[p * 3 + 2];
         m_collapsedIndices[p * 3 + 2] = t;
     }*/
-}
+    /*}*/
 
-void DaeParser::persistSingleGeometry(const GeometryId& geo_id, bool is_skin)
-{
-    TriangleListAssembler geo_assembler(geo_id);
-    geo_assembler.position3s(m_splitedPositions);
-    geo_assembler.normals(m_collapsedNormals);
-    geo_assembler.indices(m_collapsedIndices);
-    geo_assembler.vertexCapacity(static_cast<unsigned>(m_splitedPositions.size()));
-    geo_assembler.indexCapacity(static_cast<unsigned>(m_collapsedIndices.size()));
-    geo_assembler.vertexUsedCount(static_cast<unsigned>(m_splitedPositions.size()));
-    geo_assembler.indexUsedCount(static_cast<unsigned>(m_collapsedIndices.size()));
-    geo_assembler.addSegment({ 0, static_cast<unsigned>(m_splitedPositions.size()), 0, static_cast<unsigned>(m_collapsedIndices.size()) });
-    geo_assembler.topology(Enigma::Graphics::PrimitiveTopology::Topology_TriangleList);
-    if (is_skin)
+    /*void DaeParser::persistSingleGeometry(const GeometryId& geo_id, bool is_skin)
     {
-        geo_assembler.paletteIndices(m_splitedWeightIndices);
-        geo_assembler.weights(m_splitedVertexWeights, 4);
-    }
-    geo_assembler.addTexture2DCoords(m_splitedTexCoord[0]);
-    geo_assembler.computeAlignedBox();
-    geo_assembler.asAsset(geo_id.name(), geo_id.name() + ".geo", "APK_PATH");
-    if (m_geometryStoreMapper.lock())
-    {
-        m_geometryStoreMapper.lock()->putGeometry(geo_id, geo_assembler.assemble());
-    }
-}
+        TriangleListAssembler geo_assembler(geo_id);
+        geo_assembler.position3s(m_splitedPositions);
+        geo_assembler.normals(m_collapsedNormals);
+        geo_assembler.indices(m_collapsedIndices);
+        geo_assembler.vertexCapacity(static_cast<unsigned>(m_splitedPositions.size()));
+        geo_assembler.indexCapacity(static_cast<unsigned>(m_collapsedIndices.size()));
+        geo_assembler.vertexUsedCount(static_cast<unsigned>(m_splitedPositions.size()));
+        geo_assembler.indexUsedCount(static_cast<unsigned>(m_collapsedIndices.size()));
+        geo_assembler.addSegment({ 0, static_cast<unsigned>(m_splitedPositions.size()), 0, static_cast<unsigned>(m_collapsedIndices.size()) });
+        geo_assembler.topology(Enigma::Graphics::PrimitiveTopology::Topology_TriangleList);
+        if (is_skin)
+        {
+            geo_assembler.paletteIndices(m_splitedWeightIndices);
+            geo_assembler.weights(m_splitedVertexWeights, 4);
+        }
+        geo_assembler.addTexture2DCoords(m_splitedTexCoord[0]);
+        geo_assembler.computeAlignedBox();
+        geo_assembler.asAsset(geo_id.name(), geo_id.name() + ".geo", "APK_PATH");
+        if (m_geometryStoreMapper.lock())
+        {
+            m_geometryStoreMapper.lock()->putGeometry(geo_id, geo_assembler.assemble());
+        }
+    }*/
 
 void DaeParser::persistMesh(const Enigma::Primitives::PrimitiveId& mesh_id, const Enigma::Geometries::GeometryId& geo_id, const EffectMaterialId& effect_id, const std::optional<TextureId>& texture_id, const std::optional<std::string>& tex_semantic)
 {
@@ -1333,7 +1358,7 @@ std::optional<Enigma::Primitives::PrimitiveId> DaeParser::meshIdInMeshNode(const
 
 void DaeParser::clearParsedData()
 {
-    m_positions.clear();
+    /*m_positions.clear();
     m_normals.clear();
     m_texcoords[0].clear();
     m_texcoords[1].clear();
@@ -1352,7 +1377,7 @@ void DaeParser::clearParsedData()
     m_splitedWeightIndices.clear();
     m_vertexWeights.clear();
     m_splitedVertexWeights.clear();
-    m_weightSource.clear();
+    m_weightSource.clear();*/
     m_meshIdInMeshNode.clear();
     //{ //m_skinBoneNames.clear(); //}
     /*m_timeValues.clear();

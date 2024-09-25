@@ -25,6 +25,21 @@ std::string ParserErrorCategory::message(int err) const
     case ParserError::animMatrixCountMismatch: return "Animation matrix count mismatch";
     case ParserError::noAnimationTarget: return "No animation target";
     case ParserError::noAnimationTargetMesh: return "No animation target mesh";
+    case ParserError::noGeometryNode: return "No geometry node";
+    case ParserError::noMeshVertices: return "No mesh vertices";
+    case ParserError::noTriangles: return "No triangles";
+    case ParserError::noPositionArray: return "No position array";
+    case ParserError::noNormalArray: return "No normal array";
+    case ParserError::noTexcoordArray: return "No texcoord array";
+    case ParserError::notSkinGeometry: return "Not a skin geometry";
+    case ParserError::noController: return "No controller";
+    case ParserError::noControlledSkin: return "No controlled skin";
+    case ParserError::noVertexWeights: return "No vertex weights";
+    case ParserError::noWeightCount: return "No weight count";
+    case ParserError::tooManyWeights: return "Too many weights";
+    case ParserError::noInfluencePair: return "No influence pair";
+    case ParserError::noBoneNameArray: return "No bone name array";
+    case ParserError::noWeightsArray: return "No weights array";
     }
     return "Unknown";
 }

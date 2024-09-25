@@ -32,6 +32,22 @@ namespace EnigmaViewer
         animMatrixCountMismatch,
         noAnimationTarget,
         noAnimationTargetMesh,
+
+        noGeometryNode = 201,
+        noMeshVertices,
+        noTriangles,
+        noPositionArray,
+        noNormalArray,
+        noTexcoordArray,
+        notSkinGeometry,
+        noController,
+        noControlledSkin,
+        noVertexWeights,
+        noWeightCount,
+        tooManyWeights,
+        noInfluencePair,
+        noBoneNameArray,
+        noWeightsArray,
     };
     class ParserErrorCategory : public std::error_category
     {

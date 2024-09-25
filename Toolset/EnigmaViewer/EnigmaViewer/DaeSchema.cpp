@@ -5,6 +5,7 @@ using namespace EnigmaViewer;
 #define TOKEN_ID "id"
 
 std::unordered_map<std::string, std::string> DaeSchema::m_nodeIdNameMapping;
+std::unordered_map<std::string, std::string> DaeSchema::m_nodeJointIdMapping;
 
 pugi::xml_node DaeSchema::findChildNodeWithId(const pugi::xml_node& node_root, const std::string& token_name, const std::string& id)
 {
@@ -29,4 +30,19 @@ void DaeSchema::addNodeIdNameMapping(const std::string& node_id, const std::stri
 const std::string& DaeSchema::getNodeNameFromId(const std::string& node_id)
 {
     return m_nodeIdNameMapping[node_id];
+}
+
+void DaeSchema::clearNodeJointIdMapping()
+{
+    m_nodeJointIdMapping.clear();
+}
+
+void DaeSchema::addNodeJointIdMapping(const std::string& node_joint_id, const std::string& mesh_name)
+{
+    m_nodeJointIdMapping[node_joint_id] = mesh_name;
+}
+
+const std::string& DaeSchema::getMeshNameFromJointId(const std::string& joint_id)
+{
+    return m_nodeJointIdMapping[joint_id];
 }

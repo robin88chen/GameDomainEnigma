@@ -31,6 +31,9 @@
     <Filter Include="Dae Parser\AnimationParser">
       <UniqueIdentifier>{1cefcd2d-e7eb-4867-9397-4dfbd18e4466}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Dae Parser\GeometryParser">
+      <UniqueIdentifier>{921d28e3-153e-4e15-8839-13b5ed3d6717}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainForm.h">
@@ -133,6 +136,15 @@
     <ClInclude Include="DaeSchema.h">
       <Filter>Dae Parser</Filter>
     </ClInclude>
+    <ClInclude Include="DaeMeshVerticesParser.h">
+      <Filter>Dae Parser\GeometryParser</Filter>
+    </ClInclude>
+    <ClInclude Include="DaeGeometryParser.h">
+      <Filter>Dae Parser\GeometryParser</Filter>
+    </ClInclude>
+    <ClInclude Include="DaeVertexWeightsParser.h">
+      <Filter>Dae Parser\GeometryParser</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainForm.cpp">
@@ -225,6 +237,15 @@
     </ClCompile>
     <ClCompile Include="DaeSchema.cpp">
       <Filter>Dae Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="DaeGeometryParser.cpp">
+      <Filter>Dae Parser\GeometryParser</Filter>
+    </ClCompile>
+    <ClCompile Include="DaeMeshVerticesParser.cpp">
+      <Filter>Dae Parser\GeometryParser</Filter>
+    </ClCompile>
+    <ClCompile Include="DaeVertexWeightsParser.cpp">
+      <Filter>Dae Parser\GeometryParser</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -32,12 +32,9 @@
 #include "Platforms/PlatformLayerUtilities.h"
 #include "Primitives/PrimitiveRepositoryInstallingPolicy.h"
 #include "Renderables/ModelPrimitive.h"
-#include "Renderables/ModelPrimitiveAnimator.h"
 #include "Renderables/RenderablesInstallingPolicy.h"
 #include "Renderer/RendererInstallingPolicy.h"
 #include "SceneGraph/NodeAssembler.h"
-#include "SceneGraph/CameraAssembler.h"
-#include "SceneGraph/SceneGraphCommands.h"
 #include "SceneGraph/SceneGraphInstallingPolicy.h"
 #include "ShadowMap/ShadowMapInstallingPolicies.h"
 #include "ShadowMap/ShadowMapServiceConfiguration.h"
@@ -277,7 +274,7 @@ void ViewerAppDelegate::onTimerElapsed()
 
 void ViewerAppDelegate::importDaeFile(const std::string& filename)
 {
-    DaeParser parser(m_geometryDataFileStoreMapper, m_animationAssetFileStoreMapper, m_animatorFileStoreMapper, m_primitiveFileStoreMapper);
+    DaeParser parser;
     parser.loadDaeFile(filename);
     refreshModelList();
 }

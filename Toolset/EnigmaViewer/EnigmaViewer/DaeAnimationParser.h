@@ -15,21 +15,23 @@
 #include <system_error>
 #include <string>
 #include <functional>
+#include <Primitives/Primitive.h>
 
 namespace EnigmaViewer
 {
     class DaeAnimationParser
     {
     public:
-        DaeAnimationParser(const std::function<void(const std::string&)>& output_pipe, const std::shared_ptr<Enigma::Animators::AnimationAssetStoreMapper>& animation_store_mapper);
+        DaeAnimationParser(const std::function<void(const std::string&)>& output_pipe);
 
         [[nodiscard]] std::error_code parseAnimations(const pugi::xml_node& collada_root, const std::string& model_name);
+        void persistAnimator(const Enigma::Primitives::PrimitiveId& controlled_primitive);
+
         [[nodiscard]] const Enigma::Animators::AnimationAssetId& getAnimationAssetId() const { return m_animationAssetId; }
         [[nodiscard]] const Enigma::Animators::AnimatorId& getAnimatorId() const { return m_animatorId; }
 
     protected:
         std::function<void(const std::string&)> m_outputPipe;
-        std::weak_ptr<Enigma::Animators::AnimationAssetStoreMapper> m_animationStoreMapper;
 
         Enigma::Animators::AnimationAssetId m_animationAssetId;
         Enigma::Animators::AnimatorId m_animatorId;

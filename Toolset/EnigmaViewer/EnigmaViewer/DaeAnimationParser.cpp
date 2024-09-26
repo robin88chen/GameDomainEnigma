@@ -1,10 +1,14 @@
 ﻿#include "DaeAnimationParser.h"
 #include "DaeParserErrors.h"
+#include "DaeSchema.h"
 #include "DaeAnimationAssetParser.h"
 #include "Animators/AnimationAssetId.h"
 #include "Animators/AnimatorId.h"
 #include "Renderables/ModelPrimitiveAnimator.h"
 #include "Renderables/ModelAnimationAssembler.h"
+#include "Renderables/SkinOperatorAssembler.h"
+#include "Renderables/ModelAnimatorAssembler.h"
+#include "ViewerCommands.h"
 #include <system_error>
 #include <cassert>
 
@@ -13,11 +17,10 @@ using namespace EnigmaViewer;
 #define TOKEN_LIB_ANIMATIONS "library_animations"
 #define TOKEN_ANIMATION "animation"
 
-DaeAnimationParser::DaeAnimationParser(const std::function<void(const std::string&)>& output_pipe, const std::shared_ptr<Enigma::Animators::AnimationAssetStoreMapper>& animation_store_mapper)
+DaeAnimationParser::DaeAnimationParser(const std::function<void(const std::string&)>& output_pipe)
 {
     assert(output_pipe);
     m_outputPipe = output_pipe;
-    m_animationStoreMapper = animation_store_mapper;
 }
 
 std::error_code DaeAnimationParser::parseAnimations(const pugi::xml_node& collada_root, const std::string& model_name)
@@ -37,10 +40,25 @@ std::error_code DaeAnimationParser::parseAnimations(const pugi::xml_node& collad
     std::error_code error = anim_asset_parser.parseNamedAnimationAsset(anim_name_node);
     if (!error)
     {
-        if (m_animationStoreMapper.lock())
-        {
-            m_animationStoreMapper.lock()->putAnimationAsset(m_animationAssetId, anim_asset_parser.getAnimationAssembler()->assemble());
-        }
+        std::make_shared<PersistAnimationAssetDto>(m_animationAssetId, anim_asset_parser.getAnimationAssembler()->assemble())->execute();
     }
     return error;
+}
+
+void DaeAnimationParser::persistAnimator(const Enigma::Primitives::PrimitiveId& controlled_primitive)
+{
+    Enigma::Renderables::ModelAnimatorAssembler animator_assembler(m_animatorId);
+    animator_assembler.animationAsset(m_animationAssetId);
+    animator_assembler.controlledPrimitive(controlled_primitive);
+    for (const auto& [skin_name, bone_names] : DaeSchema::getSkinBoneNames())
+    {
+        auto skin_prim = DaeSchema::getMeshIdFromMeshNodeName(skin_name);
+        if (!skin_prim) continue;
+        std::shared_ptr<Enigma::Renderables::SkinOperatorAssembler> operator_assembler = std::make_shared<Enigma::Renderables::SkinOperatorAssembler>();
+        operator_assembler->operatedSkin(skin_prim.value());
+        operator_assembler->bones(bone_names);
+        animator_assembler.addSkinOperator(operator_assembler);
+    }
+    animator_assembler.asNative(m_animatorId.name() + ".animator@APK_PATH");
+    std::make_shared<PersistAnimatorDto>(m_animatorId, animator_assembler.assemble())->execute();
 }

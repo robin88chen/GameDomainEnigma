@@ -14,6 +14,7 @@
 #include "GameCommon/AnimationClipMap.h"
 #include "GameEngine/TextureId.h"
 #include "Geometries/GeometryId.h"
+#include "Animators/AnimationAssetId.h"
 #include "GameEngine/GenericDto.h"
 #include <string>
 
@@ -197,6 +198,30 @@ namespace EnigmaViewer
 
     private:
         Enigma::Primitives::PrimitiveId m_id;
+        Enigma::Engine::GenericDto m_dto;
+    };
+    class PersistAnimationAssetDto : public Enigma::Frameworks::ICommand
+    {
+    public:
+        PersistAnimationAssetDto(const Enigma::Animators::AnimationAssetId& id, const Enigma::Engine::GenericDto& dto) : m_id(id), m_dto(dto) {}
+
+        const Enigma::Animators::AnimationAssetId& id() const { return m_id; }
+        const Enigma::Engine::GenericDto& dto() const { return m_dto; }
+
+    private:
+        Enigma::Animators::AnimationAssetId m_id;
+        Enigma::Engine::GenericDto m_dto;
+    };
+    class PersistAnimatorDto : public Enigma::Frameworks::ICommand
+    {
+    public:
+        PersistAnimatorDto(const Enigma::Animators::AnimatorId& id, const Enigma::Engine::GenericDto& dto) : m_id(id), m_dto(dto) {}
+
+        const Enigma::Animators::AnimatorId& id() const { return m_id; }
+        const Enigma::Engine::GenericDto& dto() const { return m_dto; }
+
+    private:
+        Enigma::Animators::AnimatorId m_id;
         Enigma::Engine::GenericDto m_dto;
     };
 }

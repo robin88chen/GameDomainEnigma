@@ -73,6 +73,8 @@ namespace EnigmaViewer
         void removeAnimatedPawn(const Enigma::Frameworks::ICommandPtr& c);
         void persistGeometryDto(const Enigma::Frameworks::ICommandPtr& c);
         void persistPrimitiveDto(const Enigma::Frameworks::ICommandPtr& c);
+        void persistAnimationAssetDto(const Enigma::Frameworks::ICommandPtr& c);
+        void persistAnimatorDto(const Enigma::Frameworks::ICommandPtr& c);
 
         void refreshModelList();
         void loadModelPrimitive(const std::string& model_name);
@@ -113,6 +115,8 @@ namespace EnigmaViewer
         Enigma::Frameworks::CommandSubscriberPtr m_removeAnimatedPawn;
         Enigma::Frameworks::CommandSubscriberPtr m_persistGeometryDto;
         Enigma::Frameworks::CommandSubscriberPtr m_persistPrimitiveDto;
+        Enigma::Frameworks::CommandSubscriberPtr m_persistAnimationAssetDto;
+        Enigma::Frameworks::CommandSubscriberPtr m_persistAnimatorDto;
 
         Enigma::SceneGraph::SpatialId m_primaryCameraId;
         Enigma::SceneGraph::SpatialId m_sceneRootId;

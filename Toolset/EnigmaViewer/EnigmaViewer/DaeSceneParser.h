@@ -23,6 +23,8 @@ namespace EnigmaViewer
 
         std::error_code parseScene(const pugi::xml_node& collada_root, const std::string& filename);
 
+        void persistModel(const Enigma::Animators::AnimatorId& animator_id);
+
         [[nodiscard]] const std::string& getModelName() const { return m_modelName; }
         [[nodiscard]] const Enigma::Primitives::PrimitiveId& getModelId() const { return m_modelId; }
         [[nodiscard]] const std::shared_ptr<Enigma::Renderables::ModelPrimitiveAssembler>& getModelAssembler() const { return m_modelAssembler; }

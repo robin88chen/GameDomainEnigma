@@ -154,13 +154,13 @@ void DaeParser::loadDaeFile(const std::string& filename)
     m_modelId = scene_parser.getModelId();
     m_modelAssembler = scene_parser.getModelAssembler();
     //parseScene(collada_root);
-    DaeAnimationParser animation_parser([=](auto s) { outputLog(s); }, m_animationStoreMapper.lock());
+    DaeAnimationParser animation_parser([=](auto s) { outputLog(s); });
     er = animation_parser.parseAnimations(collada_root, m_modelName);
     //parseAnimations(collada_root);
     if (!er)
     {
-        persistAnimator(animation_parser.getAnimatorId(), animation_parser.getAnimationAssetId());
-        persistModel(animation_parser.getAnimatorId());
+        animation_parser.persistAnimator(scene_parser.getModelId());
+        scene_parser.persistModel(animation_parser.getAnimatorId());
     }
 }
 
@@ -1265,175 +1265,175 @@ void DaeParser::outputLog(const std::string& msg)
             }
         }*/
 
-void DaeParser::persistAnimator(const Enigma::Animators::AnimatorId& animator_id, const Enigma::Animators::AnimationAssetId& animation_asset_id)
-{
-    ModelAnimatorAssembler animator_assembler(animator_id);
-    animator_assembler.animationAsset(animation_asset_id);
-    animator_assembler.controlledPrimitive(m_modelId);
-    for (const auto& [skin_name, bone_names] : DaeSchema::getSkinBoneNames())
-    {
-        auto skin_prim = DaeSchema::getMeshIdFromMeshNodeName(skin_name);
-        if (!skin_prim) continue;
-        std::shared_ptr<SkinOperatorAssembler> operator_assembler = std::make_shared<SkinOperatorAssembler>();
-        operator_assembler->operatedSkin(skin_prim.value());
-        operator_assembler->bones(bone_names);
-        animator_assembler.addSkinOperator(operator_assembler);
-    }
-    animator_assembler.asNative(animator_id.name() + ".animator@APK_PATH");
-    if (m_animatorStoreMapper.lock())
-    {
-        m_animatorStoreMapper.lock()->putAnimator(animator_id, animator_assembler.assemble());
-    }
-}
-
-void DaeParser::persistModel(const Enigma::Animators::AnimatorId& animator_id)
-{
-    m_modelAssembler->modelAnimatorId(animator_id);
-    m_modelAssembler->asNative(m_modelId.name() + ".model@APK_PATH");
-    if (m_primitiveStoreMapper.lock())
-    {
-        m_primitiveStoreMapper.lock()->putPrimitive(m_modelId, m_modelAssembler->assemble());
-    }
-}
-
-/*pugi::xml_node DaeParser::findNodeWithId(const pugi::xml_node& node_root, const std::string& token_name, const std::string& id)
-{
-    return node_root.find_node([=](pugi::xml_node node) -> bool
+        /*void DaeParser::persistAnimator(const Enigma::Animators::AnimatorId& animator_id, const Enigma::Animators::AnimationAssetId& animation_asset_id)
         {
-            if ((token_name == node.name()) && (node.attribute(TOKEN_ID))
-                && (id == node.attribute(TOKEN_ID).as_string())) return true;
-            return false;
-        });
-}
+            ModelAnimatorAssembler animator_assembler(animator_id);
+            animator_assembler.animationAsset(animation_asset_id);
+            animator_assembler.controlledPrimitive(m_modelId);
+            for (const auto& [skin_name, bone_names] : DaeSchema::getSkinBoneNames())
+            {
+                auto skin_prim = DaeSchema::getMeshIdFromMeshNodeName(skin_name);
+                if (!skin_prim) continue;
+                std::shared_ptr<SkinOperatorAssembler> operator_assembler = std::make_shared<SkinOperatorAssembler>();
+                operator_assembler->operatedSkin(skin_prim.value());
+                operator_assembler->bones(bone_names);
+                animator_assembler.addSkinOperator(operator_assembler);
+            }
+            animator_assembler.asNative(animator_id.name() + ".animator@APK_PATH");
+            if (m_animatorStoreMapper.lock())
+            {
+                m_animatorStoreMapper.lock()->putAnimator(animator_id, animator_assembler.assemble());
+            }
+        }*/
 
-std::string DaeParser::findMaterialTexImageFilename(const pugi::xml_node& collada_root, const std::string& material_id)
-{
-    if (!collada_root) return "";
-    if (material_id.length() == 0) return "";
-    pugi::xml_node material_node = findNodeWithId(collada_root, TOKEN_MATERIAL, material_id);
-    if (!material_node)
-    {
-        outputLog("can't find material " + material_id);
-        return "";
-    }
-    pugi::xml_node effect_inst_node = material_node.child(TOKEN_INSTANCE_EFFECT);
-    if (!effect_inst_node)
-    {
-        outputLog("no instance effect in material");
-        return "";
-    }
-    std::string fx_url = "";
-    if (effect_inst_node.attribute(TOKEN_URL)) fx_url = &(effect_inst_node.attribute(TOKEN_URL).as_string()[1]);
-    if (fx_url == "")
-    {
-        outputLog("no fx url define");
-        return "";
-    }
-    pugi::xml_node effect_node = findNodeWithId(collada_root, TOKEN_EFFECT, fx_url);
-    if (!effect_node)
-    {
-        outputLog("can't find effect " + fx_url);
-        return "";
-    }
-    pugi::xml_node diffuse_node = effect_node.find_node([=](pugi::xml_node node) -> bool
-        { return (strcmp(node.name(), TOKEN_DIFFUSE) == 0); });
-    if (!diffuse_node)
-    {
-        outputLog("no diffuse node define");
-        return "";
-    }
-    pugi::xml_node texture_node = diffuse_node.child(TOKEN_TEXTURE);
-    if (!texture_node)
-    {
-        outputLog("no texture node define");
-        return "";
-    }
-    std::string image_or_sampler_id = "";
-    if (texture_node.attribute(TOKEN_TEXTURE)) image_or_sampler_id = texture_node.attribute(TOKEN_TEXTURE).as_string();
-    if (image_or_sampler_id == "")
-    {
-        outputLog("no image id define");
-        return "";
-    }
-    pugi::xml_node image_node;
-    if (image_or_sampler_id.rfind(SUFFIX_IMAGE) == image_or_sampler_id.length() - std::string{ SUFFIX_IMAGE }.length())
-    {
-        image_node = findNodeWithId(collada_root, TOKEN_IMAGE, image_or_sampler_id);
-    }
-    else if (image_or_sampler_id.rfind(SUFFIX_SAMPLER)
-        == image_or_sampler_id.length() - std::string{ SUFFIX_SAMPLER }.length())
-    {
-        pugi::xml_node surface_node = effect_node.find_node([=](pugi::xml_node node) -> bool
-            { return (strcmp(node.name(), TOKEN_SURFACE) == 0); });
-        if (!surface_node)
+        /*void DaeParser::persistModel(const Enigma::Animators::AnimatorId& animator_id)
         {
-            outputLog("can't find sampler surface node");
-            return "";
+            m_modelAssembler->modelAnimatorId(animator_id);
+            m_modelAssembler->asNative(m_modelId.name() + ".model@APK_PATH");
+            if (m_primitiveStoreMapper.lock())
+            {
+                m_primitiveStoreMapper.lock()->putPrimitive(m_modelId, m_modelAssembler->assemble());
+            }
+        }*/
+
+        /*pugi::xml_node DaeParser::findNodeWithId(const pugi::xml_node& node_root, const std::string& token_name, const std::string& id)
+        {
+            return node_root.find_node([=](pugi::xml_node node) -> bool
+                {
+                    if ((token_name == node.name()) && (node.attribute(TOKEN_ID))
+                        && (id == node.attribute(TOKEN_ID).as_string())) return true;
+                    return false;
+                });
         }
-        pugi::xml_node surface_init_from = surface_node.child(TOKEN_INIT_FROM);
-        if (!surface_init_from)
+
+        std::string DaeParser::findMaterialTexImageFilename(const pugi::xml_node& collada_root, const std::string& material_id)
         {
-            outputLog("surface no init_from node!!");
-            return "";
-        }
-        image_node = findNodeWithId(collada_root, TOKEN_IMAGE, surface_init_from.text().as_string());
-    }
-    if (!image_node)
-    {
-        outputLog("can't find image " + image_or_sampler_id);
-        return "";
-    }
-    pugi::xml_node init_from = image_node.child(TOKEN_INIT_FROM);
-    if (!init_from)
-    {
-        outputLog("image no init_from node!!");
-        return "";
-    }
-    std::string file_url = init_from.text().as_string();
-    std::size_t pos = file_url.find_first_of("//");
-    Filename filename;
-    if (pos != std::string::npos)
-    {
-        filename = Filename(file_url.substr(pos + 2));
-    }
-    else
-    {
-        filename = Filename(file_url);
-    }
-    outputLog("    " + material_id + " image file name: " + filename.getFileName());
-    return "image/" + filename.getBaseFileName();
-}*/
+            if (!collada_root) return "";
+            if (material_id.length() == 0) return "";
+            pugi::xml_node material_node = findNodeWithId(collada_root, TOKEN_MATERIAL, material_id);
+            if (!material_node)
+            {
+                outputLog("can't find material " + material_id);
+                return "";
+            }
+            pugi::xml_node effect_inst_node = material_node.child(TOKEN_INSTANCE_EFFECT);
+            if (!effect_inst_node)
+            {
+                outputLog("no instance effect in material");
+                return "";
+            }
+            std::string fx_url = "";
+            if (effect_inst_node.attribute(TOKEN_URL)) fx_url = &(effect_inst_node.attribute(TOKEN_URL).as_string()[1]);
+            if (fx_url == "")
+            {
+                outputLog("no fx url define");
+                return "";
+            }
+            pugi::xml_node effect_node = findNodeWithId(collada_root, TOKEN_EFFECT, fx_url);
+            if (!effect_node)
+            {
+                outputLog("can't find effect " + fx_url);
+                return "";
+            }
+            pugi::xml_node diffuse_node = effect_node.find_node([=](pugi::xml_node node) -> bool
+                { return (strcmp(node.name(), TOKEN_DIFFUSE) == 0); });
+            if (!diffuse_node)
+            {
+                outputLog("no diffuse node define");
+                return "";
+            }
+            pugi::xml_node texture_node = diffuse_node.child(TOKEN_TEXTURE);
+            if (!texture_node)
+            {
+                outputLog("no texture node define");
+                return "";
+            }
+            std::string image_or_sampler_id = "";
+            if (texture_node.attribute(TOKEN_TEXTURE)) image_or_sampler_id = texture_node.attribute(TOKEN_TEXTURE).as_string();
+            if (image_or_sampler_id == "")
+            {
+                outputLog("no image id define");
+                return "";
+            }
+            pugi::xml_node image_node;
+            if (image_or_sampler_id.rfind(SUFFIX_IMAGE) == image_or_sampler_id.length() - std::string{ SUFFIX_IMAGE }.length())
+            {
+                image_node = findNodeWithId(collada_root, TOKEN_IMAGE, image_or_sampler_id);
+            }
+            else if (image_or_sampler_id.rfind(SUFFIX_SAMPLER)
+                == image_or_sampler_id.length() - std::string{ SUFFIX_SAMPLER }.length())
+            {
+                pugi::xml_node surface_node = effect_node.find_node([=](pugi::xml_node node) -> bool
+                    { return (strcmp(node.name(), TOKEN_SURFACE) == 0); });
+                if (!surface_node)
+                {
+                    outputLog("can't find sampler surface node");
+                    return "";
+                }
+                pugi::xml_node surface_init_from = surface_node.child(TOKEN_INIT_FROM);
+                if (!surface_init_from)
+                {
+                    outputLog("surface no init_from node!!");
+                    return "";
+                }
+                image_node = findNodeWithId(collada_root, TOKEN_IMAGE, surface_init_from.text().as_string());
+            }
+            if (!image_node)
+            {
+                outputLog("can't find image " + image_or_sampler_id);
+                return "";
+            }
+            pugi::xml_node init_from = image_node.child(TOKEN_INIT_FROM);
+            if (!init_from)
+            {
+                outputLog("image no init_from node!!");
+                return "";
+            }
+            std::string file_url = init_from.text().as_string();
+            std::size_t pos = file_url.find_first_of("//");
+            Filename filename;
+            if (pos != std::string::npos)
+            {
+                filename = Filename(file_url.substr(pos + 2));
+            }
+            else
+            {
+                filename = Filename(file_url);
+            }
+            outputLog("    " + material_id + " image file name: " + filename.getFileName());
+            return "image/" + filename.getBaseFileName();
+        }*/
 
-/*std::optional<Enigma::Primitives::PrimitiveId> DaeParser::meshIdInMeshNode(const std::string& name)
-{
-    if (m_meshIdInMeshNode.find(name) == m_meshIdInMeshNode.end()) return std::nullopt;
-    return m_meshIdInMeshNode[name];
-}*/
+        /*std::optional<Enigma::Primitives::PrimitiveId> DaeParser::meshIdInMeshNode(const std::string& name)
+        {
+            if (m_meshIdInMeshNode.find(name) == m_meshIdInMeshNode.end()) return std::nullopt;
+            return m_meshIdInMeshNode[name];
+        }*/
 
-/*void DaeParser::clearParsedData()
-{
-    /*m_positions.clear();
-    m_normals.clear();
-    m_texcoords[0].clear();
-    m_texcoords[1].clear();
-    m_texcoords[2].clear();
-    m_texcoords[3].clear();
-    m_primitiveIndices.clear();
-    m_collapsedIndices.clear();
-    m_splitedPositions.clear();
-    m_collapsedNormals.clear();
-    m_splitedTexCoord[0].clear();
-    m_splitedTexCoord[1].clear();
-    m_splitedTexCoord[2].clear();
-    m_splitedTexCoord[3].clear();
-    m_weightCounts.clear();
-    m_weightPaletteIndices.clear();
-    m_splitedWeightIndices.clear();
-    m_vertexWeights.clear();
-    m_splitedVertexWeights.clear();
-    m_weightSource.clear();*/
-    //m_meshIdInMeshNode.clear();
-    //{ //m_skinBoneNames.clear(); //}
-    /*m_timeValues.clear();
-    m_animMatrixs.clear(); */
-    //}
+        /*void DaeParser::clearParsedData()
+        {
+            /*m_positions.clear();
+            m_normals.clear();
+            m_texcoords[0].clear();
+            m_texcoords[1].clear();
+            m_texcoords[2].clear();
+            m_texcoords[3].clear();
+            m_primitiveIndices.clear();
+            m_collapsedIndices.clear();
+            m_splitedPositions.clear();
+            m_collapsedNormals.clear();
+            m_splitedTexCoord[0].clear();
+            m_splitedTexCoord[1].clear();
+            m_splitedTexCoord[2].clear();
+            m_splitedTexCoord[3].clear();
+            m_weightCounts.clear();
+            m_weightPaletteIndices.clear();
+            m_splitedWeightIndices.clear();
+            m_vertexWeights.clear();
+            m_splitedVertexWeights.clear();
+            m_weightSource.clear();*/
+            //m_meshIdInMeshNode.clear();
+            //{ //m_skinBoneNames.clear(); //}
+            /*m_timeValues.clear();
+            m_animMatrixs.clear(); */
+            //}

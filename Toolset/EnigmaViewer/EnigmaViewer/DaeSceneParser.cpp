@@ -5,7 +5,7 @@
 #include "Renderables/ModelPrimitive.h"
 #include "Primitives/PrimitiveId.h"
 #include "Renderables/ModelPrimitiveAssembler.h"
-#include "Renderables/MeshNodeAssemblers.h"
+#include "ViewerCommands.h"
 #include <cassert>
 
 using namespace EnigmaViewer;
@@ -59,6 +59,13 @@ std::error_code DaeSceneParser::parseScene(const pugi::xml_node& collada_root, c
     }
     std::error_code er = parseModelSceneNode(model_scene_node, filename);
     return er;
+}
+
+void DaeSceneParser::persistModel(const Enigma::Animators::AnimatorId& animator_id)
+{
+    m_modelAssembler->modelAnimatorId(animator_id);
+    m_modelAssembler->asNative(m_modelId.name() + ".model@APK_PATH");
+    std::make_shared<PersistPrimitiveDto>(m_modelId, m_modelAssembler->assemble())->execute();
 }
 
 std::error_code DaeSceneParser::parseModelSceneNode(const pugi::xml_node& model_scene_node, const std::string& filename)

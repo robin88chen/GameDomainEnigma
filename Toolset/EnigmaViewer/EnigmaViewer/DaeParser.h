@@ -36,13 +36,13 @@ namespace EnigmaViewer
         void loadDaeFile(const std::string& filename);
         Enigma::Primitives::PrimitiveId getModelId() const { return m_modelId; }
 
-    private:
-        struct GeometryValueOffsets
-        {
-            int pos_offset;
-            int nor_offset;
-            int tex_offset[4];
-        };
+        /*private:
+            struct GeometryValueOffsets
+            {
+                int pos_offset;
+                int nor_offset;
+                int tex_offset[4];
+            };*/
     private:
         void outputLog(const std::string& msg);
 
@@ -85,8 +85,8 @@ namespace EnigmaViewer
         //void persistSingleGeometry(const Enigma::Geometries::GeometryId& geo_id, bool is_skin);
         //void persistMesh(const Enigma::Primitives::PrimitiveId& mesh_id, const Enigma::Geometries::GeometryId& geo_id, const Enigma::Engine::EffectMaterialId& effect_id, const std::optional<Enigma::Engine::TextureId>& texture_id, const std::optional<std::string>& tex_semantic);
         //void persistSkinMesh(const Enigma::Primitives::PrimitiveId& mesh_id, const Enigma::Geometries::GeometryId& geo_id, const Enigma::Engine::EffectMaterialId& effect_id, const std::optional<Enigma::Engine::TextureId>& texture_id, const std::optional<std::string>& tex_semantic);
-        void persistAnimator(const Enigma::Animators::AnimatorId& animator_id, const Enigma::Animators::AnimationAssetId& animation_asset_id);
-        void persistModel(const Enigma::Animators::AnimatorId& animator_id);
+        //void persistAnimator(const Enigma::Animators::AnimatorId& animator_id, const Enigma::Animators::AnimationAssetId& animation_asset_id);
+        //void persistModel(const Enigma::Animators::AnimatorId& animator_id);
 
         //std::optional<Enigma::Primitives::PrimitiveId> meshIdInMeshNode(const std::string& name);
 

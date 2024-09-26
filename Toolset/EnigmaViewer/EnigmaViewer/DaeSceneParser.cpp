@@ -57,7 +57,8 @@ std::error_code DaeSceneParser::parseScene(const pugi::xml_node& collada_root, c
         m_outputPipe("can't find visual scene node " + scene_id + "!!");
         return ParserError::noModelSceneNode;
     }
-    parseModelSceneNode(model_scene_node, filename);
+    std::error_code er = parseModelSceneNode(model_scene_node, filename);
+    return er;
 }
 
 std::error_code DaeSceneParser::parseModelSceneNode(const pugi::xml_node& model_scene_node, const std::string& filename)
@@ -80,4 +81,6 @@ std::error_code DaeSceneParser::parseModelSceneNode(const pugi::xml_node& model_
         return error;
     }
     m_modelAssembler->meshNodeTree(scene_node_tree_parser.getNodeTreeAssembler());
+    m_skinBoneNames = scene_node_tree_parser.getSkinBoneNames();
+    return ParserError::ok;
 }

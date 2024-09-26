@@ -21,10 +21,6 @@
             "Type": "Uint32",
             "Value": 3
         },
-        "Segments": {
-            "Type": "Uint32Array",
-            "Value": [0, 3, 0, 3]
-        },
         "GeometryBound": {
             "Type": "DataObject",
             "Value": {
@@ -33,6 +29,10 @@
                     "Value": [6.249174475669861e-7, -0.000007160997483879328, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.010105094872415066, 0.0008740950142964721, 0.013462300412356853]
                 }
             }
+        },
+        "Segments": {
+            "Type": "Uint32Array",
+            "Value": [0, 3, 0, 3]
         },
         "VertexCapacity": {
             "Type": "Uint32",

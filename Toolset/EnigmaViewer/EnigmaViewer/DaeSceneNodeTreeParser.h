@@ -24,6 +24,7 @@ namespace EnigmaViewer
         std::error_code parseSceneNodeTree(const pugi::xml_node& model_scene_root);
 
         [[nodiscard]] const std::shared_ptr<Enigma::Renderables::MeshNodeTreeAssembler>& getNodeTreeAssembler() const { return m_nodeTreeAssembler; }
+        [[nodiscard]] const std::unordered_map<std::string, std::vector<std::string>>& getSkinBoneNames() const { return m_skinBoneNames; }
 
     protected:
         std::error_code parseSceneNode(const pugi::xml_node& scene_node_xml, std::optional<std::string> parent_node_name);

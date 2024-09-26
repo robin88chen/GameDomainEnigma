@@ -155,6 +155,7 @@ void DaeParser::loadDaeFile(const std::string& filename)
     m_modelName = scene_parser.getModelName();
     m_modelId = scene_parser.getModelId();
     m_modelAssembler = scene_parser.getModelAssembler();
+    m_skinBoneNames = scene_parser.getSkinBoneNames();
     //parseScene(collada_root);
     DaeAnimationParser animation_parser([=](auto s) { outputLog(s); }, m_animationStoreMapper.lock());
     er = animation_parser.parseAnimations(collada_root, m_modelName);

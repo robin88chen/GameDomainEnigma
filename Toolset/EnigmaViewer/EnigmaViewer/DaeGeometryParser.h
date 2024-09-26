@@ -23,7 +23,7 @@ namespace EnigmaViewer
     class DaeGeometryParser
     {
     public:
-        DaeGeometryParser(const std::function<void(const std::string&)>& output_pipe, const std::shared_ptr<Enigma::Geometries::GeometryDataStoreMapper>& geometry_store);
+        DaeGeometryParser(const std::function<void(const std::string&)>& output_pipe);
 
         std::error_code parseGeometryInstanceNode(const pugi::xml_node& geometry_inst, const std::string& model_name);
         std::error_code parseSceneNodeForSkin(const pugi::xml_node& scene_node_xml, const std::string& model_name);
@@ -43,7 +43,6 @@ namespace EnigmaViewer
 
     protected:
         std::function<void(const std::string&)> m_outputPipe;
-        std::weak_ptr<Enigma::Geometries::GeometryDataStoreMapper> m_geometryStore;
         Enigma::Geometries::GeometryId m_geometryId;
         std::string m_geometryName;
         std::string m_meshMaterialId;

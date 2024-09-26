@@ -16,6 +16,10 @@ namespace EnigmaViewer
     {
         ok = 0,
         emptyRoot,
+        noSceneNode,
+        noInstanceScene,
+        instanceSceneUrlError,
+        noModelSceneNode,
 
         noAnimationsLib = 101,
         noAnimationNode,
@@ -48,6 +52,8 @@ namespace EnigmaViewer
         noInfluencePair,
         noBoneNameArray,
         noWeightsArray,
+
+        noMatrixTransform = 301,
     };
     class ParserErrorCategory : public std::error_category
     {

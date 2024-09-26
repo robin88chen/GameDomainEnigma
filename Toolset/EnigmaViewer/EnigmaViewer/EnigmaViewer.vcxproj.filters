@@ -34,6 +34,9 @@
     <Filter Include="Dae Parser\GeometryParser">
       <UniqueIdentifier>{921d28e3-153e-4e15-8839-13b5ed3d6717}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Dae Parser\SceneParser">
+      <UniqueIdentifier>{41aad3a4-e7c8-4498-ae15-29ddd4274126}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainForm.h">
@@ -145,6 +148,18 @@
     <ClInclude Include="DaeVertexWeightsParser.h">
       <Filter>Dae Parser\GeometryParser</Filter>
     </ClInclude>
+    <ClInclude Include="DaeSceneParser.h">
+      <Filter>Dae Parser\SceneParser</Filter>
+    </ClInclude>
+    <ClInclude Include="DaeSceneNodeTreeParser.h">
+      <Filter>Dae Parser\SceneParser</Filter>
+    </ClInclude>
+    <ClInclude Include="DaeSceneNodeParser.h">
+      <Filter>Dae Parser\SceneParser</Filter>
+    </ClInclude>
+    <ClInclude Include="DaeSkinSceneNodeParser.h">
+      <Filter>Dae Parser\SceneParser</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainForm.cpp">
@@ -246,6 +261,18 @@
     </ClCompile>
     <ClCompile Include="DaeVertexWeightsParser.cpp">
       <Filter>Dae Parser\GeometryParser</Filter>
+    </ClCompile>
+    <ClCompile Include="DaeSceneParser.cpp">
+      <Filter>Dae Parser\SceneParser</Filter>
+    </ClCompile>
+    <ClCompile Include="DaeSceneNodeTreeParser.cpp">
+      <Filter>Dae Parser\SceneParser</Filter>
+    </ClCompile>
+    <ClCompile Include="DaeSceneNodeParser.cpp">
+      <Filter>Dae Parser\SceneParser</Filter>
+    </ClCompile>
+    <ClCompile Include="DaeSkinSceneNodeParser.cpp">
+      <Filter>Dae Parser\SceneParser</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

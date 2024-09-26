@@ -2,6 +2,7 @@
 #include "DaeVertexWeightsParser.h"
 #include "DaeParserErrors.h"
 #include "DaeSchema.h"
+#include "ViewerCommands.h"
 #include "Geometries/TriangleListAssembler.h"
 #include <cassert>
 #include <sstream>
@@ -159,7 +160,7 @@ std::error_code DaeMeshVerticesParser::organizeVertices(const std::shared_ptr<Da
     return er;
 }
 
-void DaeMeshVerticesParser::persistSingleGeometry(const Enigma::Geometries::GeometryId& geo_id, const std::shared_ptr<DaeVertexWeightsParser>& weights_parser, const std::shared_ptr<Enigma::Geometries::GeometryDataStoreMapper>& geometry_store)
+void DaeMeshVerticesParser::persistSingleGeometry(const Enigma::Geometries::GeometryId& geo_id, const std::shared_ptr<DaeVertexWeightsParser>& weights_parser)
 {
     Enigma::Geometries::TriangleListAssembler geo_assembler(geo_id);
     geo_assembler.position3s(m_splitedPositions);
@@ -179,10 +180,7 @@ void DaeMeshVerticesParser::persistSingleGeometry(const Enigma::Geometries::Geom
     geo_assembler.addTexture2DCoords(m_splitedTexCoord[0]);
     geo_assembler.computeAlignedBox();
     geo_assembler.asAsset(geo_id.name(), geo_id.name() + ".geo", "APK_PATH");
-    if (geometry_store)
-    {
-        geometry_store->putGeometry(geo_id, geo_assembler.assemble());
-    }
+    std::make_shared<PersistGeometryDto>(geo_id, geo_assembler.assemble())->execute();
 }
 
 std::error_code DaeMeshVerticesParser::parsePositionSource(const pugi::xml_node& position_source)

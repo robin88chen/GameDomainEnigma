@@ -10,6 +10,10 @@ std::string ParserErrorCategory::message(int err) const
     {
     case ParserError::ok: return "OK";
     case ParserError::emptyRoot: return "Empty root";
+    case ParserError::noSceneNode: return "No scene node";
+    case ParserError::noInstanceScene: return "No instance scene";
+    case ParserError::instanceSceneUrlError: return "Instance scene url error";
+    case ParserError::noModelSceneNode: return "No model scene node";
     case ParserError::noAnimationsLib: return "No animations library";
     case ParserError::noAnimationNode: return "No animation node";
     case ParserError::noAnimationNameNode: return "No animation name node";
@@ -40,6 +44,7 @@ std::string ParserErrorCategory::message(int err) const
     case ParserError::noInfluencePair: return "No influence pair";
     case ParserError::noBoneNameArray: return "No bone name array";
     case ParserError::noWeightsArray: return "No weights array";
+    case ParserError::noMatrixTransform: return "No matrix transform";
     }
     return "Unknown";
 }

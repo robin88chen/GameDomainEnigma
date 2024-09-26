@@ -8,8 +8,10 @@
 #ifndef DAE_SCHEMA_H
 #define DAE_SCHEMA_H
 
+#include "Primitives/PrimitiveId.h"
 #include "pugixml.hpp"
 #include <unordered_map>
+#include <optional>
 
 namespace EnigmaViewer
 {
@@ -26,9 +28,14 @@ namespace EnigmaViewer
         static void addNodeJointIdMapping(const std::string& joint_id, const std::string& mesh_name);
         static const std::string& getMeshNameFromJointId(const std::string& joint_id);
 
+        static void clearMeshIdInMeshNode();
+        static void addMeshIdInMeshNodeName(const std::string& mesh_name, Enigma::Primitives::PrimitiveId mesh_node_id);
+        static std::optional<Enigma::Primitives::PrimitiveId> getMeshIdFromMeshNodeName(const std::string& mesh_node_name);
+
     private:
         static std::unordered_map<std::string, std::string> m_nodeIdNameMapping;
         static std::unordered_map<std::string, std::string> m_nodeJointIdMapping;
+        static std::unordered_map<std::string, Enigma::Primitives::PrimitiveId> m_meshIdInMeshNode;
     };
 }
 

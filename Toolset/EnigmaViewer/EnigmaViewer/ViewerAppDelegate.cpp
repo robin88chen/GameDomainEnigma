@@ -162,6 +162,10 @@ void ViewerAppDelegate::installEngine()
     CommandBus::subscribe(typeid(LoadAnimatedPawn), m_loadAnimatedPawn);
     m_removeAnimatedPawn = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { this->removeAnimatedPawn(c); });
     CommandBus::subscribe(typeid(RemoveAnimatedPawn), m_removeAnimatedPawn);
+    m_persistGeometryDto = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { this->persistGeometryDto(c); });
+    CommandBus::subscribe(typeid(PersistGeometryDto), m_persistGeometryDto);
+    m_persistPrimitiveDto = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { this->persistPrimitiveDto(c); });
+    CommandBus::subscribe(typeid(PersistPrimitiveDto), m_persistPrimitiveDto);
 
     assert(m_graphicMain);
 
@@ -221,6 +225,10 @@ void ViewerAppDelegate::shutdownEngine()
     m_loadAnimatedPawn = nullptr;
     CommandBus::unsubscribe(typeid(RemoveAnimatedPawn), m_removeAnimatedPawn);
     m_removeAnimatedPawn = nullptr;
+    CommandBus::unsubscribe(typeid(PersistGeometryDto), m_persistGeometryDto);
+    m_persistGeometryDto = nullptr;
+    CommandBus::unsubscribe(typeid(PersistPrimitiveDto), m_persistPrimitiveDto);
+    m_persistPrimitiveDto = nullptr;
 
     m_graphicMain->shutdownRenderEngine();
 }
@@ -416,6 +424,22 @@ void ViewerAppDelegate::removeAnimatedPawn(const Enigma::Frameworks::ICommandPtr
     auto cmd = std::dynamic_pointer_cast<RemoveAnimatedPawn, ICommand>(c);
     if (!cmd) return;
     removeAnimatedPawn(cmd->name());
+}
+
+void ViewerAppDelegate::persistGeometryDto(const Enigma::Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<PersistGeometryDto, ICommand>(c);
+    if (!cmd) return;
+    m_geometryDataFileStoreMapper->putGeometry(cmd->id(), cmd->dto());
+}
+
+void ViewerAppDelegate::persistPrimitiveDto(const Enigma::Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<PersistPrimitiveDto, ICommand>(c);
+    if (!cmd) return;
+    m_primitiveFileStoreMapper->putPrimitive(cmd->id(), cmd->dto());
 }
 
 void ViewerAppDelegate::refreshModelList()

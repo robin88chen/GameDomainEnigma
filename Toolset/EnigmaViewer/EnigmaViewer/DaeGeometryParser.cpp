@@ -20,8 +20,8 @@ using namespace EnigmaViewer;
 #define TOKEN_VERTEX_WEIGHTS "vertex_weights"
 #define TOKEN_SOURCE "source"
 
-DaeGeometryParser::DaeGeometryParser(const std::function<void(const std::string&)>& output_pipe, const std::shared_ptr<Enigma::Geometries::GeometryDataStoreMapper>& geometry_store)
-    : m_outputPipe(output_pipe), m_geometryStore(geometry_store)
+DaeGeometryParser::DaeGeometryParser(const std::function<void(const std::string&)>& output_pipe)
+    : m_outputPipe(output_pipe)
 {
     assert(m_outputPipe);
 }
@@ -100,10 +100,7 @@ std::error_code DaeGeometryParser::parseSingleGeometry(const pugi::xml_node& geo
         m_outputPipe("  Error organizing geometry vertices!!");
         return err;
     }
-    if (!m_geometryStore.expired())
-    {
-        vertices_parser.persistSingleGeometry(m_geometryId, weights_parser, m_geometryStore.lock());
-    }
+    vertices_parser.persistSingleGeometry(m_geometryId, weights_parser);
     return ParserError::ok;
 }
 

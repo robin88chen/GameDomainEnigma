@@ -46,14 +46,14 @@ namespace EnigmaViewer
     private:
         void outputLog(const std::string& msg);
 
-        void parseScene(const pugi::xml_node& collada_root);
-        void parseModelSceneNode(const pugi::xml_node& model_scene_node);
-        void parseSceneNode(const std::shared_ptr<Enigma::Renderables::MeshNodeTreeAssembler>& node_tree_assembler, const pugi::xml_node& scene_node_xml, std::optional<std::string> parent_node_name);
+        //void parseScene(const pugi::xml_node& collada_root);
+        //void parseModelSceneNode(const pugi::xml_node& model_scene_node);
+        //void parseSceneNode(const std::shared_ptr<Enigma::Renderables::MeshNodeTreeAssembler>& node_tree_assembler, const pugi::xml_node& scene_node_xml, std::optional<std::string> parent_node_name);
 
-        void parseGeometryInstanceNode(const std::shared_ptr<Enigma::Renderables::MeshNodeAssembler>& mesh_node_assembler, const pugi::xml_node& geometry_inst);
-        void parseSingleGeometry(const std::shared_ptr<Enigma::Renderables::MeshNodeAssembler>& mesh_node_assembler, const pugi::xml_node& geometry_xml_node, bool is_skin);
+        //void parseGeometryInstanceNode(const std::shared_ptr<Enigma::Renderables::MeshNodeAssembler>& mesh_node_assembler, const pugi::xml_node& geometry_inst);
+        //void parseSingleGeometry(const std::shared_ptr<Enigma::Renderables::MeshNodeAssembler>& mesh_node_assembler, const pugi::xml_node& geometry_xml_node, bool is_skin);
 
-        void parseSceneNodeForSkin(const std::shared_ptr<Enigma::Renderables::MeshNodeTreeAssembler>& node_tree_assembler, const pugi::xml_node& scene_node_xml, std::optional<std::string> parent_node_name);
+        //void parseSceneNodeForSkin(const std::shared_ptr<Enigma::Renderables::MeshNodeTreeAssembler>& node_tree_assembler, const pugi::xml_node& scene_node_xml, std::optional<std::string> parent_node_name);
         //void parseSkinMesh(const std::shared_ptr<Enigma::Renderables::MeshNodeAssembler>& mesh_node_assembler, const pugi::xml_node& skin_node_xml);
         //void parseVertexWeights(const std::shared_ptr<Enigma::Renderables::MeshNodeAssembler>& mesh_node_assembler, const pugi::xml_node& skin_host_xml, const pugi::xml_node& vertex_weights_xml);
         //void parseJointNameSource(const std::shared_ptr<Enigma::Renderables::MeshNodeAssembler>& mesh_node_assembler, const pugi::xml_node& bone_names_xml);
@@ -77,10 +77,10 @@ namespace EnigmaViewer
         //void collapseVertexNormals(int pos_offset, int nor_offset, bool is_split_vertex);
         //void collapseIndexArray(int pos_offset, bool is_split_vertex);
 
-        pugi::xml_node findNodeWithId(const pugi::xml_node& node_root, const std::string& token_name,
-            const std::string& id);
-        std::string findMaterialTexImageFilename(const pugi::xml_node& collada_root, const std::string& material_id);
-        void clearParsedData();
+        //pugi::xml_node findNodeWithId(const pugi::xml_node& node_root, const std::string& token_name,
+          //  const std::string& id);
+        //std::string findMaterialTexImageFilename(const pugi::xml_node& collada_root, const std::string& material_id);
+        //void clearParsedData();
 
         //void persistSingleGeometry(const Enigma::Geometries::GeometryId& geo_id, bool is_skin);
         void persistMesh(const Enigma::Primitives::PrimitiveId& mesh_id, const Enigma::Geometries::GeometryId& geo_id, const Enigma::Engine::EffectMaterialId& effect_id, const std::optional<Enigma::Engine::TextureId>& texture_id, const std::optional<std::string>& tex_semantic);
@@ -88,7 +88,7 @@ namespace EnigmaViewer
         void persistAnimator(const Enigma::Animators::AnimatorId& animator_id, const Enigma::Animators::AnimationAssetId& animation_asset_id);
         void persistModel(const Enigma::Animators::AnimatorId& animator_id);
 
-        std::optional<Enigma::Primitives::PrimitiveId> meshIdInMeshNode(const std::string& name);
+        //std::optional<Enigma::Primitives::PrimitiveId> meshIdInMeshNode(const std::string& name);
 
     private:
         DaeParserConfiguration m_config;
@@ -120,7 +120,7 @@ namespace EnigmaViewer
         //std::vector<float> m_splitedVertexWeights;
         //std::vector<float> m_weightSource;
         std::unordered_map<std::string, std::vector<std::string>> m_skinBoneNames;
-        std::unordered_map<std::string, Enigma::Primitives::PrimitiveId> m_meshIdInMeshNode;
+        //std::unordered_map<std::string, Enigma::Primitives::PrimitiveId> m_meshIdInMeshNode;
 
         //std::vector<float> m_timeValues;
         //std::vector<Enigma::MathLib::Matrix4> m_animMatrixs;

@@ -6,6 +6,7 @@ using namespace EnigmaViewer;
 
 std::unordered_map<std::string, std::string> DaeSchema::m_nodeIdNameMapping;
 std::unordered_map<std::string, std::string> DaeSchema::m_nodeJointIdMapping;
+std::unordered_map<std::string, Enigma::Primitives::PrimitiveId> DaeSchema::m_meshIdInMeshNode;
 
 pugi::xml_node DaeSchema::findChildNodeWithId(const pugi::xml_node& node_root, const std::string& token_name, const std::string& id)
 {
@@ -45,4 +46,23 @@ void DaeSchema::addNodeJointIdMapping(const std::string& node_joint_id, const st
 const std::string& DaeSchema::getMeshNameFromJointId(const std::string& joint_id)
 {
     return m_nodeJointIdMapping[joint_id];
+}
+
+void DaeSchema::clearMeshIdInMeshNode()
+{
+    m_meshIdInMeshNode.clear();
+}
+
+void DaeSchema::addMeshIdInMeshNodeName(const std::string& mesh_name, Enigma::Primitives::PrimitiveId mesh_node_id)
+{
+    m_meshIdInMeshNode[mesh_name] = mesh_node_id;
+}
+
+std::optional<Enigma::Primitives::PrimitiveId> DaeSchema::getMeshIdFromMeshNodeName(const std::string& mesh_node_name)
+{
+    if (m_meshIdInMeshNode.find(mesh_node_name) == m_meshIdInMeshNode.end())
+    {
+        return std::nullopt;
+    }
+    return m_meshIdInMeshNode[mesh_node_name];
 }

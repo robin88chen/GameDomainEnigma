@@ -145,7 +145,11 @@
     <ClInclude Include="DaeParser.h" />
     <ClInclude Include="DaeParserConfiguration.h" />
     <ClInclude Include="DaeParserErrors.h" />
+    <ClInclude Include="DaeSceneNodeParser.h" />
+    <ClInclude Include="DaeSceneNodeTreeParser.h" />
+    <ClInclude Include="DaeSceneParser.h" />
     <ClInclude Include="DaeSchema.h" />
+    <ClInclude Include="DaeSkinSceneNodeParser.h" />
     <ClInclude Include="DaeVertexWeightsParser.h" />
     <ClInclude Include="FloorReceiverMaker.h" />
     <ClInclude Include="GeometryCreationHelper.h" />
@@ -183,7 +187,11 @@
     <ClCompile Include="DaeParser.cpp" />
     <ClCompile Include="DaeParserConfiguration.cpp" />
     <ClCompile Include="DaeParserErrors.cpp" />
+    <ClCompile Include="DaeSceneNodeParser.cpp" />
+    <ClCompile Include="DaeSceneNodeTreeParser.cpp" />
+    <ClCompile Include="DaeSceneParser.cpp" />
     <ClCompile Include="DaeSchema.cpp" />
+    <ClCompile Include="DaeSkinSceneNodeParser.cpp" />
     <ClCompile Include="DaeVertexWeightsParser.cpp" />
     <ClCompile Include="FloorReceiverMaker.cpp" />
     <ClCompile Include="GeometryCreationHelper.cpp" />

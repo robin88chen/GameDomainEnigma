@@ -30,7 +30,7 @@ namespace EnigmaViewer
 
         std::error_code parseVertices(const pugi::xml_node& vertices_xml_node);
         std::error_code organizeVertices(const std::shared_ptr<DaeVertexWeightsParser>& weights_parser);
-        void persistSingleGeometry(const Enigma::Geometries::GeometryId& geo_id, const std::shared_ptr<DaeVertexWeightsParser>& weights_parser, const std::shared_ptr<Enigma::Geometries::GeometryDataStoreMapper>& geometry_store);
+        void persistSingleGeometry(const Enigma::Geometries::GeometryId& geo_id, const std::shared_ptr<DaeVertexWeightsParser>& weights_parser);
 
         [[nodiscard]] const std::string& getMaterialId() const { return m_meshMaterialId; }
     protected:

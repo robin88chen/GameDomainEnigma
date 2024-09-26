@@ -7,6 +7,7 @@ using namespace EnigmaViewer;
 std::unordered_map<std::string, std::string> DaeSchema::m_nodeIdNameMapping;
 std::unordered_map<std::string, std::string> DaeSchema::m_nodeJointIdMapping;
 std::unordered_map<std::string, Enigma::Primitives::PrimitiveId> DaeSchema::m_meshIdInMeshNode;
+std::unordered_map<std::string, std::vector<std::string>> DaeSchema::m_skinBoneNames;
 
 pugi::xml_node DaeSchema::findChildNodeWithId(const pugi::xml_node& node_root, const std::string& token_name, const std::string& id)
 {
@@ -16,6 +17,14 @@ pugi::xml_node DaeSchema::findChildNodeWithId(const pugi::xml_node& node_root, c
                 && (id == node.attribute(TOKEN_ID).as_string())) return true;
             return false;
         });
+}
+
+void DaeSchema::clear()
+{
+    clearNodeIdNameMapping();
+    clearNodeJointIdMapping();
+    clearMeshIdInMeshNode();
+    clearSkinBoneNames();
 }
 
 void DaeSchema::clearNodeIdNameMapping()
@@ -65,4 +74,19 @@ std::optional<Enigma::Primitives::PrimitiveId> DaeSchema::getMeshIdFromMeshNodeN
         return std::nullopt;
     }
     return m_meshIdInMeshNode[mesh_node_name];
+}
+
+void DaeSchema::clearSkinBoneNames()
+{
+    m_skinBoneNames.clear();
+}
+
+void DaeSchema::addSkinBoneNames(const std::string& skin_name, const std::vector<std::string>& bone_names)
+{
+    m_skinBoneNames[skin_name] = bone_names;
+}
+
+const std::unordered_map<std::string, std::vector<std::string>>& DaeSchema::getSkinBoneNames()
+{
+    return m_skinBoneNames;
 }

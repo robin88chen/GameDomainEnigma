@@ -27,12 +27,8 @@ namespace EnigmaViewer
 
         std::error_code parseSkinSceneNode(const pugi::xml_node& skin_scene_node);
 
-        [[nodiscard]] const std::vector<std::string>& getSkinBoneNames() const { return m_skinBoneNames; }
     protected:
         void persistMesh(const Enigma::Primitives::PrimitiveId& mesh_id, const Enigma::Geometries::GeometryId& geo_id, const Enigma::Engine::EffectMaterialId& effect_id, const std::optional<Enigma::Engine::TextureId>& texture_id, const std::optional<std::string>& tex_semantic);
-
-    protected:
-        std::vector<std::string> m_skinBoneNames;
     };
 }
 

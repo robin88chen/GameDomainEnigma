@@ -83,8 +83,8 @@ namespace EnigmaViewer
         //void clearParsedData();
 
         //void persistSingleGeometry(const Enigma::Geometries::GeometryId& geo_id, bool is_skin);
-        void persistMesh(const Enigma::Primitives::PrimitiveId& mesh_id, const Enigma::Geometries::GeometryId& geo_id, const Enigma::Engine::EffectMaterialId& effect_id, const std::optional<Enigma::Engine::TextureId>& texture_id, const std::optional<std::string>& tex_semantic);
-        void persistSkinMesh(const Enigma::Primitives::PrimitiveId& mesh_id, const Enigma::Geometries::GeometryId& geo_id, const Enigma::Engine::EffectMaterialId& effect_id, const std::optional<Enigma::Engine::TextureId>& texture_id, const std::optional<std::string>& tex_semantic);
+        //void persistMesh(const Enigma::Primitives::PrimitiveId& mesh_id, const Enigma::Geometries::GeometryId& geo_id, const Enigma::Engine::EffectMaterialId& effect_id, const std::optional<Enigma::Engine::TextureId>& texture_id, const std::optional<std::string>& tex_semantic);
+        //void persistSkinMesh(const Enigma::Primitives::PrimitiveId& mesh_id, const Enigma::Geometries::GeometryId& geo_id, const Enigma::Engine::EffectMaterialId& effect_id, const std::optional<Enigma::Engine::TextureId>& texture_id, const std::optional<std::string>& tex_semantic);
         void persistAnimator(const Enigma::Animators::AnimatorId& animator_id, const Enigma::Animators::AnimationAssetId& animation_asset_id);
         void persistModel(const Enigma::Animators::AnimatorId& animator_id);
 
@@ -119,7 +119,7 @@ namespace EnigmaViewer
         //std::vector<float> m_vertexWeights;
         //std::vector<float> m_splitedVertexWeights;
         //std::vector<float> m_weightSource;
-        std::unordered_map<std::string, std::vector<std::string>> m_skinBoneNames;
+        //std::unordered_map<std::string, std::vector<std::string>> m_skinBoneNames;
         //std::unordered_map<std::string, Enigma::Primitives::PrimitiveId> m_meshIdInMeshNode;
 
         //std::vector<float> m_timeValues;

@@ -81,6 +81,5 @@ std::error_code DaeSceneParser::parseModelSceneNode(const pugi::xml_node& model_
         return error;
     }
     m_modelAssembler->meshNodeTree(scene_node_tree_parser.getNodeTreeAssembler());
-    m_skinBoneNames = scene_node_tree_parser.getSkinBoneNames();
     return ParserError::ok;
 }

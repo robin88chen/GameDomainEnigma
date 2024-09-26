@@ -83,7 +83,6 @@ std::error_code DaeSceneNodeTreeParser::parseSceneNodeForSkin(const pugi::xml_no
         return er;
     }
     std::string mesh_node_name = skin_scene_node_parser.getNodeAssembler()->name();
-    m_skinBoneNames[mesh_node_name] = skin_scene_node_parser.getSkinBoneNames();
     if (parent_node_name)
     {
         m_nodeTreeAssembler->addNodeWithParentName(mesh_node_name, skin_scene_node_parser.getNodeAssembler(), parent_node_name.value());

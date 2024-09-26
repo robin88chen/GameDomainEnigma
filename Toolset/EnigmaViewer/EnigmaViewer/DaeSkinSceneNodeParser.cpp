@@ -23,7 +23,7 @@ std::error_code DaeSkinSceneNodeParser::parseSkinSceneNode(const pugi::xml_node&
         return er;
     }
     std::string mesh_node_name = geometry_parser.getSkinMeshNodeName();
-    m_skinBoneNames = geometry_parser.getSkinBoneNames();
+    DaeSchema::addSkinBoneNames(mesh_node_name, geometry_parser.getSkinBoneNames());
     m_nodeAssembler = std::make_shared<Enigma::Renderables::MeshNodeAssembler>();
     m_nodeAssembler->name(mesh_node_name);
     m_nodeAssembler->localT_PosTransform(geometry_parser.getBindShapeMatrix());

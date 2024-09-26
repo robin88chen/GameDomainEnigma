@@ -142,9 +142,7 @@ void DaeParser::loadDaeFile(const std::string& filename)
     {
         outputLog(filename + " not a COLLADA file!!");
     }
-    DaeSchema::clearNodeIdNameMapping();
-    DaeSchema::clearNodeJointIdMapping();
-    DaeSchema::clearMeshIdInMeshNode();
+    DaeSchema::clear();
     DaeSceneParser scene_parser([=](auto s) { outputLog(s); });
     std::error_code er = scene_parser.parseScene(collada_root, filename);
     if (er)
@@ -155,7 +153,6 @@ void DaeParser::loadDaeFile(const std::string& filename)
     m_modelName = scene_parser.getModelName();
     m_modelId = scene_parser.getModelId();
     m_modelAssembler = scene_parser.getModelAssembler();
-    m_skinBoneNames = scene_parser.getSkinBoneNames();
     //parseScene(collada_root);
     DaeAnimationParser animation_parser([=](auto s) { outputLog(s); }, m_animationStoreMapper.lock());
     er = animation_parser.parseAnimations(collada_root, m_modelName);
@@ -1228,52 +1225,52 @@ void DaeParser::outputLog(const std::string& msg)
             }
         }*/
 
-void DaeParser::persistMesh(const Enigma::Primitives::PrimitiveId& mesh_id, const Enigma::Geometries::GeometryId& geo_id, const EffectMaterialId& effect_id, const std::optional<TextureId>& texture_id, const std::optional<std::string>& tex_semantic)
-{
-    MeshPrimitiveAssembler mesh_assembler(mesh_id);
-    mesh_assembler.geometryId(geo_id);
-    mesh_assembler.asNative(mesh_id.name() + ".mesh@APK_PATH");
-    mesh_assembler.addEffect(effect_id);
-    if ((texture_id) && (tex_semantic))
-    {
-        std::shared_ptr<EffectTextureMapAssembler> texture_assembler = std::make_shared<EffectTextureMapAssembler>();
-        texture_assembler->addTextureMapping(texture_id.value(), std::nullopt, tex_semantic.value());
-        mesh_assembler.addTextureMap(texture_assembler);
-    }
-    mesh_assembler.renderListID(Enigma::Renderer::Renderer::RenderListID::Scene);
-    mesh_assembler.visualTechnique("Default");
-    if (m_primitiveStoreMapper.lock())
-    {
-        m_primitiveStoreMapper.lock()->putPrimitive(mesh_id, mesh_assembler.assemble());
-    }
-}
+        /*void DaeParser::persistMesh(const Enigma::Primitives::PrimitiveId& mesh_id, const Enigma::Geometries::GeometryId& geo_id, const EffectMaterialId& effect_id, const std::optional<TextureId>& texture_id, const std::optional<std::string>& tex_semantic)
+        {
+            MeshPrimitiveAssembler mesh_assembler(mesh_id);
+            mesh_assembler.geometryId(geo_id);
+            mesh_assembler.asNative(mesh_id.name() + ".mesh@APK_PATH");
+            mesh_assembler.addEffect(effect_id);
+            if ((texture_id) && (tex_semantic))
+            {
+                std::shared_ptr<EffectTextureMapAssembler> texture_assembler = std::make_shared<EffectTextureMapAssembler>();
+                texture_assembler->addTextureMapping(texture_id.value(), std::nullopt, tex_semantic.value());
+                mesh_assembler.addTextureMap(texture_assembler);
+            }
+            mesh_assembler.renderListID(Enigma::Renderer::Renderer::RenderListID::Scene);
+            mesh_assembler.visualTechnique("Default");
+            if (m_primitiveStoreMapper.lock())
+            {
+                m_primitiveStoreMapper.lock()->putPrimitive(mesh_id, mesh_assembler.assemble());
+            }
+        }
 
-void DaeParser::persistSkinMesh(const Enigma::Primitives::PrimitiveId& mesh_id, const Enigma::Geometries::GeometryId& geo_id, const EffectMaterialId& effect_id, const std::optional<TextureId>& texture_id, const std::optional<std::string>& tex_semantic)
-{
-    SkinMeshPrimitiveAssembler mesh_assembler(mesh_id);
-    mesh_assembler.geometryId(geo_id);
-    mesh_assembler.asNative(mesh_id.name() + ".mesh@APK_PATH");
-    mesh_assembler.addEffect(effect_id);
-    if ((texture_id) && (tex_semantic))
-    {
-        std::shared_ptr<EffectTextureMapAssembler> texture_assembler = std::make_shared<EffectTextureMapAssembler>();
-        texture_assembler->addTextureMapping(texture_id.value(), std::nullopt, tex_semantic.value());
-        mesh_assembler.addTextureMap(texture_assembler);
-    }
-    mesh_assembler.renderListID(Enigma::Renderer::Renderer::RenderListID::Scene);
-    mesh_assembler.visualTechnique("Default");
-    if (m_primitiveStoreMapper.lock())
-    {
-        m_primitiveStoreMapper.lock()->putPrimitive(mesh_id, mesh_assembler.assemble());
-    }
-}
+        void DaeParser::persistSkinMesh(const Enigma::Primitives::PrimitiveId& mesh_id, const Enigma::Geometries::GeometryId& geo_id, const EffectMaterialId& effect_id, const std::optional<TextureId>& texture_id, const std::optional<std::string>& tex_semantic)
+        {
+            SkinMeshPrimitiveAssembler mesh_assembler(mesh_id);
+            mesh_assembler.geometryId(geo_id);
+            mesh_assembler.asNative(mesh_id.name() + ".mesh@APK_PATH");
+            mesh_assembler.addEffect(effect_id);
+            if ((texture_id) && (tex_semantic))
+            {
+                std::shared_ptr<EffectTextureMapAssembler> texture_assembler = std::make_shared<EffectTextureMapAssembler>();
+                texture_assembler->addTextureMapping(texture_id.value(), std::nullopt, tex_semantic.value());
+                mesh_assembler.addTextureMap(texture_assembler);
+            }
+            mesh_assembler.renderListID(Enigma::Renderer::Renderer::RenderListID::Scene);
+            mesh_assembler.visualTechnique("Default");
+            if (m_primitiveStoreMapper.lock())
+            {
+                m_primitiveStoreMapper.lock()->putPrimitive(mesh_id, mesh_assembler.assemble());
+            }
+        }*/
 
 void DaeParser::persistAnimator(const Enigma::Animators::AnimatorId& animator_id, const Enigma::Animators::AnimationAssetId& animation_asset_id)
 {
     ModelAnimatorAssembler animator_assembler(animator_id);
     animator_assembler.animationAsset(animation_asset_id);
     animator_assembler.controlledPrimitive(m_modelId);
-    for (const auto& [skin_name, bone_names] : m_skinBoneNames)
+    for (const auto& [skin_name, bone_names] : DaeSchema::getSkinBoneNames())
     {
         auto skin_prim = DaeSchema::getMeshIdFromMeshNodeName(skin_name);
         if (!skin_prim) continue;

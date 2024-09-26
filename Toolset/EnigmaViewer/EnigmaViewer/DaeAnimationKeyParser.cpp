@@ -303,4 +303,5 @@ std::error_code DaeAnimationKeyParser::analyzeSRTKeys()
     {
         m_animationTimeSRTAssembler->addTranslationKey(key);
     }
+    return ParserError::ok;
 }

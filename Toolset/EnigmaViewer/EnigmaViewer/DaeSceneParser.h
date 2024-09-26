@@ -26,7 +26,6 @@ namespace EnigmaViewer
         [[nodiscard]] const std::string& getModelName() const { return m_modelName; }
         [[nodiscard]] const Enigma::Primitives::PrimitiveId& getModelId() const { return m_modelId; }
         [[nodiscard]] const std::shared_ptr<Enigma::Renderables::ModelPrimitiveAssembler>& getModelAssembler() const { return m_modelAssembler; }
-        [[nodiscard]] const std::unordered_map<std::string, std::vector<std::string>>& getSkinBoneNames() const { return m_skinBoneNames; }
 
     protected:
         std::error_code parseModelSceneNode(const pugi::xml_node& model_scene_node, const std::string& filename);
@@ -37,7 +36,6 @@ namespace EnigmaViewer
         std::string m_modelName;
         Enigma::Primitives::PrimitiveId m_modelId;
         std::shared_ptr<Enigma::Renderables::ModelPrimitiveAssembler> m_modelAssembler;
-        std::unordered_map<std::string, std::vector<std::string>> m_skinBoneNames;
     };
 }
 

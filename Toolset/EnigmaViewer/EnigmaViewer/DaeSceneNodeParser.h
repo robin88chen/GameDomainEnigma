@@ -26,7 +26,6 @@ namespace EnigmaViewer
         DaeSceneNodeParser(const std::function<void(const std::string&)>& output_pipe, const std::string& model_name);
 
         std::error_code parseSceneNode(const pugi::xml_node& scene_node_xml, const std::string& mesh_node_name);
-        std::error_code parseSkinSceneNode(const pugi::xml_node& scene_node_xml, const std::string& mesh_node_name);
 
         [[nodiscard]] const std::shared_ptr<Enigma::Renderables::MeshNodeAssembler>& getNodeAssembler() const { return m_nodeAssembler; }
 

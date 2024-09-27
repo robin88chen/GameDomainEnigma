@@ -31,7 +31,6 @@ namespace EnigmaViewer
 
     protected:
         std::error_code parseModelSceneNode(const pugi::xml_node& model_scene_node, const std::string& filename);
-        std::error_code parseSceneNode(const std::shared_ptr<Enigma::Renderables::MeshNodeTreeAssembler>& node_tree_assembler, const pugi::xml_node& scene_node_xml, std::optional<std::string> parent_node_name);
 
     protected:
         std::function<void(const std::string&)> m_outputPipe;

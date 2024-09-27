@@ -31,7 +31,7 @@ std::error_code DaeSceneNodeTreeParser::parseSceneNodeTree(const pugi::xml_node&
     return ParserError::ok;
 }
 
-std::error_code DaeSceneNodeTreeParser::parseSceneNode(const pugi::xml_node& scene_node_xml, std::optional<std::string> parent_node_name)
+std::error_code DaeSceneNodeTreeParser::parseSceneNode(const pugi::xml_node& scene_node_xml, const std::optional<std::string>& parent_node_name)
 {
     assert(m_nodeTreeAssembler);
     std::string node_xml_id = std::string(scene_node_xml.attribute(TOKEN_ID).as_string());
@@ -73,7 +73,7 @@ std::error_code DaeSceneNodeTreeParser::parseSceneNode(const pugi::xml_node& sce
     return ParserError::ok;
 }
 
-std::error_code DaeSceneNodeTreeParser::parseSceneNodeForSkin(const pugi::xml_node& scene_node_xml, std::optional<std::string> parent_node_name)
+std::error_code DaeSceneNodeTreeParser::parseSceneNodeForSkin(const pugi::xml_node& scene_node_xml, const std::optional<std::string>& parent_node_name)
 {
     DaeSkinSceneNodeParser skin_scene_node_parser(m_outputPipe, m_modelName);
     std::error_code er = skin_scene_node_parser.parseSkinSceneNode(scene_node_xml);

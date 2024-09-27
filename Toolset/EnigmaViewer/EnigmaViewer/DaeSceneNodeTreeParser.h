@@ -26,8 +26,8 @@ namespace EnigmaViewer
         [[nodiscard]] const std::shared_ptr<Enigma::Renderables::MeshNodeTreeAssembler>& getNodeTreeAssembler() const { return m_nodeTreeAssembler; }
 
     protected:
-        std::error_code parseSceneNode(const pugi::xml_node& scene_node_xml, std::optional<std::string> parent_node_name);
-        std::error_code parseSceneNodeForSkin(const pugi::xml_node& scene_node_xml, std::optional<std::string> parent_node_name);
+        std::error_code parseSceneNode(const pugi::xml_node& scene_node_xml, const std::optional<std::string>& parent_node_name);
+        std::error_code parseSceneNodeForSkin(const pugi::xml_node& scene_node_xml, const std::optional<std::string>& parent_node_name);
 
     protected:
         std::function<void(const std::string&)> m_outputPipe;

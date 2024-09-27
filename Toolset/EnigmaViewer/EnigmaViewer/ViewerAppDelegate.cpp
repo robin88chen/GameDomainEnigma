@@ -32,12 +32,9 @@
 #include "Platforms/PlatformLayerUtilities.h"
 #include "Primitives/PrimitiveRepositoryInstallingPolicy.h"
 #include "Renderables/ModelPrimitive.h"
-#include "Renderables/ModelPrimitiveAnimator.h"
 #include "Renderables/RenderablesInstallingPolicy.h"
 #include "Renderer/RendererInstallingPolicy.h"
 #include "SceneGraph/NodeAssembler.h"
-#include "SceneGraph/CameraAssembler.h"
-#include "SceneGraph/SceneGraphCommands.h"
 #include "SceneGraph/SceneGraphInstallingPolicy.h"
 #include "ShadowMap/ShadowMapInstallingPolicies.h"
 #include "ShadowMap/ShadowMapServiceConfiguration.h"
@@ -162,6 +159,14 @@ void ViewerAppDelegate::installEngine()
     CommandBus::subscribe(typeid(LoadAnimatedPawn), m_loadAnimatedPawn);
     m_removeAnimatedPawn = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { this->removeAnimatedPawn(c); });
     CommandBus::subscribe(typeid(RemoveAnimatedPawn), m_removeAnimatedPawn);
+    m_persistGeometryDto = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { this->persistGeometryDto(c); });
+    CommandBus::subscribe(typeid(PersistGeometryDto), m_persistGeometryDto);
+    m_persistPrimitiveDto = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { this->persistPrimitiveDto(c); });
+    CommandBus::subscribe(typeid(PersistPrimitiveDto), m_persistPrimitiveDto);
+    m_persistAnimationAssetDto = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { this->persistAnimationAssetDto(c); });
+    CommandBus::subscribe(typeid(PersistAnimationAssetDto), m_persistAnimationAssetDto);
+    m_persistAnimatorDto = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { this->persistAnimatorDto(c); });
+    CommandBus::subscribe(typeid(PersistAnimatorDto), m_persistAnimatorDto);
 
     assert(m_graphicMain);
 
@@ -221,6 +226,14 @@ void ViewerAppDelegate::shutdownEngine()
     m_loadAnimatedPawn = nullptr;
     CommandBus::unsubscribe(typeid(RemoveAnimatedPawn), m_removeAnimatedPawn);
     m_removeAnimatedPawn = nullptr;
+    CommandBus::unsubscribe(typeid(PersistGeometryDto), m_persistGeometryDto);
+    m_persistGeometryDto = nullptr;
+    CommandBus::unsubscribe(typeid(PersistPrimitiveDto), m_persistPrimitiveDto);
+    m_persistPrimitiveDto = nullptr;
+    CommandBus::unsubscribe(typeid(PersistAnimationAssetDto), m_persistAnimationAssetDto);
+    m_persistAnimationAssetDto = nullptr;
+    CommandBus::unsubscribe(typeid(PersistAnimatorDto), m_persistAnimatorDto);
+    m_persistAnimatorDto = nullptr;
 
     m_graphicMain->shutdownRenderEngine();
 }
@@ -261,7 +274,7 @@ void ViewerAppDelegate::onTimerElapsed()
 
 void ViewerAppDelegate::importDaeFile(const std::string& filename)
 {
-    DaeParser parser(m_geometryDataFileStoreMapper, m_animationAssetFileStoreMapper, m_animatorFileStoreMapper, m_primitiveFileStoreMapper);
+    DaeParser parser;
     parser.loadDaeFile(filename);
     refreshModelList();
 }
@@ -416,6 +429,38 @@ void ViewerAppDelegate::removeAnimatedPawn(const Enigma::Frameworks::ICommandPtr
     auto cmd = std::dynamic_pointer_cast<RemoveAnimatedPawn, ICommand>(c);
     if (!cmd) return;
     removeAnimatedPawn(cmd->name());
+}
+
+void ViewerAppDelegate::persistGeometryDto(const Enigma::Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<PersistGeometryDto, ICommand>(c);
+    if (!cmd) return;
+    m_geometryDataFileStoreMapper->putGeometry(cmd->id(), cmd->dto());
+}
+
+void ViewerAppDelegate::persistPrimitiveDto(const Enigma::Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<PersistPrimitiveDto, ICommand>(c);
+    if (!cmd) return;
+    m_primitiveFileStoreMapper->putPrimitive(cmd->id(), cmd->dto());
+}
+
+void ViewerAppDelegate::persistAnimationAssetDto(const Enigma::Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<PersistAnimationAssetDto, ICommand>(c);
+    if (!cmd) return;
+    m_animationAssetFileStoreMapper->putAnimationAsset(cmd->id(), cmd->dto());
+}
+
+void ViewerAppDelegate::persistAnimatorDto(const Enigma::Frameworks::ICommandPtr& c)
+{
+    if (!c) return;
+    auto cmd = std::dynamic_pointer_cast<PersistAnimatorDto, ICommand>(c);
+    if (!cmd) return;
+    m_animatorFileStoreMapper->putAnimator(cmd->id(), cmd->dto());
 }
 
 void ViewerAppDelegate::refreshModelList()

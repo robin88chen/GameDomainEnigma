@@ -123,7 +123,7 @@ void AnimationInfoPanel::onAddActionButton(const nana::arg_click& ev)
 {
     if (!m_actionTableBox) return;
     auto cat = m_actionTableBox->at(0); //Get the proxy to the default category
-    unsigned int count = cat.size();
+    unsigned int count = static_cast<unsigned>(cat.size());
     std::string name = string_format("Item %d", count);
     AnimClipInfoItem clip{ name };
     cat.append(clip);

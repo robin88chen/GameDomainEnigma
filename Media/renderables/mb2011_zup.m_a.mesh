@@ -1,4 +1,12 @@
 [{
+        "RenderListId": {
+            "Type": "Uint32",
+            "Value": 1
+        },
+        "GeometryId": {
+            "Type": "String",
+            "Value": "geometries/mb2011_zup.m_a"
+        },
         "Rtti": {
             "Type": "FactoryDesc",
             "Value": {
@@ -9,25 +17,17 @@
                 "PrefabFilename": "renderables/mb2011_zup.m_a.mesh@APK_PATH"
             }
         },
-        "GeometryId": {
-            "Type": "String",
-            "Value": "geometries/mb2011_zup.m_a"
-        },
-        "RenderListId": {
-            "Type": "Uint32",
-            "Value": 1
-        },
         "Id": {
             "Type": "StringArray",
             "Value": ["renderables/mb2011_zup.m_a", "0", "En.Renderables.SkinMeshPrimitive"]
         },
-        "Effects": {
-            "Type": "StringArray",
-            "Value": ["fx/default_textured_skinmesh_effect"]
-        },
         "VisualTechniqueSelection": {
             "Type": "String",
             "Value": "Default"
+        },
+        "Effects": {
+            "Type": "StringArray",
+            "Value": ["fx/default_textured_skinmesh_effect"]
         },
         "TextureMaps": {
             "Type": "DataObjectArray",

@@ -1,4 +1,4 @@
 0
 animators/mb2011_zup,0,En.Renderables.ModelPrimitiveAnimator,animators/mb2011_zup.animator@APK_PATH
-animators/mb7013_zup,0,En.Renderables.ModelPrimitiveAnimator,animators/mb7013_zup.animator@APK_PATH
 animators/mb7013,0,En.Renderables.ModelPrimitiveAnimator,animators/mb7013.animator@APK_PATH
+animators/mb7013_zup,0,En.Renderables.ModelPrimitiveAnimator,animators/mb7013_zup.animator@APK_PATH

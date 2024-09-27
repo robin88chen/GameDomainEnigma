@@ -1,4 +1,12 @@
 [{
+        "RenderListId": {
+            "Type": "Uint32",
+            "Value": 1
+        },
+        "GeometryId": {
+            "Type": "String",
+            "Value": "geometries/mb2011_zup.k_heart"
+        },
         "Rtti": {
             "Type": "FactoryDesc",
             "Value": {
@@ -9,28 +17,16 @@
                 "PrefabFilename": "renderables/mb2011_zup.k_heart.mesh@APK_PATH"
             }
         },
-        "GeometryId": {
-            "Type": "String",
-            "Value": "geometries/mb2011_zup.k_heart"
-        },
-        "RenderListId": {
-            "Type": "Uint32",
-            "Value": 1
-        },
         "Id": {
             "Type": "StringArray",
             "Value": ["renderables/mb2011_zup.k_heart", "0", "En.Renderables.MeshPrimitive"]
-        },
-        "Effects": {
-            "Type": "StringArray",
-            "Value": ["fx/default_color_mesh_effect"]
         },
         "VisualTechniqueSelection": {
             "Type": "String",
             "Value": "Default"
         },
-        "TextureMaps": {
-            "Type": "DataObjectArray",
-            "Value": []
+        "Effects": {
+            "Type": "StringArray",
+            "Value": ["fx/default_color_mesh_effect"]
         }
     }]

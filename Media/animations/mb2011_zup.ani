@@ -1,22 +1,4 @@
 [{
-        "Rtti": {
-            "Type": "FactoryDesc",
-            "Value": {
-                "InstanceType": 5,
-                "ResourceName": "animations/mb2011_zup",
-                "ResourceFilename": "animations/mb2011_zup.ani@APK_PATH",
-                "RttiName": "En.Renderables.ModelAnimationAsset",
-                "PrefabFilename": ""
-            }
-        },
-        "Id": {
-            "Type": "String",
-            "Value": "animations/mb2011_zup"
-        },
-        "MeshNodeNames": {
-            "Type": "StringArray",
-            "Value": ["Bip01", "Bip01 Pelvis", "Bip01 Spine", "Bip01 Spine1", "Bip01 Spine2", "Bip01 Neck", "Bip01 Head", "Bone06", "Bone04", "Bip01 L Clavicle", "Bip01 L UpperArm", "Bip01 L Forearm", "Bip01 L Hand", "Bip01 R Clavicle", "Bip01 R UpperArm", "Bip01 R Forearm", "Bip01 R Hand", "Bip01 L Thigh", "Bip01 L Calf", "Bip01 L Foot", "Bip01 L Toe0", "Bip01 R Thigh", "Bip01 R Calf", "Bip01 R Foot", "Bip01 R Toe0", "Bone01", "Bone02"]
-        },
         "TimeSRTs": {
             "Type": "DataObjectArray",
             "Value": [{
@@ -371,5 +353,23 @@
                         "Value": [0.04166661947965622, 0.17457009851932526, -0.00770503981038928, 2.98022992950564e-8, 1.1666669845581055, 0.17457009851932526, -0.00770503981038928, 2.98022992950564e-8, 1.2916669845581055, 0.17457009851932526, -0.007705050986260176, -8.940700269022273e-8, 1.4583330154418945, 0.17457009851932526, -0.007705032825469971, 5.96045985901128e-8, 2.6666669845581055, 0.17457009851932526, -0.007705022115260363, 2.98022992950564e-8, 3.2083330154418945, 0.17457009851932526, -0.007705070078372955, -8.940700269022273e-8, 3.25, 0.17457009851932526, -0.0077050551772117615, 2.98022992950564e-8, 10.416669845581055, 0.17457009851932526, -0.007705084979534149, 5.96045985901128e-8]
                     }
                 }]
+        },
+        "MeshNodeNames": {
+            "Type": "StringArray",
+            "Value": ["Bip01", "Bip01 Pelvis", "Bip01 Spine", "Bip01 Spine1", "Bip01 Spine2", "Bip01 Neck", "Bip01 Head", "Bone06", "Bone04", "Bip01 L Clavicle", "Bip01 L UpperArm", "Bip01 L Forearm", "Bip01 L Hand", "Bip01 R Clavicle", "Bip01 R UpperArm", "Bip01 R Forearm", "Bip01 R Hand", "Bip01 L Thigh", "Bip01 L Calf", "Bip01 L Foot", "Bip01 L Toe0", "Bip01 R Thigh", "Bip01 R Calf", "Bip01 R Foot", "Bip01 R Toe0", "Bone01", "Bone02"]
+        },
+        "Id": {
+            "Type": "String",
+            "Value": "animations/mb2011_zup"
+        },
+        "Rtti": {
+            "Type": "FactoryDesc",
+            "Value": {
+                "InstanceType": 5,
+                "ResourceName": "animations/mb2011_zup",
+                "ResourceFilename": "animations/mb2011_zup.ani@APK_PATH",
+                "RttiName": "En.Renderables.ModelAnimationAsset",
+                "PrefabFilename": ""
+            }
         }
     }]

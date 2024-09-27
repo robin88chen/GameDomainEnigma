@@ -1,0 +1,62 @@
+﻿#include "DaeParserErrors.h"
+
+using namespace EnigmaViewer;
+
+const ParserErrorCategory ParserErrorCategory::ms_category;
+
+std::string ParserErrorCategory::message(int err) const
+{
+    switch (static_cast<ParserError>(err))
+    {
+    case ParserError::ok: return "OK";
+    case ParserError::emptyRoot: return "Empty root";
+    case ParserError::noSceneNode: return "No scene node";
+    case ParserError::noInstanceScene: return "No instance scene";
+    case ParserError::instanceSceneUrlError: return "Instance scene url error";
+    case ParserError::noModelSceneNode: return "No model scene node";
+    case ParserError::noAnimationsLib: return "No animations library";
+    case ParserError::noAnimationNode: return "No animation node";
+    case ParserError::noAnimationNameNode: return "No animation name node";
+    case ParserError::noAnimationKeyNode: return "No animation key node";
+    case ParserError::noAnimationChannel: return "No animation channel";
+    case ParserError::noAnimationSamplerSource: return "No animation sampler source";
+    case ParserError::noAnimationSampler: return "No animation sampler";
+    case ParserError::noTimeValueSource: return "No time value source";
+    case ParserError::noTimeValueArray: return "No time value array";
+    case ParserError::noAnimMatrixSource: return "No animation matrix source";
+    case ParserError::noAnimMatrixArray: return "No animation matrix array";
+    case ParserError::noTimeValues: return "No time values";
+    case ParserError::animMatrixCountMismatch: return "Animation matrix count mismatch";
+    case ParserError::noAnimationTarget: return "No animation target";
+    case ParserError::noAnimationTargetMesh: return "No animation target mesh";
+    case ParserError::noGeometryNode: return "No geometry node";
+    case ParserError::noMeshVertices: return "No mesh vertices";
+    case ParserError::noTriangles: return "No triangles";
+    case ParserError::noPositionArray: return "No position array";
+    case ParserError::noNormalArray: return "No normal array";
+    case ParserError::noTexcoordArray: return "No texcoord array";
+    case ParserError::notSkinGeometry: return "Not a skin geometry";
+    case ParserError::noController: return "No controller";
+    case ParserError::noControlledSkin: return "No controlled skin";
+    case ParserError::noVertexWeights: return "No vertex weights";
+    case ParserError::noWeightCount: return "No weight count";
+    case ParserError::tooManyWeights: return "Too many weights";
+    case ParserError::noInfluencePair: return "No influence pair";
+    case ParserError::noBoneNameArray: return "No bone name array";
+    case ParserError::noWeightsArray: return "No weights array";
+    case ParserError::noMatrixTransform: return "No matrix transform";
+    }
+    return "Unknown";
+}
+
+const char* ParserErrorCategory::name() const noexcept
+{
+    return "Dae Parser Error Category";
+}
+namespace EnigmaViewer
+{
+    std::error_code make_error_code(ParserError er)
+    {
+        return std::error_code(static_cast<int>(er), ParserErrorCategory::get());
+    }
+}

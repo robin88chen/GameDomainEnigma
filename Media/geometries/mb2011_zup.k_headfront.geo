@@ -21,10 +21,6 @@
             "Type": "Uint32",
             "Value": 3
         },
-        "Segments": {
-            "Type": "Uint32Array",
-            "Value": [0, 3, 0, 3]
-        },
         "GeometryBound": {
             "Type": "DataObject",
             "Value": {
@@ -33,6 +29,10 @@
                     "Value": [-2.9802322387695313e-8, 0.000007174400707299355, -2.9802322387695313e-8, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.013462330214679241, 0.000029640301363542676, 0.010142830200493336]
                 }
             }
+        },
+        "Segments": {
+            "Type": "Uint32Array",
+            "Value": [0, 3, 0, 3]
         },
         "VertexCapacity": {
             "Type": "Uint32",
@@ -70,9 +70,5 @@
         "Indices": {
             "Type": "Uint32Array",
             "Value": [0, 1, 2]
-        },
-        "Name": {
-            "Type": "String",
-            "Value": "geometries/mb2011_zup.k_headfront"
         }
     }]

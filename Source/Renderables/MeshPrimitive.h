@@ -19,9 +19,13 @@
 #include <system_error>
 #include <vector>
 
+#include "PrimitiveMaterial.h"
+
 namespace Enigma::Renderables
 {
     using error = std::error_code;
+
+    class PrimitiveMaterial;
 
     class MeshPrimitive : public Primitives::Primitive
     {
@@ -46,13 +50,13 @@ namespace Enigma::Renderables
         const Geometries::GeometryDataPtr& getGeometryData() const { return m_geometry; };
 
         /** get effect */
-        std::shared_ptr<Engine::EffectMaterial> getEffectMaterial(unsigned index);
+        std::shared_ptr<PrimitiveMaterial> getMaterial(unsigned index);
         /** get material count */
-        unsigned getEffectMaterialCount() const;
+        unsigned getMaterialCount() const;
         /** get texture map */
-        const Engine::EffectTextureMap& getTextureMap(unsigned int index);
+        //const Engine::EffectTextureMap& getTextureMap(unsigned int index);
         /** get texture map size */
-        unsigned getTextureMapCount() const;
+        //unsigned getTextureMapCount() const;
         /** change specify semantic texture */
         void changeSemanticTexture(const Engine::EffectTextureMap::EffectSemanticTextureTuple& tuple);
         /** bind specify semantic texture, append new if semantic not existed */
@@ -92,13 +96,13 @@ namespace Enigma::Renderables
         /** change primitive's effect */
         virtual void changeEffectMaterials(const EffectMaterialList& effects);
         /** resize effect list */
-        void resizeEffectMaterialVector(unsigned new_size) { m_effects.resize(new_size); };
+        //void resizeEffectMaterialVector(unsigned new_size) { m_effects.resize(new_size); };
         /** change segment's texture map */
         void changeTextureMapInSegment(unsigned index, const Engine::EffectTextureMap& tex_map);
         /** change primitive's texture map */
         void changeTextureMaps(const TextureMapList& tex_maps);
         /** resize texture map list */
-        void resizeTextureMapVector(unsigned new_size) { m_textures.resize(new_size); };
+        //void resizeTextureMapVector(unsigned new_size) { m_textures.resize(new_size); };
         /** create render elements */
         void createRenderElements();
         //@}
@@ -108,14 +112,18 @@ namespace Enigma::Renderables
     protected:
         void cleanupGeometry();
 
+        void bindPrimitiveMaterials();
+        void bindSegmentMaterial(unsigned index);
+        void loosePrimitiveMaterials();
+        void looseSegmentMaterial(unsigned index);
         /** bind primitive effect texture */
-        void bindPrimitiveEffectTexture();
+        //void bindPrimitiveEffectTexture();
         /** bind segment effect texture */
-        void bindSegmentEffectTexture(unsigned index);
+        //void bindSegmentEffectTexture(unsigned index);
         /** un-bind primitive effect texture */
-        void loosePrimitiveEffectTexture();
+        //void loosePrimitiveEffectTexture();
         /** un-bind segment effect texture */
-        void looseSegmentEffectTexture(unsigned index);
+        //void looseSegmentEffectTexture(unsigned index);
 
     protected:
         using RenderElementList = std::vector<std::shared_ptr<Renderer::RenderElement>>;
@@ -123,8 +131,9 @@ namespace Enigma::Renderables
         Engine::RenderBufferPtr m_renderBuffer;
         RenderElementList m_elements;
         //todo: 每個 segment 中的 effect 和 texture map 是一個 value object, 不該分開
-        EffectMaterialList m_effects;
-        TextureMapList m_textures;
+        std::vector<std::shared_ptr<PrimitiveMaterial>> m_materials;
+        //EffectMaterialList m_effects;
+        //TextureMapList m_textures;
         Renderer::Renderer::RenderListID m_renderListID;  ///< default : render group scene
     };
 }

@@ -28,16 +28,19 @@ MeshPrimitive::MeshPrimitive(const Primitives::PrimitiveId& id) : Primitive(id)
     m_renderBuffer = nullptr;
     m_renderListID = Renderer::Renderer::RenderListID::Scene;
     m_elements.clear();
-    m_effects.clear();
-    m_textures.clear();
+    m_materials.clear();
+    //m_effects.clear();
+    //m_textures.clear();
 }
 
 MeshPrimitive::~MeshPrimitive()
 {
     cleanupGeometry();
-    loosePrimitiveEffectTexture();
-    m_effects.clear();
-    m_textures.clear();
+    loosePrimitiveMaterials();
+    //loosePrimitiveEffectTexture();
+    m_materials.clear();
+    //m_effects.clear();
+    //m_textures.clear();
 }
 
 std::shared_ptr<Enigma::Primitives::PrimitiveAssembler> MeshPrimitive::assembler() const
@@ -59,7 +62,11 @@ void MeshPrimitive::assemble(const std::shared_ptr<Primitives::PrimitiveAssemble
             mesh_assembler->geometry(m_geometry);
         }
     }
-    for (auto& eff : m_effects)
+    for (auto& mat : m_materials)
+    {
+        mesh_assembler->addMaterial(mat);
+    }
+    /*for (auto& eff : m_effects)
     {
         mesh_assembler->addEffect(eff->id());
     }
@@ -69,7 +76,7 @@ void MeshPrimitive::assemble(const std::shared_ptr<Primitives::PrimitiveAssemble
         std::shared_ptr<EffectTextureMapAssembler> tex_assembler = std::make_shared<EffectTextureMapAssembler>();
         tex.assemble(tex_assembler);
         mesh_assembler->addTextureMap(tex_assembler);
-    }
+    }*/
     mesh_assembler->renderListID(m_renderListID);
     mesh_assembler->visualTechnique(m_selectedVisualTech);
 }
@@ -97,7 +104,8 @@ void MeshPrimitive::disassemble(const std::shared_ptr<Primitives::PrimitiveDisas
     m_lazyStatus.changeStatus(Frameworks::LazyStatus::Status::Ghost);
     m_renderBuffer = nullptr;
     m_elements.clear();
-    m_effects.clear();
+    m_materials = mesh_disassembler->materials();
+    /*m_effects.clear();
     for (auto& eff_id : mesh_disassembler->effects())
     {
         m_effects.emplace_back(EffectMaterial::queryEffectMaterial(eff_id));
@@ -108,23 +116,23 @@ void MeshPrimitive::disassemble(const std::shared_ptr<Primitives::PrimitiveDisas
         EffectTextureMap tex_map;
         tex_map.disassemble(tex_map_dto);
         m_textures.emplace_back(tex_map);
-    }
+    }*/
     m_renderListID = mesh_disassembler->renderListID();
     m_selectedVisualTech = mesh_disassembler->visualTechniqueSelection();
 }
 
-std::shared_ptr<EffectMaterial> MeshPrimitive::getEffectMaterial(unsigned index)
+std::shared_ptr<PrimitiveMaterial> MeshPrimitive::getMaterial(unsigned index)
 {
-    if (index >= m_effects.size()) return nullptr;
-    return m_effects[index];
+    if (index >= m_materials.size()) return nullptr;
+    return m_materials[index];
 }
 
-unsigned MeshPrimitive::getEffectMaterialCount() const
+unsigned MeshPrimitive::getMaterialCount() const
 {
-    return static_cast<unsigned>(m_effects.size());
+    return static_cast<unsigned>(m_materials.size());
 }
 
-const EffectTextureMap& MeshPrimitive::getTextureMap(unsigned index)
+/*const EffectTextureMap& MeshPrimitive::getTextureMap(unsigned index)
 {
     assert(index < m_textures.size());
     return m_textures[index];
@@ -133,33 +141,57 @@ const EffectTextureMap& MeshPrimitive::getTextureMap(unsigned index)
 unsigned MeshPrimitive::getTextureMapCount() const
 {
     return static_cast<unsigned>(m_textures.size());
-}
+}*/
 
 void MeshPrimitive::changeSemanticTexture(const Engine::EffectTextureMap::EffectSemanticTextureTuple& tuple)
 {
-    if (m_textures.empty()) return;
+    if (m_materials.empty()) return;
+    loosePrimitiveMaterials();
+    for (auto& mat : m_materials)
+    {
+        if (mat == nullptr) continue;
+        mat->changeSemanticTexture(tuple);
+    }
+    bindPrimitiveMaterials();
+    /*if (m_textures.empty()) return;
     loosePrimitiveEffectTexture();
     for (auto& tm : m_textures)
     {
         tm.changeSemanticTexture(tuple);
     }
-    bindPrimitiveEffectTexture();
+    bindPrimitiveEffectTexture();*/
 }
 
 void MeshPrimitive::bindSemanticTexture(const Engine::EffectTextureMap::EffectSemanticTextureTuple& tuple)
 {
-    if (m_textures.empty()) return;
+    if (m_materials.empty()) return;
+    loosePrimitiveMaterials();
+    for (auto& mat : m_materials)
+    {
+        if (mat == nullptr) continue;
+        mat->bindSemanticTexture(tuple);
+    }
+    bindPrimitiveMaterials();
+    /*if (m_textures.empty()) return;
     loosePrimitiveEffectTexture();
     for (auto& tm : m_textures)
     {
         tm.bindSemanticTexture(tuple);
     }
-    bindPrimitiveEffectTexture();
+    bindPrimitiveEffectTexture();*/
 }
 
 void MeshPrimitive::bindSemanticTextures(const EffectTextureMap::SegmentEffectTextures& texture_tuples)
 {
-    if (m_textures.empty()) return;
+    if (m_materials.empty()) return;
+    loosePrimitiveMaterials();
+    for (auto& mat : m_materials)
+    {
+        if (mat == nullptr) continue;
+        mat->bindSemanticTextures(texture_tuples);
+    }
+    bindPrimitiveMaterials();
+    /*if (m_textures.empty()) return;
     loosePrimitiveEffectTexture();
     for (auto& tm : m_textures)
     {
@@ -168,7 +200,7 @@ void MeshPrimitive::bindSemanticTextures(const EffectTextureMap::SegmentEffectTe
             tm.bindSemanticTexture(tuple);
         }
     }
-    bindPrimitiveEffectTexture();
+    bindPrimitiveEffectTexture();*/
 }
 
 error MeshPrimitive::updateRenderBuffer()
@@ -239,10 +271,14 @@ void MeshPrimitive::updateWorldTransform(const MathLib::Matrix4& mxWorld)
 void MeshPrimitive::selectVisualTechnique(const std::string& techniqueName)
 {
     Primitive::selectVisualTechnique(techniqueName);
-    for (auto& eff : m_effects)
+    for (auto mat : m_materials)
+    {
+        if (mat) mat->selectVisualTechnique(techniqueName);
+    }
+    /*for (auto& eff : m_effects)
     {
         eff->selectVisualTechnique(techniqueName);
-    }
+    }*/
 }
 
 void MeshPrimitive::linkGeometryData(const Geometries::GeometryDataPtr& geo, const Engine::RenderBufferPtr& render_buffer)
@@ -255,36 +291,56 @@ void MeshPrimitive::linkGeometryData(const Geometries::GeometryDataPtr& geo, con
 
 void MeshPrimitive::changeEffectMaterialInSegment(unsigned index, const std::shared_ptr<EffectMaterial>& effect)
 {
-    if (index >= m_effects.size()) return;
+    if (index >= m_materials.size()) return;
+    looseSegmentMaterial(index);
+    if (m_materials[index]) m_materials[index]->changeEffect(effect);
+    bindSegmentMaterial(index);
+    /*if (index >= m_effects.size()) return;
     looseSegmentEffectTexture(index);
     m_effects[index] = effect;
-    bindSegmentEffectTexture(index);
+    bindSegmentEffectTexture(index);*/
 }
 
 void MeshPrimitive::changeEffectMaterials(const EffectMaterialList& effects)
 {
-    loosePrimitiveEffectTexture();
+    loosePrimitiveMaterials();
+    for (unsigned i = 0; i < effects.size() && i < m_materials.size(); i++)
+    {
+        if (m_materials[i]) m_materials[i]->changeEffect(effects[i]);
+    }
+    bindPrimitiveMaterials();
+    /*loosePrimitiveEffectTexture();
     m_effects.clear();
     if (effects.size() == 0) return;
     m_effects = effects;
-    bindPrimitiveEffectTexture();
+    bindPrimitiveEffectTexture();*/
 }
 
 void MeshPrimitive::changeTextureMapInSegment(unsigned index, const Engine::EffectTextureMap& tex_map)
 {
-    if (index >= m_textures.size()) return;
+    if (index >= m_materials.size()) return;
+    looseSegmentMaterial(index);
+    if (m_materials[index]) m_materials[index]->changeTextureMap(tex_map);
+    bindSegmentMaterial(index);
+    /*if (index >= m_textures.size()) return;
     looseSegmentEffectTexture(index);
     m_textures[index] = tex_map;
-    bindSegmentEffectTexture(index);
+    bindSegmentEffectTexture(index);*/
 }
 
 void MeshPrimitive::changeTextureMaps(const TextureMapList& tex_maps)
 {
-    loosePrimitiveEffectTexture();
+    loosePrimitiveMaterials();
+    for (unsigned i = 0; i < tex_maps.size() && i < m_materials.size(); i++)
+    {
+        if (m_materials[i]) m_materials[i]->changeTextureMap(tex_maps[i]);
+    }
+    bindPrimitiveMaterials();
+    /*loosePrimitiveEffectTexture();
     m_textures.clear();
     if (tex_maps.size() == 0) return;
     m_textures = tex_maps;
-    bindPrimitiveEffectTexture();
+    bindPrimitiveEffectTexture();*/
 }
 
 void MeshPrimitive::createRenderElements()
@@ -292,13 +348,13 @@ void MeshPrimitive::createRenderElements()
     assert(m_geometry);
     assert(m_renderBuffer);
     unsigned elem_count = m_geometry->getSegmentCount();
-    if (elem_count > m_effects.size()) elem_count = static_cast<unsigned>(m_effects.size());
+    if (elem_count > m_materials.size()) elem_count = static_cast<unsigned>(m_materials.size());
     assert(elem_count > 0);
     m_elements.clear();
     m_elements.reserve(elem_count);
     for (unsigned i = 0; i < elem_count; i++)
     {
-        m_elements.emplace_back(std::make_shared<Renderer::RenderElement>(m_renderBuffer, m_effects[i], m_geometry->getSegment(i)));
+        m_elements.emplace_back(std::make_shared<Renderer::RenderElement>(m_renderBuffer, m_materials[i]->effectMaterial(), m_geometry->getSegment(i)));
     }
 }
 
@@ -309,7 +365,41 @@ void MeshPrimitive::cleanupGeometry()
     m_renderBuffer = nullptr;
 }
 
-void MeshPrimitive::bindPrimitiveEffectTexture()
+void MeshPrimitive::bindPrimitiveMaterials()
+{
+    if (m_materials.empty()) return;
+    for (auto& mat : m_materials)
+    {
+        if (mat == nullptr) continue;
+        mat->assignShaderTextures();
+    }
+}
+
+void MeshPrimitive::bindSegmentMaterial(unsigned index)
+{
+    if (index >= m_materials.size()) return;
+    if (m_materials[index] == nullptr) return;
+    m_materials[index]->assignShaderTextures();
+}
+
+void MeshPrimitive::loosePrimitiveMaterials()
+{
+    if (m_materials.empty()) return;
+    for (auto& mat : m_materials)
+    {
+        if (mat == nullptr) continue;
+        mat->unassignShaderTextures();
+    }
+}
+
+void MeshPrimitive::looseSegmentMaterial(unsigned index)
+{
+    if (index >= m_materials.size()) return;
+    if (m_materials[index] == nullptr) return;
+    m_materials[index]->unassignShaderTextures();
+}
+
+/*void MeshPrimitive::bindPrimitiveEffectTexture()
 {
     if (m_effects.empty()) return;
     if (m_textures.empty()) return;
@@ -333,79 +423,80 @@ void MeshPrimitive::bindPrimitiveEffectTexture()
                     var.AssignValue(IShaderVariable::TextureVarTuple{
                         std::get<TexturePtr>(eff_tex_set)->GetDeviceTexture(), std::get<std::optional<unsigned>>(eff_tex_set) });
                 });*/
-        }
-    }
-}
+                /*}
+            }
+        }*/
 
-void MeshPrimitive::loosePrimitiveEffectTexture()
-{
-    if (m_effects.empty()) return;
-    if (m_textures.empty()) return;
-    EffectMaterialList::iterator eff_iter;
-    TextureMapList::iterator tex_iter;
-    for (eff_iter = m_effects.begin(), tex_iter = m_textures.begin();
-        ((eff_iter != m_effects.end()) && (tex_iter != m_textures.end()));
-        ++eff_iter, ++tex_iter)
-    {
-        if (*eff_iter == nullptr) continue;
-        for (unsigned i = 0; i < (*tex_iter).getCount(); i++)
+        /*void MeshPrimitive::loosePrimitiveEffectTexture()
         {
-            auto& eff_tex_set = (*tex_iter).getEffectSemanticTextureTuple(i);
-            // 改直接指定
-            (*eff_iter)->assignVariableValue(std::get<std::string>(eff_tex_set), IShaderVariable::TextureVarTuple{ nullptr, std::nullopt });
-            /*(*eff_iter)->setVariableAssignFunc(std::get<std::string>(eff_tex_set),
-                [=](auto& var)
+            if (m_effects.empty()) return;
+            if (m_textures.empty()) return;
+            EffectMaterialList::iterator eff_iter;
+            TextureMapList::iterator tex_iter;
+            for (eff_iter = m_effects.begin(), tex_iter = m_textures.begin();
+                ((eff_iter != m_effects.end()) && (tex_iter != m_textures.end()));
+                ++eff_iter, ++tex_iter)
+            {
+                if (*eff_iter == nullptr) continue;
+                for (unsigned i = 0; i < (*tex_iter).getCount(); i++)
                 {
-                    var.AssignValue(IShaderVariable::TextureVarTuple{ nullptr, std::nullopt });
-                });*/
-        }
-    }
-}
+                    auto& eff_tex_set = (*tex_iter).getEffectSemanticTextureTuple(i);
+                    // 改直接指定
+                    (*eff_iter)->assignVariableValue(std::get<std::string>(eff_tex_set), IShaderVariable::TextureVarTuple{ nullptr, std::nullopt });
+                    /*(*eff_iter)->setVariableAssignFunc(std::get<std::string>(eff_tex_set),
+                        [=](auto& var)
+                        {
+                            var.AssignValue(IShaderVariable::TextureVarTuple{ nullptr, std::nullopt });
+                        });*/
+                        /*}
+                    }
+                }*/
 
-void MeshPrimitive::bindSegmentEffectTexture(unsigned index)
-{
-    if (index >= m_effects.size()) return;
-    if (index >= m_textures.size()) return;
-    if (m_effects[index] == nullptr) return;
-    for (unsigned i = 0; i < m_textures[index].getCount(); i++)
-    {
-        auto& eff_tex_set = (m_textures[index]).getEffectSemanticTextureTuple(i);
-        if (std::get<std::shared_ptr<Texture>>(eff_tex_set) == nullptr) continue;
-        // 改直接指定
-        m_effects[index]->assignVariableValue(std::get<std::string>(eff_tex_set), IShaderVariable::TextureVarTuple{
-                    std::get<std::shared_ptr<Texture>>(eff_tex_set)->getDeviceTexture(), std::get<std::optional<unsigned>>(eff_tex_set) });
-        /*m_effects[index]->setVariableAssignFunc(std::get<std::string>(eff_tex_set),
-            [=](auto& var)
-            {
-                var.AssignValue(IShaderVariable::TextureVarTuple{
-                    std::get<TexturePtr>(eff_tex_set)->GetDeviceTexture(), std::get<std::optional<unsigned>>(eff_tex_set) });
-            });*/
-    }
-}
+                /*void MeshPrimitive::bindSegmentEffectTexture(unsigned index)
+                {
+                    if (index >= m_effects.size()) return;
+                    if (index >= m_textures.size()) return;
+                    if (m_effects[index] == nullptr) return;
+                    for (unsigned i = 0; i < m_textures[index].getCount(); i++)
+                    {
+                        auto& eff_tex_set = (m_textures[index]).getEffectSemanticTextureTuple(i);
+                        if (std::get<std::shared_ptr<Texture>>(eff_tex_set) == nullptr) continue;
+                        // 改直接指定
+                        m_effects[index]->assignVariableValue(std::get<std::string>(eff_tex_set), IShaderVariable::TextureVarTuple{
+                                    std::get<std::shared_ptr<Texture>>(eff_tex_set)->getDeviceTexture(), std::get<std::optional<unsigned>>(eff_tex_set) });
+                        /*m_effects[index]->setVariableAssignFunc(std::get<std::string>(eff_tex_set),
+                            [=](auto& var)
+                            {
+                                var.AssignValue(IShaderVariable::TextureVarTuple{
+                                    std::get<TexturePtr>(eff_tex_set)->GetDeviceTexture(), std::get<std::optional<unsigned>>(eff_tex_set) });
+                            });*/
+                            /*}
+                        }*/
 
-void MeshPrimitive::looseSegmentEffectTexture(unsigned index)
-{
-    if (index >= m_effects.size()) return;
-    if (index >= m_textures.size()) return;
-    if (m_effects[index] == nullptr) return;
-    for (unsigned i = 0; i < m_textures[index].getCount(); i++)
-    {
-        auto& eff_tex_set = m_textures[index].getEffectSemanticTextureTuple(i);
-        // 改直接指定
-        m_effects[index]->assignVariableValue(std::get<std::string>(eff_tex_set), IShaderVariable::TextureVarTuple{ nullptr, std::nullopt });
-        /*m_effects[index]->setVariableAssignFunc(std::get<std::string>(eff_tex_set),
-            [=](auto& var)
-            {
-                var.AssignValue(IShaderVariable::TextureVarTuple{ nullptr, std::nullopt });
-            });*/
-    }
-}
+                        /*void MeshPrimitive::looseSegmentEffectTexture(unsigned index)
+                        {
+                            if (index >= m_effects.size()) return;
+                            if (index >= m_textures.size()) return;
+                            if (m_effects[index] == nullptr) return;
+                            for (unsigned i = 0; i < m_textures[index].getCount(); i++)
+                            {
+                                auto& eff_tex_set = m_textures[index].getEffectSemanticTextureTuple(i);
+                                // 改直接指定
+                                m_effects[index]->assignVariableValue(std::get<std::string>(eff_tex_set), IShaderVariable::TextureVarTuple{ nullptr, std::nullopt });
+                                /*m_effects[index]->setVariableAssignFunc(std::get<std::string>(eff_tex_set),
+                                    [=](auto& var)
+                                    {
+                                        var.AssignValue(IShaderVariable::TextureVarTuple{ nullptr, std::nullopt });
+                                    });*/
+                                    /*}
+                                }*/
 
 std::shared_ptr<Texture> MeshPrimitive::findTextureBySemantic(const std::string& semantic) const
 {
-    for (auto& eff_tex : m_textures)
+    for (auto& mat : m_materials)
     {
-        auto tex_tuple = eff_tex.findSemanticTexture(semantic);
+        if (mat == nullptr) continue;
+        auto tex_tuple = mat->effectTextureMap().findSemanticTexture(semantic);
         if (!tex_tuple) continue;
         if (const auto& tex = std::get<std::shared_ptr<Texture>>(tex_tuple.value()))
         {

@@ -54,6 +54,15 @@ void EffectTextureMap::disassemble(const std::shared_ptr<EffectTextureMapDisasse
     }
 }
 
+error EffectTextureMap::addSemanticTexture(const SemanticTextureMapping& mapping)
+{
+    if (mapping.m_semantic.empty()) return ErrorCode::textureSemantic;
+    if (auto index = getTextureIndexBySemantic(mapping.m_semantic); index) return ErrorCode::textureSemantic;
+    EffectSemanticTextureTuple tuple = std::make_tuple(Texture::queryTexture(mapping.m_textureId), mapping.m_arrayIndex, mapping.m_semantic);
+    m_effectTextures.emplace_back(tuple);
+    return ErrorCode::ok;
+}
+
 error EffectTextureMap::bindSemanticTexture(const EffectSemanticTextureTuple& tuple)
 {
     auto index = getTextureIndexBySemantic(std::get<std::string>(tuple));

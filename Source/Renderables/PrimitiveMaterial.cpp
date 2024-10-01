@@ -41,8 +41,8 @@ std::shared_ptr<PrimitiveMaterialDisassembler> PrimitiveMaterial::disassembler()
 void PrimitiveMaterial::disassemble(const std::shared_ptr<PrimitiveMaterialDisassembler>& disassembler)
 {
     assert(disassembler);
-    m_effectMaterial = disassembler->material()->effectMaterial();
-    m_effectTextureMap = disassembler->material()->effectTextureMap();
+    m_effectMaterial = Engine::EffectMaterial::queryEffectMaterial(disassembler->effectMaterialId());
+    m_effectTextureMap = disassembler->effectTextureMap();
 }
 
 std::error_code PrimitiveMaterial::assignShaderTextures()
@@ -79,6 +79,13 @@ std::error_code PrimitiveMaterial::unassignShaderTextures()
                 var.AssignValue(IShaderVariable::TextureVarTuple{ nullptr, std::nullopt });
             });*/
     }
+    return ErrorCode::ok;
+}
+
+std::error_code PrimitiveMaterial::assignVariableFunc(const std::string& semantic, Engine::EffectVariable::VariableValueAssignFunc fn)
+{
+    if (m_effectMaterial == nullptr) return ErrorCode::nullEffectMaterial;
+    m_effectMaterial->setVariableAssignFunc(semantic, fn);
     return ErrorCode::ok;
 }
 

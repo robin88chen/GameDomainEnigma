@@ -7,22 +7,24 @@ using namespace Enigma::Renderables;
 static std::string TOKEN_EFFECT = "Effect";
 static std::string TOKEN_TEXTURE_MAP = "TextureMap";
 
-PrimitiveMaterialAssembler::PrimitiveMaterialAssembler(const std::shared_ptr<Engine::EffectMaterial>& effectMaterial, const Engine::EffectTextureMap& effectTextureMap)
+PrimitiveMaterialAssembler::PrimitiveMaterialAssembler(const std::shared_ptr<Engine::EffectMaterial>& effect_material, const Engine::EffectTextureMap& effect_texture_map)
 {
-    m_effectMaterialId = effectMaterial->id();
-    if (!effectTextureMap.isAllResourceTexture())
-    {
-        m_effectTextureMap = std::make_shared<Engine::EffectTextureMapAssembler>();
-        effectTextureMap.assemble(m_effectTextureMap);
-    }
+    effectMaterialId(effect_material->id());
+    effectTextureMap(effect_texture_map);
 }
 
-void PrimitiveMaterialAssembler::effectTextureMap(const Engine::EffectTextureMap& textureMap)
+PrimitiveMaterialAssembler::PrimitiveMaterialAssembler(const Engine::EffectMaterialId& effect_material_id, const Engine::EffectTextureMap& effect_texture_map)
 {
-    if (!textureMap.isAllResourceTexture())
+    effectMaterialId(effect_material_id);
+    effectTextureMap(effect_texture_map);
+}
+
+void PrimitiveMaterialAssembler::effectTextureMap(const Engine::EffectTextureMap& texture_map)
+{
+    if (!texture_map.isAllResourceTexture())
     {
         m_effectTextureMap = std::make_shared<Engine::EffectTextureMapAssembler>();
-        textureMap.assemble(m_effectTextureMap);
+        texture_map.assemble(m_effectTextureMap);
     }
 }
 

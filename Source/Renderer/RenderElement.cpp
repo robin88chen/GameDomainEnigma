@@ -20,7 +20,7 @@ RenderElement::RenderElement(const std::shared_ptr<Engine::RenderBuffer>& render
     m_rendererStamp = 0;
     m_rendererActiveFrameFlag = 0;
     m_renderBuffer = renderBuffer;
-    m_effectMaterial = std::move(effect);
+    m_effectMaterial = effect;
     m_segment = segment;
 }
 

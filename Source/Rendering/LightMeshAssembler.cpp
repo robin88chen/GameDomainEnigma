@@ -5,6 +5,7 @@
 #include "Geometries/StandardGeometryAssemblers.h"
 #include "Primitives/PrimitiveQueries.h"
 #include "Renderables/MeshPrimitiveAssembler.h"
+#include "Renderables/PrimitiveMaterialAssembler.h"
 
 using namespace Enigma::Rendering;
 using namespace Enigma::Frameworks;
@@ -99,8 +100,9 @@ std::shared_ptr<Enigma::Primitives::Primitive> LightMeshAssembler::assembleLight
 {
     std::shared_ptr<MeshPrimitiveAssembler> assembler = std::make_shared<MeshPrimitiveAssembler>(mesh_id);
     assembler->geometryId(geometry_id);
-    assembler->addEffect(effect_material_id);
-    assembler->addTextureMap(std::make_shared<EffectTextureMapAssembler>(getGBufferTextureSemantics()));
+    assembler->addMaterial(std::make_shared<PrimitiveMaterialAssembler>(effect_material_id, getGBufferTextureSemantics()));
+    //assembler->addEffect(effect_material_id);
+    //assembler->addTextureMap(std::make_shared<EffectTextureMapAssembler>(getGBufferTextureSemantics()));
     assembler->renderListID(Renderer::Renderer::RenderListID::DeferredLighting);
     assembler->asNative(mesh_id.name() + ".mesh@DataPath");
     return std::make_shared<Primitives::RequestPrimitiveConstitution>(mesh_id, assembler->assemble())->dispatch();
@@ -130,14 +132,22 @@ void LightMeshAssembler::requestPointLightMeshAssembly(const IQueryPtr& q)
     point_query->setResult(assemblePointLightMesh(point_query->meshId(), point_query->sphereRadius()));
 }
 
-EffectTextureMapAssembler LightMeshAssembler::getGBufferTextureSemantics()
+EffectTextureMap LightMeshAssembler::getGBufferTextureSemantics()
 {
     assert(m_configuration);
-    EffectTextureMapAssembler gbuffer_textures;
+    EffectTextureMap gbuffer_textures;
+
+    gbuffer_textures.addSemanticTexture({ m_configuration->gbufferTextureId(), m_configuration->findRenderTextureUsageIndex(Graphics::RenderTextureUsage::Normal), m_configuration->gbufferNormalSemantic() });
+    gbuffer_textures.addSemanticTexture({ m_configuration->gbufferTextureId(), m_configuration->findRenderTextureUsageIndex(Graphics::RenderTextureUsage::Albedo), m_configuration->gbufferDiffuseSemantic() });
+    gbuffer_textures.addSemanticTexture({ m_configuration->gbufferTextureId(), m_configuration->findRenderTextureUsageIndex(Graphics::RenderTextureUsage::Specular), m_configuration->gbufferSpecularSemantic() });
+    gbuffer_textures.addSemanticTexture({ m_configuration->gbufferTextureId(), m_configuration->findRenderTextureUsageIndex(Graphics::RenderTextureUsage::Depth), m_configuration->gbufferDepthSemantic() });
+    return gbuffer_textures;
+
+    /*EffectTextureMapAssembler gbuffer_textures;
 
     gbuffer_textures.addTextureMapping(m_configuration->gbufferTextureId(), m_configuration->findRenderTextureUsageIndex(Graphics::RenderTextureUsage::Normal), m_configuration->gbufferNormalSemantic());
     gbuffer_textures.addTextureMapping(m_configuration->gbufferTextureId(), m_configuration->findRenderTextureUsageIndex(Graphics::RenderTextureUsage::Albedo), m_configuration->gbufferDiffuseSemantic());
     gbuffer_textures.addTextureMapping(m_configuration->gbufferTextureId(), m_configuration->findRenderTextureUsageIndex(Graphics::RenderTextureUsage::Specular), m_configuration->gbufferSpecularSemantic());
     gbuffer_textures.addTextureMapping(m_configuration->gbufferTextureId(), m_configuration->findRenderTextureUsageIndex(Graphics::RenderTextureUsage::Depth), m_configuration->gbufferDepthSemantic());
-    return gbuffer_textures;
+    return gbuffer_textures;*/
 }

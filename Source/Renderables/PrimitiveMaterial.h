@@ -38,6 +38,7 @@ namespace Enigma::Renderables
 
         std::error_code assignShaderTextures();
         std::error_code unassignShaderTextures();
+        std::error_code assignVariableFunc(const std::string& semantic, Engine::EffectVariable::VariableValueAssignFunc fn);
 
         void changeSemanticTexture(const Engine::EffectTextureMap::EffectSemanticTextureTuple& tuple);
         void bindSemanticTexture(const Engine::EffectTextureMap::EffectSemanticTextureTuple& tuple);

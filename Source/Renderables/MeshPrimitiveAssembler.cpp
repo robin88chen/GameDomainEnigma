@@ -16,7 +16,7 @@ static std::string TOKEN_RENDER_LIST_ID = "RenderListId";
 static std::string TOKEN_VISUAL_TECHNIQUE_SELECTION = "VisualTechniqueSelection";
 
 MeshPrimitiveAssembler::MeshPrimitiveAssembler(const Primitives::PrimitiveId& id)
-    : Primitives::PrimitiveAssembler(id)
+    : Primitives::PrimitiveAssembler(id), m_renderListID(Renderer::Renderer::RenderListID::Scene)
 {
     m_factoryDesc = Engine::FactoryDesc(MeshPrimitive::TYPE_RTTI);
 }
@@ -25,6 +25,12 @@ void MeshPrimitiveAssembler::addMaterial(const std::shared_ptr<PrimitiveMaterial
 {
     assert(material);
     m_materials.emplace_back(PrimitiveMaterialAssembler::assembledAssemblerOf(material));
+}
+
+void MeshPrimitiveAssembler::addMaterial(const std::shared_ptr<PrimitiveMaterialAssembler>& material_assembler)
+{
+    assert(material_assembler);
+    m_materials.emplace_back(material_assembler);
 }
 
 void MeshPrimitiveAssembler::asNative(const std::string& file_at_path)
@@ -80,7 +86,7 @@ Enigma::Engine::GenericDto MeshPrimitiveAssembler::assemble() const
     return dto;
 }
 
-MeshPrimitiveDisassembler::MeshPrimitiveDisassembler()
+MeshPrimitiveDisassembler::MeshPrimitiveDisassembler() : Primitives::PrimitiveDisassembler(), m_renderListID(Renderer::Renderer::RenderListID::Scene)
 {
     m_factoryDesc = Engine::FactoryDesc(MeshPrimitive::TYPE_RTTI);
 }

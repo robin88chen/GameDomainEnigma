@@ -11,6 +11,7 @@
 #include "GameEngine/TextureQueries.h"
 #include "Platforms/PlatformLayer.h"
 #include "Renderables/ModelPrimitive.h"
+#include "Renderables/PrimitiveMaterial.h"
 #include "AvatarRecipeAssemblers.h"
 #include <cassert>
 
@@ -135,11 +136,13 @@ void ReplaceAvatarMaterial::replaceMeshMaterial(const std::shared_ptr<MeshPrimit
     if (!mesh) return;
     if (m_oldMaterialId.isEqualSource(m_newMaterialId)) return;
 
-    unsigned int total_mat_count = mesh->getEffectMaterialCount();
+    unsigned int total_mat_count = mesh->getMaterialCount();
     if (total_mat_count == 0) return;
     for (unsigned int i = 0; i < total_mat_count; i++)
     {
-        std::shared_ptr<EffectMaterial> eff = mesh->getEffectMaterial(i);
+        std::shared_ptr<PrimitiveMaterial> mat = mesh->getMaterial(i);
+        if (!mat) continue;
+        std::shared_ptr<EffectMaterial> eff = mat->effectMaterial();
         if (!eff) continue;
         if (eff->id().isEqualSource(m_oldMaterialId))
         {
@@ -171,7 +174,7 @@ void ReplaceAvatarMaterial::replaceNewMeshMaterialInSegment(const std::shared_pt
 {
     if (!mesh) return;
     if (!new_material) return;
-    if (segment_index >= mesh->getEffectMaterialCount()) return;
+    if (segment_index >= mesh->getMaterialCount()) return;
     mesh->changeEffectMaterialInSegment(segment_index, new_material);
     mesh->createRenderElements();
     if (!m_primitive.expired())

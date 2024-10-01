@@ -37,6 +37,7 @@ namespace Enigma::Renderables
         //void addEffect(const Engine::EffectMaterialId& id) { m_effects.push_back(id); }
         //void addTextureMap(const std::shared_ptr<Engine::EffectTextureMapAssembler>& texture_map) { m_textureMaps.emplace_back(texture_map); }
         void addMaterial(const std::shared_ptr<PrimitiveMaterial>& material);
+        void addMaterial(const std::shared_ptr<PrimitiveMaterialAssembler>& material_assembler);
         void renderListID(Renderer::Renderer::RenderListID id) { m_renderListID = id; }
         void visualTechnique(const std::string& technique) { m_visualTechniqueSelection = technique; }
         void asNative(const std::string& file_at_path);

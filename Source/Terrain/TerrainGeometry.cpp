@@ -8,7 +8,7 @@ using namespace Enigma::MathLib;
 
 DEFINE_RTTI(Terrain, TerrainGeometry, TriangleList);
 
-TerrainGeometry::TerrainGeometry(const Geometries::GeometryId& id) : TriangleList(id)
+TerrainGeometry::TerrainGeometry(const Geometries::GeometryId& id) : TriangleList(id), m_numRows(0), m_numCols(0)
 {
     m_factoryDesc = Engine::FactoryDesc(TerrainGeometry::TYPE_RTTI.getName());
 }

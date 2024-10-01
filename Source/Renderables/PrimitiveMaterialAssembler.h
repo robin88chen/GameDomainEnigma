@@ -21,7 +21,8 @@ namespace Enigma::Renderables
     {
     public:
         PrimitiveMaterialAssembler() = default;
-        PrimitiveMaterialAssembler(const std::shared_ptr<Engine::EffectMaterial>& effectMaterial, const Engine::EffectTextureMap& effectTextureMap);
+        PrimitiveMaterialAssembler(const std::shared_ptr<Engine::EffectMaterial>& effect_material, const Engine::EffectTextureMap& effect_texture_map);
+        PrimitiveMaterialAssembler(const Engine::EffectMaterialId& effect_material_id, const Engine::EffectTextureMap& effect_texture_map);
         virtual ~PrimitiveMaterialAssembler() = default;
         PrimitiveMaterialAssembler(const PrimitiveMaterialAssembler& other) = default;
         PrimitiveMaterialAssembler& operator=(const PrimitiveMaterialAssembler& other) = default;
@@ -29,7 +30,8 @@ namespace Enigma::Renderables
         PrimitiveMaterialAssembler& operator=(PrimitiveMaterialAssembler&& other) noexcept = default;
 
         void effectMaterialId(const Engine::EffectMaterialId& id) { m_effectMaterialId = id; }
-        void effectTextureMap(const Engine::EffectTextureMap& textureMap);
+        void effectTextureMap(const Engine::EffectTextureMap& texture_map);
+        void effectTextureMap(const std::shared_ptr<Engine::EffectTextureMapAssembler>& texture_map) { m_effectTextureMap = texture_map; }
 
         Engine::GenericDto assemble() const;
         static std::shared_ptr<PrimitiveMaterialAssembler> assembledAssemblerOf(const std::shared_ptr<PrimitiveMaterial>& material);

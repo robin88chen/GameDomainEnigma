@@ -49,6 +49,7 @@ namespace Enigma::Engine
         void assemble(const std::shared_ptr<EffectTextureMapAssembler>& assembler) const;
         void disassemble(const std::shared_ptr<EffectTextureMapDisassembler>& disassembler);
 
+        error addSemanticTexture(const SemanticTextureMapping& mapping);
         error bindSemanticTexture(const EffectSemanticTextureTuple& tuple);
         error changeSemanticTexture(const EffectSemanticTextureTuple& tuple);
         unsigned appendTextureSemantic(const std::string& semantic);  ///< return index

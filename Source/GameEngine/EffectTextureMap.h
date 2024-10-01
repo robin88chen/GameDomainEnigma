@@ -40,6 +40,7 @@ namespace Enigma::Engine
         EffectTextureMap();
         EffectTextureMap(const EffectSemanticTextureTuple& tuple);
         EffectTextureMap(const SegmentEffectTextures& textures);
+        EffectTextureMap(const std::vector<SemanticTextureMapping>& mappings);
         EffectTextureMap(const EffectTextureMap&) = default;
         EffectTextureMap(EffectTextureMap&&) = default;
         virtual ~EffectTextureMap();
@@ -59,7 +60,7 @@ namespace Enigma::Engine
         const unsigned int getCount() { return static_cast<unsigned int>(m_effectTextures.size()); };
         std::optional<EffectSemanticTextureTuple> findSemanticTexture(const std::string& semantic) const;
 
-        bool isAllResourceTexture() const;
+        bool hasAnyResourceTexture() const;
 
         /// merge texture sets to target map, with respect to same semantic
         void mergeTextureSetTo(EffectTextureMap& targetMap);

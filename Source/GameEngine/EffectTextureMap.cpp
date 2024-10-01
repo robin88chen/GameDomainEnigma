@@ -24,6 +24,14 @@ EffectTextureMap::EffectTextureMap(const SegmentEffectTextures& textures)
     m_effectTextures = textures;
 }
 
+EffectTextureMap::EffectTextureMap(const std::vector<SemanticTextureMapping>& mappings)
+{
+    for (auto& mapping : mappings)
+    {
+        m_effectTextures.emplace_back(std::make_tuple(Texture::queryTexture(mapping.m_textureId), mapping.m_arrayIndex, mapping.m_semantic));
+    }
+}
+
 EffectTextureMap::~EffectTextureMap()
 {
     m_effectTextures.clear();
@@ -119,16 +127,17 @@ std::optional<EffectTextureMap::EffectSemanticTextureTuple> EffectTextureMap::fi
     return std::nullopt;
 }
 
-bool EffectTextureMap::isAllResourceTexture() const
+bool EffectTextureMap::hasAnyResourceTexture() const
 {
-    for (auto& tuple : m_effectTextures)
+    for (auto& [tex, idx, semantic] : m_effectTextures)
     {
-        if (auto tex = std::get<std::shared_ptr<Texture>>(tuple); !tex)
-        {
-            if (tex->factoryDesc().GetResourceName().empty()) return false;
-        }
+        if (!tex) continue;
+        //if (auto tex = std::get<std::shared_ptr<Texture>>(tuple); !tex)
+        //{
+        if (!tex->factoryDesc().GetResourceName().empty()) return true;
+        //}
     }
-    return true;
+    return false;
 }
 
 void EffectTextureMap::mergeTextureSetTo(EffectTextureMap& targetMap)

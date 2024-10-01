@@ -45,12 +45,12 @@ protected:
     void makeCamera();
     void makeMesh();
 
-    void onCameraConstituted(const Enigma::Frameworks::IEventPtr& e);
+    //void onCameraConstituted(const Enigma::Frameworks::IEventPtr& e);
     void onRendererCreated(const Enigma::Frameworks::IEventPtr& e);
     void onRenderTargetCreated(const Enigma::Frameworks::IEventPtr& e);
 
 protected:
-    Enigma::Frameworks::EventSubscriberPtr m_onCameraConstituted;
+    //Enigma::Frameworks::EventSubscriberPtr m_onCameraConstituted;
     Enigma::Frameworks::EventSubscriberPtr m_onRendererCreated;
     Enigma::Frameworks::EventSubscriberPtr m_onRenderTargetCreated;
 

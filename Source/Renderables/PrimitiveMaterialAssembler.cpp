@@ -21,7 +21,7 @@ PrimitiveMaterialAssembler::PrimitiveMaterialAssembler(const Engine::EffectMater
 
 void PrimitiveMaterialAssembler::effectTextureMap(const Engine::EffectTextureMap& texture_map)
 {
-    if (!texture_map.isAllResourceTexture())
+    if (texture_map.hasAnyResourceTexture())
     {
         m_effectTextureMap = std::make_shared<Engine::EffectTextureMapAssembler>();
         texture_map.assemble(m_effectTextureMap);
@@ -51,7 +51,7 @@ PrimitiveMaterialDisassembler::PrimitiveMaterialDisassembler(const Enigma::Engin
 
 void PrimitiveMaterialDisassembler::disassemble(const Enigma::Engine::GenericDto& dto)
 {
-    if (const auto v = dto.tryGetValue<Engine::EffectMaterialId>(TOKEN_EFFECT)) m_effectMaterialId = v.value();
+    if (const auto v = dto.tryGetValue<std::string>(TOKEN_EFFECT)) m_effectMaterialId = v.value();
     if (const auto v = dto.tryGetValue<Enigma::Engine::GenericDto>(TOKEN_TEXTURE_MAP))
     {
         std::shared_ptr<Engine::EffectTextureMapDisassembler> disassembler = std::make_shared<Engine::EffectTextureMapDisassembler>();

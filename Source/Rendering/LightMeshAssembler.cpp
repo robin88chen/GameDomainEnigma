@@ -135,12 +135,12 @@ void LightMeshAssembler::requestPointLightMeshAssembly(const IQueryPtr& q)
 EffectTextureMap LightMeshAssembler::getGBufferTextureSemantics()
 {
     assert(m_configuration);
-    EffectTextureMap gbuffer_textures;
-
-    gbuffer_textures.addSemanticTexture({ m_configuration->gbufferTextureId(), m_configuration->findRenderTextureUsageIndex(Graphics::RenderTextureUsage::Normal), m_configuration->gbufferNormalSemantic() });
-    gbuffer_textures.addSemanticTexture({ m_configuration->gbufferTextureId(), m_configuration->findRenderTextureUsageIndex(Graphics::RenderTextureUsage::Albedo), m_configuration->gbufferDiffuseSemantic() });
-    gbuffer_textures.addSemanticTexture({ m_configuration->gbufferTextureId(), m_configuration->findRenderTextureUsageIndex(Graphics::RenderTextureUsage::Specular), m_configuration->gbufferSpecularSemantic() });
-    gbuffer_textures.addSemanticTexture({ m_configuration->gbufferTextureId(), m_configuration->findRenderTextureUsageIndex(Graphics::RenderTextureUsage::Depth), m_configuration->gbufferDepthSemantic() });
+    EffectTextureMap gbuffer_textures({
+        { m_configuration->gbufferTextureId(), m_configuration->findRenderTextureUsageIndex(Graphics::RenderTextureUsage::Normal), m_configuration->gbufferNormalSemantic() },
+        { m_configuration->gbufferTextureId(), m_configuration->findRenderTextureUsageIndex(Graphics::RenderTextureUsage::Albedo), m_configuration->gbufferDiffuseSemantic() },
+        { m_configuration->gbufferTextureId(), m_configuration->findRenderTextureUsageIndex(Graphics::RenderTextureUsage::Specular), m_configuration->gbufferSpecularSemantic() },
+        { m_configuration->gbufferTextureId(), m_configuration->findRenderTextureUsageIndex(Graphics::RenderTextureUsage::Depth), m_configuration->gbufferDepthSemantic() }
+        });
     return gbuffer_textures;
 
     /*EffectTextureMapAssembler gbuffer_textures;

@@ -49,10 +49,11 @@ namespace Enigma::Renderables
         /** get geometry data */
         const Geometries::GeometryDataPtr& getGeometryData() const { return m_geometry; };
 
-        /** get effect */
+        /** get material */
         std::shared_ptr<PrimitiveMaterial> getMaterial(unsigned index);
         /** get material count */
         unsigned getMaterialCount() const;
+        void changeMaterials(const std::vector<std::shared_ptr<PrimitiveMaterial>>& materials);
         /** get texture map */
         //const Engine::EffectTextureMap& getTextureMap(unsigned int index);
         /** get texture map size */

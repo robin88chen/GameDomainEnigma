@@ -132,6 +132,13 @@ unsigned MeshPrimitive::getMaterialCount() const
     return static_cast<unsigned>(m_materials.size());
 }
 
+void MeshPrimitive::changeMaterials(const std::vector<std::shared_ptr<PrimitiveMaterial>>& materials)
+{
+    loosePrimitiveMaterials();
+    m_materials = materials;
+    bindPrimitiveMaterials();
+}
+
 /*const EffectTextureMap& MeshPrimitive::getTextureMap(unsigned index)
 {
     assert(index < m_textures.size());

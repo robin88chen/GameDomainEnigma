@@ -101,8 +101,9 @@ void EventPublisher::cleanupAllEvents()
 void EventPublisher::invokeHandlers(const IEventPtr& e, const SubscriberList& subscribers)
 {
     if (subscribers.empty()) return;
-    for (auto subscriber : subscribers)
+    SubscriberList invoking_subscribers = subscribers; // Copy the list to avoid concurrent modification
+    for (const auto& subscriber : invoking_subscribers)
     {
-        if (subscriber) subscriber->handleEvent(e);
+        if (subscriber != nullptr) subscriber->handleEvent(e);
     }
 }

@@ -105,7 +105,9 @@ void MeshPrimitiveDisassembler::disassemble(const Engine::GenericDto& dto)
         for (auto& mat_dto : ary.value())
         {
             auto material_disassembler = std::make_shared<PrimitiveMaterialDisassembler>(mat_dto);
-            m_materials.emplace_back(std::make_shared<PrimitiveMaterial>(material_disassembler->effectMaterialId(), material_disassembler->effectTextureMap()));
+            auto material = std::make_shared<PrimitiveMaterial>(material_disassembler->effectMaterialId(), material_disassembler->effectTextureMap());
+            material->registerEventHandlersWhenNotReady();
+            m_materials.emplace_back(material);
         }
     }
     /*if (const auto ary = dto.tryGetValue<std::vector<std::string>>(TOKEN_EFFECTS))
@@ -126,15 +128,17 @@ void MeshPrimitiveDisassembler::disassemble(const Engine::GenericDto& dto)
     if (const auto v = dto.tryGetValue<std::string>(TOKEN_VISUAL_TECHNIQUE_SELECTION)) m_visualTechniqueSelection = v.value();
 }
 
-MeshPrimitiveMaterialMetaDisassembler::MeshPrimitiveMaterialMetaDisassembler(const std::shared_ptr<MeshPrimitiveDisassembler>& mesh_disassembler)
+/*MeshPrimitiveMaterialMetaDisassembler::MeshPrimitiveMaterialMetaDisassembler(const std::shared_ptr<MeshPrimitiveDisassembler>& mesh_disassembler)
 {
     if (!mesh_disassembler) return;
     for (auto& mat : mesh_disassembler->materials())
     {
         m_effects.emplace_back(mat->effectMaterial()->id());
-        std::shared_ptr<Engine::EffectTextureMapDisassembler> disassembler = std::make_shared<Engine::EffectTextureMapDisassembler>();
-        const_cast<Engine::EffectTextureMap&>(mat->effectTextureMap()).disassemble(disassembler);
-        m_textureMaps.emplace_back(disassembler);
+        //Engine::EffectTextureMap texture_map = mat->effectTextureMap();
+        //std::shared_ptr<Engine::EffectTextureMapDisassembler> disassembler = std::make_shared<Engine::EffectTextureMapDisassembler>();
+        //texture_map.disassemble(disassembler);
+        //const_cast<Engine::EffectTextureMap&>(mat->effectTextureMap()).disassemble(disassembler);
+        m_textureMaps.emplace_back(mat->effectTextureMap());
     }
     //m_effects = mesh_disassembler->effects();
     //m_textureMaps = mesh_disassembler->textureMaps();
@@ -148,4 +152,4 @@ void MeshPrimitiveMaterialMetaDisassembler::replaceDuplicatedEffects(const std::
     {
         m_effects.emplace_back(mesh_primitive->getMaterial(i)->effectMaterial()->id());
     }
-}
+}*/

@@ -56,11 +56,13 @@ namespace Enigma::Engine
         unsigned appendTextureSemantic(const std::string& semantic);  ///< return index
         std::shared_ptr<Texture> getTexture(unsigned index);
         std::shared_ptr<Texture> getTexture(unsigned index) const;
-        const EffectSemanticTextureTuple& getEffectSemanticTextureTuple(unsigned index);
-        const unsigned int getCount() { return static_cast<unsigned int>(m_effectTextures.size()); };
+        const EffectSemanticTextureTuple& getEffectSemanticTextureTuple(unsigned index) const;
+        unsigned int getCount() const { return static_cast<unsigned int>(m_effectTextures.size()); };
         std::optional<EffectSemanticTextureTuple> findSemanticTexture(const std::string& semantic) const;
+        std::shared_ptr<Texture> findTexture(const TextureId& textureId) const;
 
         bool hasAnyResourceTexture() const;
+        bool isAllTextureReady() const;
 
         /// merge texture sets to target map, with respect to same semantic
         void mergeTextureSetTo(EffectTextureMap& targetMap);

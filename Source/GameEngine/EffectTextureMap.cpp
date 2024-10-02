@@ -112,7 +112,7 @@ std::shared_ptr<Texture> EffectTextureMap::getTexture(unsigned index) const
     return std::get<std::shared_ptr<Texture>>(m_effectTextures[index]);
 }
 
-const EffectTextureMap::EffectSemanticTextureTuple& EffectTextureMap::getEffectSemanticTextureTuple(unsigned index)
+const EffectTextureMap::EffectSemanticTextureTuple& EffectTextureMap::getEffectSemanticTextureTuple(unsigned index) const
 {
     assert(index < m_effectTextures.size());
     return m_effectTextures[index];
@@ -127,6 +127,15 @@ std::optional<EffectTextureMap::EffectSemanticTextureTuple> EffectTextureMap::fi
     return std::nullopt;
 }
 
+std::shared_ptr<Texture> EffectTextureMap::findTexture(const TextureId& textureId) const
+{
+    for (auto& tuple : m_effectTextures)
+    {
+        if (auto tex = std::get<std::shared_ptr<Texture>>(tuple); tex && tex->id() == textureId) return tex;
+    }
+    return nullptr;
+}
+
 bool EffectTextureMap::hasAnyResourceTexture() const
 {
     for (auto& [tex, idx, semantic] : m_effectTextures)
@@ -138,6 +147,16 @@ bool EffectTextureMap::hasAnyResourceTexture() const
         //}
     }
     return false;
+}
+
+bool EffectTextureMap::isAllTextureReady() const
+{
+    for (auto& [tex, idx, semantic] : m_effectTextures)
+    {
+        if (!tex) return false;
+        if (!tex->lazyStatus().isReady()) return false;
+    }
+    return true;
 }
 
 void EffectTextureMap::mergeTextureSetTo(EffectTextureMap& targetMap)

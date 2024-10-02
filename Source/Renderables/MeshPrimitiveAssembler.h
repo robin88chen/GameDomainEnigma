@@ -84,7 +84,7 @@ namespace Enigma::Renderables
         std::string m_visualTechniqueSelection;
     };
 
-    class MeshPrimitiveMaterialMetaDisassembler
+    /*class MeshPrimitiveMaterialMetaDisassembler
     {
     public:
         MeshPrimitiveMaterialMetaDisassembler() = default;
@@ -99,12 +99,13 @@ namespace Enigma::Renderables
 
         [[nodiscard]] const std::vector<Engine::EffectMaterialId>& effects() const { return m_effects; }
 
-        [[nodiscard]] const std::vector<std::shared_ptr<Engine::EffectTextureMapDisassembler>>& textureMaps() const { return m_textureMaps; }
+        [[nodiscard]] const std::vector<Engine::EffectTextureMap>& textureMaps() const { return m_textureMaps; }
 
     protected:
         std::vector<Engine::EffectMaterialId> m_effects;
-        std::vector<std::shared_ptr<Engine::EffectTextureMapDisassembler>> m_textureMaps;
-    };
+        std::vector<Engine::EffectTextureMap> m_textureMaps;
+        //std::vector<std::shared_ptr<Engine::EffectTextureMapDisassembler>> m_textureMaps;
+    };*/
 }
 
 #endif // MESH_PRIMITIVE_ASSEMBLER_H

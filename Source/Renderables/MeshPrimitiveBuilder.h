@@ -21,7 +21,8 @@ namespace Enigma::Renderables
 {
     class MeshPrimitive;
     class MeshPrimitiveDisassembler;
-    class MeshPrimitiveMaterialMetaDisassembler;
+    //class MeshPrimitiveMaterialMetaDisassembler;
+    class PrimitiveMaterial;
 
     class MeshPrimitiveBuilder
     {
@@ -68,15 +69,17 @@ namespace Enigma::Renderables
     protected:
         void onRenderBufferBuilt(const Frameworks::IEventPtr& e);
         void onBuildRenderBufferFailed(const Frameworks::IEventPtr& e);
-
-        void onEffectMaterialHydrated(const Frameworks::IEventPtr& e);
-        void onHydrateEffectMaterialFailed(const Frameworks::IEventPtr& e);
-        void onTextureHydrated(const Frameworks::IEventPtr& e);
-        void onHydrateTextureFailed(const Frameworks::IEventPtr& e);
+        void onPrimitiveMaterialHydrated(const Frameworks::IEventPtr& e);
+        void onPrimitiveMaterialHydrationFailed(const Frameworks::IEventPtr& e);
+        //void onEffectMaterialHydrated(const Frameworks::IEventPtr& e);
+        //void onHydrateEffectMaterialFailed(const Frameworks::IEventPtr& e);
+        //void onTextureHydrated(const Frameworks::IEventPtr& e);
+        //void onHydrateTextureFailed(const Frameworks::IEventPtr& e);
 
         void tryCompletingMesh();
         void failMeshHydration(const std::error_code er);
 
+        bool isBuildingMeshMaterial(const std::shared_ptr<PrimitiveMaterial>& material) const;
         std::optional<unsigned> findBuildingEffectIndex(const Engine::EffectMaterialId& id);
         std::optional<std::tuple<unsigned, unsigned>> findLoadingTextureIndex(const Engine::TextureId& id);
 
@@ -85,21 +88,22 @@ namespace Enigma::Renderables
     protected:
         Primitives::PrimitiveId m_buildingId;
         std::shared_ptr<MeshPrimitiveDisassembler> m_buildingDisassembler;
-        std::unique_ptr<MeshPrimitiveMaterialMetaDisassembler> m_metaDisassembler;
+        //std::unique_ptr<MeshPrimitiveMaterialMetaDisassembler> m_metaDisassembler;
 
         std::shared_ptr<MeshPrimitive> m_builtPrimitive;
         std::shared_ptr<Geometries::GeometryData> m_builtGeometry;
         std::shared_ptr<Engine::RenderBuffer> m_builtRenderBuffer;
-        std::vector<std::shared_ptr<Engine::EffectMaterial>> m_builtEffects;
-        std::vector<Engine::EffectTextureMap> m_builtTextures;
+        //std::vector<std::shared_ptr<Engine::EffectMaterial>> m_builtEffects;
+        //std::vector<Engine::EffectTextureMap> m_builtTextures;
 
         Frameworks::EventSubscriberPtr m_onRenderBufferBuilt;
         Frameworks::EventSubscriberPtr m_onBuildRenderBufferFailed;
-
-        Frameworks::EventSubscriberPtr m_onEffectMaterialHydrated;
-        Frameworks::EventSubscriberPtr m_onHydrateEffectMaterialFailed;
-        Frameworks::EventSubscriberPtr m_onTextureHydrated;
-        Frameworks::EventSubscriberPtr m_onHydrateTextureFailed;
+        Frameworks::EventSubscriberPtr m_onPrimitiveMaterialHydrated;
+        Frameworks::EventSubscriberPtr m_onPrimitiveMaterialHydrationFailed;
+        //Frameworks::EventSubscriberPtr m_onEffectMaterialHydrated;
+        //Frameworks::EventSubscriberPtr m_onHydrateEffectMaterialFailed;
+        //Frameworks::EventSubscriberPtr m_onTextureHydrated;
+        //Frameworks::EventSubscriberPtr m_onHydrateTextureFailed;
     };
 }
 

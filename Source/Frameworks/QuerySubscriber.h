@@ -29,6 +29,8 @@ namespace Enigma::Frameworks
         QueryHandler m_handler;
     };
     using QuerySubscriberPtr = std::shared_ptr<QuerySubscriber>;
+    QuerySubscriberPtr requestSubscription(const std::type_info& ev_type, const QueryHandler& handler);
+    void releaseSubscription(const std::type_info& ev_type, const QuerySubscriberPtr& subscriber);
 }
 
 #endif // QUERY_SUBSCRIBER_H

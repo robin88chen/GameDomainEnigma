@@ -33,21 +33,23 @@ std::shared_ptr<PrimitiveDisassembler> SkinMeshPrimitive::disassembler() const
     return std::make_shared<SkinMeshPrimitiveDisassembler>();
 }
 
+void SkinMeshPrimitive::changeMaterials(const std::vector<std::shared_ptr<PrimitiveMaterial>>& materials)
+{
+    loosePrimitiveBoneMatrix();
+    MeshPrimitive::changeMaterials(materials);
+    bindPrimitiveBoneMatrix();
+}
+
 void SkinMeshPrimitive::bindOwnerRootRefTransform(const MathLib::Matrix4& mx)
 {
     m_ownerNodeRootRefTransform = mx;
 }
 
-void SkinMeshPrimitive::changeEffectMaterials(const EffectMaterialList& effects)
+void SkinMeshPrimitive::changeEffects(const EffectMaterialList& effects)
 {
-    loosePrimitiveMaterials();
     loosePrimitiveBoneMatrix();
-    for (unsigned i = 0; i < m_materials.size() && i < effects.size(); i++)
-    {
-        if (m_materials[i]) m_materials[i]->changeEffect(effects[i]);
-    }
+    MeshPrimitive::changeEffects(effects);
     bindPrimitiveBoneMatrix();
-    bindPrimitiveMaterials();
     /*loosePrimitiveEffectTexture();
     loosePrimitiveBoneMatrix();
     m_effects.clear();
@@ -57,14 +59,12 @@ void SkinMeshPrimitive::changeEffectMaterials(const EffectMaterialList& effects)
     bindPrimitiveBoneMatrix();*/
 }
 
-void SkinMeshPrimitive::changeEffectMaterialInSegment(unsigned index, const std::shared_ptr<Engine::EffectMaterial>& effect)
+void SkinMeshPrimitive::changeEffectInSegment(unsigned index, const std::shared_ptr<Engine::EffectMaterial>& effect)
 {
     if (index >= m_materials.size()) return;
-    looseSegmentMaterial(index);
     looseSegmentBoneMatrix(index);
-    if (m_materials[index]) m_materials[index]->changeEffect(effect);
+    MeshPrimitive::changeEffectInSegment(index, effect);
     bindSegmentBoneMatrix(index);
-    bindSegmentMaterial(index);
     /*if (index >= m_effects.size()) return;
     looseSegmentEffectTexture(index);
     looseSegmentBoneMatrix(index);

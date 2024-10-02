@@ -20,10 +20,7 @@ std::shared_ptr<MeshPrimitive> SkinMeshModelMaker::makeCubeMeshPrimitive(const E
     SkinMeshPrimitiveAssembler assembler(mesh_id);
     assembler.geometryId(geo_id);
     assembler.asNative(mesh_id.name() + ".mesh@DataPath");
-    assembler.addEffect(EffectMaterialId("skin_mesh_prim_test"));
-    std::shared_ptr<EffectTextureMapAssembler> texture_assembler = std::make_shared<EffectTextureMapAssembler>();
-    texture_assembler->addTextureMapping(TextureId("earth"), std::nullopt, "DiffuseMap");
-    assembler.addTextureMap(texture_assembler);
+    assembler.addMaterial(std::make_shared<PrimitiveMaterial>(EffectMaterialId("skin_mesh_prim_test"), EffectTextureMap({ {TextureId("earth"), std::nullopt, "DiffuseMap"} })));
     assembler.renderListID(Enigma::Renderer::Renderer::RenderListID::Scene);
     assembler.visualTechnique("Default");
     return std::dynamic_pointer_cast<MeshPrimitive>(std::make_shared<RequestPrimitiveConstitution>(mesh_id, assembler.assemble())->dispatch());

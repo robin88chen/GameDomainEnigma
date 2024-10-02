@@ -280,7 +280,7 @@ void MeshPrimitiveBuilder::tryCompletingMesh()
         }
     }*/
     m_builtPrimitive->changeMaterials(m_buildingDisassembler->materials());
-    //m_builtPrimitive->changeEffectMaterials(m_builtEffects);
+    //m_builtPrimitive->changeEffects(m_builtEffects);
     //m_builtPrimitive->changeTextureMaps(m_builtTextures);
     m_builtPrimitive->createRenderElements();
     m_builtPrimitive->renderListId() = m_buildingDisassembler->renderListID();

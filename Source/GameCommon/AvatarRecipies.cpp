@@ -175,7 +175,7 @@ void ReplaceAvatarMaterial::replaceNewMeshMaterialInSegment(const std::shared_pt
     if (!mesh) return;
     if (!new_material) return;
     if (segment_index >= mesh->getMaterialCount()) return;
-    mesh->changeEffectMaterialInSegment(segment_index, new_material);
+    mesh->changeEffectInSegment(segment_index, new_material);
     mesh->createRenderElements();
     if (!m_primitive.expired())
     {

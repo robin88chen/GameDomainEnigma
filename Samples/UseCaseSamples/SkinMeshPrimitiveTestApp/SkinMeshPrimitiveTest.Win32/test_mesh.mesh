@@ -106,29 +106,34 @@
                 }
             }
         },
-        "Effects": {
-            "Type": "StringArray",
-            "Value": ["skin_mesh_prim_test"]
-        },
         "VisualTechniqueSelection": {
             "Type": "String",
             "Value": "Default"
         },
-        "TextureMaps": {
+        "Materials": {
             "Type": "DataObjectArray",
             "Value": [{
-                    "TextureMappings": {
-                        "Type": "DataObjectArray",
-                        "Value": [{
-                                "TextureId.Name": {
-                                    "Type": "String",
-                                    "Value": "earth"
-                                },
-                                "Semantic": {
-                                    "Type": "String",
-                                    "Value": "DiffuseMap"
-                                }
-                            }]
+                    "Effect": {
+                        "Type": "String",
+                        "Value": "skin_mesh_prim_test"
+                    },
+                    "TextureMap": {
+                        "Type": "DataObject",
+                        "Value": {
+                            "TextureMappings": {
+                                "Type": "DataObjectArray",
+                                "Value": [{
+                                        "TextureId.Name": {
+                                            "Type": "String",
+                                            "Value": "earth"
+                                        },
+                                        "Semantic": {
+                                            "Type": "String",
+                                            "Value": "DiffuseMap"
+                                        }
+                                    }]
+                            }
+                        }
                     }
                 }]
         }

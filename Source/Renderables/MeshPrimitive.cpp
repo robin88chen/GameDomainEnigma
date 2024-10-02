@@ -296,7 +296,7 @@ void MeshPrimitive::linkGeometryData(const Geometries::GeometryDataPtr& geo, con
     m_bound = m_geometry->getBoundingVolume();
 }
 
-void MeshPrimitive::changeEffectMaterialInSegment(unsigned index, const std::shared_ptr<EffectMaterial>& effect)
+void MeshPrimitive::changeEffectInSegment(unsigned index, const std::shared_ptr<EffectMaterial>& effect)
 {
     if (index >= m_materials.size()) return;
     looseSegmentMaterial(index);
@@ -308,7 +308,7 @@ void MeshPrimitive::changeEffectMaterialInSegment(unsigned index, const std::sha
     bindSegmentEffectTexture(index);*/
 }
 
-void MeshPrimitive::changeEffectMaterials(const EffectMaterialList& effects)
+void MeshPrimitive::changeEffects(const EffectMaterialList& effects)
 {
     loosePrimitiveMaterials();
     for (unsigned i = 0; i < effects.size() && i < m_materials.size(); i++)

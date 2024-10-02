@@ -53,7 +53,7 @@ namespace Enigma::Renderables
         std::shared_ptr<PrimitiveMaterial> getMaterial(unsigned index);
         /** get material count */
         unsigned getMaterialCount() const;
-        void changeMaterials(const std::vector<std::shared_ptr<PrimitiveMaterial>>& materials);
+        virtual void changeMaterials(const std::vector<std::shared_ptr<PrimitiveMaterial>>& materials);
         /** get texture map */
         //const Engine::EffectTextureMap& getTextureMap(unsigned int index);
         /** get texture map size */
@@ -93,9 +93,9 @@ namespace Enigma::Renderables
         /** link geometry object and render buffer */
         void linkGeometryData(const Geometries::GeometryDataPtr& geo, const Engine::RenderBufferPtr& render_buffer);
         /** change segment's effect */
-        virtual void changeEffectMaterialInSegment(unsigned index, const std::shared_ptr<Engine::EffectMaterial>& effect);
+        virtual void changeEffectInSegment(unsigned index, const std::shared_ptr<Engine::EffectMaterial>& effect);
         /** change primitive's effect */
-        virtual void changeEffectMaterials(const EffectMaterialList& effects);
+        virtual void changeEffects(const EffectMaterialList& effects);
         /** resize effect list */
         //void resizeEffectMaterialVector(unsigned new_size) { m_effects.resize(new_size); };
         /** change segment's texture map */

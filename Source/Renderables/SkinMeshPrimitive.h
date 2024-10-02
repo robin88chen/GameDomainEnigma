@@ -30,10 +30,12 @@ namespace Enigma::Renderables
         virtual std::shared_ptr<Primitives::PrimitiveDisassembler> disassembler() const override;
         // assemble, disassemble is same with MeshPrimitive
 
+        virtual void changeMaterials(const std::vector<std::shared_ptr<PrimitiveMaterial>>& materials) override;
+
         void bindOwnerRootRefTransform(const MathLib::Matrix4& mx);
         const MathLib::Matrix4& getOwnerRootRefTransform() const { return m_ownerNodeRootRefTransform; }
-        virtual void changeEffectMaterialInSegment(unsigned index, const std::shared_ptr<Engine::EffectMaterial>& effect) override;
-        virtual void changeEffectMaterials(const EffectMaterialList& effects) override;
+        virtual void changeEffectInSegment(unsigned index, const std::shared_ptr<Engine::EffectMaterial>& effect) override;
+        virtual void changeEffects(const EffectMaterialList& effects) override;
 
         void createBoneMatrixArray(unsigned int size);
         void updateBoneEffectMatrix(unsigned int idx, const MathLib::Matrix4& ref_mx);

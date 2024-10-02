@@ -50,10 +50,7 @@ std::shared_ptr<MeshPrimitive> ModelPrimitiveMaker::makeCubeMeshPrimitive(const 
     MeshPrimitiveAssembler mesh_assembler(mesh_id);
     mesh_assembler.geometryId(geo_id);
     mesh_assembler.asNative(mesh_id.name() + ".mesh@DataPath");
-    std::shared_ptr<EffectTextureMapAssembler> texture_assembler = std::make_shared<EffectTextureMapAssembler>();
-    texture_assembler->addTextureMapping(TextureId("earth"), std::nullopt, "DiffuseMap");
-    mesh_assembler.addEffect(EffectMaterialId("basic_vtx_tex"));
-    mesh_assembler.addTextureMap(texture_assembler);
+    mesh_assembler.addMaterial(std::make_shared<PrimitiveMaterial>(EffectMaterialId("basic_vtx_tex"), EffectTextureMap({ {TextureId("earth"), std::nullopt, "DiffuseMap"} })));
     mesh_assembler.renderListID(Enigma::Renderer::Renderer::RenderListID::Scene);
     mesh_assembler.visualTechnique("Default");
 

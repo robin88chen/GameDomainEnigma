@@ -1,5 +1,4 @@
 pawns/bear_brown,En.GameCommon.AnimatedPawn,pawns/bear_brown.pawn@APK_PATH
-camera,En.SceneGraph.Camera,camera.En.SceneGraph.Camera.json
 _SceneRoot_,En.SceneGraph.Node,_SceneRoot_.node@DataPath
 pawns/bear_green,En.GameCommon.AnimatedPawn,pawns/bear_green.pawn@APK_PATH
 pawns/bear_red,En.GameCommon.AnimatedPawn,pawns/bear_red.pawn@APK_PATH

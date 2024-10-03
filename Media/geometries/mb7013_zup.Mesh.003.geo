@@ -21,10 +21,6 @@
             "Type": "Uint32",
             "Value": 3
         },
-        "Segments": {
-            "Type": "Uint32Array",
-            "Value": [0, 3, 0, 3]
-        },
         "GeometryBound": {
             "Type": "DataObject",
             "Value": {
@@ -33,6 +29,10 @@
                     "Value": [0.0, 0.0, -0.000007176625331339892, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.013462300412356853, 0.010142860002815723, 0.0000011920928955078125]
                 }
             }
+        },
+        "Segments": {
+            "Type": "Uint32Array",
+            "Value": [0, 3, 0, 3]
         },
         "VertexCapacity": {
             "Type": "Uint32",
@@ -70,9 +70,5 @@
         "Indices": {
             "Type": "Uint32Array",
             "Value": [0, 1, 2]
-        },
-        "Name": {
-            "Type": "String",
-            "Value": "geometries/mb7013_zup.Mesh.003"
         }
     }]

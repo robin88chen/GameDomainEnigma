@@ -44,7 +44,7 @@ void EffectTextureMap::assemble(const std::shared_ptr<EffectTextureMapAssembler>
     {
         if (auto& t = std::get<std::shared_ptr<Texture>>(tex))
         {
-            if (t->factoryDesc().GetResourceName().empty()) continue; // skip null texture (not resource texture)
+            //if (t->factoryDesc().GetResourceName().empty()) continue; // skip null texture (not resource texture)
             assembler->addTextureMapping(std::get<std::shared_ptr<Texture>>(tex)->id(), std::get<std::optional<unsigned>>(tex), std::get<std::string>(tex));
         }
     }

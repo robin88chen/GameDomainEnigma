@@ -1,4 +1,12 @@
 [{
+        "RenderListId": {
+            "Type": "Uint32",
+            "Value": 1
+        },
+        "GeometryId": {
+            "Type": "String",
+            "Value": "geometries/mb7013_zup.Mesh.003"
+        },
         "Rtti": {
             "Type": "FactoryDesc",
             "Value": {
@@ -9,28 +17,30 @@
                 "PrefabFilename": "renderables/mb7013_zup.Mesh.003.mesh@APK_PATH"
             }
         },
-        "GeometryId": {
-            "Type": "String",
-            "Value": "geometries/mb7013_zup.Mesh.003"
-        },
-        "RenderListId": {
-            "Type": "Uint32",
-            "Value": 1
-        },
         "Id": {
             "Type": "StringArray",
             "Value": ["renderables/mb7013_zup.Mesh.003", "0", "En.Renderables.MeshPrimitive"]
         },
-        "Effects": {
-            "Type": "StringArray",
-            "Value": ["fx/default_color_mesh_effect"]
+        "Materials": {
+            "Type": "DataObjectArray",
+            "Value": [{
+                    "Effect": {
+                        "Type": "String",
+                        "Value": "fx/default_color_mesh_effect"
+                    },
+                    "TextureMap": {
+                        "Type": "DataObject",
+                        "Value": {
+                            "TextureMappings": {
+                                "Type": "DataObjectArray",
+                                "Value": []
+                            }
+                        }
+                    }
+                }]
         },
         "VisualTechniqueSelection": {
             "Type": "String",
             "Value": "Default"
-        },
-        "TextureMaps": {
-            "Type": "DataObjectArray",
-            "Value": []
         }
     }]

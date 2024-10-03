@@ -14,9 +14,11 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)CameraConcatenater.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)DeferredRenderingTest.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CameraConcatenater.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)DeferredRenderingTest.h" />
   </ItemGroup>
 </Project>

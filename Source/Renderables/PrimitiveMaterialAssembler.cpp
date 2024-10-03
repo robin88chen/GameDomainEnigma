@@ -21,11 +21,8 @@ PrimitiveMaterialAssembler::PrimitiveMaterialAssembler(const Engine::EffectMater
 
 void PrimitiveMaterialAssembler::effectTextureMap(const Engine::EffectTextureMap& texture_map)
 {
-    if (texture_map.hasAnyResourceTexture())
-    {
-        m_effectTextureMap = std::make_shared<Engine::EffectTextureMapAssembler>();
-        texture_map.assemble(m_effectTextureMap);
-    }
+    m_effectTextureMap = std::make_shared<Engine::EffectTextureMapAssembler>();
+    texture_map.assemble(m_effectTextureMap);
 }
 
 Enigma::Engine::GenericDto PrimitiveMaterialAssembler::assemble() const

@@ -4,6 +4,7 @@
 #include "RenderableEvents.h"
 #include "GameEngine/Texture.h"
 #include "GameEngine/EffectEvents.h"
+#include "GameEngine/EffectSemanticTexture.h"
 #include "GameEngine/TextureEvents.h"
 
 using namespace Enigma::Renderables;
@@ -73,11 +74,11 @@ std::error_code PrimitiveMaterial::assignShaderTextures()
     if (m_effectMaterial == nullptr) return ErrorCode::nullEffectMaterial;
     for (unsigned i = 0; i < m_effectTextureMap.getCount(); i++)
     {
-        auto& eff_tex_set = m_effectTextureMap.getEffectSemanticTextureTuple(i);
-        if (std::get<std::shared_ptr<Engine::Texture>>(eff_tex_set) == nullptr) continue;
+        auto& eff_tex = m_effectTextureMap.getEffectSemanticTexture(i);
+        if (eff_tex.texture() == nullptr) continue;
         // 改直接指定
-        m_effectMaterial->assignVariableValue(std::get<std::string>(eff_tex_set), Graphics::IShaderVariable::TextureVarTuple{
-                    std::get<std::shared_ptr<Engine::Texture>>(eff_tex_set)->getDeviceTexture(), std::get<std::optional<unsigned>>(eff_tex_set) });
+        m_effectMaterial->assignVariableValue(eff_tex.semantic(), Graphics::IShaderVariable::TextureVarTuple{
+                    eff_tex.texture()->getDeviceTexture(), eff_tex.arrayIndex() });
         /*(*eff_iter)->setVariableAssignFunc(std::get<std::string>(eff_tex_set),
             [=](auto& var)
             {
@@ -93,9 +94,9 @@ std::error_code PrimitiveMaterial::unassignShaderTextures()
     if (m_effectMaterial == nullptr) return ErrorCode::nullEffectMaterial;
     for (unsigned i = 0; i < m_effectTextureMap.getCount(); i++)
     {
-        auto& eff_tex_set = m_effectTextureMap.getEffectSemanticTextureTuple(i);
+        auto& eff_tex = m_effectTextureMap.getEffectSemanticTexture(i);
         // 改直接指定
-        m_effectMaterial->assignVariableValue(std::get<std::string>(eff_tex_set), Graphics::IShaderVariable::TextureVarTuple{ nullptr, std::nullopt });
+        m_effectMaterial->assignVariableValue(eff_tex.semantic(), Graphics::IShaderVariable::TextureVarTuple{ nullptr, std::nullopt });
         /*(*eff_iter)->setVariableAssignFunc(std::get<std::string>(eff_tex_set),
             [=](auto& var)
             {
@@ -112,21 +113,21 @@ std::error_code PrimitiveMaterial::assignVariableFunc(const std::string& semanti
     return ErrorCode::ok;
 }
 
-void PrimitiveMaterial::changeSemanticTexture(const Engine::EffectTextureMap::EffectSemanticTextureTuple& tuple)
+void PrimitiveMaterial::changeSemanticTexture(const Engine::EffectSemanticTexture& semantic_texture)
 {
-    m_effectTextureMap.changeSemanticTexture(tuple);
+    m_effectTextureMap.changeSemanticTexture(semantic_texture);
 }
 
-void PrimitiveMaterial::bindSemanticTexture(const Engine::EffectTextureMap::EffectSemanticTextureTuple& tuple)
+void PrimitiveMaterial::bindSemanticTexture(const Engine::EffectSemanticTexture& semantic_texture)
 {
-    m_effectTextureMap.bindSemanticTexture(tuple);
+    m_effectTextureMap.bindSemanticTexture(semantic_texture);
 }
 
-void PrimitiveMaterial::bindSemanticTextures(const Engine::EffectTextureMap::SegmentEffectTextures& texture_tuples)
+void PrimitiveMaterial::bindSemanticTextures(const std::vector<Engine::EffectSemanticTexture>& textures)
 {
-    for (const auto& tuple : texture_tuples)
+    for (const auto& tex : textures)
     {
-        bindSemanticTexture(tuple);
+        bindSemanticTexture(tex);
     }
 }
 
@@ -220,7 +221,7 @@ void PrimitiveMaterial::onTextureHydrationFailed(const Frameworks::IEventPtr& e)
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<Engine::HydrateTextureFailed>(e);
     if (!ev) return;
-    if (m_effectTextureMap.findTexture(ev->id()))
+    if (m_effectTextureMap.hasTexture(ev->id()))
     {
         std::make_shared<PrimitiveMaterialHydrationFailed>(shared_from_this(), ev->error())->enqueue();
     }

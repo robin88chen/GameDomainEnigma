@@ -14,12 +14,12 @@
 #include "GameEngine/EffectTextureMap.h"
 #include "Renderer/Renderer.h"
 #include "Renderer/RenderElement.h"
+#include "PrimitiveMaterial.h"
+#include "GameEngine/EffectSemanticTexture.h"
 #include <string>
 #include <memory>
 #include <system_error>
 #include <vector>
-
-#include "PrimitiveMaterial.h"
 
 namespace Enigma::Renderables
 {
@@ -59,11 +59,11 @@ namespace Enigma::Renderables
         /** get texture map size */
         //unsigned getTextureMapCount() const;
         /** change specify semantic texture */
-        void changeSemanticTexture(const Engine::EffectTextureMap::EffectSemanticTextureTuple& tuple);
+        void changeSemanticTexture(const Engine::EffectSemanticTexture& semantic_texture);
         /** bind specify semantic texture, append new if semantic not existed */
-        void bindSemanticTexture(const Engine::EffectTextureMap::EffectSemanticTextureTuple& tuple);
+        void bindSemanticTexture(const Engine::EffectSemanticTexture& semantic_texture);
         /** bind specify semantic texture, append new if semantic not existed */
-        void bindSemanticTextures(const Engine::EffectTextureMap::SegmentEffectTextures& texture_tuples);
+        void bindSemanticTextures(const std::vector<Engine::EffectSemanticTexture>& textures);
 
         /** update render buffer */
         error updateRenderBuffer();
@@ -108,7 +108,7 @@ namespace Enigma::Renderables
         void createRenderElements();
         //@}
 
-        std::shared_ptr<Engine::Texture> findTextureBySemantic(const std::string& semantic) const;
+        //std::shared_ptr<Engine::Texture> findTextureBySemantic(const std::string& semantic) const;
 
     protected:
         void cleanupGeometry();

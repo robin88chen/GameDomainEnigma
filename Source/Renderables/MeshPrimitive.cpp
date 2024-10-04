@@ -150,14 +150,14 @@ unsigned MeshPrimitive::getTextureMapCount() const
     return static_cast<unsigned>(m_textures.size());
 }*/
 
-void MeshPrimitive::changeSemanticTexture(const Engine::EffectTextureMap::EffectSemanticTextureTuple& tuple)
+void MeshPrimitive::changeSemanticTexture(const Engine::EffectSemanticTexture& semantic_texture)
 {
     if (m_materials.empty()) return;
     loosePrimitiveMaterials();
     for (auto& mat : m_materials)
     {
         if (mat == nullptr) continue;
-        mat->changeSemanticTexture(tuple);
+        mat->changeSemanticTexture(semantic_texture);
     }
     bindPrimitiveMaterials();
     /*if (m_textures.empty()) return;
@@ -169,14 +169,14 @@ void MeshPrimitive::changeSemanticTexture(const Engine::EffectTextureMap::Effect
     bindPrimitiveEffectTexture();*/
 }
 
-void MeshPrimitive::bindSemanticTexture(const Engine::EffectTextureMap::EffectSemanticTextureTuple& tuple)
+void MeshPrimitive::bindSemanticTexture(const Engine::EffectSemanticTexture& semantic_texture)
 {
     if (m_materials.empty()) return;
     loosePrimitiveMaterials();
     for (auto& mat : m_materials)
     {
         if (mat == nullptr) continue;
-        mat->bindSemanticTexture(tuple);
+        mat->bindSemanticTexture(semantic_texture);
     }
     bindPrimitiveMaterials();
     /*if (m_textures.empty()) return;
@@ -188,14 +188,14 @@ void MeshPrimitive::bindSemanticTexture(const Engine::EffectTextureMap::EffectSe
     bindPrimitiveEffectTexture();*/
 }
 
-void MeshPrimitive::bindSemanticTextures(const EffectTextureMap::SegmentEffectTextures& texture_tuples)
+void MeshPrimitive::bindSemanticTextures(const std::vector<EffectSemanticTexture>& textures)
 {
     if (m_materials.empty()) return;
     loosePrimitiveMaterials();
     for (auto& mat : m_materials)
     {
         if (mat == nullptr) continue;
-        mat->bindSemanticTextures(texture_tuples);
+        mat->bindSemanticTextures(textures);
     }
     bindPrimitiveMaterials();
     /*if (m_textures.empty()) return;
@@ -498,17 +498,17 @@ void MeshPrimitive::looseSegmentMaterial(unsigned index)
                                     /*}
                                 }*/
 
-std::shared_ptr<Texture> MeshPrimitive::findTextureBySemantic(const std::string& semantic) const
-{
-    for (auto& mat : m_materials)
-    {
-        if (mat == nullptr) continue;
-        auto tex_tuple = mat->effectTextureMap().findSemanticTexture(semantic);
-        if (!tex_tuple) continue;
-        if (const auto& tex = std::get<std::shared_ptr<Texture>>(tex_tuple.value()))
-        {
-            return tex;
-        }
-    }
-    return nullptr;
-}
+                                /*std::shared_ptr<Texture> MeshPrimitive::findTextureBySemantic(const std::string& semantic) const
+                                {
+                                    for (auto& mat : m_materials)
+                                    {
+                                        if (mat == nullptr) continue;
+                                        auto tex_tuple = mat->effectTextureMap().findSemanticTexture(semantic);
+                                        if (!tex_tuple) continue;
+                                        if (const auto& tex = std::get<std::shared_ptr<Texture>>(tex_tuple.value()))
+                                        {
+                                            return tex;
+                                        }
+                                    }
+                                    return nullptr;
+                                }*/

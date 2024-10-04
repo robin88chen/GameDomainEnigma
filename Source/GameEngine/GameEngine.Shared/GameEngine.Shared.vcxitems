@@ -19,6 +19,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\BoxBV.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\DeviceCreatingPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectCompilingQueue.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectSemanticTexture.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMapAssembler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectMaterialId.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectEvents.h" />
@@ -64,7 +65,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureAssembler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureFactory.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureId.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureMappingAssembler.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectSemanticTextureAssembler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureRepositoryInstallingPolicy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureResourceProcessor.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureImageUpdater.h" />
@@ -83,6 +84,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\BoxBV.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\DeviceCreatingPolicy.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectCompilingQueue.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectSemanticTexture.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectTextureMapAssembler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialId.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectMaterialSourceRepository.cpp" />
@@ -115,7 +117,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureFactory.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureImageUpdater.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureLoader.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureMappingAssembler.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectSemanticTextureAssembler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureRepository.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureRepositoryInstallingPolicy.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureResourceProcessor.cpp" />

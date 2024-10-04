@@ -41,7 +41,7 @@ void ViewerAvatarBaker::changeMeshTexture(const Enigma::Frameworks::ICommandPtr&
     if (!m_getCurrentPawn) return;
     auto pawn = m_getCurrentPawn();
     if (!pawn) return;
-    auto recipe = std::make_shared<ChangeAvatarTexture>(cmd->meshId(), EffectTextureMap::SemanticTextureMapping{ cmd->textureId(), std::nullopt, "DiffuseMap" });
+    auto recipe = std::make_shared<ChangeAvatarTexture>(cmd->meshId(), EffectSemanticTexture{ cmd->textureId(), std::nullopt, "DiffuseMap" });
     pawn->addAvatarRecipe(recipe);
     pawn->bakeAvatarRecipes();
 }

@@ -12,6 +12,7 @@
 #include "GameEngine/EffectMaterialId.h"
 #include "GameEngine/EffectMaterial.h"
 #include "GameEngine/EffectTextureMapAssembler.h"
+#include "GameEngine/EffectTextureMap.h"
 
 namespace Enigma::Renderables
 {

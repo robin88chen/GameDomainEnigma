@@ -22,25 +22,19 @@ namespace Enigma::Engine
     class GenericDto;
     class EffectTextureMapAssembler;
     class EffectTextureMapDisassembler;
+    class EffectSemanticTexture;
 
     class EffectTextureMap
     {
-    public:
-        struct SemanticTextureMapping
-        {
-            TextureId m_textureId;
-            std::optional<unsigned> m_arrayIndex;
-            std::string m_semantic;
-        };
-    public:
-        ///todo: texture 可以改成 texture id 嗎?
-        using EffectSemanticTextureTuple = std::tuple<std::shared_ptr<Texture>, std::optional<unsigned>, std::string>;
-        using SegmentEffectTextures = std::vector<EffectSemanticTextureTuple>;
+        //public:
+            ///todo: texture 可以改成 texture id 嗎?
+            //using EffectSemanticTextureTuple = std::tuple<std::shared_ptr<Texture>, std::optional<unsigned>, std::string>;
+            //using SegmentEffectTextures = std::vector<EffectSemanticTextureTuple>;
     public:
         EffectTextureMap();
-        EffectTextureMap(const EffectSemanticTextureTuple& tuple);
-        EffectTextureMap(const SegmentEffectTextures& textures);
-        EffectTextureMap(const std::vector<SemanticTextureMapping>& mappings);
+        EffectTextureMap(const EffectSemanticTexture& effect_semantic_texture);
+        //EffectTextureMap(const SegmentEffectTextures& textures);
+        EffectTextureMap(const std::vector<EffectSemanticTexture>& mappings);
         EffectTextureMap(const EffectTextureMap&) = default;
         EffectTextureMap(EffectTextureMap&&) = default;
         virtual ~EffectTextureMap();
@@ -50,28 +44,30 @@ namespace Enigma::Engine
         void assemble(const std::shared_ptr<EffectTextureMapAssembler>& assembler) const;
         void disassemble(const std::shared_ptr<EffectTextureMapDisassembler>& disassembler);
 
-        error addSemanticTexture(const SemanticTextureMapping& mapping);
-        error bindSemanticTexture(const EffectSemanticTextureTuple& tuple);
-        error changeSemanticTexture(const EffectSemanticTextureTuple& tuple);
-        unsigned appendTextureSemantic(const std::string& semantic);  ///< return index
-        std::shared_ptr<Texture> getTexture(unsigned index);
-        std::shared_ptr<Texture> getTexture(unsigned index) const;
-        const EffectSemanticTextureTuple& getEffectSemanticTextureTuple(unsigned index) const;
+        //error addSemanticTexture(const SemanticTextureMapping& mapping);
+        error bindSemanticTexture(const EffectSemanticTexture& semantic_texture);
+        error changeSemanticTexture(const EffectSemanticTexture& semantic_texture);
+        //unsigned appendTextureSemantic(const std::string& semantic);  ///< return index
+        //std::shared_ptr<Texture> getTexture(unsigned index);
+        //std::shared_ptr<Texture> getTexture(unsigned index) const;
+        const EffectSemanticTexture& getEffectSemanticTexture(unsigned index) const;
         unsigned int getCount() const { return static_cast<unsigned int>(m_effectTextures.size()); };
-        std::optional<EffectSemanticTextureTuple> findSemanticTexture(const std::string& semantic) const;
-        std::shared_ptr<Texture> findTexture(const TextureId& textureId) const;
+        std::optional<EffectSemanticTexture> findSemanticTexture(const std::string& semantic) const;
+        //std::shared_ptr<Texture> findTexture(const TextureId& textureId) const;
 
-        bool hasAnyResourceTexture() const;
+        //bool hasAnyResourceTexture() const;
         bool isAllTextureReady() const;
+        bool hasTexture(const TextureId& textureId) const;
 
         /// merge texture sets to target map, with respect to same semantic
-        void mergeTextureSetTo(EffectTextureMap& targetMap);
+        //void mergeTextureSetTo(EffectTextureMap& targetMap);
 
     protected:
         std::optional<unsigned> getTextureIndexBySemantic(const std::string& semantic);
 
     protected:
-        SegmentEffectTextures m_effectTextures;
+        //SegmentEffectTextures m_effectTextures;
+        std::vector<EffectSemanticTexture> m_effectTextures;
     };
 }
 

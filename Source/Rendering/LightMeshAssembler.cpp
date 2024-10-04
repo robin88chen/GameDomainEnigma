@@ -6,6 +6,8 @@
 #include "Primitives/PrimitiveQueries.h"
 #include "Renderables/MeshPrimitiveAssembler.h"
 #include "Renderables/PrimitiveMaterialAssembler.h"
+#include "GameEngine/EffectTextureMap.h"
+#include "GameEngine/EffectSemanticTexture.h"
 
 using namespace Enigma::Rendering;
 using namespace Enigma::Frameworks;

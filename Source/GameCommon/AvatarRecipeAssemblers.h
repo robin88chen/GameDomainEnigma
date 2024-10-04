@@ -11,7 +11,7 @@
 #include "GameEngine/GenericDto.h"
 #include "GameEngine/EffectMaterialId.h"
 #include "Primitives/PrimitiveId.h"
-#include "GameEngine/EffectTextureMap.h"
+#include "GameEngine/EffectSemanticTexture.h"
 
 namespace Enigma::GameCommon
 {
@@ -62,13 +62,13 @@ namespace Enigma::GameCommon
         virtual ~ChangeAvatarTextureAssembler() override = default;
 
         void meshId(const Primitives::PrimitiveId& meshId) { m_meshId = meshId; }
-        void semanticTextureMapping(const Engine::EffectTextureMap::SemanticTextureMapping& semantic_texture_mapping) { m_semanticTextureMapping = semantic_texture_mapping; }
+        void semanticTexture(const Engine::EffectSemanticTexture& semantic_texture) { m_semanticTexture = semantic_texture; }
 
         Engine::GenericDto assemble() const override;
 
     protected:
         Primitives::PrimitiveId m_meshId;
-        Engine::EffectTextureMap::SemanticTextureMapping m_semanticTextureMapping;
+        Engine::EffectSemanticTexture m_semanticTexture;
     };
 
     class AvatarRecipeDisassembler
@@ -118,13 +118,13 @@ namespace Enigma::GameCommon
         virtual ~ChangeAvatarTextureDisassembler() override = default;
 
         [[nodiscard]] const Primitives::PrimitiveId& meshId() const { return m_meshId; }
-        [[nodiscard]] const Engine::EffectTextureMap::SemanticTextureMapping& semanticTextureMapping() const { return m_semanticTextureMapping; }
+        [[nodiscard]] const Engine::EffectSemanticTexture& semanticTexture() const { return m_semanticTexture; }
 
         void disassemble(const Engine::GenericDto& dto) override;
 
     protected:
         Primitives::PrimitiveId m_meshId;
-        Engine::EffectTextureMap::SemanticTextureMapping m_semanticTextureMapping;
+        Engine::EffectSemanticTexture m_semanticTexture;
     };
 }
 

@@ -40,6 +40,9 @@
     <Filter Include="Primitives\Assemblers">
       <UniqueIdentifier>{8b134bb2-7c89-4304-8eb1-a3a93e296df9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Material">
+      <UniqueIdentifier>{5cfb6ba7-15bf-418b-b1c1-2b23d2b798c0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\MeshPrimitive.cpp">
@@ -122,6 +125,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveAssembler.cpp">
       <Filter>Primitives\Assemblers</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PrimitiveMaterial.cpp">
+      <Filter>Material</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\PrimitiveMaterialAssembler.cpp">
+      <Filter>Material</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -214,6 +223,12 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveAssembler.h">
       <Filter>Primitives\Assemblers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveMaterial.h">
+      <Filter>Material</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveMaterialAssembler.h">
+      <Filter>Material</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

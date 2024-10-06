@@ -14,7 +14,7 @@ using namespace Enigma::Graphics;
 
 DEFINE_RTTI_OF_BASE(Engine, Texture);
 
-Texture::Texture(const TextureId& id) : m_factoryDesc(TYPE_RTTI.getName())
+Texture::Texture(const TextureId& id) : m_dimension({ 1, 1 }), m_isCubeTexture(false), m_surfaceCount(1), m_factoryDesc(TYPE_RTTI.getName()), m_texture(nullptr)
 {
     m_id = id;
     m_lazyStatus.changeStatus(LazyStatus::Status::Ready);

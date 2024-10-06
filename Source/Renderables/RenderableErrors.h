@@ -27,6 +27,8 @@ namespace Enigma::Renderables
 
         nullRenderer = 401,
         emptyRenderElementList,
+
+        nullEffectMaterial = 501,
     };
     class ErrorCategory : public std::error_category
     {

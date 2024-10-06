@@ -94,29 +94,34 @@
                 }
             }
         },
-        "Effects": {
-            "Type": "StringArray",
-            "Value": ["basic_vtx_tex"]
-        },
         "VisualTechniqueSelection": {
             "Type": "String",
             "Value": "Default"
         },
-        "TextureMaps": {
+        "Materials": {
             "Type": "DataObjectArray",
             "Value": [{
-                    "TextureMappings": {
-                        "Type": "DataObjectArray",
-                        "Value": [{
-                                "TextureId.Name": {
-                                    "Type": "String",
-                                    "Value": "earth"
-                                },
-                                "Semantic": {
-                                    "Type": "String",
-                                    "Value": "DiffuseMap"
-                                }
-                            }]
+                    "Effect": {
+                        "Type": "String",
+                        "Value": "basic_vtx_tex"
+                    },
+                    "TextureMap": {
+                        "Type": "DataObject",
+                        "Value": {
+                            "TextureMappings": {
+                                "Type": "DataObjectArray",
+                                "Value": [{
+                                        "TextureId.Name": {
+                                            "Type": "String",
+                                            "Value": "earth"
+                                        },
+                                        "Semantic": {
+                                            "Type": "String",
+                                            "Value": "DiffuseMap"
+                                        }
+                                    }]
+                            }
+                        }
                     }
                 }]
         }

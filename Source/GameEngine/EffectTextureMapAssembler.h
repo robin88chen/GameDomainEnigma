@@ -10,7 +10,7 @@
 
 #include "TextureId.h"
 #include "GenericDto.h"
-#include "TextureMappingAssembler.h"
+#include "EffectSemanticTextureAssembler.h"
 #include <optional>
 #include <string>
 #include <vector>
@@ -22,12 +22,13 @@ namespace Enigma::Engine
     public:
         EffectTextureMapAssembler();
 
-        void addTextureMapping(const TextureId& id, std::optional<unsigned> array_index, const std::string& semantic);
+        void addSemanticTextureMapping(const TextureId& id, std::optional<unsigned> array_index, const std::string& semantic);
+        void addSemanticTextureMapping(const EffectSemanticTexture& semantic_texture);
 
         GenericDto assemble() const;
 
     protected:
-        std::vector<TextureMappingAssembler> m_mappingAssemblers;
+        std::vector<EffectSemanticTextureAssembler> m_mappingAssemblers;
     };
 
     class EffectTextureMapDisassembler
@@ -36,12 +37,12 @@ namespace Enigma::Engine
         EffectTextureMapDisassembler();
         EffectTextureMapDisassembler(const GenericDto& dto);
 
-        [[nodiscard]] const std::vector<TextureMappingDisassembler>& textureMappings() const { return m_mappingDisassemblers; }
+        [[nodiscard]] const std::vector<EffectSemanticTextureDisassembler>& semanticTextureMappings() const { return m_mappingDisassemblers; }
 
         void disassemble(const GenericDto& dto);
 
     protected:
-        std::vector<TextureMappingDisassembler> m_mappingDisassemblers;
+        std::vector<EffectSemanticTextureDisassembler> m_mappingDisassemblers;
     };
 }
 

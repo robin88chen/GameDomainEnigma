@@ -14,6 +14,8 @@
 
 namespace Enigma::Renderables
 {
+    class PrimitiveMaterial;
+
     class RenderablePrimitiveHydrated : public Frameworks::IEvent
     {
     public:
@@ -35,6 +37,28 @@ namespace Enigma::Renderables
 
     protected:
         Primitives::PrimitiveId m_id;
+        std::error_code m_error;
+    };
+    class PrimitiveMaterialHydrated : public Frameworks::IEvent
+    {
+    public:
+        PrimitiveMaterialHydrated(const std::shared_ptr<PrimitiveMaterial>& material) : m_material(material) {}
+        const std::shared_ptr<PrimitiveMaterial>& material() const { return m_material; }
+
+    protected:
+        std::shared_ptr<PrimitiveMaterial> m_material;
+    };
+    class PrimitiveMaterialHydrationFailed : public Frameworks::IEvent
+    {
+    public:
+        PrimitiveMaterialHydrationFailed(const std::shared_ptr<PrimitiveMaterial>& material, std::error_code er)
+            : m_material(material), m_error(er) {}
+
+        const std::shared_ptr<PrimitiveMaterial>& material() const { return m_material; }
+        std::error_code error() const { return m_error; }
+
+    protected:
+        std::shared_ptr<PrimitiveMaterial> m_material;
         std::error_code m_error;
     };
 }

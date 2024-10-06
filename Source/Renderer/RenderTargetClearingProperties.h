@@ -27,6 +27,8 @@ namespace Enigma::Renderer
         float m_depth;
         unsigned int m_stencil;
         RenderTargetClearingBits m_clearingBits;
+        RenderTargetClearingProperty() : m_color(MathLib::ColorRGBA::BLACK), m_depth(1.0f), m_stencil(0), m_clearingBits(RenderTargetClear::BothBuffer) {}
+        RenderTargetClearingProperty(const MathLib::ColorRGBA& color, float depth, unsigned int stencil, RenderTargetClearingBits clearingBits) : m_color(color), m_depth(depth), m_stencil(stencil), m_clearingBits(clearingBits) {}
     };
 
     struct RenderTargetClearChangingProperty

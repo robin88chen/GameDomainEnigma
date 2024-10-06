@@ -1,7 +1,4 @@
 ﻿#include "CubeGeometryMaker.h"
-
-#include <GameEngine/EffectTextureMapAssembler.h>
-
 #include "MathLib/Vector2.h"
 #include "MathLib/Vector3.h"
 #include "MathLib/ContainmentBox3.h"

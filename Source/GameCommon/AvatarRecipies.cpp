@@ -11,6 +11,7 @@
 #include "GameEngine/TextureQueries.h"
 #include "Platforms/PlatformLayer.h"
 #include "Renderables/ModelPrimitive.h"
+#include "Renderables/PrimitiveMaterial.h"
 #include "AvatarRecipeAssemblers.h"
 #include <cassert>
 
@@ -135,11 +136,13 @@ void ReplaceAvatarMaterial::replaceMeshMaterial(const std::shared_ptr<MeshPrimit
     if (!mesh) return;
     if (m_oldMaterialId.isEqualSource(m_newMaterialId)) return;
 
-    unsigned int total_mat_count = mesh->getEffectMaterialCount();
+    unsigned int total_mat_count = mesh->getMaterialCount();
     if (total_mat_count == 0) return;
     for (unsigned int i = 0; i < total_mat_count; i++)
     {
-        std::shared_ptr<EffectMaterial> eff = mesh->getEffectMaterial(i);
+        std::shared_ptr<PrimitiveMaterial> mat = mesh->getMaterial(i);
+        if (!mat) continue;
+        std::shared_ptr<EffectMaterial> eff = mat->effectMaterial();
         if (!eff) continue;
         if (eff->id().isEqualSource(m_oldMaterialId))
         {
@@ -171,8 +174,8 @@ void ReplaceAvatarMaterial::replaceNewMeshMaterialInSegment(const std::shared_pt
 {
     if (!mesh) return;
     if (!new_material) return;
-    if (segment_index >= mesh->getEffectMaterialCount()) return;
-    mesh->changeEffectMaterialInSegment(segment_index, new_material);
+    if (segment_index >= mesh->getMaterialCount()) return;
+    mesh->changeEffectInSegment(segment_index, new_material);
     mesh->createRenderElements();
     if (!m_primitive.expired())
     {
@@ -198,7 +201,7 @@ void ReplaceAvatarMaterial::onHydrateMaterialFailed(const IEventPtr& e)
     Platforms::Debug::ErrorPrintf("ReplaceAvatarMaterial::OnContentEffectMaterialFailed: %s, %s\n", ev->id().name().c_str(), ev->error().message().c_str());
 }
 
-ChangeAvatarTexture::ChangeAvatarTexture() : m_meshId(), m_semanticTextureMapping()
+ChangeAvatarTexture::ChangeAvatarTexture() : m_meshId(), m_semanticTexture()
 {
     m_factoryDesc = FactoryDesc(ChangeAvatarTexture::TYPE_RTTI.getName());
     m_onTextureHydrated = std::make_shared<EventSubscriber>([=](auto e) { this->onTextureHydrated(e); });
@@ -207,7 +210,7 @@ ChangeAvatarTexture::ChangeAvatarTexture() : m_meshId(), m_semanticTextureMappin
     EventPublisher::subscribe(typeid(HydrateTextureFailed), m_onTextureHydrated);
 }
 
-ChangeAvatarTexture::ChangeAvatarTexture(const Primitives::PrimitiveId& mesh_id, const EffectTextureMap::SemanticTextureMapping& semantic_texture_mapping) : m_meshId(mesh_id), m_semanticTextureMapping(semantic_texture_mapping)
+ChangeAvatarTexture::ChangeAvatarTexture(const Primitives::PrimitiveId& mesh_id, const EffectSemanticTexture& semantic_texture) : m_meshId(mesh_id), m_semanticTexture(semantic_texture)
 {
     m_factoryDesc = FactoryDesc(ChangeAvatarTexture::TYPE_RTTI.getName());
     m_onTextureHydrated = std::make_shared<EventSubscriber>([=](auto e) { this->onTextureHydrated(e); });
@@ -240,7 +243,7 @@ void ChangeAvatarTexture::assemble(const std::shared_ptr<AvatarRecipeAssembler>&
     if (std::shared_ptr<ChangeAvatarTextureAssembler> change_assembler = std::dynamic_pointer_cast<ChangeAvatarTextureAssembler>(assembler))
     {
         change_assembler->meshId(m_meshId);
-        change_assembler->semanticTextureMapping(m_semanticTextureMapping);
+        change_assembler->semanticTexture(m_semanticTexture);
     }
 }
 
@@ -255,7 +258,7 @@ void ChangeAvatarTexture::disassemble(const std::shared_ptr<AvatarRecipeDisassem
     if (std::shared_ptr<ChangeAvatarTextureDisassembler> change_disassembler = std::dynamic_pointer_cast<ChangeAvatarTextureDisassembler>(disassembler))
     {
         m_meshId = change_disassembler->meshId();
-        m_semanticTextureMapping = change_disassembler->semanticTextureMapping();
+        m_semanticTexture = change_disassembler->semanticTexture();
     }
 }
 
@@ -284,11 +287,10 @@ void ChangeAvatarTexture::changeMeshTexture(const std::shared_ptr<MeshPrimitive>
 {
     if (!mesh) return;
     if (m_meshId.name().empty()) return;
-    auto query = std::make_shared<QueryTexture>(m_semanticTextureMapping.m_textureId);
-    QueryDispatcher::dispatch(query);
-    if ((query->getResult()) && (query->getResult()->lazyStatus().isReady()))
+    if (m_semanticTexture.textureId().name().empty()) return;
+    if ((m_semanticTexture.texture()) && (m_semanticTexture.texture()->lazyStatus().isReady()))
     {
-        mesh->changeSemanticTexture({ query->getResult(), m_semanticTextureMapping.m_arrayIndex, m_semanticTextureMapping.m_semantic });
+        mesh->changeSemanticTexture(m_semanticTexture);
     }
     else
     {
@@ -301,9 +303,9 @@ void ChangeAvatarTexture::onTextureHydrated(const Frameworks::IEventPtr& e)
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<TextureHydrated>(e);
     if (!ev) return;
-    if (ev->id() != m_semanticTextureMapping.m_textureId) return;
+    if (ev->id() != m_semanticTexture.textureId()) return;
     if (m_mesh.expired()) return;
-    m_mesh.lock()->changeSemanticTexture({ ev->texture(), m_semanticTextureMapping.m_arrayIndex, m_semanticTextureMapping.m_semantic });
+    m_mesh.lock()->changeSemanticTexture(m_semanticTexture);
 }
 
 void ChangeAvatarTexture::onHydrateTextureFailed(const Frameworks::IEventPtr& e)
@@ -311,7 +313,7 @@ void ChangeAvatarTexture::onHydrateTextureFailed(const Frameworks::IEventPtr& e)
     if (!e) return;
     auto ev = std::dynamic_pointer_cast<HydrateTextureFailed>(e);
     if (!ev) return;
-    if (ev->id() != m_semanticTextureMapping.m_textureId) return;
+    if (ev->id() != m_semanticTexture.textureId()) return;
     Platforms::Debug::ErrorPrintf("ChangeAvatarTexture::OnLoadTextureFailed: %s, %s\n", ev->id().name().c_str(), ev->error().message().c_str());
 }
 

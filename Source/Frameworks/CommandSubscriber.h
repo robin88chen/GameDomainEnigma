@@ -29,6 +29,8 @@ namespace Enigma::Frameworks
         CommandHandler m_handler;
     };
     using CommandSubscriberPtr = std::shared_ptr<CommandSubscriber>;
+    CommandSubscriberPtr commandSubscription(const std::type_info& ev_type, const CommandHandler& handler);
+    void releaseSubscription(const std::type_info& ev_type, const CommandSubscriberPtr& subscriber);
 }
 
 

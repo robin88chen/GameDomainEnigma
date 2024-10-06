@@ -1,7 +1,5 @@
 ﻿#include "AnimatedPawnPresentation.h"
-
-#include <SceneGraph/SceneGraphQueries.h>
-
+#include "SceneGraph/SceneGraphQueries.h"
 #include "ViewerCommands.h"
 #include "GameCommon/AnimatedPawnAssembler.h"
 #include "MathLib/MathGlobal.h"

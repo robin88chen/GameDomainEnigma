@@ -42,8 +42,8 @@ EffectTechnique& EffectTechnique::operator=(EffectTechnique&& source_tech) noexc
 
 EffectTechnique& EffectTechnique::operator=(const EffectTechnique& source_tech)
 {
-    m_name = std::move(source_tech.m_name);
-    m_effectPasses = std::move(source_tech.m_effectPasses);
+    m_name = source_tech.m_name;
+    m_effectPasses = source_tech.m_effectPasses;
     m_currentApplyPass = m_effectPasses.end();
 
     return *this;

@@ -8,7 +8,7 @@
 using namespace Enigma::Engine;
 using namespace Enigma::Frameworks;
 
-TextureImageUpdater::TextureImageUpdater()
+TextureImageUpdater::TextureImageUpdater() : m_targetTextureRect(0, 0, 1, 1)
 {
     m_onResourceImageRetrieved = std::make_shared<EventSubscriber>([=](auto e) { this->onResourceImageRetrieved(e); });
     EventPublisher::subscribe(typeid(Graphics::TextureResourceImageRetrieved), m_onResourceImageRetrieved);

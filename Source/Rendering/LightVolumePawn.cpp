@@ -23,19 +23,6 @@ LightVolumePawn::LightVolumePawn(const SpatialId& id) : LightingPawn(id), m_isCa
 {
 }
 
-/*LightVolumePawn::LightVolumePawn(const SpatialId& id, const Engine::GenericDto& o) : LightingPawn(id, o), m_isCameraInside(false)
-{
-    if ((!m_primitive) && (!m_hostLight.expired()))
-    {
-        LightVolumePawnDto dto(o);
-        if ((m_hostLight.lock()->info().lightType() == LightInfo::LightType::Point) && (dto.primitiveId().has_value()))
-        {
-            m_primitive = std::make_shared<RequestPointLightMeshAssembly>(dto.primitiveId().value(), m_hostLight.lock()->getLightRange())->dispatch();
-        }
-        m_prensentCameraId = dto.presentCameraId();
-    }
-}*/
-
 LightVolumePawn::~LightVolumePawn()
 {
 
@@ -77,7 +64,7 @@ void LightVolumePawn::disassemble(const std::shared_ptr<SceneGraph::SpatialDisas
         {
             m_hostLight = std::dynamic_pointer_cast<Light>(std::make_shared<QuerySpatial>(v.value())->dispatch());
         }
-        if ((!m_primitive) && (m_hostLight.expired()))
+        if ((!m_primitive) && (!m_hostLight.expired()))
         {
 
             if ((m_hostLight.lock()->info().lightType() == LightInfo::LightType::Point) && (lightingPawnDisassembler->primitiveId().has_value()))
@@ -88,14 +75,6 @@ void LightVolumePawn::disassemble(const std::shared_ptr<SceneGraph::SpatialDisas
         if (lightingPawnDisassembler->presentCameraId()) m_prensentCameraId = lightingPawnDisassembler->presentCameraId().value();
     }
 }
-
-/*GenericDto LightVolumePawn::serializeDto()
-{
-    LightVolumePawnDto dto{ LightingPawnDto(SerializePawnDto()) };
-    if (getHostLight()) dto.hostLightId(getHostLight()->id());
-    if (!m_prensentCameraId.empty()) dto.presentCameraId(m_prensentCameraId);
-    return dto.toGenericDto();
-}*/
 
 void LightVolumePawn::registerHandlers()
 {

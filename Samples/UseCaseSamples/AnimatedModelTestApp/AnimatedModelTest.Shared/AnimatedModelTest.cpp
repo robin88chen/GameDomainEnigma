@@ -95,8 +95,8 @@ void AnimatedModelTest::initializeMountPaths()
 
 void AnimatedModelTest::installEngine()
 {
-    m_onCameraConstituted = std::make_shared<EventSubscriber>([=](auto e) { this->onCameraConstituted(e); });
-    EventPublisher::subscribe(typeid(CameraConstituted), m_onCameraConstituted);
+    //m_onCameraConstituted = std::make_shared<EventSubscriber>([=](auto e) { this->onCameraConstituted(e); });
+    //EventPublisher::subscribe(typeid(CameraConstituted), m_onCameraConstituted);
 
     m_onRendererCreated = std::make_shared<EventSubscriber>([=](auto e) {this->onRendererCreated(e); });
     EventPublisher::subscribe(typeid(RendererCreated), m_onRendererCreated);
@@ -136,8 +136,8 @@ void AnimatedModelTest::shutdownEngine()
     m_renderTarget = nullptr;
     m_camera = nullptr;
 
-    EventPublisher::unsubscribe(typeid(CameraConstituted), m_onCameraConstituted);
-    m_onCameraConstituted = nullptr;
+    //EventPublisher::unsubscribe(typeid(CameraConstituted), m_onCameraConstituted);
+    //m_onCameraConstituted = nullptr;
 
     EventPublisher::unsubscribe(typeid(RendererCreated), m_onRendererCreated);
     m_onRendererCreated = nullptr;
@@ -171,12 +171,12 @@ void AnimatedModelTest::makeCamera()
     if (const auto camera = Camera::queryCamera(m_cameraId))
     {
         m_camera = camera;
-        if ((m_camera) && (m_renderer)) m_renderer->setAssociatedCamera(m_camera);
     }
     else
     {
-        CameraMaker::makeCamera(m_cameraId);
+        m_camera = CameraMaker::makeCamera(m_cameraId);
     }
+    if ((m_camera) && (m_renderer)) m_renderer->setAssociatedCamera(m_camera);
 }
 
 void AnimatedModelTest::makeModel()

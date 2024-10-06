@@ -23,11 +23,14 @@
 #include "Renderer/Renderer.h"
 #include "SceneGraph/Node.h"
 #include "SceneGraph/Pawn.h"
-#include "GameCommon/SceneRendererService.h"
+#include "Rendering/SceneRendering.h"
 #include "FileStorage/SceneGraphFileStoreMapper.h"
 #include "SceneGraph/SceneGraphRepository.h"
 #include <memory>
 #include <string>
+#include <GameCommon/GameCommonInstallingPolicies.h>
+#include <GameCommon/GameSceneService.h>
+#include <Rendering/DeferredRenderingConfiguration.h>
 
 class DeferredRenderingTest : public Enigma::Application::AppDelegate
 {
@@ -59,7 +62,8 @@ private:
     void prepareRenderScene();
 
 protected:
-    std::weak_ptr<Enigma::GameCommon::SceneRendererService> m_sceneRendererService;
+    std::weak_ptr<Enigma::Rendering::SceneRendering> m_sceneRendering;
+    std::weak_ptr<Enigma::GameCommon::GameSceneService> m_gameSceneService;
     std::weak_ptr<Enigma::SceneGraph::SceneGraphRepository> m_sceneGraphRepository;
 
     std::shared_ptr<Enigma::FileStorage::SceneGraphFileStoreMapper> m_sceneGraphFileStoreMapper;
@@ -71,9 +75,9 @@ protected:
     Enigma::Renderer::RendererPtr m_renderer;
     Enigma::Renderer::RenderTargetPtr m_renderTarget;
     std::shared_ptr<Enigma::Renderables::ModelPrimitive> m_model;
-    Enigma::SceneGraph::NodePtr m_sceneRoot;
+    std::shared_ptr<Enigma::SceneGraph::Node> m_sceneRoot;
     Enigma::SceneGraph::SpatialId m_sceneRootId;
-    Enigma::SceneGraph::PawnPtr m_pawn;
+    std::shared_ptr<Enigma::SceneGraph::Pawn> m_pawn;
     Enigma::SceneGraph::SpatialId m_cubeId;
 
     std::shared_ptr<Enigma::SceneGraph::Camera> m_camera;

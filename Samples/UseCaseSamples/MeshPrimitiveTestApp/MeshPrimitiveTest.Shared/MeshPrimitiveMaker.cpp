@@ -17,10 +17,7 @@ std::shared_ptr<MeshPrimitive> MeshPrimitiveMaker::makeCubeMeshPrimitive(const E
     MeshPrimitiveAssembler assembler(mesh_id);
     assembler.geometryId(geo_id);
     assembler.asNative(mesh_id.name() + ".mesh@DataPath");
-    assembler.addEffect(EffectMaterialId("basic_vtx_tex"));
-    std::shared_ptr<EffectTextureMapAssembler> texture_assembler = std::make_shared<EffectTextureMapAssembler>();
-    texture_assembler->addTextureMapping(TextureId("earth"), std::nullopt, "DiffuseMap");
-    assembler.addTextureMap(texture_assembler);
+    assembler.addMaterial(std::make_shared<PrimitiveMaterial>(EffectMaterialId("basic_vtx_tex"), EffectTextureMap({ { TextureId("earth"), std::nullopt, "DiffuseMap" } })));
     assembler.renderListID(Renderer::RenderListID::Scene);
     assembler.visualTechnique("Default");
 

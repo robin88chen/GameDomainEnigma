@@ -21,30 +21,35 @@
             "Type": "StringArray",
             "Value": ["renderables/mb2011_zup.m_a", "0", "En.Renderables.SkinMeshPrimitive"]
         },
+        "Materials": {
+            "Type": "DataObjectArray",
+            "Value": [{
+                    "Effect": {
+                        "Type": "String",
+                        "Value": "fx/default_textured_skinmesh_effect"
+                    },
+                    "TextureMap": {
+                        "Type": "DataObject",
+                        "Value": {
+                            "TextureMappings": {
+                                "Type": "DataObjectArray",
+                                "Value": [{
+                                        "TextureId.Name": {
+                                            "Type": "String",
+                                            "Value": "image/mb20110801"
+                                        },
+                                        "Semantic": {
+                                            "Type": "String",
+                                            "Value": "DiffuseMap"
+                                        }
+                                    }]
+                            }
+                        }
+                    }
+                }]
+        },
         "VisualTechniqueSelection": {
             "Type": "String",
             "Value": "Default"
-        },
-        "Effects": {
-            "Type": "StringArray",
-            "Value": ["fx/default_textured_skinmesh_effect"]
-        },
-        "TextureMaps": {
-            "Type": "DataObjectArray",
-            "Value": [{
-                    "TextureMappings": {
-                        "Type": "DataObjectArray",
-                        "Value": [{
-                                "TextureId.Name": {
-                                    "Type": "String",
-                                    "Value": "image/mb20110801"
-                                },
-                                "Semantic": {
-                                    "Type": "String",
-                                    "Value": "DiffuseMap"
-                                }
-                            }]
-                    }
-                }]
         }
     }]

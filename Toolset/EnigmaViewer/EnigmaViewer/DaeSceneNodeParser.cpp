@@ -199,12 +199,13 @@ void DaeSceneNodeParser::persistMesh(const Enigma::Primitives::PrimitiveId& mesh
     Enigma::Renderables::MeshPrimitiveAssembler mesh_assembler(mesh_id);
     mesh_assembler.geometryId(geo_id);
     mesh_assembler.asNative(mesh_id.name() + ".mesh@APK_PATH");
-    mesh_assembler.addEffect(effect_id);
     if ((texture_id) && (tex_semantic))
     {
-        std::shared_ptr<Enigma::Engine::EffectTextureMapAssembler> texture_assembler = std::make_shared<Enigma::Engine::EffectTextureMapAssembler>();
-        texture_assembler->addTextureMapping(texture_id.value(), std::nullopt, tex_semantic.value());
-        mesh_assembler.addTextureMap(texture_assembler);
+        mesh_assembler.addMaterial(std::make_shared<Enigma::Renderables::PrimitiveMaterial>(effect_id, Enigma::Engine::EffectTextureMap({ {texture_id.value(), std::nullopt, tex_semantic.value()} })));
+    }
+    else
+    {
+        mesh_assembler.addMaterial(std::make_shared<Enigma::Renderables::PrimitiveMaterial>(effect_id, Enigma::Engine::EffectTextureMap()));
     }
     mesh_assembler.renderListID(Enigma::Renderer::Renderer::RenderListID::Scene);
     mesh_assembler.visualTechnique("Default");

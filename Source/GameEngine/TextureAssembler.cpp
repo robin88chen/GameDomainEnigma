@@ -15,7 +15,7 @@ static std::string TOKEN_WIDTH_OF_CREATION = "WidthOfCreation";
 static std::string TOKEN_HEIGHT_OF_CREATION = "HeightOfCreation";
 static std::string TOKEN_IMAGE_FILENAMES_OF_LOAD = "ImageFilenamesOfLoad";
 
-TextureAssembler::TextureAssembler(const TextureId& id) : m_id(id), m_factoryDesc(Texture::TYPE_RTTI.getName())
+TextureAssembler::TextureAssembler(const TextureId& id) : m_id(id), m_factoryDesc(Texture::TYPE_RTTI.getName()), m_dimension{ 1, 1 }
 {
 }
 
@@ -40,7 +40,7 @@ GenericDto TextureAssembler::assemble() const
     return dto;
 }
 
-TextureDisassembler::TextureDisassembler() : m_factoryDesc(Texture::TYPE_RTTI.getName())
+TextureDisassembler::TextureDisassembler() : m_factoryDesc(Texture::TYPE_RTTI.getName()), m_dimension{ 1, 1 }
 {
 }
 

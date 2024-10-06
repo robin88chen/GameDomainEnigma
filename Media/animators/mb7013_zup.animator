@@ -13,13 +13,28 @@
                 "PrefabFilename": "animators/mb7013_zup.animator@APK_PATH"
             }
         },
-        "ControlledPrimitiveId": {
-            "Type": "StringArray",
-            "Value": ["renderables/mb7013_zup", "0", "En.Renderables.ModelPrimitive"]
-        },
         "SkinOperators": {
             "Type": "DataObjectArray",
             "Value": [{
+                    "Rtti": {
+                        "Type": "FactoryDesc",
+                        "Value": {
+                            "InstanceType": 0,
+                            "ResourceName": "",
+                            "ResourceFilename": "",
+                            "RttiName": "En.Renderables.SkinAnimationOperator",
+                            "PrefabFilename": ""
+                        }
+                    },
+                    "SkinMeshId": {
+                        "Type": "StringArray",
+                        "Value": ["renderables/mb7013_zup.Mesh.001", "0", "En.Renderables.SkinMeshPrimitive"]
+                    },
+                    "BoneNodeNames": {
+                        "Type": "StringArray",
+                        "Value": ["Bip01 Head"]
+                    }
+                }, {
                     "Rtti": {
                         "Type": "FactoryDesc",
                         "Value": {
@@ -39,6 +54,10 @@
                         "Value": ["Bip01 Pelvis", "Bip01 Spine", "Bip01 L Thigh", "Bip01 L Calf", "Bip01 R Thigh", "Bip01 R Calf", "Bip01 Head", "Bip01 Ponytail1", "Bip01 Ponytail11", "Bip01 Ponytail2", "Bip01 Ponytail21", "Bip01 L UpperArm", "Bip01 L Forearm", "Bip01 R UpperArm", "Bip01 R Forearm", "Bip01 Tail", "Bip01 Tail1"]
                     }
                 }]
+        },
+        "ControlledPrimitiveId": {
+            "Type": "StringArray",
+            "Value": ["renderables/mb7013_zup", "0", "En.Renderables.ModelPrimitive"]
         },
         "AssetId": {
             "Type": "String",

@@ -13,7 +13,7 @@
 class CameraMaker
 {
 public:
-    static void makeCamera(const Enigma::SceneGraph::SpatialId& id);
+    static std::shared_ptr<Enigma::SceneGraph::Camera> makeCamera(const Enigma::SceneGraph::SpatialId& id);
 };
 
 #endif // CAMERA_MAKER_H

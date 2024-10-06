@@ -30,7 +30,7 @@ namespace Enigma::Geometries
     class HasGeometryData : public Frameworks::Query<bool>
     {
     public:
-        HasGeometryData(const GeometryId& id) : m_id(id) {}
+        HasGeometryData(const GeometryId& id) : Query(false), m_id(id) {}
 
         const GeometryId& id() const { return m_id; }
 

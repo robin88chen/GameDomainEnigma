@@ -1,7 +1,7 @@
 ﻿/*********************************************************************
  * \file   RenderBufferBuildingPolicies.h
- * \brief  
- * 
+ * \brief
+ *
  * \author Lancelot 'Robin' Chen
  * \date   September 2022
  *********************************************************************/
@@ -26,6 +26,7 @@ namespace Enigma::Engine
         unsigned int m_idxBufferSize;
         std::optional<byte_buffer> m_vtxBuffer;
         std::optional<uint_buffer> m_idxBuffer;
+        RenderBufferPolicy() : m_sizeofVertex(0), m_vtxBufferSize(0), m_idxBufferSize(0) {}
     };
 }
 

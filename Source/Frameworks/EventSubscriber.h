@@ -29,6 +29,9 @@ namespace Enigma::Frameworks
         EventHandler m_handler;
     };
     using EventSubscriberPtr = std::shared_ptr<EventSubscriber>;
+
+    EventSubscriberPtr eventSubscription(const std::type_info& ev_type, const EventHandler& handler);
+    void releaseSubscription(const std::type_info& ev_type, const EventSubscriberPtr& subscriber);
 }
 
 #endif // EVENT_SUBSCRIBER_H

@@ -252,11 +252,14 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureAssembler.h">
       <Filter>Textures\Assembler</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\TextureMappingAssembler.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectSemanticTextureAssembler.h">
       <Filter>Effect Material\Assemblers</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectTextureMapAssembler.h">
       <Filter>Effect Material\Assemblers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\EffectSemanticTexture.h">
+      <Filter>Effect Material\Effect Texture Map</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -383,11 +386,14 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureAssembler.cpp">
       <Filter>Textures\Assembler</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\TextureMappingAssembler.cpp">
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectSemanticTextureAssembler.cpp">
       <Filter>Effect Material\Assemblers</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectTextureMapAssembler.cpp">
       <Filter>Effect Material\Assemblers</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\EffectSemanticTexture.cpp">
+      <Filter>Effect Material\Effect Texture Map</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

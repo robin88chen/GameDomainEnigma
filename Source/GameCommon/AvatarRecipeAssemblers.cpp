@@ -1,6 +1,6 @@
 ﻿#include "AvatarRecipeAssemblers.h"
 #include "AvatarRecipes.h"
-#include "GameEngine/TextureMappingAssembler.h"
+#include "GameEngine/EffectSemanticTextureAssembler.h"
 
 using namespace Enigma::GameCommon;
 
@@ -42,7 +42,7 @@ Enigma::Engine::GenericDto ChangeAvatarTextureAssembler::assemble() const
 {
     Enigma::Engine::GenericDto dto = AvatarRecipeAssembler::assemble();
     dto.addOrUpdate(TOKEN_MESH_ID, m_meshId.tokens());
-    std::shared_ptr<Engine::TextureMappingAssembler> textureAssembler = std::make_shared<Engine::TextureMappingAssembler>(m_semanticTextureMapping);
+    std::shared_ptr<Engine::EffectSemanticTextureAssembler> textureAssembler = std::make_shared<Engine::EffectSemanticTextureAssembler>(m_semanticTexture);
     dto.addOrUpdate(TOKEN_TEXTURE_MAPPING_DTO, textureAssembler->assemble());
     return dto;
 }
@@ -79,7 +79,7 @@ void ChangeAvatarTextureDisassembler::disassemble(const Engine::GenericDto& dto)
     if (const auto v = dto.tryGetValue<std::vector<std::string>>(TOKEN_MESH_ID)) m_meshId = v.value();
     if (const auto v = dto.tryGetValue<Engine::GenericDto>(TOKEN_TEXTURE_MAPPING_DTO))
     {
-        Engine::TextureMappingDisassembler textureDisassembler(v.value());
-        m_semanticTextureMapping = textureDisassembler.semanticTextureMapping();
+        Engine::EffectSemanticTextureDisassembler textureDisassembler(v.value());
+        m_semanticTexture = textureDisassembler.semanticTexture();
     }
 }

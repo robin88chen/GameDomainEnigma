@@ -17,6 +17,7 @@ std::string ErrorCategory::message(int err) const
     case ErrorCode::nullRenderBuffer: return "Null render buffer";
     case ErrorCode::nullRenderer: return "Null Renderer error";
     case ErrorCode::emptyRenderElementList: return "Empty render element list";
+    case ErrorCode::nullEffectMaterial: return "Null effect material";
     }
     return "Unknown";
 }

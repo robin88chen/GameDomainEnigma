@@ -31,13 +31,10 @@ void FloorReceiverMaker::makeFloorReceiver(const std::shared_ptr<Enigma::SceneGr
     PawnAssembler pawn_assembler(floorPawnId);
     auto floorMeshId = PrimitiveId("floor_mesh", MeshPrimitive::TYPE_RTTI);
     MeshPrimitiveAssembler mesh_assembler(floorMeshId);
-    std::shared_ptr<EffectTextureMapAssembler> tex_assembler = std::make_shared<EffectTextureMapAssembler>();
-    tex_assembler->addTextureMapping(TextureId("image/du011"), std::nullopt, "DiffuseMap");
-    mesh_assembler.addTextureMap(tex_assembler);
+    mesh_assembler.addMaterial(std::make_shared<PrimitiveMaterial>(EffectMaterialId("fx/default_textured_mesh_effect"), EffectTextureMap({ {TextureId("image/du011"), std::nullopt, "DiffuseMap"} })));
     mesh_assembler.geometryId(floorGeometryId);
     mesh_assembler.renderListID(Enigma::Renderer::Renderer::RenderListID::Scene);
     mesh_assembler.visualTechnique("Default");
-    mesh_assembler.addEffect(EffectMaterialId("fx/default_textured_mesh_effect"));
     mesh_assembler.asNative(floorMeshId.name() + ".mesh@DataPath");
     auto mesh = std::make_shared<RequestPrimitiveConstitution>(floorMeshId, mesh_assembler.assemble())->dispatch();
     pawn_assembler.primitiveId(floorMeshId);

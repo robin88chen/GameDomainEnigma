@@ -21,12 +21,26 @@
             "Type": "StringArray",
             "Value": ["renderables/mb2011_zup.k_headtop", "0", "En.Renderables.MeshPrimitive"]
         },
+        "Materials": {
+            "Type": "DataObjectArray",
+            "Value": [{
+                    "Effect": {
+                        "Type": "String",
+                        "Value": "fx/default_color_mesh_effect"
+                    },
+                    "TextureMap": {
+                        "Type": "DataObject",
+                        "Value": {
+                            "TextureMappings": {
+                                "Type": "DataObjectArray",
+                                "Value": []
+                            }
+                        }
+                    }
+                }]
+        },
         "VisualTechniqueSelection": {
             "Type": "String",
             "Value": "Default"
-        },
-        "Effects": {
-            "Type": "StringArray",
-            "Value": ["fx/default_color_mesh_effect"]
         }
     }]

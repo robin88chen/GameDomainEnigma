@@ -91,8 +91,8 @@ void MeshPrimitiveTest::initializeMountPaths()
 
 void MeshPrimitiveTest::installEngine()
 {
-    m_onCameraConstituted = std::make_shared<EventSubscriber>([=](auto e) { this->onCameraConstituted(e); });
-    EventPublisher::subscribe(typeid(CameraConstituted), m_onCameraConstituted);
+    //m_onCameraConstituted = std::make_shared<EventSubscriber>([=](auto e) { this->onCameraConstituted(e); });
+    //EventPublisher::subscribe(typeid(CameraConstituted), m_onCameraConstituted);
 
     m_onRendererCreated = std::make_shared<EventSubscriber>([=](auto e) {this->onRendererCreated(e); });
     EventPublisher::subscribe(typeid(RendererCreated), m_onRendererCreated);
@@ -125,8 +125,8 @@ void MeshPrimitiveTest::shutdownEngine()
     m_renderer = nullptr;
     m_renderTarget = nullptr;
 
-    EventPublisher::unsubscribe(typeid(CameraConstituted), m_onCameraConstituted);
-    m_onCameraConstituted = nullptr;
+    //EventPublisher::unsubscribe(typeid(CameraConstituted), m_onCameraConstituted);
+    //m_onCameraConstituted = nullptr;
 
     EventPublisher::unsubscribe(typeid(RendererCreated), m_onRendererCreated);
     m_onRendererCreated = nullptr;
@@ -163,12 +163,12 @@ void MeshPrimitiveTest::makeCamera()
     if (query->getResult())
     {
         m_camera = query->getResult();
-        if ((m_camera) && (m_renderer)) m_renderer->setAssociatedCamera(m_camera);
     }
     else
     {
-        CameraMaker::makeCamera(m_cameraId);
+        m_camera = CameraMaker::makeCamera(m_cameraId);
     }
+    if ((m_camera) && (m_renderer)) m_renderer->setAssociatedCamera(m_camera);
 }
 
 void MeshPrimitiveTest::makeMesh()
@@ -181,7 +181,7 @@ void MeshPrimitiveTest::makeMesh()
     if (m_mesh) CommandBus::enqueue(std::make_shared<PutPrimitive>(m_meshId, m_mesh));
 }
 
-void MeshPrimitiveTest::onCameraConstituted(const Enigma::Frameworks::IEventPtr& e)
+/*void MeshPrimitiveTest::onCameraConstituted(const Enigma::Frameworks::IEventPtr& e)
 {
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<Enigma::SceneGraph::CameraConstituted>(e);
@@ -191,7 +191,7 @@ void MeshPrimitiveTest::onCameraConstituted(const Enigma::Frameworks::IEventPtr&
     m_camera = ev->camera();
     if ((m_camera) && (m_renderer)) m_renderer->setAssociatedCamera(m_camera);
     CommandBus::enqueue(std::make_shared<PutCamera>(m_cameraId, m_camera));
-}
+}*/
 
 void MeshPrimitiveTest::onRendererCreated(const Enigma::Frameworks::IEventPtr& e)
 {
@@ -199,7 +199,7 @@ void MeshPrimitiveTest::onRendererCreated(const Enigma::Frameworks::IEventPtr& e
     const auto ev = std::dynamic_pointer_cast<RendererCreated, IEvent>(e);
     if (!ev) return;
     m_renderer = std::dynamic_pointer_cast<Renderer, IRenderer>(ev->renderer());
-    m_renderer->setAssociatedCamera(m_camera);
+    if ((m_camera) && (m_renderer)) m_renderer->setAssociatedCamera(m_camera);
     if ((m_renderer) && (m_renderTarget)) m_renderer->setRenderTarget(m_renderTarget);
 }
 

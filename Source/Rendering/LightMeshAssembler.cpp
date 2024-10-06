@@ -144,12 +144,4 @@ EffectTextureMap LightMeshAssembler::getGBufferTextureSemantics()
         { m_configuration->gbufferTextureId(), m_configuration->findRenderTextureUsageIndex(Graphics::RenderTextureUsage::Depth), m_configuration->gbufferDepthSemantic() }
         });
     return gbuffer_textures;
-
-    /*EffectTextureMapAssembler gbuffer_textures;
-
-    gbuffer_textures.addTextureMapping(m_configuration->gbufferTextureId(), m_configuration->findRenderTextureUsageIndex(Graphics::RenderTextureUsage::Normal), m_configuration->gbufferNormalSemantic());
-    gbuffer_textures.addTextureMapping(m_configuration->gbufferTextureId(), m_configuration->findRenderTextureUsageIndex(Graphics::RenderTextureUsage::Albedo), m_configuration->gbufferDiffuseSemantic());
-    gbuffer_textures.addTextureMapping(m_configuration->gbufferTextureId(), m_configuration->findRenderTextureUsageIndex(Graphics::RenderTextureUsage::Specular), m_configuration->gbufferSpecularSemantic());
-    gbuffer_textures.addTextureMapping(m_configuration->gbufferTextureId(), m_configuration->findRenderTextureUsageIndex(Graphics::RenderTextureUsage::Depth), m_configuration->gbufferDepthSemantic());
-    return gbuffer_textures;*/
 }

@@ -12,7 +12,6 @@
 #include "GameEngine/RenderBuffer.h"
 #include "GameEngine/EffectMaterial.h"
 #include "Frameworks/EventSubscriber.h"
-#include "GameEngine/EffectTextureMap.h"
 #include "Primitives/PrimitiveId.h"
 #include "GameEngine/TextureId.h"
 #include <memory>
@@ -21,7 +20,6 @@ namespace Enigma::Renderables
 {
     class MeshPrimitive;
     class MeshPrimitiveDisassembler;
-    //class MeshPrimitiveMaterialMetaDisassembler;
     class PrimitiveMaterial;
 
     class MeshPrimitiveBuilder
@@ -71,10 +69,6 @@ namespace Enigma::Renderables
         void onBuildRenderBufferFailed(const Frameworks::IEventPtr& e);
         void onPrimitiveMaterialHydrated(const Frameworks::IEventPtr& e);
         void onPrimitiveMaterialHydrationFailed(const Frameworks::IEventPtr& e);
-        //void onEffectMaterialHydrated(const Frameworks::IEventPtr& e);
-        //void onHydrateEffectMaterialFailed(const Frameworks::IEventPtr& e);
-        //void onTextureHydrated(const Frameworks::IEventPtr& e);
-        //void onHydrateTextureFailed(const Frameworks::IEventPtr& e);
 
         void tryCompletingMesh();
         void failMeshHydration(const std::error_code er);
@@ -88,22 +82,15 @@ namespace Enigma::Renderables
     protected:
         Primitives::PrimitiveId m_buildingId;
         std::shared_ptr<MeshPrimitiveDisassembler> m_buildingDisassembler;
-        //std::unique_ptr<MeshPrimitiveMaterialMetaDisassembler> m_metaDisassembler;
 
         std::shared_ptr<MeshPrimitive> m_builtPrimitive;
         std::shared_ptr<Geometries::GeometryData> m_builtGeometry;
         std::shared_ptr<Engine::RenderBuffer> m_builtRenderBuffer;
-        //std::vector<std::shared_ptr<Engine::EffectMaterial>> m_builtEffects;
-        //std::vector<Engine::EffectTextureMap> m_builtTextures;
 
         Frameworks::EventSubscriberPtr m_onRenderBufferBuilt;
         Frameworks::EventSubscriberPtr m_onBuildRenderBufferFailed;
         Frameworks::EventSubscriberPtr m_onPrimitiveMaterialHydrated;
         Frameworks::EventSubscriberPtr m_onPrimitiveMaterialHydrationFailed;
-        //Frameworks::EventSubscriberPtr m_onEffectMaterialHydrated;
-        //Frameworks::EventSubscriberPtr m_onHydrateEffectMaterialFailed;
-        //Frameworks::EventSubscriberPtr m_onTextureHydrated;
-        //Frameworks::EventSubscriberPtr m_onHydrateTextureFailed;
     };
 }
 

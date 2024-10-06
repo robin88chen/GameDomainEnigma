@@ -54,10 +54,6 @@ namespace Enigma::Renderables
         /** get material count */
         unsigned getMaterialCount() const;
         virtual void changeMaterials(const std::vector<std::shared_ptr<PrimitiveMaterial>>& materials);
-        /** get texture map */
-        //const Engine::EffectTextureMap& getTextureMap(unsigned int index);
-        /** get texture map size */
-        //unsigned getTextureMapCount() const;
         /** change specify semantic texture */
         void changeSemanticTexture(const Engine::EffectSemanticTexture& semantic_texture);
         /** bind specify semantic texture, append new if semantic not existed */
@@ -96,19 +92,13 @@ namespace Enigma::Renderables
         virtual void changeEffectInSegment(unsigned index, const std::shared_ptr<Engine::EffectMaterial>& effect);
         /** change primitive's effect */
         virtual void changeEffects(const EffectMaterialList& effects);
-        /** resize effect list */
-        //void resizeEffectMaterialVector(unsigned new_size) { m_effects.resize(new_size); };
         /** change segment's texture map */
         void changeTextureMapInSegment(unsigned index, const Engine::EffectTextureMap& tex_map);
         /** change primitive's texture map */
         void changeTextureMaps(const TextureMapList& tex_maps);
-        /** resize texture map list */
-        //void resizeTextureMapVector(unsigned new_size) { m_textures.resize(new_size); };
         /** create render elements */
         void createRenderElements();
         //@}
-
-        //std::shared_ptr<Engine::Texture> findTextureBySemantic(const std::string& semantic) const;
 
     protected:
         void cleanupGeometry();
@@ -117,24 +107,13 @@ namespace Enigma::Renderables
         void bindSegmentMaterial(unsigned index);
         void loosePrimitiveMaterials();
         void looseSegmentMaterial(unsigned index);
-        /** bind primitive effect texture */
-        //void bindPrimitiveEffectTexture();
-        /** bind segment effect texture */
-        //void bindSegmentEffectTexture(unsigned index);
-        /** un-bind primitive effect texture */
-        //void loosePrimitiveEffectTexture();
-        /** un-bind segment effect texture */
-        //void looseSegmentEffectTexture(unsigned index);
 
     protected:
         using RenderElementList = std::vector<std::shared_ptr<Renderer::RenderElement>>;
         Geometries::GeometryDataPtr m_geometry;
         Engine::RenderBufferPtr m_renderBuffer;
         RenderElementList m_elements;
-        //todo: 每個 segment 中的 effect 和 texture map 是一個 value object, 不該分開
         std::vector<std::shared_ptr<PrimitiveMaterial>> m_materials;
-        //EffectMaterialList m_effects;
-        //TextureMapList m_textures;
         Renderer::Renderer::RenderListID m_renderListID;  ///< default : render group scene
     };
 }

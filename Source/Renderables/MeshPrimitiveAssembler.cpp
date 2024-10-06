@@ -9,8 +9,6 @@ using namespace Enigma::Renderables;
 static std::string TOKEN_ID = "Id";
 static std::string TOKEN_GEOMETRY_ID = "GeometryId";
 static std::string TOKEN_RAW_GEOMETRY = "RawGeometry";
-//static std::string TOKEN_EFFECTS = "Effects";
-//static std::string TOKEN_TEXTURE_MAPS = "TextureMaps";
 static std::string TOKEN_MATERIALS = "Materials";
 static std::string TOKEN_RENDER_LIST_ID = "RenderListId";
 static std::string TOKEN_VISUAL_TECHNIQUE_SELECTION = "VisualTechniqueSelection";
@@ -59,25 +57,6 @@ Enigma::Engine::GenericDto MeshPrimitiveAssembler::assemble() const
         }
         dto.addOrUpdate(TOKEN_MATERIALS, materials);
     }
-    /*if (!m_effects.empty())
-    {
-        std::vector<std::string> effect_names;
-        effect_names.reserve(m_effects.size());
-        for (auto& eff : m_effects)
-        {
-            effect_names.emplace_back(eff.name());
-        }
-        dto.addOrUpdate(TOKEN_EFFECTS, effect_names);
-    }
-    if (!m_textureMaps.empty())
-    {
-        Engine::GenericDtoCollection texture_maps;
-        for (auto& tex_assembler : m_textureMaps)
-        {
-            if (tex_assembler) texture_maps.emplace_back(tex_assembler->assemble());
-        }
-        dto.addOrUpdate(TOKEN_TEXTURE_MAPS, texture_maps);
-    }*/
     dto.addOrUpdate(TOKEN_RENDER_LIST_ID, static_cast<unsigned>(m_renderListID));
     if (!m_visualTechniqueSelection.empty())
     {
@@ -110,46 +89,6 @@ void MeshPrimitiveDisassembler::disassemble(const Engine::GenericDto& dto)
             m_materials.emplace_back(material);
         }
     }
-    /*if (const auto ary = dto.tryGetValue<std::vector<std::string>>(TOKEN_EFFECTS))
-    {
-        for (auto& eff_id : ary.value())
-        {
-            m_effects.emplace_back(eff_id);
-        }
-    }
-    if (const auto ary = dto.tryGetValue<Engine::GenericDtoCollection>(TOKEN_TEXTURE_MAPS))
-    {
-        for (auto& tex_dto : ary.value())
-        {
-            m_textureMaps.emplace_back(std::make_shared<Engine::EffectTextureMapDisassembler>(tex_dto));
-        }
-    }*/
     if (const auto v = dto.tryGetValue<unsigned>(TOKEN_RENDER_LIST_ID)) m_renderListID = static_cast<Renderer::Renderer::RenderListID>(v.value());
     if (const auto v = dto.tryGetValue<std::string>(TOKEN_VISUAL_TECHNIQUE_SELECTION)) m_visualTechniqueSelection = v.value();
 }
-
-/*MeshPrimitiveMaterialMetaDisassembler::MeshPrimitiveMaterialMetaDisassembler(const std::shared_ptr<MeshPrimitiveDisassembler>& mesh_disassembler)
-{
-    if (!mesh_disassembler) return;
-    for (auto& mat : mesh_disassembler->materials())
-    {
-        m_effects.emplace_back(mat->effectMaterial()->id());
-        //Engine::EffectTextureMap texture_map = mat->effectTextureMap();
-        //std::shared_ptr<Engine::EffectTextureMapDisassembler> disassembler = std::make_shared<Engine::EffectTextureMapDisassembler>();
-        //texture_map.disassemble(disassembler);
-        //const_cast<Engine::EffectTextureMap&>(mat->effectTextureMap()).disassemble(disassembler);
-        m_textureMaps.emplace_back(mat->effectTextureMap());
-    }
-    //m_effects = mesh_disassembler->effects();
-    //m_textureMaps = mesh_disassembler->textureMaps();
-}
-
-void MeshPrimitiveMaterialMetaDisassembler::replaceDuplicatedEffects(const std::shared_ptr<MeshPrimitive>& mesh_primitive)
-{
-    if (!mesh_primitive) return;
-    m_effects.clear();
-    for (unsigned i = 0; i < mesh_primitive->getMaterialCount(); ++i)
-    {
-        m_effects.emplace_back(mesh_primitive->getMaterial(i)->effectMaterial()->id());
-    }
-}*/

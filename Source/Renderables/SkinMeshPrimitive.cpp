@@ -50,13 +50,6 @@ void SkinMeshPrimitive::changeEffects(const EffectMaterialList& effects)
     loosePrimitiveBoneMatrix();
     MeshPrimitive::changeEffects(effects);
     bindPrimitiveBoneMatrix();
-    /*loosePrimitiveEffectTexture();
-    loosePrimitiveBoneMatrix();
-    m_effects.clear();
-    if (effects.size() == 0) return;
-    m_effects = effects;
-    bindPrimitiveEffectTexture();
-    bindPrimitiveBoneMatrix();*/
 }
 
 void SkinMeshPrimitive::changeEffectInSegment(unsigned index, const std::shared_ptr<Engine::EffectMaterial>& effect)
@@ -65,12 +58,6 @@ void SkinMeshPrimitive::changeEffectInSegment(unsigned index, const std::shared_
     looseSegmentBoneMatrix(index);
     MeshPrimitive::changeEffectInSegment(index, effect);
     bindSegmentBoneMatrix(index);
-    /*if (index >= m_effects.size()) return;
-    looseSegmentEffectTexture(index);
-    looseSegmentBoneMatrix(index);
-    m_effects[index] = effect;
-    bindSegmentEffectTexture(index);
-    bindSegmentBoneMatrix(index);*/
 }
 
 void SkinMeshPrimitive::createBoneMatrixArray(unsigned size)
@@ -101,15 +88,6 @@ void SkinMeshPrimitive::bindPrimitiveBoneMatrix()
             { if (!lifetime.expired()) std::dynamic_pointer_cast<SkinMeshPrimitive, Primitive>(lifetime.lock())->assignBoneMatrix(v); });
         if (er) return;
     }
-    /*if (m_effects.empty()) return;
-    EffectMaterialList::iterator eff_iter;
-    for (eff_iter = m_effects.begin(); eff_iter != m_effects.end(); ++eff_iter)
-    {
-        if (!(*eff_iter)) continue;
-        (*eff_iter)->setVariableAssignFunc(SEMANTIC_BONE_MATRIX,
-            [lifetime = weak_from_this()](EffectVariable& v)
-            { if (!lifetime.expired()) std::dynamic_pointer_cast<SkinMeshPrimitive, Primitive>(lifetime.lock())->assignBoneMatrix(v); });
-    }*/
 }
 
 void SkinMeshPrimitive::bindSegmentBoneMatrix(unsigned index)
@@ -119,11 +97,6 @@ void SkinMeshPrimitive::bindSegmentBoneMatrix(unsigned index)
     m_materials[index]->assignVariableFunc(SEMANTIC_BONE_MATRIX,
         [lifetime = weak_from_this()](EffectVariable& v)
         { if (!lifetime.expired()) std::dynamic_pointer_cast<SkinMeshPrimitive, Primitive>(lifetime.lock())->assignBoneMatrix(v); });
-    /*if (index >= m_effects.size()) return;
-    if (!m_effects[index]) return;
-    m_effects[index]->setVariableAssignFunc(SEMANTIC_BONE_MATRIX,
-        [lifetime = weak_from_this()](EffectVariable& v)
-        { if (!lifetime.expired()) std::dynamic_pointer_cast<SkinMeshPrimitive, Primitive>(lifetime.lock())->assignBoneMatrix(v); });*/
 }
 
 void SkinMeshPrimitive::loosePrimitiveBoneMatrix()
@@ -135,13 +108,6 @@ void SkinMeshPrimitive::loosePrimitiveBoneMatrix()
         auto er = mat->assignVariableFunc(SEMANTIC_BONE_MATRIX, nullptr);
         if (er) return;
     }
-    /*if (m_effects.empty()) return;
-    EffectMaterialList::iterator eff_iter;
-    for (eff_iter = m_effects.begin(); eff_iter != m_effects.end(); ++eff_iter)
-    {
-        if (!(*eff_iter)) continue;
-        (*eff_iter)->setVariableAssignFunc(SEMANTIC_BONE_MATRIX, nullptr);
-    }*/
 }
 
 void SkinMeshPrimitive::looseSegmentBoneMatrix(unsigned index)
@@ -149,9 +115,6 @@ void SkinMeshPrimitive::looseSegmentBoneMatrix(unsigned index)
     if (index >= m_materials.size()) return;
     if (!m_materials[index]) return;
     [[maybe_unused]] auto er = m_materials[index]->assignVariableFunc(SEMANTIC_BONE_MATRIX, nullptr);
-    /*if (index >= m_effects.size()) return;
-    if (!m_effects[index]) return;
-    m_effects[index]->setVariableAssignFunc(SEMANTIC_BONE_MATRIX, nullptr);*/
 }
 
 void SkinMeshPrimitive::assignBoneMatrix(Engine::EffectVariable& var)

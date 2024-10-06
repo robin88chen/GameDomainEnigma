@@ -288,7 +288,7 @@ void ChangeAvatarTexture::changeMeshTexture(const std::shared_ptr<MeshPrimitive>
     if (!mesh) return;
     if (m_meshId.name().empty()) return;
     if (m_semanticTexture.textureId().name().empty()) return;
-    if (m_semanticTexture.texture())
+    if ((m_semanticTexture.texture()) && (m_semanticTexture.texture()->lazyStatus().isReady()))
     {
         mesh->changeSemanticTexture(m_semanticTexture);
     }

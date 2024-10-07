@@ -31,9 +31,6 @@ namespace Enigma::Renderables
     {
         DECLARE_EN_RTTI;
     public:
-        using CustomMeshCreator = std::function<std::shared_ptr<Primitives::Primitive>(const Primitives::PrimitiveId&)>;
-        using CustomMeshConstitutor = std::function<std::shared_ptr<Primitives::Primitive>(const Primitives::PrimitiveId&, const Engine::GenericDto&)>;
-    public:
         RenderablePrimitiveBuilder(Frameworks::ServiceManager* mngr, const std::shared_ptr<Primitives::PrimitiveRepository>& primitive_repository, const std::shared_ptr<Geometries::GeometryRepository>& geometry_repository);
         RenderablePrimitiveBuilder(const RenderablePrimitiveBuilder&) = delete;
         RenderablePrimitiveBuilder(RenderablePrimitiveBuilder&&) = delete;
@@ -45,22 +42,24 @@ namespace Enigma::Renderables
         virtual Frameworks::ServiceResult onTick() override;
         virtual Frameworks::ServiceResult onTerm() override;
 
-        void registerCustomMeshFactory(const std::string& rtti, const CustomMeshCreator creator, const CustomMeshConstitutor& constitutor);
+        //void registerCustomMeshFactory(const std::string& rtti, const CustomMeshCreator creator, const CustomMeshConstitutor& constitutor);
 
     protected:
-        std::shared_ptr<Primitives::Primitive> createMesh(const Primitives::PrimitiveId& id);
+        /*std::shared_ptr<Primitives::Primitive> createMesh(const Primitives::PrimitiveId& id);
         std::shared_ptr<Primitives::Primitive> constituteMesh(const Primitives::PrimitiveId& id, const Engine::GenericDto& dto);
         std::shared_ptr<Primitives::Primitive> createSkinMesh(const Primitives::PrimitiveId& id);
         std::shared_ptr<Primitives::Primitive> constituteSkinMesh(const Primitives::PrimitiveId& id, const Engine::GenericDto& dto);
         std::shared_ptr<Primitives::Primitive> createModel(const Primitives::PrimitiveId& id);
         std::shared_ptr<Primitives::Primitive> constituteModel(const Primitives::PrimitiveId& id, const Engine::GenericDto& dto);
         std::shared_ptr<Primitives::Primitive> createCustomMesh(const Primitives::PrimitiveId& id);
-        std::shared_ptr<Primitives::Primitive> constituteCustomMesh(const Primitives::PrimitiveId& id, const Engine::GenericDto& dto);
+        std::shared_ptr<Primitives::Primitive> constituteCustomMesh(const Primitives::PrimitiveId& id, const Engine::GenericDto& dto);*/
 
         void hydrateRenderablePrimitive(const PrimitiveHydratingPlan& plan);
 
-        void onPrimitiveHydrated(const Frameworks::IEventPtr& e);
-        void onHydratePrimitiveFailed(const Frameworks::IEventPtr& e);
+        void onPrimitiveConstituted(const Frameworks::IEventPtr& e);
+        void onPrimitiveConstitutionFailed(const Frameworks::IEventPtr& e);
+        void onMeshPrimitiveHydrated(const Frameworks::IEventPtr& e);
+        void onMeshPrimitiveHydrationFailed(const Frameworks::IEventPtr& e);
 
     protected:
         std::weak_ptr<Primitives::PrimitiveRepository> m_primitiveRepository;
@@ -69,11 +68,13 @@ namespace Enigma::Renderables
         std::mutex m_primitivePlansLock;
         std::optional<Primitives::PrimitiveId> m_currentBuildingId;
 
-        std::unordered_map<std::string, CustomMeshCreator> m_customMeshCreators;
-        std::unordered_map<std::string, CustomMeshConstitutor> m_customMeshConstitutors;
+        //std::unordered_map<std::string, CustomMeshCreator> m_customMeshCreators;
+        //std::unordered_map<std::string, CustomMeshConstitutor> m_customMeshConstitutors;
 
+        Frameworks::EventSubscriberPtr m_onPrimitiveConstituted;
+        Frameworks::EventSubscriberPtr m_onPrimitiveConstitutionFailed;
         Frameworks::EventSubscriberPtr m_onMeshPrimitiveHydrated;
-        Frameworks::EventSubscriberPtr m_onHydrateMeshPrimitiveFailed;
+        Frameworks::EventSubscriberPtr m_onMeshPrimitiveHydrationFailed;
 
         MeshPrimitiveBuilder* m_meshBuilder;
     };

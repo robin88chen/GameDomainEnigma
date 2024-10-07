@@ -38,6 +38,11 @@ MeshPrimitive::~MeshPrimitive()
     m_materials.clear();
 }
 
+std::shared_ptr<MeshPrimitive> MeshPrimitive::create(const Primitives::PrimitiveId& id)
+{
+    return std::make_shared<MeshPrimitive>(id);
+}
+
 std::shared_ptr<Enigma::Primitives::PrimitiveAssembler> MeshPrimitive::assembler() const
 {
     return std::make_shared<MeshPrimitiveAssembler>(m_id.origin());
@@ -108,6 +113,12 @@ void MeshPrimitive::changeMaterials(const std::vector<std::shared_ptr<PrimitiveM
 {
     loosePrimitiveMaterials();
     m_materials = materials;
+    bindPrimitiveMaterials();
+}
+
+void MeshPrimitive::rebindMaterials()
+{
+    loosePrimitiveMaterials();
     bindPrimitiveMaterials();
 }
 

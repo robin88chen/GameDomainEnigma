@@ -41,17 +41,15 @@ namespace Enigma::Primitives
     class RegisterPrimitiveFactory : public Frameworks::ICommand
     {
     public:
-        RegisterPrimitiveFactory(const std::string& rtti, const PrimitiveCreator& creator, const PrimitiveConstitutor& constitutor)
-            : m_rtti(rtti), m_creator(creator), m_constitutor(constitutor) {}
+        RegisterPrimitiveFactory(const std::string& rtti, const PrimitiveCreator& creator)
+            : m_rtti(rtti), m_creator(creator) {}
 
         const std::string& rttiName() const { return m_rtti; }
         const PrimitiveCreator& creator() { return m_creator; }
-        const PrimitiveConstitutor& constitutor() { return m_constitutor; }
 
     private:
         std::string m_rtti;
         PrimitiveCreator m_creator;
-        PrimitiveConstitutor m_constitutor;
     };
     class UnregisterPrimitiveFactory : public Frameworks::ICommand
     {

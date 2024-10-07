@@ -16,6 +16,11 @@ TerrainPrimitive::~TerrainPrimitive()
 
 }
 
+std::shared_ptr<TerrainPrimitive> TerrainPrimitive::create(const Primitives::PrimitiveId& id)
+{
+    return std::make_shared<TerrainPrimitive>(id);
+}
+
 std::shared_ptr<Enigma::Primitives::PrimitiveAssembler> TerrainPrimitive::assembler() const
 {
     return std::make_shared<TerrainPrimitiveAssembler>(m_id.origin());

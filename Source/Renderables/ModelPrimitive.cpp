@@ -39,6 +39,11 @@ ModelPrimitive::~ModelPrimitive()
     m_meshPrimitiveIndexCache.clear();
 }
 
+std::shared_ptr<ModelPrimitive> ModelPrimitive::create(const Primitives::PrimitiveId& id)
+{
+    return std::make_shared<ModelPrimitive>(id);
+}
+
 std::shared_ptr<PrimitiveAssembler> ModelPrimitive::assembler() const
 {
     return std::make_shared<ModelPrimitiveAssembler>(m_id.origin());

@@ -23,6 +23,8 @@ namespace Enigma::Terrain
         TerrainPrimitive(TerrainPrimitive&&) = delete;
         TerrainPrimitive& operator=(TerrainPrimitive&&) = delete;
 
+        static std::shared_ptr<TerrainPrimitive> create(const Primitives::PrimitiveId& id);
+
         virtual std::shared_ptr<Primitives::PrimitiveAssembler> assembler() const override;
         virtual std::shared_ptr<Primitives::PrimitiveDisassembler> disassembler() const override;
     };

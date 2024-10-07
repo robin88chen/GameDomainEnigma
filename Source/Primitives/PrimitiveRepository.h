@@ -13,6 +13,7 @@
 #include "Frameworks/CommandSubscriber.h"
 #include "PrimitiveId.h"
 #include "PrimitiveFactoryDelegate.h"
+#include "GameEngine/GenericDto.h"
 #include <mutex>
 #include <optional>
 
@@ -38,21 +39,21 @@ namespace Enigma::Primitives
         /// On Term
         virtual Frameworks::ServiceResult onTerm() override;
 
-        void registerPrimitiveFactory(const std::string& rtti, const PrimitiveCreator& creator, const PrimitiveConstitutor& constitutor);
+        void registerPrimitiveFactory(const std::string& rtti, const PrimitiveCreator& creator);
 
         std::uint64_t nextSequenceNumber();
         bool hasPrimitive(const PrimitiveId& id);
         std::shared_ptr<Primitive> queryPrimitive(const PrimitiveId& id);
         void removePrimitive(const PrimitiveId& id);
         void putPrimitive(const PrimitiveId& id, const std::shared_ptr<Primitive>& primitive);
-        std::optional<Engine::GenericDto> queryPrimitiveDto(const PrimitiveId& id);
+        //std::optional<Engine::GenericDto> queryPrimitiveDto(const PrimitiveId& id);
 
     protected:
         void queryPrimitive(const Frameworks::IQueryPtr& q);
         void queryPrimitiveNextSequenceNumber(const Frameworks::IQueryPtr& q);
         void requestPrimitiveCreation(const Frameworks::IQueryPtr& r);
         void requestPrimitiveConstitution(const Frameworks::IQueryPtr& r);
-        void queryPrimitiveDto(const Frameworks::IQueryPtr& q);
+        //void queryPrimitiveDto(const Frameworks::IQueryPtr& q);
         void putPrimitive(const Frameworks::ICommandPtr& c);
         void removePrimitive(const Frameworks::ICommandPtr& c);
 
@@ -71,7 +72,7 @@ namespace Enigma::Primitives
         Frameworks::QuerySubscriberPtr m_queryPrimitiveNextSequenceNumber;
         Frameworks::QuerySubscriberPtr m_requestPrimitiveCreation;
         Frameworks::QuerySubscriberPtr m_requestPrimitiveConstitution;
-        Frameworks::QuerySubscriberPtr m_queryPrimitiveDto;
+        //Frameworks::QuerySubscriberPtr m_queryPrimitiveDto;
 
         Frameworks::CommandSubscriberPtr m_putPrimitive;
         Frameworks::CommandSubscriberPtr m_removePrimitive;

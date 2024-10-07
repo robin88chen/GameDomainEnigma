@@ -39,10 +39,10 @@ namespace Enigma::Renderables
             std::string m_name;
             std::shared_ptr<MeshPrimitive> m_prim;
         };
-        class HydrateMeshPrimitiveFailed : public Frameworks::IEvent
+        class MeshPrimitiveHydrationFailed : public Frameworks::IEvent
         {
         public:
-            HydrateMeshPrimitiveFailed(const Primitives::PrimitiveId& id, const std::string& name, std::error_code er)
+            MeshPrimitiveHydrationFailed(const Primitives::PrimitiveId& id, const std::string& name, std::error_code er)
                 : m_id(id), m_name(name), m_error(er) {};
 
             const Primitives::PrimitiveId& id() const { return m_id; }
@@ -62,7 +62,7 @@ namespace Enigma::Renderables
         MeshPrimitiveBuilder& operator=(const MeshPrimitiveBuilder&) = delete;
         MeshPrimitiveBuilder& operator=(MeshPrimitiveBuilder&&) = delete;
 
-        void hydrateMeshPrimitive(const std::shared_ptr<MeshPrimitive>& mesh, const Engine::GenericDto& dto);
+        void hydrateMeshPrimitive(const std::shared_ptr<MeshPrimitive>& mesh);
 
     protected:
         void onRenderBufferBuilt(const Frameworks::IEventPtr& e);
@@ -74,14 +74,12 @@ namespace Enigma::Renderables
         void failMeshHydration(const std::error_code er);
 
         bool isBuildingMeshMaterial(const std::shared_ptr<PrimitiveMaterial>& material) const;
-        std::optional<unsigned> findBuildingEffectIndex(const Engine::EffectMaterialId& id);
-        std::optional<std::tuple<unsigned, unsigned>> findLoadingTextureIndex(const Engine::TextureId& id);
 
         void cleanupBuildingMeta();
 
     protected:
         Primitives::PrimitiveId m_buildingId;
-        std::shared_ptr<MeshPrimitiveDisassembler> m_buildingDisassembler;
+        //std::shared_ptr<MeshPrimitiveDisassembler> m_buildingDisassembler;
 
         std::shared_ptr<MeshPrimitive> m_builtPrimitive;
         std::shared_ptr<Geometries::GeometryData> m_builtGeometry;

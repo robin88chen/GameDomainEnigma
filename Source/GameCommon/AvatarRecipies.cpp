@@ -179,7 +179,7 @@ void ReplaceAvatarMaterial::replaceNewMeshMaterialInSegment(const std::shared_pt
     mesh->createRenderElements();
     if (!m_primitive.expired())
     {
-        m_primitive.lock()->selectVisualTechnique(m_primitive.lock()->getSelectedVisualTechnique());
+        m_primitive.lock()->selectVisualTechnique(m_primitive.lock()->visualTechniqueSelection());
     }
 }
 

@@ -54,10 +54,10 @@ std::shared_ptr<GeometryData> GeometryDataFactory::create(const GeometryId& id, 
 
 std::shared_ptr<GeometryData> GeometryDataFactory::constitute(const GeometryId& id, const GenericDto& dto, bool is_persisted)
 {
-    auto constitutor = m_constitutors.find(dto.getRtti().GetRttiName());
+    auto constitutor = m_constitutors.find(dto.getRtti().rttiName());
     if (constitutor == m_constitutors.end())
     {
-        Platforms::Debug::Printf("Can't find constitutor of %s\n", dto.getRtti().GetRttiName().c_str());
+        Platforms::Debug::Printf("Can't find constitutor of %s\n", dto.getRtti().rttiName().c_str());
         EventPublisher::enqueue(std::make_shared<ConstituteGeometryFailed>(id, ErrorCode::geometryFactoryNotExists));
         return nullptr;
     }

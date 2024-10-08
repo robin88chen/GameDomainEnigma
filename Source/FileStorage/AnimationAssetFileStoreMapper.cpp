@@ -121,8 +121,8 @@ void AnimationAssetFileStoreMapper::deserializeMapperFile(const std::string& map
 
 std::string AnimationAssetFileStoreMapper::extractFilename(const Animators::AnimationAssetId& id, const Engine::FactoryDesc& factory_desc)
 {
-    if (!factory_desc.GetDeferredFilename().empty()) return factory_desc.GetDeferredFilename();
-    if (!factory_desc.GetResourceFilename().empty()) return factory_desc.GetResourceFilename();
+    if (!factory_desc.deferredFilename().empty()) return factory_desc.deferredFilename();
+    if (!factory_desc.resourceFilename().empty()) return factory_desc.resourceFilename();
     return id.name() + ".json";
 }
 

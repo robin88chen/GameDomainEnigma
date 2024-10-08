@@ -9,8 +9,6 @@
 #include "Renderer/RendererEvents.h"
 #include "Gateways/JsonFileDtoDeserializer.h"
 #include "GameEngine/EngineInstallingPolicy.h"
-#include "Terrain/TerrainPrimitiveDto.h"
-#include "Terrain/TerrainGeometryDto.h"
 #include "Frameworks/CommandBus.h"
 #include "Terrain/TerrainInstallingPolicy.h"
 #include "GameEngine/EffectTextureMapAssembler.h"
@@ -35,12 +33,16 @@
 #include "FileStorage/AnimatorFileStoreMapper.h"
 #include "FileStorage/EffectMaterialSourceFileStoreMapper.h"
 #include "FileStorage/TextureFileStoreMapper.h"
+#include "FileStorage/GeometryDataFileStoreMapper.h"
+#include "FileStorage/PrimitiveFileStoreMapper.h"
+#include "FileStorage/SceneGraphFileStoreMapper.h"
+#include "Terrain/TerrainPrimitive.h"
 #include "Terrain/TerrainGeometry.h"
 #include "Controllers/ControllerEvents.h"
 #include "CameraMaker.h"
 #include "TerrainMaker.h"
-#include "GameEngine/TextureDto.h"
 #include "GameEngine/Texture.h"
+#include "GameEngine/TextureAssembler.h"
 
 using namespace Enigma::FileSystem;
 using namespace Enigma::Engine;
@@ -200,18 +202,18 @@ void TerrainPrimitiveTest::makeTerrain()
 
 void TerrainPrimitiveTest::makeSplatTextureDto()
 {
-    Enigma::Engine::TextureDto dto;
     m_splatTextureId = Enigma::Engine::TextureId("splat");
+    Enigma::Engine::TextureAssembler assembler(m_splatTextureId);
     auto asset_filename = m_splatTextureId.name() + ".tex@DataPath";
     auto image_filename = "splat.png@DataPath";
-    dto.id() = m_splatTextureId;
-    dto.factoryDesc() = Enigma::Engine::FactoryDesc(Enigma::Engine::Texture::TYPE_RTTI.getName()).ClaimAsResourceAsset(m_splatTextureId.name(), asset_filename);
-    dto.format() = Enigma::Graphics::GraphicFormat::FMT_A8R8G8B8;
-    dto.dimension() = Enigma::MathLib::Dimension<unsigned>{ 512, 512 };
-    dto.isCubeTexture() = false;
-    dto.surfaceCount() = 1;
-    dto.filePaths().push_back(image_filename);
-    m_textureFileStoreMapper->putTexture(m_splatTextureId, dto.toGenericDto());
+    assembler.factoryDesc(Enigma::Engine::FactoryDesc(Enigma::Engine::Texture::TYPE_RTTI.getName()).claimAsResourceAsset(m_splatTextureId.name(), asset_filename));
+    assembler.format(Enigma::Graphics::GraphicFormat::FMT_A8R8G8B8);
+    assembler.dimension({ 512, 512 });
+    assembler.isCubeTexture(false);
+    assembler.surfaceCount(1);
+    assembler.imageFilenamesOfLoad({ image_filename });
+    assembler.filePaths({ image_filename });
+    m_textureFileStoreMapper->putTexture(m_splatTextureId, assembler.assemble());
 }
 
 void TerrainPrimitiveTest::onRenderEngineInstalled(const IEventPtr& e)

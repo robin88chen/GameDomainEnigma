@@ -21,145 +21,66 @@
             "Type": "StringArray",
             "Value": ["terrain", "0", "En.Terrain.TerrainPrimitive"]
         },
-        "RawGeometry": {
-            "Type": "DataObject",
-            "Value": {
-                "VertexFormat": {
-                    "Type": "String",
-                    "Value": "xyz_nor_tex2(2,2)"
-                },
-                "NumCols": {
-                    "Type": "Uint32",
-                    "Value": 10
-                },
-                "Id": {
-                    "Type": "String",
-                    "Value": "terrain_geo"
-                },
-                "IndexCapacity": {
-                    "Type": "Uint32",
-                    "Value": 600
-                },
-                "GeometryBound": {
-                    "Type": "DataObject",
-                    "Value": {
-                        "BoxBV": {
-                            "Type": "Box3",
-                            "Value": [0.0, 0.5, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 5.0, 0.5, 5.0]
-                        }
-                    }
-                },
-                "Segments": {
-                    "Type": "Uint32Array",
-                    "Value": [0, 121, 0, 600]
-                },
-                "VertexCapacity": {
-                    "Type": "Uint32",
-                    "Value": 121
-                },
-                "VertexUsedCount": {
-                    "Type": "Uint32",
-                    "Value": 121
-                },
-                "IndexUsedCount": {
-                    "Type": "Uint32",
-                    "Value": 600
-                },
-                "MinPosition": {
-                    "Type": "Vector3",
-                    "Value": [-5.0, 0.0, -5.0]
-                },
-                "Topology": {
-                    "Type": "Uint32",
-                    "Value": 4
-                },
-                "Rtti": {
-                    "Type": "FactoryDesc",
-                    "Value": {
-                        "InstanceType": 5,
-                        "ResourceName": "terrain_geo",
-                        "ResourceFilename": "terrain_geo.geo@DataPath",
-                        "RttiName": "En.Terrain.TerrainGeometry",
-                        "PrefabFilename": ""
-                    }
-                },
-                "MaxTextureCoordinate": {
-                    "Type": "Vector2",
-                    "Value": [1.0, 1.0]
-                },
-                "NumRows": {
-                    "Type": "Uint32",
-                    "Value": 10
-                },
-                "MaxPosition": {
-                    "Type": "Vector3",
-                    "Value": [5.0, 0.0, 5.0]
-                },
-                "MinTextureCoordinate": {
-                    "Type": "Vector2",
-                    "Value": [0.0, 0.0]
-                },
-                "HeightMap": {
-                    "Type": "FloatArray",
-                    "Value": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-                }
-            }
-        },
-        "Effects": {
-            "Type": "StringArray",
-            "Value": ["fx/TerrainMesh"]
-        },
-        "TextureMaps": {
+        "Materials": {
             "Type": "DataObjectArray",
             "Value": [{
-                    "TextureMappings": {
-                        "Type": "DataObjectArray",
-                        "Value": [{
-                                "TextureId.Name": {
-                                    "Type": "String",
-                                    "Value": "image/du011"
-                                },
-                                "Semantic": {
-                                    "Type": "String",
-                                    "Value": "TextureLayer0"
-                                }
-                            }, {
-                                "TextureId.Name": {
-                                    "Type": "String",
-                                    "Value": "image/one"
-                                },
-                                "Semantic": {
-                                    "Type": "String",
-                                    "Value": "TextureLayer1"
-                                }
-                            }, {
-                                "TextureId.Name": {
-                                    "Type": "String",
-                                    "Value": "image/two"
-                                },
-                                "Semantic": {
-                                    "Type": "String",
-                                    "Value": "TextureLayer2"
-                                }
-                            }, {
-                                "TextureId.Name": {
-                                    "Type": "String",
-                                    "Value": "image/three"
-                                },
-                                "Semantic": {
-                                    "Type": "String",
-                                    "Value": "TextureLayer3"
-                                }
-                            }, {
-                                "TextureId.Name": {
-                                    "Type": "String",
-                                    "Value": "splat"
-                                },
-                                "Semantic": {
-                                    "Type": "String",
-                                    "Value": "AlphaLayer"
-                                }
-                            }]
+                    "Effect": {
+                        "Type": "String",
+                        "Value": "fx/TerrainMesh"
+                    },
+                    "TextureMap": {
+                        "Type": "DataObject",
+                        "Value": {
+                            "TextureMappings": {
+                                "Type": "DataObjectArray",
+                                "Value": [{
+                                        "TextureId.Name": {
+                                            "Type": "String",
+                                            "Value": "image/du011"
+                                        },
+                                        "Semantic": {
+                                            "Type": "String",
+                                            "Value": "TextureLayer0"
+                                        }
+                                    }, {
+                                        "TextureId.Name": {
+                                            "Type": "String",
+                                            "Value": "image/one"
+                                        },
+                                        "Semantic": {
+                                            "Type": "String",
+                                            "Value": "TextureLayer1"
+                                        }
+                                    }, {
+                                        "TextureId.Name": {
+                                            "Type": "String",
+                                            "Value": "image/two"
+                                        },
+                                        "Semantic": {
+                                            "Type": "String",
+                                            "Value": "TextureLayer2"
+                                        }
+                                    }, {
+                                        "TextureId.Name": {
+                                            "Type": "String",
+                                            "Value": "image/three"
+                                        },
+                                        "Semantic": {
+                                            "Type": "String",
+                                            "Value": "TextureLayer3"
+                                        }
+                                    }, {
+                                        "TextureId.Name": {
+                                            "Type": "String",
+                                            "Value": "splat"
+                                        },
+                                        "Semantic": {
+                                            "Type": "String",
+                                            "Value": "AlphaLayer"
+                                        }
+                                    }]
+                            }
+                        }
                     }
                 }]
         }

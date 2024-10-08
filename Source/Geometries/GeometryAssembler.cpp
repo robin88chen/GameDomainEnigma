@@ -98,7 +98,7 @@ Enigma::Engine::GenericDto GeometryAssembler::assemble()
 
 void GeometryAssembler::asAsset(const std::string& name, const std::string& filename, const std::string& path_id)
 {
-    m_factoryDesc.ClaimAsResourceAsset(name, filename, path_id);
+    m_factoryDesc.claimAsResourceAsset(name, filename, path_id);
 }
 
 void GeometryAssembler::position3s(const std::vector<MathLib::Vector3>& positions)
@@ -262,11 +262,11 @@ void GeometryDisassembler::disassemble(const Engine::GenericDto& dto)
                 tex_coord_disassembler.disassemble(v.value());
                 if (m_textureCoordinates)
                 {
-                    m_textureCoordinates->emplace_back(tex_coord_disassembler);
+                    m_textureCoordinates->emplace_back(tex_coord_disassembler.textureCoordinate());
                 }
                 else
                 {
-                    m_textureCoordinates = std::vector<TextureCoordinateDisassembler>{ tex_coord_disassembler };
+                    m_textureCoordinates = std::vector{ tex_coord_disassembler.textureCoordinate() };
                 }
             }
         }

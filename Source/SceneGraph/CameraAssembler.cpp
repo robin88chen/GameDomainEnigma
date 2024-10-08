@@ -29,7 +29,7 @@ void CameraAssembler::frustum(const Frustum& frustum)
 
 void CameraAssembler::asNative(const std::string& file_at_path)
 {
-    m_factoryDesc.ClaimAsNative(file_at_path);
+    m_factoryDesc.claimAsNative(file_at_path);
 }
 
 Enigma::Engine::GenericDto CameraAssembler::assemble()

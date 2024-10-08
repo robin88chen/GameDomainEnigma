@@ -33,7 +33,7 @@ void MeshPrimitiveAssembler::addMaterial(const std::shared_ptr<PrimitiveMaterial
 
 void MeshPrimitiveAssembler::asNative(const std::string& file_at_path)
 {
-    m_factoryDesc.ClaimAsNative(file_at_path);
+    m_factoryDesc.claimAsNative(file_at_path);
 }
 
 Enigma::Engine::GenericDto MeshPrimitiveAssembler::assemble() const

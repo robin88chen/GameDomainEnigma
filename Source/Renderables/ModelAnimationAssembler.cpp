@@ -26,7 +26,7 @@ void ModelAnimationAssembler::nodeSRT(const std::string& node_name, const std::s
 
 void ModelAnimationAssembler::asAsset(const std::string& name, const std::string& filename, const std::string& path_id)
 {
-    m_factoryDesc.ClaimAsResourceAsset(name, filename, path_id);
+    m_factoryDesc.claimAsResourceAsset(name, filename, path_id);
 }
 
 Enigma::Engine::GenericDto ModelAnimationAssembler::assemble() const

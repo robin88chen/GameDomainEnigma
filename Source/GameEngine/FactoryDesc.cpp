@@ -2,35 +2,35 @@
 
 using namespace Enigma::Engine;
 
-FactoryDesc& FactoryDesc::ClaimAsNative(const std::string& filename, const std::string& path_id)
+FactoryDesc& FactoryDesc::claimAsNative(const std::string& filename, const std::string& path_id)
 {
     m_type = InstanceType::Native;
     m_prefab_deferredFilename = combineFilenameAtPath(filename, path_id);
     return *this;
 }
 
-FactoryDesc& FactoryDesc::ClaimByPrefab(const std::string& prefab_name)
+FactoryDesc& FactoryDesc::claimByPrefab(const std::string& prefab_name)
 {
     m_type = InstanceType::ByPrefab;
     if (!prefab_name.empty()) m_prefab_deferredFilename = prefab_name;
     return *this;
 }
 
-FactoryDesc& FactoryDesc::ClaimAsDeferred(const std::string& filename, const std::string& path_id)
+FactoryDesc& FactoryDesc::claimAsDeferred(const std::string& filename, const std::string& path_id)
 {
     m_type = InstanceType::Deferred;
     m_prefab_deferredFilename = combineFilenameAtPath(filename, path_id);
     return *this;
 }
 
-FactoryDesc& FactoryDesc::ClaimAsInstanced(const std::string& filename, const std::string& path_id)
+FactoryDesc& FactoryDesc::claimAsInstanced(const std::string& filename, const std::string& path_id)
 {
     m_type = InstanceType::Instanced;
     m_prefab_deferredFilename = combineFilenameAtPath(filename, path_id);
     return *this;
 }
 
-FactoryDesc& FactoryDesc::ClaimAsResourceAsset(const std::string& name, const std::string& filename, const std::string& path_id)
+FactoryDesc& FactoryDesc::claimAsResourceAsset(const std::string& name, const std::string& filename, const std::string& path_id)
 {
     m_type = InstanceType::ResourceAsset;
     if (!name.empty()) m_resourceName = name;
@@ -38,7 +38,7 @@ FactoryDesc& FactoryDesc::ClaimAsResourceAsset(const std::string& name, const st
     return *this;
 }
 
-FactoryDesc& FactoryDesc::ClaimFromResource(const std::string& name, const std::string& filename, const std::string& path_id)
+FactoryDesc& FactoryDesc::claimFromResource(const std::string& name, const std::string& filename, const std::string& path_id)
 {
     m_type = InstanceType::FromResource;
     if (!name.empty()) m_resourceName = name;
@@ -46,7 +46,7 @@ FactoryDesc& FactoryDesc::ClaimFromResource(const std::string& name, const std::
     return *this;
 }
 
-FactoryDesc& FactoryDesc::PathId(const std::string& path_id)
+FactoryDesc& FactoryDesc::pathId(const std::string& path_id)
 {
     if (path_id.empty()) return *this;
     if (!m_resourceFilename.empty())
@@ -76,7 +76,7 @@ FactoryDesc& FactoryDesc::PathId(const std::string& path_id)
     return *this;
 }
 
-std::string FactoryDesc::PathId() const
+std::string FactoryDesc::pathId() const
 {
     if (!m_resourceFilename.empty())
     {

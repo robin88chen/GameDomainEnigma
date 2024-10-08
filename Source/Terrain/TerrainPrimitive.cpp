@@ -8,7 +8,7 @@ DEFINE_RTTI(Terrain, TerrainPrimitive, MeshPrimitive);
 
 TerrainPrimitive::TerrainPrimitive(const Primitives::PrimitiveId& id) : MeshPrimitive(id)
 {
-    m_factoryDesc = Engine::FactoryDesc(TerrainPrimitive::TYPE_RTTI.getName()).ClaimAsInstanced(id.name() + ".terrain");
+    m_factoryDesc = Engine::FactoryDesc(TerrainPrimitive::TYPE_RTTI.getName()).claimAsInstanced(id.name() + ".terrain");
 }
 
 TerrainPrimitive::~TerrainPrimitive()

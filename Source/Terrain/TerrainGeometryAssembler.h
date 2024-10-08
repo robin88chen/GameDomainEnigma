@@ -36,14 +36,11 @@ namespace Enigma::Terrain
         void maxTextureCoordinate(const MathLib::Vector2& max) { m_maxTextureCoordinate = max; }
         void heightMap(const std::optional<float_buffer>& height_map) { m_heightMap = height_map; }
 
+
         Engine::GenericDto assemble() override;
 
-        void convertGeometryVertices();
-        Engine::BoundingVolume calculateGeometryBounding();
-
     protected:
-        unsigned calculateGeometryVertexCount() const;
-        unsigned calculateGeometryIndexCount() const;
+        void assembleNonVertexAttributes();
 
     protected:
         unsigned m_numRows;
@@ -73,6 +70,9 @@ namespace Enigma::Terrain
         [[nodiscard]] const MathLib::Vector2& minTextureCoordinate() const { return m_minTextureCoordinate; }
         [[nodiscard]] const MathLib::Vector2& maxTextureCoordinate() const { return m_maxTextureCoordinate; }
         [[nodiscard]] const std::optional<float_buffer>& heightMap() const { return m_heightMap; }
+
+    protected:
+        void disassembleGeometryVertices();
 
     protected:
         unsigned m_numRows;

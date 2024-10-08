@@ -56,8 +56,9 @@ void MeshPrimitive::assemble(const std::shared_ptr<Primitives::PrimitiveAssemble
     if (m_geometry)
     {
         mesh_assembler->geometryId(m_geometry->id());
-        if ((m_geometry->factoryDesc().GetInstanceType() == FactoryDesc::InstanceType::Native)
-            || (m_geometry->factoryDesc().GetInstanceType() == FactoryDesc::InstanceType::ResourceAsset))
+        //if ((m_geometry->factoryDesc().instanceType() == FactoryDesc::InstanceType::Native)
+          //  || (m_geometry->factoryDesc().instanceType() == FactoryDesc::InstanceType::ResourceAsset))
+        if (m_geometry->factoryDesc().instanceType() == FactoryDesc::InstanceType::Native) // only native geometry need to be assembled
         {
             mesh_assembler->geometry(m_geometry);
         }

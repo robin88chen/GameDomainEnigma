@@ -54,10 +54,10 @@ std::shared_ptr<Animator> AnimatorFactory::create(const AnimatorId& id, const Fr
 
 std::shared_ptr<Animator> AnimatorFactory::constitute(const AnimatorId& id, const Engine::GenericDto& dto, bool is_persisted)
 {
-    auto constitutor = m_constitutors.find(dto.getRtti().GetRttiName());
+    auto constitutor = m_constitutors.find(dto.getRtti().rttiName());
     if (constitutor == m_constitutors.end())
     {
-        Platforms::Debug::Printf("Can't find constitutor of %s\n", dto.getRtti().GetRttiName().c_str());
+        Platforms::Debug::Printf("Can't find constitutor of %s\n", dto.getRtti().rttiName().c_str());
         EventPublisher::enqueue(std::make_shared<ConstituteAnimatorFailed>(id, ErrorCode::animatorFactoryNotExists));
         return nullptr;
     }

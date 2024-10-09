@@ -41,6 +41,8 @@ namespace Enigma::Renderables
         MeshPrimitive& operator=(const MeshPrimitive&) = delete;
         MeshPrimitive& operator=(MeshPrimitive&&) = delete;
 
+        static std::shared_ptr<MeshPrimitive> create(const Primitives::PrimitiveId& id);
+
         virtual std::shared_ptr<Primitives::PrimitiveAssembler> assembler() const override;
         virtual void assemble(const std::shared_ptr<Primitives::PrimitiveAssembler>& assembler) const override;
         virtual std::shared_ptr<Primitives::PrimitiveDisassembler> disassembler() const override;
@@ -49,16 +51,14 @@ namespace Enigma::Renderables
         /** get geometry data */
         const Geometries::GeometryDataPtr& getGeometryData() const { return m_geometry; };
 
-        /** get material */
         std::shared_ptr<PrimitiveMaterial> getMaterial(unsigned index);
-        /** get material count */
+        const std::vector<std::shared_ptr<PrimitiveMaterial>>& materials() const { return m_materials; }
         unsigned getMaterialCount() const;
         virtual void changeMaterials(const std::vector<std::shared_ptr<PrimitiveMaterial>>& materials);
-        /** change specify semantic texture */
+        virtual void rebindMaterials();
+
         void changeSemanticTexture(const Engine::EffectSemanticTexture& semantic_texture);
-        /** bind specify semantic texture, append new if semantic not existed */
         void bindSemanticTexture(const Engine::EffectSemanticTexture& semantic_texture);
-        /** bind specify semantic texture, append new if semantic not existed */
         void bindSemanticTextures(const std::vector<Engine::EffectSemanticTexture>& textures);
 
         /** update render buffer */
@@ -68,7 +68,7 @@ namespace Enigma::Renderables
 
         /** render list id */
         Renderer::Renderer::RenderListID renderListId() const { return m_renderListID; };
-        Renderer::Renderer::RenderListID& renderListId() { return m_renderListID; };
+        void renderListId(Renderer::Renderer::RenderListID id) { m_renderListID = id; };
 
         /** insert to renderer */
         virtual error insertToRendererWithTransformUpdating(const std::shared_ptr<Engine::IRenderer>& renderer,

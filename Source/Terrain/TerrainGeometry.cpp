@@ -17,6 +17,11 @@ TerrainGeometry::~TerrainGeometry()
 {
 }
 
+std::shared_ptr<TerrainGeometry> TerrainGeometry::create(const Geometries::GeometryId& id)
+{
+    return std::make_shared<TerrainGeometry>(id);
+}
+
 std::shared_ptr<Enigma::Geometries::GeometryAssembler> TerrainGeometry::assembler() const
 {
     return std::make_shared<TerrainGeometryAssembler>(m_id);

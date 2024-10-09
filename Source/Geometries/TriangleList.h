@@ -9,6 +9,7 @@
 #define _TRIANGLE_LIST_H
 
 #include "GeometryData.h"
+#include "GeometryId.h"
 #include <memory>
 
 namespace Enigma::Geometries
@@ -25,6 +26,8 @@ namespace Enigma::Geometries
         virtual ~TriangleList() override;
         TriangleList& operator=(const TriangleList&) = delete;
         TriangleList& operator=(TriangleList&&) = delete;
+
+        static std::shared_ptr<TriangleList> create(const GeometryId& id);
 
         virtual std::shared_ptr<GeometryAssembler> assembler() const override;
         virtual std::shared_ptr<GeometryDisassembler> disassembler() override;

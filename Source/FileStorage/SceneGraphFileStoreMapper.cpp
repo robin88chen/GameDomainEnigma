@@ -125,22 +125,22 @@ std::string SceneGraphFileStoreMapper::SpatialFileMap::extractFilename(const Sce
 {
     if (m_assetPrefix.empty())
     {
-        if (!factory_desc.GetDeferredFilename().empty()) return factory_desc.GetDeferredFilename();
-        if (!factory_desc.GetResourceFilename().empty()) return factory_desc.GetResourceFilename();
-        return id.name() + "." + factory_desc.GetRttiName() + ".json";
+        if (!factory_desc.deferredFilename().empty()) return factory_desc.deferredFilename();
+        if (!factory_desc.resourceFilename().empty()) return factory_desc.resourceFilename();
+        return id.name() + "." + factory_desc.rttiName() + ".json";
     }
     std::string filename;
-    if (!factory_desc.GetDeferredFilename().empty())
+    if (!factory_desc.deferredFilename().empty())
     {
-        filename = factory_desc.GetDeferredFilename();
+        filename = factory_desc.deferredFilename();
     }
-    else if (!factory_desc.GetResourceFilename().empty())
+    else if (!factory_desc.resourceFilename().empty())
     {
-        filename = factory_desc.GetResourceFilename();
+        filename = factory_desc.resourceFilename();
     }
     else
     {
-        filename = id.name() + "." + factory_desc.GetRttiName() + ".json";
+        filename = id.name() + "." + factory_desc.rttiName() + ".json";
     }
     auto pos = filename.find_last_of('/');
     if (pos == std::string::npos) return m_assetPrefix + filename;

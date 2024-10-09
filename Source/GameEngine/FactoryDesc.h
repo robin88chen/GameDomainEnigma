@@ -34,42 +34,42 @@ namespace Enigma::Engine
         FactoryDesc& operator=(const FactoryDesc& desc) = default;
         FactoryDesc& operator=(FactoryDesc&& desc) = default;
 
-        FactoryDesc& ClaimAsNative(const std::string& filename, const std::string& path_id = "");
-        FactoryDesc& ClaimByPrefab(const std::string& prefab_name);
-        FactoryDesc& ClaimAsDeferred(const std::string& filename, const std::string& path_id = "");
-        FactoryDesc& ClaimAsInstanced(const std::string& filename, const std::string& path_id = "");
-        FactoryDesc& ClaimAsResourceAsset(const std::string& name, const std::string& filename, const std::string& path_id = "");
-        FactoryDesc& ClaimFromResource(const std::string& name, const std::string& filename, const std::string& path_id = "");
-        FactoryDesc& PathId(const std::string& path_id);
+        FactoryDesc& claimAsNative(const std::string& filename, const std::string& path_id = "");
+        FactoryDesc& claimByPrefab(const std::string& prefab_name);
+        FactoryDesc& claimAsDeferred(const std::string& filename, const std::string& path_id = "");
+        FactoryDesc& claimAsInstanced(const std::string& filename, const std::string& path_id = "");
+        FactoryDesc& claimAsResourceAsset(const std::string& name, const std::string& filename, const std::string& path_id = "");
+        FactoryDesc& claimFromResource(const std::string& name, const std::string& filename, const std::string& path_id = "");
+        FactoryDesc& pathId(const std::string& path_id);
         /** Claim as native without change file name */
-        FactoryDesc& ClaimAsNative() { return ClaimAsNative(""); }
+        FactoryDesc& claimAsNative() { return claimAsNative(""); }
         /** Claim as instanced without change file name */
-        FactoryDesc& ClaimByPrefab() { return ClaimByPrefab(""); }
+        FactoryDesc& claimByPrefab() { return claimByPrefab(""); }
 
         /** Claim as deferred without change file name */
-        FactoryDesc& ClaimAsDeferred() { return ClaimAsDeferred("", ""); }
+        FactoryDesc& claimAsDeferred() { return claimAsDeferred("", ""); }
         /** Claim as instanced without change file name */
-        FactoryDesc& ClaimAsInstanced() { return ClaimAsInstanced("", ""); }
+        FactoryDesc& claimAsInstanced() { return claimAsInstanced("", ""); }
 
         /** Claim as resource asset without change resource name and file name */
-        FactoryDesc& ClaimAsResourceAsset() { return ClaimAsResourceAsset("", ""); }
+        FactoryDesc& claimAsResourceAsset() { return claimAsResourceAsset("", ""); }
         /** Claim from resource without change resource name and file name */
-        FactoryDesc& ClaimFromResource() { return ClaimFromResource("", ""); }
+        FactoryDesc& claimFromResource() { return claimFromResource("", ""); }
 
-        InstanceType GetInstanceType() { return m_type; };
-        InstanceType GetInstanceType() const { return m_type; };
+        InstanceType instanceType() { return m_type; };
+        InstanceType instanceType() const { return m_type; };
 
-        const std::string& GetRttiName() { return m_rttiName; };
-        const std::string& GetRttiName() const { return m_rttiName; };
-        const std::string& GetPrefab() { return m_prefab_deferredFilename; };
-        const std::string& GetPrefab() const { return m_prefab_deferredFilename; };
-        const std::string& GetResourceName() { return m_resourceName; };
-        const std::string& GetResourceName() const { return m_resourceName; };
-        const std::string& GetResourceFilename() { return m_resourceFilename; };
-        const std::string& GetResourceFilename() const { return m_resourceFilename; };
-        const std::string& GetDeferredFilename() { return m_prefab_deferredFilename; };
-        const std::string& GetDeferredFilename() const { return m_prefab_deferredFilename; };
-        std::string PathId() const;
+        const std::string& rttiName() { return m_rttiName; };
+        const std::string& rttiName() const { return m_rttiName; };
+        const std::string& prefabFilename() { return m_prefab_deferredFilename; };
+        const std::string& prefabFilename() const { return m_prefab_deferredFilename; };
+        const std::string& resourceName() { return m_resourceName; };
+        const std::string& resourceName() const { return m_resourceName; };
+        const std::string& resourceFilename() { return m_resourceFilename; };
+        const std::string& resourceFilename() const { return m_resourceFilename; };
+        const std::string& deferredFilename() { return m_prefab_deferredFilename; };
+        const std::string& deferredFilename() const { return m_prefab_deferredFilename; };
+        std::string pathId() const;
 
     protected:
         std::string combineFilenameAtPath(const std::string& filename, const std::string& path_id) const;

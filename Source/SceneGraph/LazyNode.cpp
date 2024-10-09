@@ -15,7 +15,7 @@ DEFINE_RTTI(SceneGraph, LazyNode, Node);
 LazyNode::LazyNode(const SpatialId& id) : Node(id)
 {
     m_factoryDesc = FactoryDesc(LazyNode::TYPE_RTTI.getName());
-    m_factoryDesc.ClaimAsDeferred();
+    m_factoryDesc.claimAsDeferred();
     m_lazyStatus.changeStatus(Frameworks::LazyStatus::Status::Ghost);
 }
 

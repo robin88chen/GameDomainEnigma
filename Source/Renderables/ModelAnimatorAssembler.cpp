@@ -31,7 +31,7 @@ void ModelAnimatorAssembler::addSkinOperator(const std::shared_ptr<SkinOperatorA
 
 void ModelAnimatorAssembler::asNative(const std::string& file_at_path)
 {
-    m_factoryDesc.ClaimAsNative(file_at_path);
+    m_factoryDesc.claimAsNative(file_at_path);
 }
 
 Enigma::Engine::GenericDto ModelAnimatorAssembler::assemble() const

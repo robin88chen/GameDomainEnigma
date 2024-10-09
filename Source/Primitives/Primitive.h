@@ -81,7 +81,7 @@ namespace Enigma::Primitives
         /** select visual technique */
         virtual void selectVisualTechnique(const std::string& techniqueName) { m_selectedVisualTech = techniqueName; };
         /** get selected visual technique */
-        virtual std::string& getSelectedVisualTechnique() { return m_selectedVisualTech; };
+        virtual std::string& visualTechniqueSelection() { return m_selectedVisualTech; };
 
         virtual const Animators::AnimatorId& animatorId() const { return m_animatorId; }
         virtual void animatorId(const Animators::AnimatorId& animator_id) { m_animatorId = animator_id; }

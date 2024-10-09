@@ -5,8 +5,7 @@
 #include "PrimitiveCommands.h"
 #include "Frameworks/CommandBus.h"
 #include "PrimitiveErrors.h"
-#include "PrimitiveQueries.h"
-#include "Frameworks/QueryDispatcher.h"
+#include "PrimitiveAssembler.h"
 
 using namespace Enigma::Primitives;
 using namespace Enigma::Frameworks;
@@ -43,7 +42,7 @@ std::shared_ptr<Primitive> PrimitiveFactory::create(const PrimitiveId& id, const
     if (creator == m_creators.end())
     {
         Platforms::Debug::Printf("Can't find creator of %s\n", rtti.getName().c_str());
-        EventPublisher::enqueue(std::make_shared<CreatePrimitiveFailed>(id, ErrorCode::primitiveFactoryNotExists));
+        EventPublisher::enqueue(std::make_shared<PrimitiveCreationFailed>(id, ErrorCode::primitiveFactoryNotExists));
         return nullptr;
     }
     auto prim = creator->second(id);
@@ -53,19 +52,22 @@ std::shared_ptr<Primitive> PrimitiveFactory::create(const PrimitiveId& id, const
 
 std::shared_ptr<Primitive> PrimitiveFactory::constitute(const PrimitiveId& id, const Engine::GenericDto& dto, bool is_persisted)
 {
-    auto constitutor = m_constitutors.find(dto.getRtti().GetRttiName());
-    if (constitutor == m_constitutors.end())
+    auto creator = m_creators.find(dto.getRtti().rttiName());
+    if (creator == m_creators.end())
     {
-        Platforms::Debug::Printf("Can't find constitutor of %s\n", dto.getRtti().GetRttiName().c_str());
-        EventPublisher::enqueue(std::make_shared<ConstitutePrimitiveFailed>(id, ErrorCode::primitiveFactoryNotExists));
+        Platforms::Debug::Printf("Can't find constitutor of %s\n", dto.getRtti().rttiName().c_str());
+        EventPublisher::enqueue(std::make_shared<PrimitiveConstitutionFailed>(id, ErrorCode::primitiveFactoryNotExists));
         return nullptr;
     }
-    auto prim = constitutor->second(id, dto);
+    auto prim = creator->second(id);
+    auto disassembler = prim->disassembler();
+    disassembler->disassemble(dto);
+    prim->disassemble(disassembler);
     EventPublisher::enqueue(std::make_shared<PrimitiveConstituted>(id, prim, is_persisted));
     return prim;
 }
 
-void PrimitiveFactory::registerPrimitiveFactory(const std::string& rtti, const PrimitiveCreator& creator, const PrimitiveConstitutor& constitutor)
+void PrimitiveFactory::registerPrimitiveFactory(const std::string& rtti, const PrimitiveCreator& creator)
 {
     if (m_creators.find(rtti) != m_creators.end())
     {
@@ -73,7 +75,6 @@ void PrimitiveFactory::registerPrimitiveFactory(const std::string& rtti, const P
         return;
     }
     m_creators[rtti] = creator;
-    m_constitutors[rtti] = constitutor;
 }
 
 void PrimitiveFactory::unregisterPrimitiveFactory(const std::string& rtti)
@@ -84,7 +85,6 @@ void PrimitiveFactory::unregisterPrimitiveFactory(const std::string& rtti)
         return;
     }
     m_creators.erase(rtti);
-    m_constitutors.erase(rtti);
 }
 
 void PrimitiveFactory::registerPrimitiveFactory(const Frameworks::ICommandPtr& c)
@@ -92,7 +92,7 @@ void PrimitiveFactory::registerPrimitiveFactory(const Frameworks::ICommandPtr& c
     if (!c) return;
     auto cmd = std::dynamic_pointer_cast<RegisterPrimitiveFactory>(c);
     if (!cmd) return;
-    registerPrimitiveFactory(cmd->rttiName(), cmd->creator(), cmd->constitutor());
+    registerPrimitiveFactory(cmd->rttiName(), cmd->creator());
 }
 
 void PrimitiveFactory::unregisterPrimitiveFactory(const Frameworks::ICommandPtr& c)

@@ -9,7 +9,7 @@ DEFINE_RTTI(Terrain, TerrainPawn, Pawn);
 
 TerrainPawn::TerrainPawn(const SpatialId& id) : Pawn(id)
 {
-    m_factoryDesc = FactoryDesc(TerrainPawn::TYPE_RTTI.getName()).ClaimAsInstanced(id.name() + ".pawn");
+    m_factoryDesc = FactoryDesc(TerrainPawn::TYPE_RTTI.getName()).claimAsInstanced(id.name() + ".pawn");
 }
 
 TerrainPawn::~TerrainPawn()

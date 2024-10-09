@@ -23,6 +23,11 @@ SkinMeshPrimitive::~SkinMeshPrimitive()
     loosePrimitiveBoneMatrix();
 }
 
+std::shared_ptr<SkinMeshPrimitive> SkinMeshPrimitive::create(const Primitives::PrimitiveId& id)
+{
+    return std::make_shared<SkinMeshPrimitive>(id);
+}
+
 std::shared_ptr<PrimitiveAssembler> SkinMeshPrimitive::assembler() const
 {
     return std::make_shared<SkinMeshPrimitiveAssembler>(m_id.origin());
@@ -37,6 +42,13 @@ void SkinMeshPrimitive::changeMaterials(const std::vector<std::shared_ptr<Primit
 {
     loosePrimitiveBoneMatrix();
     MeshPrimitive::changeMaterials(materials);
+    bindPrimitiveBoneMatrix();
+}
+
+void SkinMeshPrimitive::rebindMaterials()
+{
+    loosePrimitiveBoneMatrix();
+    MeshPrimitive::rebindMaterials();
     bindPrimitiveBoneMatrix();
 }
 

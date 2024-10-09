@@ -231,22 +231,22 @@ FactoryDesc DeserializeFactoryDesc(const rapidjson::Value& value)
     switch (instance_type)
     {
     case FactoryDesc::InstanceType::Native:
-        desc.ClaimAsNative(prefab);
+        desc.claimAsNative(prefab);
         break;
     case FactoryDesc::InstanceType::ByPrefab:
-        desc.ClaimByPrefab(prefab);
+        desc.claimByPrefab(prefab);
         break;
     case FactoryDesc::InstanceType::Deferred:
-        desc.ClaimAsDeferred(prefab);
+        desc.claimAsDeferred(prefab);
         break;
     case FactoryDesc::InstanceType::Instanced:
-        desc.ClaimAsInstanced(prefab);
+        desc.claimAsInstanced(prefab);
         break;
     case FactoryDesc::InstanceType::FromResource:
-        desc.ClaimFromResource(resource_name, resource_filename);
+        desc.claimFromResource(resource_name, resource_filename);
         break;
     case FactoryDesc::InstanceType::ResourceAsset:
-        desc.ClaimAsResourceAsset(resource_name, resource_filename);
+        desc.claimAsResourceAsset(resource_name, resource_filename);
         break;
     }
     return desc;
@@ -567,11 +567,11 @@ rapidjson::Value SerializeObject(std::any any_ob, rapidjson::MemoryPoolAllocator
 rapidjson::Value SerializeFactoryDesc(const FactoryDesc& desc, rapidjson::MemoryPoolAllocator<>& allocator)
 {
     rapidjson::Value value{ rapidjson::kObjectType };
-    value.AddMember(rapidjson::StringRef(INSTANCE_TYPE), static_cast<int>(desc.GetInstanceType()), allocator);
-    value.AddMember(rapidjson::StringRef(RESOURCE_NAME), SerializeString(desc.GetResourceName(), allocator), allocator);
-    value.AddMember(rapidjson::StringRef(RESOURCE_FILENAME), SerializeString(desc.GetResourceFilename(), allocator), allocator);
-    value.AddMember(rapidjson::StringRef(RTTI_NAME), SerializeString(desc.GetRttiName(), allocator), allocator);
-    value.AddMember(rapidjson::StringRef(PREFAB_FILENAME), SerializeString(desc.GetPrefab(), allocator), allocator);
+    value.AddMember(rapidjson::StringRef(INSTANCE_TYPE), static_cast<int>(desc.instanceType()), allocator);
+    value.AddMember(rapidjson::StringRef(RESOURCE_NAME), SerializeString(desc.resourceName(), allocator), allocator);
+    value.AddMember(rapidjson::StringRef(RESOURCE_FILENAME), SerializeString(desc.resourceFilename(), allocator), allocator);
+    value.AddMember(rapidjson::StringRef(RTTI_NAME), SerializeString(desc.rttiName(), allocator), allocator);
+    value.AddMember(rapidjson::StringRef(PREFAB_FILENAME), SerializeString(desc.prefabFilename(), allocator), allocator);
     return value;
 }
 

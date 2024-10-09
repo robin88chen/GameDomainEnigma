@@ -130,12 +130,12 @@ std::error_code QuadTreeRoot::createTreeNode(const std::shared_ptr<SceneGraphRep
 
 std::shared_ptr<HydratedLazyNodeAssembler> QuadTreeRoot::assembleChildTreeNode(const SpatialId& parent_id, const Engine::FactoryDesc& parent_desc, const SpatialId& id, const MathLib::Matrix4& local_transform, const MathLib::Matrix4& world_transform, const Engine::BoundingVolume& model_bound)
 {
-    auto child_filename = replaceToChildFilename(parent_desc.GetDeferredFilename(), parent_desc.PathId(), parent_id, id);
+    auto child_filename = replaceToChildFilename(parent_desc.deferredFilename(), parent_desc.pathId(), parent_id, id);
     std::shared_ptr<HydratedVisibilityManagedNodeAssembler> assembler = std::make_shared<HydratedVisibilityManagedNodeAssembler>(id);
     assembler->localTransform(local_transform);
     assembler->modelBound(model_bound);
     assembler->worldTransform(world_transform);
-    assembler->persist(child_filename, parent_desc.PathId());
+    assembler->persist(child_filename, parent_desc.pathId());
     return assembler;
 }
 

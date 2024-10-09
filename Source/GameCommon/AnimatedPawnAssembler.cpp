@@ -20,7 +20,7 @@ AnimatedPawnAssembler::AnimatedPawnAssembler(const SceneGraph::SpatialId& id) : 
 void AnimatedPawnAssembler::factory(const Engine::FactoryDesc& factory)
 {
     PawnAssembler::factory(factory);
-    if (m_prefab) m_factoryDesc.ClaimByPrefab(m_prefab.value());
+    if (m_prefab) m_factoryDesc.claimByPrefab(m_prefab.value());
 }
 
 void AnimatedPawnAssembler::persist(const std::string& filename, const std::string& path_id)
@@ -54,7 +54,7 @@ void AnimatedPawnAssembler::addAvatarRecipe(const std::shared_ptr<AvatarRecipeAs
 void AnimatedPawnAssembler::byPrefab(const std::string& prefab_name)
 {
     m_prefab = prefab_name;
-    m_factoryDesc.ClaimByPrefab(prefab_name);
+    m_factoryDesc.claimByPrefab(prefab_name);
 }
 
 Enigma::Engine::GenericDto AnimatedPawnAssembler::assemble() const
@@ -90,7 +90,7 @@ void AnimatedPawnDisassembler::disassemble(const Engine::GenericDto& dto)
     {
         for (auto& recipe_dto : v.value())
         {
-            std::shared_ptr<AvatarRecipe> recipe = std::make_shared<RequestAvatarRecipeCreation>(recipe_dto.getRtti().GetRttiName())->dispatch();
+            std::shared_ptr<AvatarRecipe> recipe = std::make_shared<RequestAvatarRecipeCreation>(recipe_dto.getRtti().rttiName())->dispatch();
             std::shared_ptr<AvatarRecipeDisassembler> disassembler = recipe->disassembler();
             disassembler->disassemble(recipe_dto);
             recipe->disassemble(disassembler);
@@ -98,23 +98,4 @@ void AnimatedPawnDisassembler::disassemble(const Engine::GenericDto& dto)
         }
     }
 }
-
-/*AnimatedPawnDto AnimatedPawnAssembler::toAnimatedPawnDto()
-{
-    AnimatedPawnDto pawn_dto(m_pawnAssembler.toGenericDto());
-    pawn_dto.id(m_dto.id());
-    pawn_dto.animationClipMapDto() = m_dto.animationClipMapDto();
-    pawn_dto.factoryDesc(m_dto.factoryDesc());
-    return pawn_dto;
-}
-
-Enigma::Engine::GenericDto AnimatedPawnAssembler::toGenericDto()
-{
-    return toAnimatedPawnDto().toGenericDto();
-}
-
-std::shared_ptr<AnimatedPawn> AnimatedPawnAssembler::constitute()
-{
-    return std::dynamic_pointer_cast<AnimatedPawn>(std::make_shared<RequestSpatialConstitution>(m_id, toGenericDto())->dispatch());
-}*/
 

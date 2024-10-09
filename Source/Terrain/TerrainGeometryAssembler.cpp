@@ -15,6 +15,37 @@ static std::string TOKEN_MIN_TEXTURE_COORDINATE = "MinTextureCoordinate";
 static std::string TOKEN_MAX_TEXTURE_COORDINATE = "MaxTextureCoordinate";
 static std::string TOKEN_HEIGHT_MAP = "HeightMap";
 
+unsigned calculateGeometryVertexCount(unsigned num_rows, unsigned num_cols)
+{
+    return (num_rows + 1) * (num_cols + 1);
+}
+
+unsigned calculateGeometryIndexCount(unsigned num_rows, unsigned num_cols)
+{
+    return num_rows * num_cols * 6;
+}
+
+BoundingVolume calculateGeometryBounding(const Vector3& min_position, const Vector3& max_position, const std::optional<float_buffer>& height_map)
+{
+    float min_height = 0.0f;
+    float max_height = 1.0f;
+    if (height_map)
+    {
+        const float_buffer heights = height_map.value();
+        min_height = heights[0];
+        max_height = heights[0];
+        for (unsigned vi = 1; vi < heights.size(); vi++)
+        {
+            if (heights[vi] < min_height) min_height = heights[vi];
+            if (heights[vi] > max_height) max_height = heights[vi];
+        }
+    }
+    const Vector3 box_corner[2] = { Vector3(min_position.x(), min_height, min_position.z()),
+        Vector3(max_position.x(), max_height, max_position.z()) };
+    const Box3 bb_box = ContainmentBox3::ComputeAlignedBox(box_corner, 2);
+    return BoundingVolume{ bb_box };
+}
+
 TerrainGeometryAssembler::TerrainGeometryAssembler(const GeometryId& id) : TriangleListAssembler(id)
 {
     m_factoryDesc = FactoryDesc(TerrainGeometry::TYPE_RTTI);
@@ -24,7 +55,7 @@ TerrainGeometryAssembler::TerrainGeometryAssembler(const GeometryId& id) : Trian
 GenericDto TerrainGeometryAssembler::assemble()
 {
     GenericDto dto;
-    convertGeometryVertices();
+    assembleNonVertexAttributes();
     serializeNonVertexAttributesToGenericDto(dto);
     dto.addRtti(m_factoryDesc);
     dto.addOrUpdate(TOKEN_NUM_ROWS, m_numRows);
@@ -40,17 +71,47 @@ GenericDto TerrainGeometryAssembler::assemble()
     return dto;
 }
 
-void TerrainGeometryAssembler::convertGeometryVertices()
+void TerrainGeometryAssembler::assembleNonVertexAttributes()
+{
+    m_vtxCapacity = calculateGeometryVertexCount(m_numRows, m_numCols);
+    m_vtxUsedCount = m_vtxCapacity;
+    m_idxCapacity = calculateGeometryIndexCount(m_numRows, m_numCols);
+    m_idxUsedCount = m_idxCapacity;
+    m_segments = { { 0, m_vtxUsedCount, 0, m_idxUsedCount } };
+    m_vertexFormat.fromString("xyz_nor_tex2(2,2)");
+    m_topology = static_cast<unsigned>(Graphics::PrimitiveTopology::Topology_TriangleList);
+    m_geometryBound = calculateGeometryBounding(m_minPosition, m_maxPosition, m_heightMap);
+}
+
+TerrainGeometryDisassembler::TerrainGeometryDisassembler() : TriangleListDisassembler()
+{
+    m_numRows = m_numCols = 1;
+}
+
+void TerrainGeometryDisassembler::disassemble(const Engine::GenericDto& dto)
+{
+    TriangleListDisassembler::disassemble(dto);
+    if (auto v = dto.tryGetValue<unsigned>(TOKEN_NUM_ROWS)) m_numRows = v.value();
+    if (auto v = dto.tryGetValue<unsigned>(TOKEN_NUM_COLS)) m_numCols = v.value();
+    if (auto v = dto.tryGetValue<Vector3>(TOKEN_MIN_POSITION)) m_minPosition = v.value();
+    if (auto v = dto.tryGetValue<Vector3>(TOKEN_MAX_POSITION)) m_maxPosition = v.value();
+    if (auto v = dto.tryGetValue<Vector2>(TOKEN_MIN_TEXTURE_COORDINATE)) m_minTextureCoordinate = v.value();
+    if (auto v = dto.tryGetValue<Vector2>(TOKEN_MAX_TEXTURE_COORDINATE)) m_maxTextureCoordinate = v.value();
+    if (auto v = dto.tryGetValue<float_buffer>(TOKEN_HEIGHT_MAP)) m_heightMap = v.value();
+    disassembleGeometryVertices();
+}
+
+void TerrainGeometryDisassembler::disassembleGeometryVertices()
 {
     assert((m_numRows != 0) && (m_numCols != 0));
     Vector3 terrain_size = m_maxPosition - m_minPosition;
     Vector2 uv_range = m_maxTextureCoordinate - m_minTextureCoordinate;
 
-    m_vtxCapacity = calculateGeometryVertexCount();
+    m_vtxCapacity = calculateGeometryVertexCount(m_numRows, m_numCols);
     m_vtxUsedCount = m_vtxCapacity;
-    m_idxCapacity = calculateGeometryIndexCount();
+    m_idxCapacity = calculateGeometryIndexCount(m_numRows, m_numCols);
     m_idxUsedCount = m_idxCapacity;
-    m_segments = { 0, m_vtxUsedCount, 0, m_idxUsedCount };
+    m_segments = { { 0, m_vtxUsedCount, 0, m_idxUsedCount } };
     m_position3s = std::vector<Vector3>(m_vtxUsedCount);
     m_normals = std::vector<Vector3>(m_vtxUsedCount);
     std::vector<Vector2> tex_coords(m_vtxUsedCount);
@@ -82,62 +143,9 @@ void TerrainGeometryAssembler::convertGeometryVertices()
         m_indices.value()[cell_i * 6 + 4] = (zi + 1) * (m_numCols + 1) + xi + 1;
         m_indices.value()[cell_i * 6 + 5] = zi * (m_numCols + 1) + xi + 1;
     }
-    TextureCoordinateAssembler tex_coord_assembler;
-    TextureCoordinateAssembler alpha_coord_assembler;
-    tex_coord_assembler.texture2DCoords(tex_coords);
-    alpha_coord_assembler.texture2DCoords(alpha_coords);
-    m_texCoords = { tex_coord_assembler.assemble(), alpha_coord_assembler.assemble() };
-
+    m_textureCoordinates = { { tex_coords, alpha_coords } };
     m_vertexFormat.fromString("xyz_nor_tex2(2,2)");
-    m_topology = static_cast<unsigned>(Graphics::PrimitiveTopology::Topology_TriangleList);
-    m_geometryBound = calculateGeometryBounding();
+    m_topology = Graphics::PrimitiveTopology::Topology_TriangleList;
+    m_geometryBound = calculateGeometryBounding(m_minPosition, m_maxPosition, m_heightMap);
 }
 
-unsigned TerrainGeometryAssembler::calculateGeometryVertexCount() const
-{
-    return (m_numRows + 1) * (m_numCols + 1);
-}
-
-unsigned TerrainGeometryAssembler::calculateGeometryIndexCount() const
-{
-    return m_numRows * m_numCols * 6;
-}
-
-BoundingVolume TerrainGeometryAssembler::calculateGeometryBounding()
-{
-    assert((m_numRows != 0) && (m_numCols != 0));
-    float min_height = 0.0f;
-    float max_height = 1.0f;
-    if (m_heightMap)
-    {
-        const float_buffer heights = m_heightMap.value();
-        min_height = heights[0];
-        max_height = heights[0];
-        for (unsigned vi = 1; vi < m_vtxUsedCount; vi++)
-        {
-            if (heights[vi] < min_height) min_height = heights[vi];
-            if (heights[vi] > max_height) max_height = heights[vi];
-        }
-    }
-    const Vector3 box_corner[2] = { Vector3(m_minPosition.x(), min_height, m_minPosition.z()),
-        Vector3(m_maxPosition.x(), max_height, m_maxPosition.z()) };
-    const Box3 bb_box = ContainmentBox3::ComputeAlignedBox(box_corner, 2);
-    return BoundingVolume{ bb_box };
-}
-
-TerrainGeometryDisassembler::TerrainGeometryDisassembler() : TriangleListDisassembler()
-{
-    m_numRows = m_numCols = 1;
-}
-
-void TerrainGeometryDisassembler::disassemble(const Engine::GenericDto& dto)
-{
-    TriangleListDisassembler::disassemble(dto);
-    if (auto v = dto.tryGetValue<unsigned>(TOKEN_NUM_ROWS)) m_numRows = v.value();
-    if (auto v = dto.tryGetValue<unsigned>(TOKEN_NUM_COLS)) m_numCols = v.value();
-    if (auto v = dto.tryGetValue<Vector3>(TOKEN_MIN_POSITION)) m_minPosition = v.value();
-    if (auto v = dto.tryGetValue<Vector3>(TOKEN_MAX_POSITION)) m_maxPosition = v.value();
-    if (auto v = dto.tryGetValue<Vector2>(TOKEN_MIN_TEXTURE_COORDINATE)) m_minTextureCoordinate = v.value();
-    if (auto v = dto.tryGetValue<Vector2>(TOKEN_MAX_TEXTURE_COORDINATE)) m_maxTextureCoordinate = v.value();
-    if (auto v = dto.tryGetValue<float_buffer>(TOKEN_HEIGHT_MAP)) m_heightMap = v.value();
-}

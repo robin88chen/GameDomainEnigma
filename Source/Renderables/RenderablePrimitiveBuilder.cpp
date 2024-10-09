@@ -3,10 +3,10 @@
 #include "Primitives/PrimitiveAssembler.h"
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/EventPublisher.h"
+#include "Primitives/PrimitiveEvents.h"
 #include "Platforms/MemoryMacro.h"
 #include "Platforms/PlatformLayer.h"
 #include "MeshPrimitive.h"
-#include "SkinMeshPrimitive.h"
 #include "ModelPrimitive.h"
 #include "RenderableEvents.h"
 #include <memory>
@@ -32,20 +32,10 @@ RenderablePrimitiveBuilder::~RenderablePrimitiveBuilder()
 
 ServiceResult RenderablePrimitiveBuilder::onInit()
 {
-    m_onMeshPrimitiveHydrated = std::make_shared<EventSubscriber>([=](auto e) { this->onPrimitiveHydrated(e); });
-    m_onHydrateMeshPrimitiveFailed = std::make_shared<EventSubscriber>([=](auto e) { this->onHydratePrimitiveFailed(e); });
-    EventPublisher::subscribe(typeid(MeshPrimitiveBuilder::MeshPrimitiveHydrated), m_onMeshPrimitiveHydrated);
-    EventPublisher::subscribe(typeid(MeshPrimitiveBuilder::HydrateMeshPrimitiveFailed), m_onHydrateMeshPrimitiveFailed);
-
-    m_primitiveRepository.lock()->registerPrimitiveFactory(MeshPrimitive::TYPE_RTTI.getName(),
-        [=](const PrimitiveId& id) { return createMesh(id); },
-        [=](const PrimitiveId& id, const GenericDto& dto) { return constituteMesh(id, dto); });
-    m_primitiveRepository.lock()->registerPrimitiveFactory(SkinMeshPrimitive::TYPE_RTTI.getName(),
-        [=](const PrimitiveId& id) { return createSkinMesh(id); },
-        [=](const PrimitiveId& id, const GenericDto& dto) { return constituteSkinMesh(id, dto); });
-    m_primitiveRepository.lock()->registerPrimitiveFactory(ModelPrimitive::TYPE_RTTI.getName(),
-        [=](const PrimitiveId& id) { return createModel(id); },
-        [=](const PrimitiveId& id, const GenericDto& dto) { return constituteModel(id, dto); });
+    m_onPrimitiveConstituted = eventSubscription(typeid(PrimitiveConstituted), [=](auto e) { this->onPrimitiveConstituted(e); });
+    m_onPrimitiveConstitutionFailed = eventSubscription(typeid(PrimitiveConstitutionFailed), [=](auto e) { this->onPrimitiveConstitutionFailed(e); });
+    m_onMeshPrimitiveHydrated = eventSubscription(typeid(MeshPrimitiveBuilder::MeshPrimitiveHydrated), [=](auto e) { this->onMeshPrimitiveHydrated(e); });
+    m_onMeshPrimitiveHydrationFailed = eventSubscription(typeid(MeshPrimitiveBuilder::MeshPrimitiveHydrationFailed), [=](auto e) { this->onMeshPrimitiveHydrationFailed(e); });
 
     m_meshBuilder = menew MeshPrimitiveBuilder();
 
@@ -55,16 +45,17 @@ ServiceResult RenderablePrimitiveBuilder::onInit()
 ServiceResult RenderablePrimitiveBuilder::onTick()
 {
     if (m_currentBuildingId.has_value()) return ServiceResult::Pendding;
-    std::lock_guard locker{ m_primitivePlansLock };
-    if (m_primitivePlans.empty())
+    std::lock_guard locker{ m_primitiveQueueLock };
+    if (m_queuedPrimitives.empty())
     {
         m_needTick = false;
         return ServiceResult::Pendding;
     }
-    const auto plan = m_primitivePlans.front();
-    hydrateRenderablePrimitive(plan);
-    m_currentBuildingId = plan.id();
-    m_primitivePlans.pop();
+    const auto primitive = m_queuedPrimitives.front();
+    m_queuedPrimitives.pop();
+    if (!primitive) return ServiceResult::Pendding;
+    hydrateRenderablePrimitive(primitive);
+    m_currentBuildingId = primitive->id();
     return ServiceResult::Pendding;
 }
 
@@ -72,103 +63,50 @@ ServiceResult RenderablePrimitiveBuilder::onTerm()
 {
     SAFE_DELETE(m_meshBuilder);
 
-    EventPublisher::unsubscribe(typeid(MeshPrimitiveBuilder::MeshPrimitiveHydrated), m_onMeshPrimitiveHydrated);
-    EventPublisher::unsubscribe(typeid(MeshPrimitiveBuilder::HydrateMeshPrimitiveFailed), m_onHydrateMeshPrimitiveFailed);
+    releaseSubscription(typeid(PrimitiveConstituted), m_onPrimitiveConstituted);
+    m_onPrimitiveConstituted = nullptr;
+    releaseSubscription(typeid(PrimitiveConstitutionFailed), m_onPrimitiveConstitutionFailed);
+    m_onPrimitiveConstitutionFailed = nullptr;
+    releaseSubscription(typeid(MeshPrimitiveBuilder::MeshPrimitiveHydrated), m_onMeshPrimitiveHydrated);
     m_onMeshPrimitiveHydrated = nullptr;
-    m_onHydrateMeshPrimitiveFailed = nullptr;
+    releaseSubscription(typeid(MeshPrimitiveBuilder::MeshPrimitiveHydrationFailed), m_onMeshPrimitiveHydrationFailed);
+    m_onMeshPrimitiveHydrationFailed = nullptr;
 
     return ServiceResult::Complete;
 }
 
-void RenderablePrimitiveBuilder::registerCustomMeshFactory(const std::string& rtti, const CustomMeshCreator creator, const CustomMeshConstitutor& constitutor)
-{
-    m_customMeshCreators.emplace(rtti, creator);
-    m_customMeshConstitutors.emplace(rtti, constitutor);
-    m_primitiveRepository.lock()->registerPrimitiveFactory(rtti,
-        [=](const PrimitiveId& id) { return createCustomMesh(id); },
-        [=](const PrimitiveId& id, const GenericDto& dto) { return constituteCustomMesh(id, dto); });
-}
-
-void RenderablePrimitiveBuilder::hydrateRenderablePrimitive(const PrimitiveHydratingPlan& plan)
+void RenderablePrimitiveBuilder::hydrateRenderablePrimitive(const std::shared_ptr<Primitive>& primitive)
 {
     assert(m_meshBuilder);
-    if (auto p = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(plan.primitive()))
+    if (auto mesh = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(primitive))
     {
-        m_meshBuilder->hydrateMeshPrimitive(p, plan.dto());
+        m_meshBuilder->hydrateMeshPrimitive(mesh);
     }
 }
 
-std::shared_ptr<Primitive> RenderablePrimitiveBuilder::createMesh(const PrimitiveId& id)
+void RenderablePrimitiveBuilder::onPrimitiveConstituted(const Frameworks::IEventPtr& e)
 {
-    return std::make_shared<MeshPrimitive>(id);
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<PrimitiveConstituted, IEvent>(e);
+    if (!ev) return;
+    if (ev->primitive() == nullptr) return;
+    if (ev->primitive()->typeInfo().isDerived(MeshPrimitive::TYPE_RTTI))
+    {
+        std::lock_guard locker{ m_primitiveQueueLock };
+        m_queuedPrimitives.emplace(ev->primitive());
+        ev->primitive()->lazyStatus().changeStatus(LazyStatus::Status::InQueue);
+        m_needTick = true;
+    }
 }
 
-std::shared_ptr<Primitive> RenderablePrimitiveBuilder::constituteMesh(const PrimitiveId& id, const GenericDto& dto)
+void RenderablePrimitiveBuilder::onPrimitiveConstitutionFailed(const Frameworks::IEventPtr& e)
 {
-    assert(!m_geometryRepository.expired());
-    auto prim = std::make_shared<MeshPrimitive>(id);
-    auto disassembler = prim->disassembler();
-    disassembler->disassemble(dto);
-    prim->disassemble(disassembler);
-    std::lock_guard locker{ m_primitivePlansLock };
-    m_primitivePlans.emplace(PrimitiveHydratingPlan{ id, prim, dto });
-    prim->lazyStatus().changeStatus(LazyStatus::Status::InQueue);
-    m_needTick = true;
-    return prim;
+    if (!e) return;
+    const auto ev = std::dynamic_pointer_cast<PrimitiveConstitutionFailed, IEvent>(e);
+    if (!ev) return;
 }
 
-std::shared_ptr<Primitive> RenderablePrimitiveBuilder::createSkinMesh(const PrimitiveId& id)
-{
-    return std::make_shared<SkinMeshPrimitive>(id);
-}
-
-std::shared_ptr<Primitive> RenderablePrimitiveBuilder::constituteSkinMesh(const PrimitiveId& id, const GenericDto& dto)
-{
-    assert(!m_geometryRepository.expired());
-    auto prim = std::make_shared<SkinMeshPrimitive>(id);
-    auto disassembler = prim->disassembler();
-    disassembler->disassemble(dto);
-    prim->disassemble(disassembler);
-    std::lock_guard locker{ m_primitivePlansLock };
-    m_primitivePlans.emplace(PrimitiveHydratingPlan{ id, prim, dto });
-    prim->lazyStatus().changeStatus(LazyStatus::Status::InQueue);
-    m_needTick = true;
-    return prim;
-}
-
-std::shared_ptr<Primitive> RenderablePrimitiveBuilder::createModel(const PrimitiveId& id)
-{
-    return std::make_shared<ModelPrimitive>(id);
-}
-
-std::shared_ptr<Primitive> RenderablePrimitiveBuilder::constituteModel(const PrimitiveId& id, const GenericDto& dto)
-{
-    auto prim = std::make_shared<ModelPrimitive>(id);
-    auto disassembler = prim->disassembler();
-    disassembler->disassemble(dto);
-    prim->disassemble(disassembler);
-    return prim;
-}
-
-std::shared_ptr<Primitive> RenderablePrimitiveBuilder::createCustomMesh(const Primitives::PrimitiveId& id)
-{
-    assert(m_customMeshCreators.find(id.rtti().getName()) != m_customMeshCreators.end());
-    return m_customMeshCreators.at(id.rtti().getName())(id);
-}
-
-std::shared_ptr<Primitive> RenderablePrimitiveBuilder::constituteCustomMesh(const Primitives::PrimitiveId& id, const Engine::GenericDto& dto)
-{
-    assert(m_customMeshConstitutors.find(id.rtti().getName()) != m_customMeshConstitutors.end());
-    assert(!m_geometryRepository.expired());
-    auto prim = m_customMeshConstitutors.at(id.rtti().getName())(id, dto);
-    std::lock_guard locker{ m_primitivePlansLock };
-    m_primitivePlans.emplace(PrimitiveHydratingPlan{ id, prim, dto });
-    prim->lazyStatus().changeStatus(LazyStatus::Status::InQueue);
-    m_needTick = true;
-    return prim;
-}
-
-void RenderablePrimitiveBuilder::onPrimitiveHydrated(const IEventPtr& e)
+void RenderablePrimitiveBuilder::onMeshPrimitiveHydrated(const IEventPtr& e)
 {
     if (!e) return;
     if (!m_currentBuildingId) return;
@@ -180,11 +118,11 @@ void RenderablePrimitiveBuilder::onPrimitiveHydrated(const IEventPtr& e)
     }
 }
 
-void RenderablePrimitiveBuilder::onHydratePrimitiveFailed(const IEventPtr& e)
+void RenderablePrimitiveBuilder::onMeshPrimitiveHydrationFailed(const IEventPtr& e)
 {
     if (!e) return;
     if (!m_currentBuildingId) return;
-    if (const auto ev = std::dynamic_pointer_cast<MeshPrimitiveBuilder::HydrateMeshPrimitiveFailed, IEvent>(e))
+    if (const auto ev = std::dynamic_pointer_cast<MeshPrimitiveBuilder::MeshPrimitiveHydrationFailed, IEvent>(e))
     {
         if (ev->id() != m_currentBuildingId.value()) return;
         Platforms::Debug::ErrorPrintf("mesh primitive %s build failed : %s\n",

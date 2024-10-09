@@ -1,7 +1,7 @@
 [{
         "VertexFormat": {
             "Type": "String",
-            "Value": ""
+            "Value": "xyz_nor_tex2(2,2)"
         },
         "Id": {
             "Type": "String",
@@ -13,11 +13,11 @@
         },
         "IndexCapacity": {
             "Type": "Uint32",
-            "Value": 0
+            "Value": 600
         },
         "Segments": {
             "Type": "Uint32Array",
-            "Value": []
+            "Value": [0, 121, 0, 600]
         },
         "GeometryBound": {
             "Type": "DataObject",
@@ -30,19 +30,19 @@
         },
         "VertexCapacity": {
             "Type": "Uint32",
-            "Value": 0
+            "Value": 121
         },
         "VertexUsedCount": {
             "Type": "Uint32",
-            "Value": 0
+            "Value": 121
         },
         "IndexUsedCount": {
             "Type": "Uint32",
-            "Value": 0
+            "Value": 600
         },
         "Topology": {
             "Type": "Uint32",
-            "Value": 0
+            "Value": 4
         },
         "MinPosition": {
             "Type": "Vector3",

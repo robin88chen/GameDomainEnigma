@@ -29,7 +29,7 @@ namespace Enigma::Primitives
         std::shared_ptr<Primitive> create(const PrimitiveId& id, const Frameworks::Rtti& rtti);
         std::shared_ptr<Primitive> constitute(const PrimitiveId& id, const Engine::GenericDto& dto, bool is_persisted);
 
-        void registerPrimitiveFactory(const std::string& rtti, const PrimitiveCreator& creator, const PrimitiveConstitutor& constitutor);
+        void registerPrimitiveFactory(const std::string& rtti, const PrimitiveCreator& creator);
         void unregisterPrimitiveFactory(const std::string& rtti);
 
     private:
@@ -38,7 +38,6 @@ namespace Enigma::Primitives
 
     private:
         std::unordered_map<std::string, PrimitiveCreator> m_creators; // rtti name -> creator
-        std::unordered_map<std::string, PrimitiveConstitutor> m_constitutors; // rtti name -> constitutor
 
         Frameworks::CommandSubscriberPtr m_registerPrimitiveFactory;
         Frameworks::CommandSubscriberPtr m_unregisterPrimitiveFactory;

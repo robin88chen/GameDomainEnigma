@@ -26,11 +26,14 @@ namespace Enigma::Renderables
         SkinMeshPrimitive& operator=(const SkinMeshPrimitive&) = delete;
         SkinMeshPrimitive& operator=(SkinMeshPrimitive&&) = delete;
 
+        static std::shared_ptr<SkinMeshPrimitive> create(const Primitives::PrimitiveId& id);
+
         virtual std::shared_ptr<Primitives::PrimitiveAssembler> assembler() const override;
         virtual std::shared_ptr<Primitives::PrimitiveDisassembler> disassembler() const override;
         // assemble, disassemble is same with MeshPrimitive
 
         virtual void changeMaterials(const std::vector<std::shared_ptr<PrimitiveMaterial>>& materials) override;
+        virtual void rebindMaterials() override;
 
         void bindOwnerRootRefTransform(const MathLib::Matrix4& mx);
         const MathLib::Matrix4& getOwnerRootRefTransform() const { return m_ownerNodeRootRefTransform; }

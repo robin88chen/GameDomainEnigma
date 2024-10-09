@@ -25,16 +25,7 @@ GeometryRepository::GeometryRepository(Frameworks::ServiceManager* srv_manager, 
     m_factory = menew GeometryDataFactory();
     m_needTick = false;
 
-    m_factory->registerGeometryFactory(TriangleList::TYPE_RTTI.getName(),
-        [=](auto id) { return std::make_shared<TriangleList>(id); },
-        [=](auto id, auto o)
-        {
-            auto geometry = std::make_shared<TriangleList>(id);
-            auto disassembler = geometry->disassembler();
-            disassembler->disassemble(o);
-            geometry->disassemble(disassembler);
-            return geometry;
-        });
+    m_factory->registerGeometryFactory(TriangleList::TYPE_RTTI.getName(), TriangleList::create);
 }
 
 GeometryRepository::~GeometryRepository()
@@ -87,10 +78,10 @@ ServiceResult GeometryRepository::onTerm()
     return Frameworks::ServiceResult::Complete;
 }
 
-void GeometryRepository::registerGeometryFactory(const std::string& rtti_name, const GeometryCreator& creator, const GeometryConstitutor& constitutor)
+void GeometryRepository::registerGeometryFactory(const std::string& rtti_name, const GeometryCreator& creator)
 {
     assert(m_factory);
-    m_factory->registerGeometryFactory(rtti_name, creator, constitutor);
+    m_factory->registerGeometryFactory(rtti_name, creator);
 }
 
 bool GeometryRepository::hasGeometryData(const GeometryId& id)

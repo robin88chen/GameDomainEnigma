@@ -22,6 +22,11 @@ TriangleList::~TriangleList()
 {
 }
 
+std::shared_ptr<TriangleList> TriangleList::create(const GeometryId& id)
+{
+    return std::make_shared<TriangleList>(id);
+}
+
 std::shared_ptr<GeometryAssembler> TriangleList::assembler() const
 {
     return std::make_shared<TriangleListAssembler>(m_id);

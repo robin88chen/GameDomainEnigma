@@ -9,7 +9,7 @@
 #define _GEOMETRY_COMMANDS_H
 
 #include "Frameworks/Command.h"
-#include "GeometryDataFactory.h"
+#include "GeometryFactoryDelegate.h"
 
 namespace Enigma::Geometries
 {
@@ -41,22 +41,20 @@ namespace Enigma::Geometries
     class RegisterGeometryFactory : public Frameworks::ICommand
     {
     public:
-        RegisterGeometryFactory(const std::string& rtti, const GeometryCreator& creator, const GeometryConstitutor& constitutor)
-            : m_rtti(rtti), m_creator(creator), m_constitutor(constitutor) {}
+        RegisterGeometryFactory(const std::string& rtti, const GeometryCreator& creator)
+            : m_rtti(rtti), m_creator(creator) {}
 
         const std::string& rttiName() const { return m_rtti; }
         const GeometryCreator& creator() { return m_creator; }
-        const GeometryConstitutor& constitutor() { return m_constitutor; }
 
     private:
         std::string m_rtti;
         GeometryCreator m_creator;
-        GeometryConstitutor m_constitutor;
     };
-    class UnRegisterGeometryFactory : public Frameworks::ICommand
+    class UnregisterGeometryFactory : public Frameworks::ICommand
     {
     public:
-        UnRegisterGeometryFactory(const std::string& rtti) : m_rtti(rtti) {}
+        UnregisterGeometryFactory(const std::string& rtti) : m_rtti(rtti) {}
 
         const std::string& rttiName() const { return m_rtti; }
 

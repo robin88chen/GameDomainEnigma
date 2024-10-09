@@ -25,10 +25,10 @@ namespace Enigma::Primitives
         PrimitiveId m_id;
         std::shared_ptr<Primitive> m_primitive;
     };
-    class CreatePrimitiveFailed : public Frameworks::IEvent
+    class PrimitiveCreationFailed : public Frameworks::IEvent
     {
     public:
-        CreatePrimitiveFailed(const PrimitiveId& id, std::error_code er) :
+        PrimitiveCreationFailed(const PrimitiveId& id, std::error_code er) :
             m_id(id), m_error(er) {};
         const PrimitiveId& id() { return m_id; }
         std::error_code error() const { return m_error; }
@@ -49,10 +49,10 @@ namespace Enigma::Primitives
         std::shared_ptr<Primitive> m_primitive;
         bool m_is_persisted;
     };
-    class ConstitutePrimitiveFailed : public Frameworks::IEvent
+    class PrimitiveConstitutionFailed : public Frameworks::IEvent
     {
     public:
-        ConstitutePrimitiveFailed(const PrimitiveId& id, std::error_code er) :
+        PrimitiveConstitutionFailed(const PrimitiveId& id, std::error_code er) :
             m_id(id), m_error(er) {};
         const PrimitiveId& id() { return m_id; }
         std::error_code error() const { return m_error; }

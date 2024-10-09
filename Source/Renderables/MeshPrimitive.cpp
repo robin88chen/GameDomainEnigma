@@ -2,7 +2,6 @@
 #include "MeshPrimitiveAssembler.h"
 #include "GameEngine/EffectMaterial.h"
 #include "GameEngine/EffectMaterialSource.h"
-#include "GameEngine/Texture.h"
 #include "GraphicKernel/IShaderVariable.h"
 #include "GameEngine/RenderBuffer.h"
 #include "Geometries/GeometryData.h"
@@ -38,6 +37,11 @@ MeshPrimitive::~MeshPrimitive()
     m_materials.clear();
 }
 
+std::shared_ptr<MeshPrimitive> MeshPrimitive::create(const Primitives::PrimitiveId& id)
+{
+    return std::make_shared<MeshPrimitive>(id);
+}
+
 std::shared_ptr<Enigma::Primitives::PrimitiveAssembler> MeshPrimitive::assembler() const
 {
     return std::make_shared<MeshPrimitiveAssembler>(m_id.origin());
@@ -51,8 +55,9 @@ void MeshPrimitive::assemble(const std::shared_ptr<Primitives::PrimitiveAssemble
     if (m_geometry)
     {
         mesh_assembler->geometryId(m_geometry->id());
-        if ((m_geometry->factoryDesc().GetInstanceType() == FactoryDesc::InstanceType::Native)
-            || (m_geometry->factoryDesc().GetInstanceType() == FactoryDesc::InstanceType::ResourceAsset))
+        //if ((m_geometry->factoryDesc().instanceType() == FactoryDesc::InstanceType::Native)
+          //  || (m_geometry->factoryDesc().instanceType() == FactoryDesc::InstanceType::ResourceAsset))
+        if (m_geometry->factoryDesc().instanceType() == FactoryDesc::InstanceType::Native) // only native geometry need to be assembled
         {
             mesh_assembler->geometry(m_geometry);
         }
@@ -108,6 +113,12 @@ void MeshPrimitive::changeMaterials(const std::vector<std::shared_ptr<PrimitiveM
 {
     loosePrimitiveMaterials();
     m_materials = materials;
+    bindPrimitiveMaterials();
+}
+
+void MeshPrimitive::rebindMaterials()
+{
+    loosePrimitiveMaterials();
     bindPrimitiveMaterials();
 }
 

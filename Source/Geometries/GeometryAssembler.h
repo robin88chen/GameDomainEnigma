@@ -22,7 +22,6 @@
 #include <vector>
 #include <string>
 
-
 namespace Enigma::Geometries
 {
     class GeometryAssembler
@@ -113,7 +112,7 @@ namespace Enigma::Geometries
         [[nodiscard]] const std::optional<std::vector<MathLib::Vector3>>& normals() const { return m_normals; }
         [[nodiscard]] const std::optional<std::vector<MathLib::Vector4>>& diffuseColors() const { return m_diffuseColors; }
         [[nodiscard]] const std::optional<std::vector<MathLib::Vector4>>& specularColors() const { return m_specularColors; }
-        [[nodiscard]] const std::optional<std::vector<TextureCoordinateDisassembler>>& textureCoordinates() const { return m_textureCoordinates; }
+        [[nodiscard]] const std::optional<std::vector<DimensionalTextureCoordinate>>& textureCoordinates() const { return m_textureCoordinates; }
         [[nodiscard]] const std::optional<std::vector<unsigned>>& paletteIndices() const { return m_paletteIndices; }
         [[nodiscard]] const std::optional<std::vector<float>>& weights() const { return m_weights; }
         [[nodiscard]] const std::optional<std::vector<MathLib::Vector4>>& tangents() const { return m_tangents; }
@@ -138,7 +137,7 @@ namespace Enigma::Geometries
         std::optional<std::vector<MathLib::Vector3>> m_normals;
         std::optional<std::vector<MathLib::Vector4>> m_diffuseColors;
         std::optional<std::vector<MathLib::Vector4>> m_specularColors;
-        std::optional<std::vector<TextureCoordinateDisassembler>> m_textureCoordinates;
+        std::optional<std::vector<DimensionalTextureCoordinate>> m_textureCoordinates;
         std::optional<std::vector<unsigned>> m_paletteIndices;
         std::optional<std::vector<float>> m_weights;
         std::optional<std::vector<MathLib::Vector4>> m_tangents;

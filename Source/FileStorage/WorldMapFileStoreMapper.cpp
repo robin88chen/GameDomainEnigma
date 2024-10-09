@@ -240,14 +240,14 @@ std::error_code WorldMapFileStoreMapper::serializeDataTransferObjects(const std:
 
 std::string WorldMapFileStoreMapper::extractWorldFilename(const WorldMap::WorldMapId& id, const Engine::FactoryDesc& factory_desc)
 {
-    if (!factory_desc.GetDeferredFilename().empty()) return factory_desc.GetDeferredFilename();
-    if (!factory_desc.GetResourceFilename().empty()) return factory_desc.GetResourceFilename();
+    if (!factory_desc.deferredFilename().empty()) return factory_desc.deferredFilename();
+    if (!factory_desc.resourceFilename().empty()) return factory_desc.resourceFilename();
     return id.name() + ".json";
 }
 
 std::string WorldMapFileStoreMapper::extractQuadRootFilename(const WorldMap::QuadTreeRootId& id, const Engine::FactoryDesc& factory_desc)
 {
-    if (!factory_desc.GetDeferredFilename().empty()) return factory_desc.GetDeferredFilename();
-    if (!factory_desc.GetResourceFilename().empty()) return factory_desc.GetResourceFilename();
+    if (!factory_desc.deferredFilename().empty()) return factory_desc.deferredFilename();
+    if (!factory_desc.resourceFilename().empty()) return factory_desc.resourceFilename();
     return id.name() + ".json";
 }

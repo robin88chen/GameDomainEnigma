@@ -24,6 +24,8 @@ namespace Enigma::Terrain
         TerrainGeometry(TerrainGeometry&&) = delete;
         TerrainGeometry& operator=(TerrainGeometry&&) = delete;
 
+        static std::shared_ptr<TerrainGeometry> create(const Geometries::GeometryId& id);
+
         virtual std::shared_ptr<Geometries::GeometryAssembler> assembler() const override;
         virtual void assemble(const std::shared_ptr<Geometries::GeometryAssembler>& assembler) const override;
         virtual std::shared_ptr<Geometries::GeometryDisassembler> disassembler() override;

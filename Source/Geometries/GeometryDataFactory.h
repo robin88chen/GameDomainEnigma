@@ -29,7 +29,7 @@ namespace Enigma::Geometries
         std::shared_ptr<GeometryData> create(const GeometryId& id, const Frameworks::Rtti& rtti);
         std::shared_ptr<GeometryData> constitute(const GeometryId& id, const Engine::GenericDto& dto, bool is_persisted);
 
-        void registerGeometryFactory(const std::string& rtti_name, const GeometryCreator& creator, const GeometryConstitutor& constitutor);
+        void registerGeometryFactory(const std::string& rtti_name, const GeometryCreator& creator);
         void unregisterGeometryFactory(const std::string& rtti_name);
 
     private:
@@ -38,7 +38,6 @@ namespace Enigma::Geometries
 
     private:
         std::unordered_map<std::string, GeometryCreator> m_creators; // rtti name -> creator
-        std::unordered_map<std::string, GeometryConstitutor> m_constitutors; // rtti name -> constitutor
 
         Frameworks::CommandSubscriberPtr m_registerGeometryFactory;
         Frameworks::CommandSubscriberPtr m_unregisterGeometryFactory;

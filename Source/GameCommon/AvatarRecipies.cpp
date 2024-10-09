@@ -8,7 +8,6 @@
 #include "GameEngine/Texture.h"
 #include "GameEngine/TextureCommands.h"
 #include "GameEngine/TextureEvents.h"
-#include "GameEngine/TextureQueries.h"
 #include "Platforms/PlatformLayer.h"
 #include "Renderables/ModelPrimitive.h"
 #include "Renderables/PrimitiveMaterial.h"
@@ -179,7 +178,7 @@ void ReplaceAvatarMaterial::replaceNewMeshMaterialInSegment(const std::shared_pt
     mesh->createRenderElements();
     if (!m_primitive.expired())
     {
-        m_primitive.lock()->selectVisualTechnique(m_primitive.lock()->getSelectedVisualTechnique());
+        m_primitive.lock()->selectVisualTechnique(m_primitive.lock()->visualTechniqueSelection());
     }
 }
 

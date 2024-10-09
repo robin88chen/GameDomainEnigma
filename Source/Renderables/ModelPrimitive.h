@@ -36,6 +36,8 @@ namespace Enigma::Renderables
         ModelPrimitive& operator=(const ModelPrimitive& prim) = delete;
         ModelPrimitive& operator=(ModelPrimitive&& prim) = delete;
 
+        static std::shared_ptr<ModelPrimitive> create(const Primitives::PrimitiveId& id);
+
         virtual std::shared_ptr<Primitives::PrimitiveAssembler> assembler() const override;
         virtual void assemble(const std::shared_ptr<Primitives::PrimitiveAssembler>& assembler) const override;
         virtual std::shared_ptr<Primitives::PrimitiveDisassembler> disassembler() const override;

@@ -1,5 +1,4 @@
 ﻿#include "SpatialAssembler.h"
-
 #include "Culler.h"
 #include "GameEngine/BoundingVolumeAssembler.h"
 
@@ -24,7 +23,7 @@ void SpatialAssembler::factory(const Engine::FactoryDesc& factory)
 {
     m_factoryDesc = factory;
     //! 不可因為設 factory 而失去原本的 native file path
-    if ((m_persistFilename) && (m_persistPathId)) m_factoryDesc.ClaimAsNative(m_persistFilename.value(), m_persistPathId.value());
+    if ((m_persistFilename) && (m_persistPathId)) m_factoryDesc.claimAsNative(m_persistFilename.value(), m_persistPathId.value());
 }
 
 void SpatialAssembler::localTransform(const MathLib::Matrix4& local_transform)
@@ -65,7 +64,7 @@ void SpatialAssembler::persist(const std::string& filename, const std::string& p
 {
     m_persistFilename = filename;
     m_persistPathId = path_id;
-    m_factoryDesc.ClaimAsNative(filename, path_id);
+    m_factoryDesc.claimAsNative(filename, path_id);
 }
 
 Enigma::Engine::GenericDto SpatialAssembler::assemble() const

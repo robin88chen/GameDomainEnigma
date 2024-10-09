@@ -42,7 +42,7 @@ namespace Enigma::Geometries
         /// On Term
         virtual Frameworks::ServiceResult onTerm() override;
 
-        void registerGeometryFactory(const std::string& rtti_name, const GeometryCreator& creator, const GeometryConstitutor& constitutor);
+        void registerGeometryFactory(const std::string& rtti_name, const GeometryCreator& creator);
 
         bool hasGeometryData(const GeometryId& id);
         std::shared_ptr<GeometryData> queryGeometryData(const GeometryId& id);

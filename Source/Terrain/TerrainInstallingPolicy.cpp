@@ -1,6 +1,4 @@
 ﻿#include "TerrainInstallingPolicy.h"
-#include "TerrainGeometryFactoryMethods.h"
-#include "TerrainPrimitiveFactoryMethods.h"
 #include "Frameworks/ServiceManager.h"
 #include "Renderables/RenderableErrors.h"
 #include "TerrainGeometry.h"
@@ -21,9 +19,10 @@ error TerrainInstallingPolicy::install(Frameworks::ServiceManager* service_manag
     assert(service_manager);
     //Frameworks::CommandBus::enqueue(std::make_shared<SceneGraph::RegisterSpatialDtoFactory>(TerrainPawn::TYPE_RTTI.name(),
       //  [](auto o) { return new TerrainPawn(o); }));
-    auto geometry_repository = service_manager->getSystemServiceAs<Enigma::Geometries::GeometryRepository>();
-    assert(geometry_repository);
-    geometry_repository->registerGeometryFactory(TerrainGeometry::TYPE_RTTI.getName(), createTerrainGeometry, constituteTerrainGeometry);
+    //auto geometry_repository = service_manager->getSystemServiceAs<Enigma::Geometries::GeometryRepository>();
+    //assert(geometry_repository);
+    //geometry_repository->registerGeometryFactory(TerrainGeometry::TYPE_RTTI.getName(), createTerrainGeometry, constituteTerrainGeometry);
+    std::make_shared<Geometries::RegisterGeometryFactory>(TerrainGeometry::TYPE_RTTI.getName(), TerrainGeometry::create)->execute();
     std::make_shared<Enigma::Primitives::RegisterPrimitiveFactory>(TerrainPrimitive::TYPE_RTTI.getName(), TerrainPrimitive::create)->execute();
     //auto renderable_builder = service_manager->getSystemServiceAs<RenderablePrimitiveBuilder>();
     //assert(renderable_builder);
@@ -38,7 +37,8 @@ error TerrainInstallingPolicy::shutdown(Frameworks::ServiceManager* service_mana
 {
     assert(service_manager);
     std::make_shared<Enigma::Primitives::UnregisterPrimitiveFactory>(TerrainPrimitive::TYPE_RTTI.getName())->execute();
+    std::make_shared<Geometries::UnregisterGeometryFactory>(TerrainGeometry::TYPE_RTTI.getName())->execute();
     //Frameworks::CommandBus::enqueue(std::make_shared<SceneGraph::UnRegisterSpatialDtoFactory>(TerrainPawn::TYPE_RTTI.name()));
-    Frameworks::CommandBus::enqueue(std::make_shared<Enigma::Geometries::UnRegisterGeometryFactory>(TerrainGeometry::TYPE_RTTI.getName()));
+    //Frameworks::CommandBus::enqueue(std::make_shared<Enigma::Geometries::UnRegisterGeometryFactory>(TerrainGeometry::TYPE_RTTI.getName()));
     return ErrorCode::ok;
 }

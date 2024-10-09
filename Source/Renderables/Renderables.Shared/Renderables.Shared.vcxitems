@@ -68,7 +68,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelPrimitive.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveAnimator.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\ModelPrimitiveRay3IntersectionFinder.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\PrimitiveHydratingPlan.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderableBoundFilter.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderableEvents.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\RenderablePrimitiveBuilder.h" />

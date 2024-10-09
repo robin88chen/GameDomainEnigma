@@ -45,16 +45,17 @@ ServiceResult RenderablePrimitiveBuilder::onInit()
 ServiceResult RenderablePrimitiveBuilder::onTick()
 {
     if (m_currentBuildingId.has_value()) return ServiceResult::Pendding;
-    std::lock_guard locker{ m_primitivePlansLock };
-    if (m_primitivePlans.empty())
+    std::lock_guard locker{ m_primitiveQueueLock };
+    if (m_queuedPrimitives.empty())
     {
         m_needTick = false;
         return ServiceResult::Pendding;
     }
-    const auto plan = m_primitivePlans.front();
-    hydrateRenderablePrimitive(plan);
-    m_currentBuildingId = plan.id();
-    m_primitivePlans.pop();
+    const auto primitive = m_queuedPrimitives.front();
+    m_queuedPrimitives.pop();
+    if (!primitive) return ServiceResult::Pendding;
+    hydrateRenderablePrimitive(primitive);
+    m_currentBuildingId = primitive->id();
     return ServiceResult::Pendding;
 }
 
@@ -74,12 +75,12 @@ ServiceResult RenderablePrimitiveBuilder::onTerm()
     return ServiceResult::Complete;
 }
 
-void RenderablePrimitiveBuilder::hydrateRenderablePrimitive(const PrimitiveHydratingPlan& plan)
+void RenderablePrimitiveBuilder::hydrateRenderablePrimitive(const std::shared_ptr<Primitive>& primitive)
 {
     assert(m_meshBuilder);
-    if (auto p = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(plan.primitive()))
+    if (auto mesh = std::dynamic_pointer_cast<MeshPrimitive, Primitive>(primitive))
     {
-        m_meshBuilder->hydrateMeshPrimitive(p);
+        m_meshBuilder->hydrateMeshPrimitive(mesh);
     }
 }
 
@@ -91,8 +92,8 @@ void RenderablePrimitiveBuilder::onPrimitiveConstituted(const Frameworks::IEvent
     if (ev->primitive() == nullptr) return;
     if (ev->primitive()->typeInfo().isDerived(MeshPrimitive::TYPE_RTTI))
     {
-        std::lock_guard locker{ m_primitivePlansLock };
-        m_primitivePlans.emplace(PrimitiveHydratingPlan{ ev->id(), ev->primitive() });
+        std::lock_guard locker{ m_primitiveQueueLock };
+        m_queuedPrimitives.emplace(ev->primitive());
         ev->primitive()->lazyStatus().changeStatus(LazyStatus::Status::InQueue);
         m_needTick = true;
     }

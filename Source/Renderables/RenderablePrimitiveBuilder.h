@@ -14,7 +14,6 @@
 #include "Primitives/PrimitiveId.h"
 #include "Geometries/GeometryRepository.h"
 #include "Primitives/PrimitiveRepository.h"
-#include "PrimitiveHydratingPlan.h"
 #include <queue>
 #include <mutex>
 #include <system_error>
@@ -42,7 +41,7 @@ namespace Enigma::Renderables
         virtual Frameworks::ServiceResult onTerm() override;
 
     protected:
-        void hydrateRenderablePrimitive(const PrimitiveHydratingPlan& plan);
+        void hydrateRenderablePrimitive(const std::shared_ptr<Primitives::Primitive>& plan);
 
         void onPrimitiveConstituted(const Frameworks::IEventPtr& e);
         void onPrimitiveConstitutionFailed(const Frameworks::IEventPtr& e);
@@ -52,8 +51,8 @@ namespace Enigma::Renderables
     protected:
         std::weak_ptr<Primitives::PrimitiveRepository> m_primitiveRepository;
         std::weak_ptr<Geometries::GeometryRepository> m_geometryRepository;
-        std::queue<PrimitiveHydratingPlan> m_primitivePlans;
-        std::mutex m_primitivePlansLock;
+        std::queue<std::shared_ptr<Primitives::Primitive>> m_queuedPrimitives;
+        std::mutex m_primitiveQueueLock;
         std::optional<Primitives::PrimitiveId> m_currentBuildingId;
 
         Frameworks::EventSubscriberPtr m_onPrimitiveConstituted;

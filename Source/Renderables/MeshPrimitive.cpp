@@ -2,7 +2,6 @@
 #include "MeshPrimitiveAssembler.h"
 #include "GameEngine/EffectMaterial.h"
 #include "GameEngine/EffectMaterialSource.h"
-#include "GameEngine/Texture.h"
 #include "GraphicKernel/IShaderVariable.h"
 #include "GameEngine/RenderBuffer.h"
 #include "Geometries/GeometryData.h"

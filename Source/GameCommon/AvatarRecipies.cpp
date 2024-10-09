@@ -8,7 +8,6 @@
 #include "GameEngine/Texture.h"
 #include "GameEngine/TextureCommands.h"
 #include "GameEngine/TextureEvents.h"
-#include "GameEngine/TextureQueries.h"
 #include "Platforms/PlatformLayer.h"
 #include "Renderables/ModelPrimitive.h"
 #include "Renderables/PrimitiveMaterial.h"

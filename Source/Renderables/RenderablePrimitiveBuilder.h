@@ -18,7 +18,6 @@
 #include <queue>
 #include <mutex>
 #include <system_error>
-#include <functional>
 
 namespace Enigma::Renderables
 {
@@ -42,18 +41,7 @@ namespace Enigma::Renderables
         virtual Frameworks::ServiceResult onTick() override;
         virtual Frameworks::ServiceResult onTerm() override;
 
-        //void registerCustomMeshFactory(const std::string& rtti, const CustomMeshCreator creator, const CustomMeshConstitutor& constitutor);
-
     protected:
-        /*std::shared_ptr<Primitives::Primitive> createMesh(const Primitives::PrimitiveId& id);
-        std::shared_ptr<Primitives::Primitive> constituteMesh(const Primitives::PrimitiveId& id, const Engine::GenericDto& dto);
-        std::shared_ptr<Primitives::Primitive> createSkinMesh(const Primitives::PrimitiveId& id);
-        std::shared_ptr<Primitives::Primitive> constituteSkinMesh(const Primitives::PrimitiveId& id, const Engine::GenericDto& dto);
-        std::shared_ptr<Primitives::Primitive> createModel(const Primitives::PrimitiveId& id);
-        std::shared_ptr<Primitives::Primitive> constituteModel(const Primitives::PrimitiveId& id, const Engine::GenericDto& dto);
-        std::shared_ptr<Primitives::Primitive> createCustomMesh(const Primitives::PrimitiveId& id);
-        std::shared_ptr<Primitives::Primitive> constituteCustomMesh(const Primitives::PrimitiveId& id, const Engine::GenericDto& dto);*/
-
         void hydrateRenderablePrimitive(const PrimitiveHydratingPlan& plan);
 
         void onPrimitiveConstituted(const Frameworks::IEventPtr& e);
@@ -67,9 +55,6 @@ namespace Enigma::Renderables
         std::queue<PrimitiveHydratingPlan> m_primitivePlans;
         std::mutex m_primitivePlansLock;
         std::optional<Primitives::PrimitiveId> m_currentBuildingId;
-
-        //std::unordered_map<std::string, CustomMeshCreator> m_customMeshCreators;
-        //std::unordered_map<std::string, CustomMeshConstitutor> m_customMeshConstitutors;
 
         Frameworks::EventSubscriberPtr m_onPrimitiveConstituted;
         Frameworks::EventSubscriberPtr m_onPrimitiveConstitutionFailed;

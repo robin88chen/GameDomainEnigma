@@ -22,7 +22,6 @@
 #include <vector>
 #include <string>
 
-
 namespace Enigma::Geometries
 {
     class GeometryAssembler

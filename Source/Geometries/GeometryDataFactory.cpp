@@ -7,7 +7,6 @@
 #include "Frameworks/CommandBus.h"
 #include "GeometryDataQueries.h"
 #include "GeometryAssembler.h"
-#include "Frameworks/QueryDispatcher.h"
 
 using namespace Enigma::Geometries;
 using namespace Enigma::Engine;

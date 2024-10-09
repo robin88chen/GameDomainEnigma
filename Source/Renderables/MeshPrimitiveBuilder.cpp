@@ -38,8 +38,6 @@ void MeshPrimitiveBuilder::hydrateMeshPrimitive(const std::shared_ptr<MeshPrimit
 {
     Platforms::Debug::Printf("hydrating mesh primitive %s\n", mesh->id().name().c_str());
     cleanupBuildingMeta();
-    //m_buildingDisassembler = std::make_shared<MeshPrimitiveDisassembler>();
-    //m_buildingDisassembler->disassemble(dto);
     m_buildingId = mesh->id();
     m_builtPrimitive = mesh;
     m_builtGeometry = mesh->getGeometryData();
@@ -63,8 +61,6 @@ void MeshPrimitiveBuilder::hydrateMeshPrimitive(const std::shared_ptr<MeshPrimit
 void MeshPrimitiveBuilder::onRenderBufferBuilt(const Frameworks::IEventPtr& e)
 {
     Platforms::Debug::Printf("on render buffer built of mesh %s\n", m_buildingId.name().c_str());
-    //if (!m_metaDisassembler) return;
-    //if (!m_buildingDisassembler) return;
     if (!m_builtGeometry) return;
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<RenderBufferBuilt, IEvent>(e);
@@ -89,7 +85,6 @@ void MeshPrimitiveBuilder::onRenderBufferBuilt(const Frameworks::IEventPtr& e)
 void MeshPrimitiveBuilder::onBuildRenderBufferFailed(const Frameworks::IEventPtr& e)
 {
     Platforms::Debug::Printf("on render buffer build failure of mesh %s\n", m_buildingId.name().c_str());
-    //if (!m_buildingDisassembler) return;
     if (!m_builtGeometry) return;
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<BuildRenderBufferFailed, IEvent>(e);
@@ -104,7 +99,6 @@ void MeshPrimitiveBuilder::onPrimitiveMaterialHydrated(const Frameworks::IEventP
     //!? 發生奇怪的bug, 兩個 dto 是 empty, 卻沒有return, 一路走到 found_idx 出錯, ev的 id 與 builtEffects 也不符
     //!? 真正原因: render buffer 比 material 晚完成，所以這時候 builtEffects 還是空的，index 就出錯了
     Platforms::Debug::Printf("on material hydrated of mesh %s\n", m_buildingId.name().c_str());
-    //if (!m_buildingDisassembler) return;
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<PrimitiveMaterialHydrated>(e);
     if (!ev) return;
@@ -114,7 +108,6 @@ void MeshPrimitiveBuilder::onPrimitiveMaterialHydrated(const Frameworks::IEventP
 void MeshPrimitiveBuilder::onPrimitiveMaterialHydrationFailed(const Frameworks::IEventPtr& e)
 {
     Platforms::Debug::Printf("on material hydrated failure of mesh %s\n", m_buildingId.name().c_str());
-    //if (!m_buildingDisassembler) return;
     if (!e) return;
     const auto ev = std::dynamic_pointer_cast<PrimitiveMaterialHydrationFailed>(e);
     if (!ev) return;
@@ -124,7 +117,6 @@ void MeshPrimitiveBuilder::onPrimitiveMaterialHydrationFailed(const Frameworks::
 
 void MeshPrimitiveBuilder::tryCompletingMesh()
 {
-    //if (!m_buildingDisassembler) return;
     if (!m_builtPrimitive) return;
     if (!m_builtGeometry) return;
     if (!m_builtRenderBuffer) return;
@@ -132,12 +124,9 @@ void MeshPrimitiveBuilder::tryCompletingMesh()
     {
         if (!mat->lazyStatus().isReady()) return;
     }
-    //m_builtPrimitive->changeMaterials(m_buildingDisassembler->materials());
     m_builtPrimitive->createRenderElements();
     m_builtPrimitive->rebindMaterials();
     m_builtPrimitive->selectVisualTechnique(m_builtPrimitive->visualTechniqueSelection());
-    //m_builtPrimitive->renderListId() = m_buildingDisassembler->renderListID();
-    //m_builtPrimitive->selectVisualTechnique(m_buildingDisassembler->visualTechniqueSelection());
     m_builtPrimitive->lazyStatus().changeStatus(LazyStatus::Status::Ready);
     EventPublisher::enqueue(std::make_shared<MeshPrimitiveHydrated>(m_buildingId, m_buildingId.name(), m_builtPrimitive));
 
@@ -167,6 +156,5 @@ void MeshPrimitiveBuilder::cleanupBuildingMeta()
     m_builtRenderBuffer = nullptr;
     m_builtGeometry = nullptr;
     m_builtPrimitive = nullptr;
-    //m_buildingDisassembler = nullptr;
     m_buildingId = Primitives::PrimitiveId();
 }

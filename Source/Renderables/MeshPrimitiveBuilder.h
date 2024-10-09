@@ -10,10 +10,8 @@
 
 #include "Geometries/GeometryData.h"
 #include "GameEngine/RenderBuffer.h"
-#include "GameEngine/EffectMaterial.h"
 #include "Frameworks/EventSubscriber.h"
 #include "Primitives/PrimitiveId.h"
-#include "GameEngine/TextureId.h"
 #include <memory>
 
 namespace Enigma::Renderables
@@ -79,7 +77,6 @@ namespace Enigma::Renderables
 
     protected:
         Primitives::PrimitiveId m_buildingId;
-        //std::shared_ptr<MeshPrimitiveDisassembler> m_buildingDisassembler;
 
         std::shared_ptr<MeshPrimitive> m_builtPrimitive;
         std::shared_ptr<Geometries::GeometryData> m_builtGeometry;

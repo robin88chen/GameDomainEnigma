@@ -44,8 +44,6 @@ ServiceResult PrimitiveRepository::onInit()
     QueryDispatcher::subscribe(typeid(RequestPrimitiveCreation), m_requestPrimitiveCreation);
     m_requestPrimitiveConstitution = std::make_shared<QuerySubscriber>([=](const IQueryPtr& r) { requestPrimitiveConstitution(r); });
     QueryDispatcher::subscribe(typeid(RequestPrimitiveConstitution), m_requestPrimitiveConstitution);
-    //m_queryPrimitiveDto = std::make_shared<QuerySubscriber>([=](const IQueryPtr& q) { queryPrimitiveDto(q); });
-    //QueryDispatcher::subscribe(typeid(QueryPrimitiveDto), m_queryPrimitiveDto);
 
     m_putPrimitive = std::make_shared<CommandSubscriber>([=](const ICommandPtr& c) { putPrimitive(c); });
     CommandBus::subscribe(typeid(PutPrimitive), m_putPrimitive);
@@ -72,8 +70,6 @@ ServiceResult PrimitiveRepository::onTerm()
     m_requestPrimitiveCreation = nullptr;
     QueryDispatcher::unsubscribe(typeid(RequestPrimitiveConstitution), m_requestPrimitiveConstitution);
     m_requestPrimitiveConstitution = nullptr;
-    //QueryDispatcher::unsubscribe(typeid(QueryPrimitiveDto), m_queryPrimitiveDto);
-    //m_queryPrimitiveDto = nullptr;
 
     CommandBus::unsubscribe(typeid(PutPrimitive), m_putPrimitive);
     m_putPrimitive = nullptr;
@@ -145,19 +141,6 @@ void PrimitiveRepository::putPrimitive(const PrimitiveId& id, const std::shared_
     }
 }
 
-/*std::optional<Enigma::Engine::GenericDto> PrimitiveRepository::queryPrimitiveDto(const PrimitiveId& id)
-{
-    if (!hasPrimitive(id)) return std::nullopt;
-    if (auto cached_prim = findCachedPrimitive(id))
-    {
-        std::shared_ptr<PrimitiveAssembler> assembler = cached_prim->assembler();
-        cached_prim->assemble(assembler);
-        return assembler->assemble();
-    }
-    assert(m_storeMapper);
-    return m_storeMapper->queryPrimitive(id.origin());
-}*/
-
 std::uint64_t PrimitiveRepository::nextSequenceNumber()
 {
     assert(m_storeMapper);
@@ -214,14 +197,6 @@ void PrimitiveRepository::requestPrimitiveConstitution(const Frameworks::IQueryP
     m_primitives.insert_or_assign(request->id(), primitive);
     request->setResult(primitive);
 }
-
-/*void PrimitiveRepository::queryPrimitiveDto(const Frameworks::IQueryPtr& q)
-{
-    if (!q) return;
-    const auto query = std::dynamic_pointer_cast<QueryPrimitiveDto>(q);
-    assert(query);
-    query->setResult(queryPrimitiveDto(query->id()));
-}*/
 
 void PrimitiveRepository::putPrimitive(const ICommandPtr& c)
 {

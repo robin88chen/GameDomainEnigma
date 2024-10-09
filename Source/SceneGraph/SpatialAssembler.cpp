@@ -1,5 +1,4 @@
 ﻿#include "SpatialAssembler.h"
-
 #include "Culler.h"
 #include "GameEngine/BoundingVolumeAssembler.h"
 

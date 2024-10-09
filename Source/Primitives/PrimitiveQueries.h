@@ -58,14 +58,6 @@ namespace Enigma::Primitives
         PrimitiveId m_id;
         Engine::GenericDto m_dto;
     };
-    /*class QueryPrimitiveDto : public Frameworks::Query<std::optional<Engine::GenericDto>>
-    {
-    public:
-        QueryPrimitiveDto(const PrimitiveId& id) : m_id(id) {}
-        const PrimitiveId& id() { return m_id; }
-    protected:
-        PrimitiveId m_id;
-    };*/
 }
 
 #endif // PRIMITIVE_QUERIES_H

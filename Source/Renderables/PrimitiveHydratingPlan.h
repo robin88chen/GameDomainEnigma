@@ -27,12 +27,10 @@ namespace Enigma::Renderables
 
         const Primitives::PrimitiveId& id() const { return m_id; }
         const std::shared_ptr<Primitives::Primitive>& primitive() const { return m_primitive; }
-        //const Engine::GenericDto& dto() const { return m_dto; }
 
     protected:
         Primitives::PrimitiveId m_id;
         std::shared_ptr<Primitives::Primitive> m_primitive;
-        //Engine::GenericDto m_dto;
     };
 }
 

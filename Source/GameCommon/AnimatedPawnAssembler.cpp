@@ -99,22 +99,3 @@ void AnimatedPawnDisassembler::disassemble(const Engine::GenericDto& dto)
     }
 }
 
-/*AnimatedPawnDto AnimatedPawnAssembler::toAnimatedPawnDto()
-{
-    AnimatedPawnDto pawn_dto(m_pawnAssembler.toGenericDto());
-    pawn_dto.id(m_dto.id());
-    pawn_dto.animationClipMapDto() = m_dto.animationClipMapDto();
-    pawn_dto.factoryDesc(m_dto.factoryDesc());
-    return pawn_dto;
-}
-
-Enigma::Engine::GenericDto AnimatedPawnAssembler::toGenericDto()
-{
-    return toAnimatedPawnDto().toGenericDto();
-}
-
-std::shared_ptr<AnimatedPawn> AnimatedPawnAssembler::constitute()
-{
-    return std::dynamic_pointer_cast<AnimatedPawn>(std::make_shared<RequestSpatialConstitution>(m_id, toGenericDto())->dispatch());
-}*/
-

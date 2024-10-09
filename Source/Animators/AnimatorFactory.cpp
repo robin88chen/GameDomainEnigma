@@ -3,7 +3,6 @@
 #include "Frameworks/CommandBus.h"
 #include "Frameworks/EventPublisher.h"
 #include "AnimatorEvents.h"
-#include "Frameworks/QueryDispatcher.h"
 #include "AnimatorQueries.h"
 #include "Platforms/PlatformLayer.h"
 #include "AnimatorErrors.h"

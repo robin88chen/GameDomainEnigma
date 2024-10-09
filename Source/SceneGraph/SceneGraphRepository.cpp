@@ -23,9 +23,8 @@
 #include "CameraAssembler.h"
 #include "SpatialAssembler.h"
 #include "PawnAssembler.h"
-#include <cassert>
-
 #include "LazyNodeAssembler.h"
+#include <cassert>
 
 using namespace Enigma::SceneGraph;
 using namespace Enigma::Frameworks;

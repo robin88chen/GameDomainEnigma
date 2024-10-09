@@ -136,6 +136,9 @@
     <ClCompile Include="AssetsBrowsePanel.cpp">
       <Filter>Forms</Filter>
     </ClCompile>
+    <ClCompile Include="PrimitiveFileStoreMapper.cpp">
+      <Filter>FileStorages</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SchemeColorDef.h">
@@ -255,6 +258,9 @@
     </ClInclude>
     <ClInclude Include="AssetIdCombo.h">
       <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="PrimitiveFileStoreMapper.h">
+      <Filter>FileStorages</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

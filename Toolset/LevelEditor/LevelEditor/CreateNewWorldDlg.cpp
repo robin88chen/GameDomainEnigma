@@ -4,13 +4,11 @@
 #include "WorldMap/WorldMap.h"
 #include "Frameworks/CommandBus.h"
 #include "WorldMap/WorldMapQueries.h"
-#include "WorldMap/WorldMapDto.h"
 #include "WorldMap/WorldMapCommands.h"
 #include "Platforms/PlatformLayer.h"
 #include "Platforms/MemoryMacro.h"
 #include "WorldEditConsole.h"
 #include "SceneGraph/OutRegionNode.h"
-#include "SceneGraph/SceneGraphAssemblers.h"
 #include "SceneGraph/SceneGraphCommands.h"
 #include "GameCommon/GameSceneCommands.h"
 #include "InputNameVerifier.h"
@@ -78,11 +76,11 @@ void CreateNewWorldDlg::onOkButton(const nana::arg_click& arg)
     {
         region_id = outsideRegionFromInput();
         Engine::FactoryDesc factory_desc(region_id->rtti());
-        factory_desc.ClaimAsDeferred(region_id->name() + ".node", m_worldEditor.lock()->mediaPathId());
+        factory_desc.claimAsDeferred(region_id->name() + ".node", m_worldEditor.lock()->mediaPathId());
         std::make_shared<WorldMap::CreateWorldMapOutsideRegion>(*region_id, factory_desc)->execute();
     }
     Engine::FactoryDesc factory_desc(WorldMap::WorldMap::TYPE_RTTI);
-    factory_desc.ClaimAsInstanced(world_id.name() + ".wld", m_worldEditor.lock()->mediaPathId());
+    factory_desc.claimAsInstanced(world_id.name() + ".wld", m_worldEditor.lock()->mediaPathId());
     std::make_shared<WorldMap::CreateEmptyWorldMap>(world_id, factory_desc, region_id)->execute();
 
     close();

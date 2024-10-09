@@ -35,7 +35,6 @@ namespace LevelEditor
 
         Enigma::Engine::GenericDto cameraDto() const;
         Enigma::SceneGraph::SpatialId cameraId() const;
-        std::string frustumName() const;
 
     private:
         Enigma::Engine::GenericDto m_configDto;

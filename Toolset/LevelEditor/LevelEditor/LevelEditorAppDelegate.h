@@ -15,7 +15,6 @@
 #include "InputHandlers/InputHandlerService.h"
 #include "Frameworks/EventSubscriber.h"
 #include "ShadowMap/ShadowMapService.h"
-#include "FileStorage/PrimitiveFileStoreMapper.h"
 #include "FileStorage/AnimationAssetFileStoreMapper.h"
 #include "FileStorage/AnimatorFileStoreMapper.h"
 
@@ -26,6 +25,7 @@ namespace LevelEditor
     class WorldMapFileStoreMapper;
     class TextureFileStoreMapper;
     class SceneGraphFileStoreMapper;
+    class PrimitiveFileStoreMapper;
 
     class EditorAppDelegate
     {
@@ -76,7 +76,7 @@ namespace LevelEditor
 
         Enigma::Controllers::GraphicMain* m_graphicMain;
         std::shared_ptr<GeometryDataFileStoreMapper> m_geometryDataFileStoreMapper;
-        std::shared_ptr<Enigma::FileStorage::PrimitiveFileStoreMapper> m_primitiveFileStoreMapper;
+        std::shared_ptr<PrimitiveFileStoreMapper> m_primitiveFileStoreMapper;
         std::shared_ptr<Enigma::FileStorage::AnimationAssetFileStoreMapper> m_animationAssetFileStoreMapper;
         std::shared_ptr<Enigma::FileStorage::AnimatorFileStoreMapper> m_animatorFileStoreMapper;
         std::shared_ptr<TextureFileStoreMapper> m_textureFileStoreMapper;

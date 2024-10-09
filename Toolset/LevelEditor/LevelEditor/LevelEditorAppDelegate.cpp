@@ -41,12 +41,13 @@
 #include "FileStorage/EffectMaterialSourceFileStoreMapper.h"
 #include "Controllers/ControllerEvents.h"
 #include "GameCommon/GameSceneCommands.h"
-#include "SceneGraph/PortalAssemblers.h"
+#include "SceneGraph/PortalAssembler.h"
 #include "GameCommon/GameLightCommands.h"
 #include "GeometryDataFileStoreMapper.h"
 #include "SceneGraphFileStoreMapper.h"
 #include "TextureFileStoreMapper.h"
 #include "WorldMapFileStoreMapper.h"
+#include "PrimitiveFileStoreMapper.h"
 #include <memory>
 
 using namespace LevelEditor;
@@ -242,6 +243,7 @@ void EditorAppDelegate::installEngine()
     m_sceneGraphFileStoreMapper->subscribeHandlers();
     m_worldMapFileStoreMapper->subscribeHandlers();
     m_textureFileStoreMapper->subscribeHandlers();
+    m_primitiveFileStoreMapper->subscribeHandlers();
 }
 
 void EditorAppDelegate::shutdownEngine()
@@ -249,6 +251,7 @@ void EditorAppDelegate::shutdownEngine()
     m_sceneGraphFileStoreMapper->unsubscribeHandlers();
     m_worldMapFileStoreMapper->unsubscribeHandlers();
     m_textureFileStoreMapper->unsubscribeHandlers();
+    m_primitiveFileStoreMapper->unsubscribeHandlers();
 
     EventPublisher::unsubscribe(typeid(RenderEngineInstalled), m_onRenderEngineInstalled);
     m_onRenderEngineInstalled = nullptr;

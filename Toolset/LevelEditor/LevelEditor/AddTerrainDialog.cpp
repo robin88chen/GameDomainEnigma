@@ -6,7 +6,6 @@
 #include "LevelEditorCommands.h"
 #include "Frameworks/StringFormat.h"
 #include "TerrainEditConsole.h"
-#include "Terrain/TerrainAssemblers.h"
 #include <cstdlib>
 
 #include "LevelEditorQueries.h"

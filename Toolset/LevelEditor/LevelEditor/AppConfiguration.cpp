@@ -2,7 +2,7 @@
 #include "Frameworks/ExtentTypesDefine.h"
 #include "FileSystem/FileSystem.h"
 #include "Gateways/DtoJsonGateway.h"
-#include "SceneGraph/CameraDtos.h"
+#include "SceneGraph/CameraAssembler.h"
 #include <cassert>
 
 using namespace LevelEditor;
@@ -119,13 +119,6 @@ std::string AppConfiguration::worldMapPathId() const
 Enigma::SceneGraph::SpatialId AppConfiguration::cameraId() const
 {
     assert(!m_configDto.isEmpty());
-    Enigma::SceneGraph::CameraDto camera = Enigma::SceneGraph::CameraDto::fromGenericDto(cameraDto());
-    return camera.id();
-}
-
-std::string AppConfiguration::frustumName() const
-{
-    assert(!m_configDto.isEmpty());
-    auto camera = Enigma::SceneGraph::CameraDto::fromGenericDto(cameraDto());
-    return camera.Frustum().getName();
+    Enigma::SceneGraph::CameraDisassembler disassembler(cameraDto());
+    return disassembler.id();
 }

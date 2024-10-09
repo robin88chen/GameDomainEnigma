@@ -12,6 +12,8 @@
 #include "Frameworks/Query.h"
 #include "GameEngine/TextureId.h"
 #include "SceneGraph/SpatialId.h"
+#include "Primitives/PrimitiveId.h"
+#include "GameEngine/GenericDto.h"
 #include <optional>
 
 namespace LevelEditor
@@ -81,6 +83,16 @@ namespace LevelEditor
     {
     public:
         QueryLightIds() = default;
+    };
+    class QueryPrimitiveDto : public Enigma::Frameworks::Query<std::optional<Enigma::Engine::GenericDto>>
+    {
+    public:
+        QueryPrimitiveDto(const Enigma::Primitives::PrimitiveId& id) : m_id(id) {}
+
+        const Enigma::Primitives::PrimitiveId& id() const { return m_id; }
+
+    protected:
+        Enigma::Primitives::PrimitiveId m_id;
     };
 }
 

@@ -12,9 +12,9 @@
 #include "SceneGraph/Light.h"
 #include "SceneGraph/SceneGraphQueries.h"
 #include "Primitives/PrimitiveCommands.h"
-#include "Primitives/PrimitiveQueries.h"
-#include "Terrain/TerrainPrimitiveDto.h"
-#include "GameEngine/EffectTextureMapDto.h"
+#include "Terrain/TerrainPrimitiveAssembler.h"
+#include "Renderables/PrimitiveMaterial.h"
+#include "GameEngine/EffectTextureMapAssembler.h"
 #include "Geometries/GeometryCommands.h"
 #include "GameEngine/TextureCommands.h"
 
@@ -353,18 +353,19 @@ void AssetsBrowsePanel::removeTerrainReferencedAssets(const Enigma::SceneGraph::
     std::optional<Enigma::Engine::TextureId> splat_texture_id;
     if (terrain_primitive_id.has_value())
     {
-        std::optional<Enigma::Engine::GenericDto> dto = std::make_shared<Enigma::Primitives::QueryPrimitiveDto>(terrain_primitive_id.value())->dispatch();
+        std::optional<Enigma::Engine::GenericDto> dto = std::make_shared<QueryPrimitiveDto>(terrain_primitive_id.value())->dispatch();
         if (dto.has_value())
         {
-            Enigma::Terrain::TerrainPrimitiveDto terrain_prim_dto(dto.value());
-            terrain_geo_id = terrain_prim_dto.geometryId();
-            Enigma::Engine::EffectTextureMapDto effect_texture_map_dto(terrain_prim_dto.textureMaps()[0]);
-            for (const auto& mapping_dto : effect_texture_map_dto.textureMappings())
+            std::shared_ptr<Enigma::Terrain::TerrainPrimitiveDisassembler> terrain_prim_disassembler = std::make_shared<Enigma::Terrain::TerrainPrimitiveDisassembler>();
+            terrain_prim_disassembler->disassemble(dto.value());
+            terrain_geo_id = terrain_prim_disassembler->geometryId();
+            std::shared_ptr<Enigma::Renderables::PrimitiveMaterial> material;
+            if (!terrain_prim_disassembler->materials().empty()) material = terrain_prim_disassembler->materials()[0];
+            if (material)
             {
-                if (mapping_dto.semantic() == "AlphaLayer")
+                if (auto semantic_tex = material->effectTextureMap().findSemanticTexture("AlphaLayer"))
                 {
-                    splat_texture_id = mapping_dto.textureId();
-                    break;
+                    splat_texture_id = semantic_tex->textureId();
                 }
             }
         }

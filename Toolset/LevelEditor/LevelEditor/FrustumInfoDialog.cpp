@@ -6,6 +6,8 @@
 #include "Frameworks/QueryDispatcher.h"
 #include "LevelEditorCommands.h"
 #include "MathLib/MathGlobal.h"
+#include "MathLib/Radian.h"
+#include "MathLib/Degree.h"
 
 using namespace LevelEditor;
 
@@ -68,8 +70,8 @@ void FrustumInfoDialog::onOkButton(const nana::arg_click& arg)
     }
     if (!m_fovInputBox->caption().empty())
     {
-        float fov = std::stof(m_fovInputBox->caption()) * Enigma::MathLib::Math::PI / 180.0f;
-        if ((fov > 0.0f) && (fov < Enigma::MathLib::Math::HALF_PI))
+        Enigma::MathLib::Radian fov = Enigma::MathLib::Degree(std::stof(m_fovInputBox->caption())).radian();
+        if ((fov.value() > 0.0f) && (fov.value() < Enigma::MathLib::Math::HALF_PI))
         {
             m_camera.lock()->changeFrustumFov(fov);
         }
@@ -122,7 +124,7 @@ void FrustumInfoDialog::queryCamera(const Enigma::SceneGraph::SpatialId& camera_
     if (query->getResult())
     {
         m_camera = query->getResult();
-        m_fovInputBox->caption(std::to_string(m_camera.lock()->cullingFrustum().fov() * 180.0f / Enigma::MathLib::Math::PI));
+        m_fovInputBox->caption(std::to_string(m_camera.lock()->cullingFrustum().fov().degree().value()));
         m_nearPlaneInputBox->caption(std::to_string(m_camera.lock()->cullingFrustum().nearPlaneZ()));
         m_farPlaneInputBox->caption(std::to_string(m_camera.lock()->cullingFrustum().farPlaneZ()));
     }
